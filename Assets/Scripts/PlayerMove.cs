@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
+
 { 
     float speed = 5f;
 
@@ -9,6 +10,10 @@ public class PlayerMove : MonoBehaviour
     {
         
     }
+
+{
+    public float moveSpeed = 10f;
+
 
     // Update is called once per frame
     void Update()
@@ -20,5 +25,7 @@ public class PlayerMove : MonoBehaviour
         transform.Translate(0f, moveY * speed * Time.deltaTime,0f);
 
         // 좌우 이동 의현이
+        float moveX = Input.GetAxisRaw("Horizontal");
+        transform.Translate(moveX * moveSpeed * Time.deltaTime, 0, 0);
     }
 }
