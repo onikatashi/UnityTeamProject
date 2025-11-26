@@ -11,7 +11,6 @@ public class PlayerMove : MonoBehaviour
         
     }
 
-{
     public float moveSpeed = 10f;
 
 
