@@ -19,12 +19,14 @@ public class ItemData : ScriptableObject
     // 아이템 능력치
     public Stats iBaseStat;                 // 아이템 능력치
 
-    // 아이템 강화 보너스 스탯
-    // 원래는 extra였지만 bonus로 바꿈. 이거 얘기 후에 결정
-    public float iBonusAttackDamage;        // 강화 보너스 공격력
-    public float iBonusRange;               // 공격 추적 범위 ?
-    public float iBonusAttackRange;         // 강화 보너스 공격 범위
-    public float iBonusAttackSpeed;         // 강화 보너스 공격 속도
-    public float iBonusProjectileSpeed;     // 강화 보너스 투사체 속도
+    // 아이템 추가 능력치
+    public Stats iBonusStat;                // 아이템 강화 수치
+
+    // 아이템 효과 스탯
+    public float iExtraAttackDamage;        // 강화 보너스 공격력
+    public float iExtraRange;               // 공격 추적 범위
+    public float iExtraAttackRange;         // 강화 보너스 공격 범위
+    public float iExtraAttackSpeed;         // 강화 보너스 공격 속도
+    public float iExtraProjectileSpeed;     // 강화 보너스 투사체 속도
 
 }
