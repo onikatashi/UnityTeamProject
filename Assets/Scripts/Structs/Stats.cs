@@ -21,6 +21,7 @@ public class Stats
     public float criticalRate;          // 치명타 확률 (criChance)
     public float criticalDamage;        // 치명타 피해 (criDamage)
     public float shield;                // 보호막
+    public float bonusExpRate;          // 추가 경험치량
     public float luck;                  // 행운
     public float cooldownReduction;     // 쿨타임 감소
     public int reviveCount;             // 부활 횟수
