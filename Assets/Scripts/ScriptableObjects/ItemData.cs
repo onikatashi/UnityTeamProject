@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 1. 아이템 데이터를 저장하는 SO
@@ -9,6 +10,7 @@ using UnityEngine;
 public class ItemData : ScriptableObject
 {
     public int iId;                         // 아이템 고유 ID
+    public Image iIcon;                     // 아이템 아이콘
     public string iName;                    // 아이템 이름
     public string iDescription;             // 아이템 설명
     public Enums.ItemRank iRank;            // 아이템 등급

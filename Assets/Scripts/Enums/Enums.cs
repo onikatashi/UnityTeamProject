@@ -55,4 +55,14 @@ public class Enums
         Mage,
         Archer
     }
+
+    // 몬스터 상태 종류
+    // 텔레포트, 도망, 달리기(?), 패트롤 등 추가적으로 생각
+    public enum MonsterState
+    {
+        Idle,
+        Move,
+        Attack,
+        Die
+    }
 }
