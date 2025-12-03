@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Title.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: 1a8d469235928a5469f7b11bfb8bfd6c
+  - enabled: 1
+    path: Assets/Scenes/DungeonMap.unity
+    guid: 1a7d812d33b8dc94c854e50013171fcb
+  - enabled: 1
+    path: Assets/Scenes/DungeonRoom.unity
+    guid: 8c98ccc990a904f45b6a3e67c80272b7
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
