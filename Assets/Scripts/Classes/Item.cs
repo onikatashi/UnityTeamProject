@@ -5,7 +5,13 @@ using UnityEngine;
 /// </summary>
 public class Item : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    ItemData itemData;
+
+    public Item(ItemData itemData)
+    {
+        this.itemData = itemData;
+    }
+
     void Start()
     {
         
