@@ -266,9 +266,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bb16caaffcd02444ab6ea1d556afc29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryPanel: {fileID: 4554288707722345633}
+  InventoryPanel: {fileID: 4554288707722345633}
   slotPrefab: {fileID: 7072645127141874044, guid: 040be2d86b843f54daee05da41861cee, type: 3}
-  descriptionUIController: {fileID: 0}
   inventorySlots: []
 --- !u!1 &9087739003913172352
 GameObject:

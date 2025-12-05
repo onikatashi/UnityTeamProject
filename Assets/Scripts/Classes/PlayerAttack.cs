@@ -54,15 +54,15 @@ public class PlayerAttack : MonoBehaviour
 
                 // 몬스터 만드는 사람한테 받아와야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 // 몬스터 만드는 사람한테 받아와야함
-                Enemy enemy = c.GetComponent<Enemy>();
+                //Enemy enemy = c.GetComponent<Enemy>();
                 // 몬스터 만드는 사람한테 받아와야함
                 // 몬스터 만드는 사람한테 받아와야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-                if ( enemy != null )
-                {
-                    enemy.TakeDamage(atkDmg);
-                }
+                //if ( enemy != null )
+                //{
+                //    enemy.TakeDamage(atkDmg);
+                //}
             }
         }
     }
