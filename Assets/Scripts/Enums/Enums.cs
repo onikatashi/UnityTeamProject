@@ -15,6 +15,7 @@ public class Enums
     // 임시 시너지 3개
     public enum ItemSynergy
     {
+        None,
         Fire,
         Ice,
         Wind
@@ -24,6 +25,7 @@ public class Enums
     // 이건 정해진게 없음. 예시일 뿐임
     public enum ItemEffect
     {
+        None,
         AutoAttack,
         AutoBuff,
         LifeSteal

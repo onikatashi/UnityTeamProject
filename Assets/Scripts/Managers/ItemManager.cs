@@ -26,7 +26,7 @@ public class ItemManager : MonoBehaviour
     List<ItemData> allItemDatas;
     
     // 아이템 데이터를 ID로 편하게 찾기위한 Dictionary
-    Dictionary<int, ItemData> itemDictionary;
+    Dictionary<int, ItemData> itemDictionary = new Dictionary<int, ItemData>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -43,13 +43,13 @@ public class ItemManager : MonoBehaviour
     }
 
     // Item 객체 생성
-    public Item CreateItemInstance(int itemId)
+    public ItemData CreateItemInstance(int itemId)
     {
         if( !itemDictionary.TryGetValue(itemId, out var data))
         {
             Debug.LogError("ItemData를 찾을 수 없음");
             return null;
         }
-        return new Item(data);
+        return data;
     }
 }

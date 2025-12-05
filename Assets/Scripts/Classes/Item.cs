@@ -22,4 +22,9 @@ public class Item : MonoBehaviour
     {
         
     }
+
+    public ItemData GetItemData()
+    {
+        return itemData;
+    }
 }

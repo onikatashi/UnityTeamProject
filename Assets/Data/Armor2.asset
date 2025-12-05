@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
-  m_Name: ItemData
+  m_Name: Armor2
   m_EditorClassIdentifier: 
-  iId: 0
-  iName: 
-  iDescription: 
-  iRank: 0
-  iSynergy: 0
+  iId: 2
+  iIcon: {fileID: 21300000, guid: f140213409172fe4caef8ee8e6c59087, type: 3}
+  iName: "\uAC11\uC6372"
+  iDescription: a_Armor05
+  iRank: 1
+  iSynergy: 1
   iEffect: 0
   iPrice: 0
   iBaseStat:
-    maxHp: 0
+    maxHp: 150
     maxMp: 0
     mpRegen: 0
     maxDashCount: 0
@@ -31,7 +32,7 @@ MonoBehaviour:
     attackSpeed: 0
     projectileCount: 0
     projectileSpeed: 0
-    moveSpeed: 0
+    moveSpeed: 1
     criticalRate: 0
     criticalDamage: 0
     shield: 0
@@ -41,7 +42,7 @@ MonoBehaviour:
     cooldownReduction: 0
     reviveCount: 0
   iBonusStat:
-    maxHp: 0
+    maxHp: 15
     maxMp: 0
     mpRegen: 0
     maxDashCount: 0
@@ -52,7 +53,7 @@ MonoBehaviour:
     attackSpeed: 0
     projectileCount: 0
     projectileSpeed: 0
-    moveSpeed: 0
+    moveSpeed: 1
     criticalRate: 0
     criticalDamage: 0
     shield: 0
