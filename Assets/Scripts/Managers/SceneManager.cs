@@ -1,18 +1,23 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
-/// <summary>
-/// 1. ì”¬ ì „í™˜ì„ ê´€ë¦¬í•˜ëŠ” ë§¤ë‹ˆì €
-/// 2. ì”¬ ë¡œë“œ, ì–¸ë¡œë“œ, ì „í™˜ ì• ë‹ˆë©”ì´ì…˜ ë“±ì„ ì²˜ë¦¬
-/// </summary>
 public class SceneManager : MonoBehaviour
 {
-    public static SceneManager Instance;
+    // ½Ì±ÛÅÏ ÆĞÅÏÀ» À§ÇÑ ÀÎ½ºÅÏ½º
+    public static SceneManager Instance { get; private set; }
+
+    [Header("Managed Objects")]
+    // ÀÌ º¯¼ö¿¡ ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®ÀÇ ÂüÁ¶°¡ ÀúÀåµË´Ï´Ù.
+    private GameObject player;
 
     private void Awake()
     {
-        if(Instance == null)
+        // ½Ì±ÛÅÏ ÀÎ½ºÅÏ½º ¼³Á¤
+        if (Instance == null)
         {
             Instance = this;
+            // ¾À ÀüÈ¯ ½Ã ÀÌ ¸Å´ÏÀú ¿ÀºêÁ§Æ®°¡ ÆÄ±«µÇÁö ¾Êµµ·Ï ¼³Á¤ÇÕ´Ï´Ù.
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -21,15 +26,53 @@ public class SceneManager : MonoBehaviour
         }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    // Portal ½ºÅ©¸³Æ®·ÎºÎÅÍ È£ÃâµÇ´Â °ø°³ ¸Ş¼­µå
+    public void TravelToScene(string targetScene, GameObject playerToMove)
     {
-        
+        this.player = playerToMove;
+
+        // ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®¸¦ ´ÙÀ½ ¾À¿¡¼­µµ ÆÄ±«µÇÁö ¾Êµµ·Ï ¼³Á¤ÇÕ´Ï´Ù.
+        DontDestroyOnLoad(player);
+
+        // ¾À ·Îµå ¹× ÇÃ·¹ÀÌ¾î ÀÌµ¿ ÄÚ·çÆ¾ ½ÃÀÛ
+        StartCoroutine(LoadSceneAndRelocatePlayer(targetScene));
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator LoadSceneAndRelocatePlayer(string targetScene)
     {
-        
+        // ¾À ·Îµå
+        AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(targetScene);
+
+        // ·Îµù ¿Ï·á±îÁö ´ë±â
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        // ¾À ·Îµù ¿Ï·á ÈÄ, »õ ¾ÀÀÇ ¿ÀºêÁ§Æ®µéÀÌ ¿ÏÀüÈ÷ ÃÊ±âÈ­µÉ ¼ö ÀÖµµ·Ï ÇÑ ÇÁ·¹ÀÓÀ» ´ë±âÇÕ´Ï´Ù.
+        yield return null;
+
+        // ¾ÀÀÌ ¿ÏÀüÈ÷ ·ÎµåµÈ ÈÄ SpawnPoint Ã£±â
+        // ÁÖÀÇ: ÀÌ ¿ÀºêÁ§Æ®´Â ´ÙÀ½ ¾ÀÀÇ ÃÖ»óÀ§ °èÃş¿¡ ÀÖÀ¸¸ç, ÀÌ¸§ÀÌ "SpawnPoint"¿©¾ß ÇÕ´Ï´Ù.
+        GameObject spawnPoint = GameObject.Find("SpawnPoint");
+
+        if (spawnPoint != null)
+        {
+            // µğ¹ö±× ·Î±×: SpawnPoint Ã£À½ ¹× ÁÂÇ¥ Ãâ·Â
+            Vector3 spawnPosition = spawnPoint.transform.position;
+            Debug.Log($"SceneManager: SpawnPoint¸¦ Ã£¾Ò½À´Ï´Ù! À§Ä¡: ({spawnPosition.x:F2}, {spawnPosition.y:F2}, {spawnPosition.z:F2})");
+
+            // µğ¹ö±× ·Î±×: ÇÃ·¹ÀÌ¾î À§Ä¡ ÀÌµ¿ Àü ¾Ë¸²
+            Debug.Log("SceneManager: ÇÃ·¹ÀÌ¾î À§Ä¡¸¦ SpawnPoint·Î ÀÌµ¿½ÃÅµ´Ï´Ù.");
+
+            // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡¿Í È¸ÀüÀ» SpawnPoint °ªÀ¸·Î ¼³Á¤
+            player.transform.position = spawnPoint.transform.position;
+            player.transform.rotation = spawnPoint.transform.rotation;
+        }
+        else
+        {
+            // µğ¹ö±× ·Î±×: SpawnPoint Ã£±â ½ÇÆĞ °æ°í
+            Debug.LogWarning("SceneManager: ´ÙÀ½ ¾À (" + targetScene + ") ¿¡¼­ 'SpawnPoint' ¿ÀºêÁ§Æ®¸¦ Ã£Áö ¸øÇß½À´Ï´Ù. ÇÃ·¹ÀÌ¾î À§Ä¡ ÃÊ±âÈ­ ½ÇÆĞ.");
+        }
     }
 }
