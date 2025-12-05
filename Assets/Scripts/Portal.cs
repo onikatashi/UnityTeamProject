@@ -3,23 +3,36 @@ using UnityEngine.SceneManagement;
 
 public class Portal : MonoBehaviour
 {
-    // 이동할 다음 씬의 이름을 Inspector에서 설정
     public string targetSceneName;
+
+    private int playerLayer;
+
+    void Start()
+    {
+        playerLayer = LayerMask.NameToLayer("Player");
+
+        if (playerLayer == -1)
+        {
+            Debug.LogError("Layer 'Player'를 찾을 수 없습니다! Unity Layer 설정 필요. (Portal.cs)");
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        // 플레이어 태그 확인 (플레이어 오브젝트에 "Player" 태그가 있어야 합니다)
-        if (other.CompareTag("Player"))
+        // 플레이어인지 판별
+        if (other.gameObject.layer == playerLayer)
         {
-            // 중앙 SceneManager에게 씬 전환을 요청합니다.
-            if (SceneManager.Instance != null)
+            // 플레이어가 씬 이동 중 끊기지 않도록 (원하면)
+            DontDestroyOnLoad(other.gameObject);
+
+            // 그냥 바로 씬 로드
+            if (!string.IsNullOrEmpty(targetSceneName))
             {
-                // 충돌한 오브젝트(플레이어)를 전달
-                SceneManager.Instance.TravelToScene(targetSceneName, other.gameObject);
+                SceneManager.LoadScene(targetSceneName);
             }
             else
             {
-                Debug.LogError("SceneManager 인스턴스를 찾을 수 없습니다! 씬 전환 실패.");
+                Debug.LogError("targetSceneName이 비어 있습니다! Inspector에서 설정하세요. (Portal.cs)");
             }
         }
     }
