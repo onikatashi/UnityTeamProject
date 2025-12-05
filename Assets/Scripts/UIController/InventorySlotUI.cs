@@ -54,7 +54,6 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("클릭감지");
         if(eventData.button == PointerEventData.InputButton.Left)
         {
             clickCallback?.Invoke(slotIndex);
