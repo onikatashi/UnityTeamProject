@@ -33,14 +33,25 @@ public class InventoryManager : MonoBehaviour
     {
         Inventory = new ItemData[9];
         synergeCount = new Dictionary<Enums.ItemSynergy, int>();
-        reinforcedSlots = new Dictionary<int, int>();
+        InitReinforceSlots();
         GenerateLineCheck();
+
+        reinforcedSlots[0] = 2;
     }
 
 
     void Update()
     {
 
+    }
+
+    void InitReinforceSlots()
+    {
+        reinforcedSlots = new Dictionary<int, int>();
+        for (int i = 0; i< Inventory.Length; i++)
+        {
+            reinforcedSlots[i] = 0;
+        }
     }
 
     // 라인 체크 배열 생성
@@ -104,5 +115,23 @@ public class InventoryManager : MonoBehaviour
             currentIndex--;
         }
         UIManager.Instance.inventoryUIController.UpdateItemIcon();
+    }
+
+    public Stats GetInventoryTotalStats()
+    {
+        Stats totalStats = new Stats();
+        for(int i = 0; i< Inventory.Length; i++)
+        {
+            var itemData = Inventory[i];
+            if(itemData != null)
+            {
+                if (reinforcedSlots.ContainsKey(i))
+                {
+                    totalStats += itemData.iBaseStat + itemData.iBonusStat * reinforcedSlots[i];
+                }
+            }
+        }
+        Debug.Log(totalStats.maxHp);
+        return totalStats;
     }
 }
