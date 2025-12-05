@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class InventoryUIController : MonoBehaviour
 {
-    public GameObject InventoryPanel;           // ÀÎº¥Åä¸® ÆĞ³Î ÇÁ¸®ÆÕ
-    public List<Image> itemIconsImage;          // ÀÎº¥Åä¸® ¾ÆÀÌÅÛ ¾ÆÀÌÄÜ ÀÌ¹ÌÁö ¸®½ºÆ®
+    public GameObject InventoryPanel; Â  Â  Â  Â  Â  Â // ì¸ë²¤í† ë¦¬ íŒ¨ë„ ì˜¤ë¸Œì íŠ¸
+    public List<Image> itemIconsImage; Â  Â  Â  Â  Â  // ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ ì•„ì´ì½˜ ì´ë¯¸ì§€ ë¦¬ìŠ¤íŠ¸
 
     InventoryManager inventoryManager;
 
-    // InventoryUIController ÃÊ±âÈ­
+    // InventoryUIController ì´ˆê¸°í™”
     public void InitInventoryUIController()
     {
         inventoryManager = InventoryManager.Instance;
@@ -20,11 +20,11 @@ public class InventoryUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    // Àç±ÍÀûÀ¸·Î ¸¶Áö¸· ÀÚ½Ä ¿ÀºêÁ§Æ®¸¦ Ã£¾Æ Image ÄÄÆ÷³ÍÆ®¸¦ ¸®½ºÆ®¿¡ Ãß°¡
-    // ItemIcon ÀÌ¹ÌÁö¸¦ ¾÷µ¥ÀÌÆ®ÇÏ±â À§ÇØ »ç¿ë
+    // íŠ¹ì • ë¶€ëª¨ì˜ ëª¨ë“  ë§ˆì§€ë§‰ ìì‹ ì˜¤ë¸Œì íŠ¸ë¥¼ ì°¾ì•„ Image ì»´í¬ë„ŒíŠ¸ë¥¼ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
+    // ItemIcon ì´ë¯¸ì§€ë¥¼ ì—…ë°ì´íŠ¸í•˜ê¸° ìœ„í•œ ì‘ì—…
     void FindLastChildObjectRecursive(Transform transform)
     {
         if (transform.childCount == 0)
@@ -39,7 +39,7 @@ public class InventoryUIController : MonoBehaviour
         }
     }
 
-    // ÀÎº¥Åä¸® ¾ÆÀÌÅÛ ¾ÆÀÌÄÜ ¾÷µ¥ÀÌÆ®
+    // ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ ì•„ì´ì½˜ ì—…ë°ì´íŠ¸
     public void UpdateItemIcon()
     {
         for (int i = 0; i < inventoryManager.Inventory.Length; i++)

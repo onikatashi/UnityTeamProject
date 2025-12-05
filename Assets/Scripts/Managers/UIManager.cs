@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private GameObject inventoryPanelPrefab;                // 인벤토리 패널 프리팹
-    public InventoryUIController inventoryUIController;    // 인벤토리 UI 컨트롤러
+    public InventoryUIController inventoryUIController;     // 인벤토리 UI 컨트롤러
 
     void Start()
     {

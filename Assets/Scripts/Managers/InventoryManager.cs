@@ -9,7 +9,7 @@ public class InventoryManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
@@ -20,15 +20,14 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public ItemData[] Inventory;                        // ÀÎº¥Åä¸® ¾ÆÀÌÅÛ ¹è¿­
-    int itemCount = 0;                                  // ÀÎº¥Åä¸® ¾ÆÀÌÅÛ °³¼ö
+    public ItemData[] Inventory; Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // ì¸ë²¤í† ë¦¬ ì•„ì´í…œ ë°°ì—´
+    int itemCount = 0; Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // ì¸ë²¤í† ë¦¬ ì•„ì´í…œ ìˆ˜
 
-    int currentIndex = 0;                               // ÇöÀç ¾ÆÀÌÅÛ µé¾î°¥ À§Ä¡ ÀÎµ¦½º
-    int lineSize = 3;                                   // ÇÑ ÁÙ¿¡ ÀÖ´Â ½½·Ô °³¼ö 
-    Dictionary<Enums.ItemSynergy, int> synergeCount;    // ½Ã³ÊÁöº° °³¼ö µñ¼Å³Ê¸®
-    Dictionary<int, int> reinforcedSlots;               // °­È­µÈ ½½·Ô µñ¼Å³Ê¸® (Å°: ½½·Ô ÀÎµ¦½º, °ª: °­È­ ·¹º§)
-    List<int[]> lineCheck;                              // ÇÑ ÁÙ¿¡ ½Ã³ÊÁö ºù°í°¡ µÇ¾îÀÖ´ÂÁö È®ÀÎÇÏ±â À§ÇÑ 2Â÷¿ø ¹è¿­
-      
+    int currentIndex = 0; Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â // ë‹¤ìŒ ì•„ì´í…œì´ ë“¤ì–´ê°ˆ ìœ„ì¹˜ ì¸ë±ìŠ¤
+    int lineSize = 3; Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â // í•œ ì¤„ì— ìˆëŠ” ìŠ¬ë¡¯ ê°œìˆ˜
+    Dictionary<Enums.ItemSynergy, int> synergeCount; Â  Â  // ì‹œë„ˆì§€ íš¨ê³¼ ì¹´ìš´íŠ¸
+    Dictionary<int, int> reinforcedSlots; Â  Â  Â  Â  Â  Â  Â  Â // ê°•í™”ëœ ìŠ¬ë¡¯ ì¹´ìš´íŠ¸ (í‚¤: ìŠ¬ë¡¯ ì¸ë±ìŠ¤, ê°’: ê°•í™” ë ˆë²¨)
+    List<int[]> lineCheck;                               // ì¤„ ë³„ ì‹œë„ˆì§€ íš¨ê³¼ê°€ ì™„ì„±ë˜ì—ˆëŠ”ì§€ í™•ì¸í•˜ê¸° ìœ„í•œ 2ì°¨ì› ë°°ì—´
 
     void Start()
     {
@@ -41,26 +40,26 @@ public class InventoryManager : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
-    // ºù°í Ã¼Å© ¶óÀÎ »ı¼º
+    // ë¼ì¸ ì²´í¬ ë°°ì—´ ìƒì„±
     void GenerateLineCheck()
     {
         lineCheck = new List<int[]>();
 
-        // °¡·Î ÁÙ Ã¼Å©¶óÀÎ »ı¼º
+        // ê°€ë¡œ ì¤„ ì²´í¬ ë°°ì—´ ìƒì„±
         for (int i = 0; i < lineSize; i++)
         {
             int[] row = new int[lineSize];
-            for( int j = 0; j < lineSize; j++)
+            for (int j = 0; j < lineSize; j++)
             {
                 row[j] = i * lineSize + j;
             }
             lineCheck.Add(row);
         }
 
-        // ¼¼·Î ÁÙ Ã¼Å©¶óÀÎ »ı¼º
+        // ì„¸ë¡œ ì¤„ ì²´í¬ ë°°ì—´ ìƒì„±
         for (int i = 0; i < lineSize; i++)
         {
             int[] column = new int[lineSize];
@@ -71,38 +70,38 @@ public class InventoryManager : MonoBehaviour
             lineCheck.Add(column);
         }
 
-        // ÁÂ»ó -> ¿ìÇÏ ´ë°¢¼± ¶óÀÎ »ı¼º
+        // ì¢Œìƒ -> ìš°í•˜ ëŒ€ê°ì„  ë°°ì—´ ìƒì„±
         int[] diagonal1 = new int[lineSize];
-        for(int i = 0; i < lineSize; i++)
+        for (int i = 0; i < lineSize; i++)
         {
             diagonal1[i] = i * (lineSize + 1);
         }
         lineCheck.Add(diagonal1);
 
-        // ¿ì»ó -> ÁÂÇÏ ´ë°¢¼± ¶óÀÎ »ı¼º
+        // ìš°ìƒ -> ì¢Œí•˜ ëŒ€ê°ì„  ë°°ì—´ ìƒì„±
         int[] diagonal2 = new int[lineSize];
-        for(int i = 0; i < lineSize; i++)
+        for (int i = 0; i < lineSize; i++)
         {
             diagonal2[i] = (i + 1) * (lineSize - 1);
         }
         lineCheck.Add(diagonal2);
     }
 
-    // ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛ Ãß°¡
+    // ì¸ë²¤í† ë¦¬ì— ì•„ì´í…œ ì¶”ê°€
     public void AddItemToInventory(ItemData newItem)
     {
-        if(itemCount >= Inventory.Length)
+        if (itemCount >= Inventory.Length)
         {
-            Debug.Log("ÀÎº¥Åä¸® ²ËÂü");
+            Debug.Log("ì¸ë²¤í† ë¦¬ ê°€ë“ ì°¸");
             return;
         }
 
         Inventory[currentIndex] = newItem;
         currentIndex++;
         itemCount++;
-        if(currentIndex >= Inventory.Length)
+        if (currentIndex >= Inventory.Length)
         {
-            currentIndex--; 
+            currentIndex--;
         }
         UIManager.Instance.inventoryUIController.UpdateItemIcon();
     }
