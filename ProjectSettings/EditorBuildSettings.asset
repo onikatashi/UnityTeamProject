@@ -9,9 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Title.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Town.unity
-    guid: 1a8d469235928a5469f7b11bfb8bfd6c
-  - enabled: 1
     path: Assets/Scenes/DungeonMap.unity
     guid: 1a7d812d33b8dc94c854e50013171fcb
   - enabled: 1
@@ -19,10 +16,10 @@ EditorBuildSettings:
     guid: 8c98ccc990a904f45b6a3e67c80272b7
   - enabled: 1
     path: Assets/Scenes/Town.unity
-    guid: f61bc1b2b218e2b4eb9d2c354fd32929
+    guid: 5d8df9838da0090478747c16cd7e5aa1
   - enabled: 1
     path: Assets/Scenes/Dungeon.unity
-    guid: 5d8df9838da0090478747c16cd7e5aa1
+    guid: a6cbcc4383e211748b9f48bcb2f11905
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
