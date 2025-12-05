@@ -1,7 +1,4 @@
-using JetBrains.Annotations;
-using Mono.Cecil.Cil;
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 
 public class PlayerSkill : MonoBehaviour
@@ -16,7 +13,14 @@ public class PlayerSkill : MonoBehaviour
     */
     public LayerMask monsterLayer;
 
-    float timer = 0f;
+    //스킬 중복 사용 금지용 (쿨타임 포함)
+    bool canUse1 = true;
+    bool canUse2 = true;
+    float skill1CoolTime = 7f;
+    float skill2CoolTime = 5f;
+
+    //코루틴 용 값 저장 변수들
+    float currentAtkDmg;
 
     private void Update()
     {
@@ -33,11 +37,11 @@ public class PlayerSkill : MonoBehaviour
         {
             //스킬 슬롯에 있는 스킬을 읽어서 사용
             //근데 일단은 그거 배제하고 적용해보자.
-            Skill1();
+            if (canUse1) Skill1();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            Skill2();
+            if (canUse2) Skill2();
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
@@ -47,31 +51,44 @@ public class PlayerSkill : MonoBehaviour
 
 
     /// <summary>
-    /// 전방향 공격 3회
+    /// 전방향 공격 3회 코루틴 실행
     /// </summary>
     public void Skill1()
     {
-        Collider[] monsters = Physics.OverlapSphere(transform.position, Player.Instance.finalStats.attackRange, monsterLayer);
+        StartCoroutine(Skill1Coroutine());
+    }
+
+    /// <summary>
+    /// 스킬1 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Skill1Coroutine()
+    {
+        //쿨타임용 (사용금지)
+        canUse1 = false;
         float atkDmg = Player.Instance.finalStats.attackDamage;
         float atkRng = Player.Instance.finalStats.attackRange;
-        foreach (Collider c in monsters)
+
+        for (int i = 0; i < 3; i++)
         {
-
-            Monster monster = c.GetComponent<Monster>();
-
-            if (monster != null)
+            //시작, 0.4초마다 몬스터 범위안에 있는지 찾아주고
+            Collider[] monsters = Physics.OverlapSphere(transform.position, Player.Instance.finalStats.attackRange, monsterLayer);  
+            foreach (Collider c in monsters)
             {
-                for (int i = 0; i < 3; i++)
+
+                Monster monster = c.GetComponent<Monster>();
+
+                if (monster != null)
                 {
                     monster.TakeDamage(atkDmg);
-                    StartCoroutine(Skill1CoolTime());
                 }
             }
+
+            yield return new WaitForSeconds(0.4f);      //0.4초마다 몬스터 찾아서 TakeDamage하기.
         }
-    }
-    IEnumerator Skill1CoolTime()
-    {
-        yield return new WaitForSeconds(0.2f);
+
+        yield return new WaitForSeconds(skill1CoolTime);
+        canUse1 = true;
     }
 
     /// <summary>
@@ -79,16 +96,18 @@ public class PlayerSkill : MonoBehaviour
     /// </summary>
     void Skill2()
     {
-        float currentAtkDmg = Player.Instance.finalStats.attackDamage;
-
+        canUse2 = false;
+        currentAtkDmg = Player.Instance.finalStats.attackDamage;
         Player.Instance.finalStats.attackDamage *= 2f;
+        StartCoroutine(Skill2CoolTime());
 
-        timer += Time.deltaTime;
-        if( timer >= 5f)
-        {
-            Player.Instance.finalStats.attackDamage /= 2f;
-            timer = 0f;
-        }
+
+    }
+    IEnumerator Skill2CoolTime()
+    {
+        yield return new WaitForSeconds(skill2CoolTime);
+        Player.Instance.finalStats.attackDamage = currentAtkDmg;
+        canUse2 = true;
     }
 
 }

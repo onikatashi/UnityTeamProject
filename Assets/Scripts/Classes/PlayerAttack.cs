@@ -2,14 +2,8 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    //공격력
-    public float atkDmg = Player.Instance.finalStats.attackDamage;
-    //공격 속도
-    public float atkSpd = Player.Instance.finalStats.attackSpeed;
-    //다음 공격을 위한 변수
-    float nextAtkTime;
-    //공격 범위
-    public float atkRng = Player.Instance.finalStats.attackRange;
+    //기본공격 쿨타임용 변수
+    float nextAtkTime = 0f;
     //공격 각도(범위 공격)
     public float atkAngle = 20f;
 
@@ -29,6 +23,12 @@ public class PlayerAttack : MonoBehaviour
     /// </summary>
     void BaseAttack()
     {
+        //공격력
+        float atkDmg = Player.Instance.finalStats.attackDamage;
+        //공격 범위
+        float atkRng = Player.Instance.finalStats.attackRange;
+
+
         // 1. 플레이어 중심으로 공격 범위 안에 있는 모든 Collider를 찾는다.
         Collider[] monsters = Physics.OverlapSphere(transform.position, atkRng, monsterLayer);
 
@@ -51,13 +51,7 @@ public class PlayerAttack : MonoBehaviour
                 //1. 공격 거리 안에 있고,
                 //2. 공격 각도 안에 있는 적
 
-
-                // 몬스터 만드는 사람한테 받아와야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                // 몬스터 만드는 사람한테 받아와야함
                 Monster monster = c.GetComponent<Monster>();
-                // 몬스터 만드는 사람한테 받아와야함
-                // 몬스터 만드는 사람한테 받아와야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
                 if (monster != null)
                 {
@@ -73,15 +67,24 @@ public class PlayerAttack : MonoBehaviour
     /// <returns></returns>
     public bool TryAttack()
     {
+        //공격 속도
+        float atkSpd = Player.Instance.finalStats.attackSpeed;
+        //공격 범위
+        float atkRng = Player.Instance.finalStats.attackRange;
+
+
         // 주위에 적이 있을 때 실행되어야 함.
         Collider[] monsters = Physics.OverlapSphere(transform.position, atkRng, monsterLayer);
+        Collider nearestMonster = null;
+
         // 적 탐지가 안된 경우 false 반환
-        if (monsters == null)
+        if (monsters.Length == 0)
         {
             return false;
         }
+
         // 적 탐지가 된 경우 쿨타임 적용해서 공격
-        else        
+        else
         {
             //공격 쿨타임이 채워지면, 공격을 시도
             if (Time.time >= nextAtkTime)
@@ -97,12 +100,14 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// 범위 파악용 
     /// </summary>
     void OnDrawGizmosSelected()
     {
+        //공격 범위
+        float atkRng = Player.Instance.finalStats.attackRange;
+
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, atkRng);
     }

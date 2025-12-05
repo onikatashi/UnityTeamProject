@@ -1,4 +1,3 @@
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 /// <summary>
@@ -40,6 +39,12 @@ public class Player : MonoBehaviour
         currentHp = finalStats.maxHp;
         currentMp = finalStats.maxMp;
     }
+
+    //void LookAtTheCamera()
+    //{
+    //    Transform target = Camera.main.transform;
+    //    transform.rotation = transform.LookAt(target,target.tra);
+    //}
 
     public Stats GetFinalStat()
     {
