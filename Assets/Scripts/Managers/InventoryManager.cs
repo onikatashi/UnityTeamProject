@@ -125,7 +125,7 @@ public class InventoryManager : MonoBehaviour
             var itemData = Inventory[i];
             if(itemData != null)
             {
-                if (reinforcedSlots.ContainsKey(i))
+                if (reinforcedSlots.ContainsKey(i) && Inventory[i] != null)
                 {
                     totalStats += itemData.iBaseStat + itemData.iBonusStat * reinforcedSlots[i];
                 }
