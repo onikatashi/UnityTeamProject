@@ -14,6 +14,7 @@ public class TempManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Q))
         {
             InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.CreateItemInstance(1));
+            InventoryManager.Instance.GetInventoryTotalStats();
         }
         
         if(Input.GetKeyDown(KeyCode.I))

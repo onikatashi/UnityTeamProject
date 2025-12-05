@@ -10,8 +10,9 @@ public class MonsterData : ScriptableObject
 {
     public Enums.MonsterRank monsterRank;       // 몬스터 등급(종류)
 
-    public float maxHp;                         // 몬스터 체력
-    public float currentHp;                     // 몬스터 현재 체력
+    public int mId;                             // 몬스터 ID
+    public string monsterName;                  // 몬스터 이름
+    public float maxHp;                         // 몬스터 MaxHp
     public float attackDamage;                  // 몬스터 공격력
     public float attackRange;                   // 몬스터 공격 범위
     public float attackSpeed;                   // 몬스터 공격 속도
@@ -24,6 +25,11 @@ public class MonsterData : ScriptableObject
 
     public float shield;                        // 몬스터 보호막
 
+    public GameObject mosterPrefab;             // 몬스터 프리팹
+
     // 이건 보스한테만 필요
     public float stunGage;                      // 몬스터 기절 게이지
+
+
 }
+

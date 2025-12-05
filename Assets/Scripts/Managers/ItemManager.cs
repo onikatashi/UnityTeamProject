@@ -42,7 +42,7 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    // Item 객체 생성
+    // ItemId를 통한 ItemData 반환
     public ItemData CreateItemInstance(int itemId)
     {
         if( !itemDictionary.TryGetValue(itemId, out var data))

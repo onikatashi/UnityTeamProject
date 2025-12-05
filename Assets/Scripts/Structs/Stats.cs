@@ -26,4 +26,71 @@ public class Stats
     public float luck;                  // 행운
     public float cooldownReduction;     // 쿨타임 감소
     public int reviveCount;             // 부활 횟수
+
+    public static Stats operator +(Stats a, Stats b)
+    {
+        // 둘 다 값이 없으면 null 반환
+        if (a == null && b == null) return null;
+
+        // a가 null 이면 b, b가 null이면 a 반환
+        if (a == null) return b;
+        if (b == null) return a;
+
+        // 두 구조체의 값을 모두 더함
+        Stats result = new Stats
+        {
+            maxHp = a.maxHp + b.maxHp,
+            maxMp = a.maxMp + b.maxMp,
+            mpRegen = a.mpRegen + b.mpRegen,
+            maxDashCount = a.maxDashCount + b.maxDashCount,
+            dashRegen = a.dashRegen + b.dashRegen,
+            dashDistance = a.dashDistance + b.dashDistance,
+            attackDamage = a.attackDamage + b.attackDamage,
+            attackRange = a.attackRange + b.attackRange,
+            attackSpeed = a.attackSpeed + b.attackSpeed,
+            projectileCount = a.projectileCount + b.projectileCount,
+            projectileSpeed = a.projectileSpeed + b.projectileSpeed,
+            moveSpeed = a.moveSpeed + b.moveSpeed,
+            criticalRate = a.criticalRate + b.criticalRate,
+            criticalDamage = a.criticalDamage + b.criticalDamage,
+            shield = a.shield + b.shield,
+            bonusExpRate = a.bonusExpRate + b.bonusExpRate,
+            bonusGoldRate = a.bonusGoldRate + b.bonusGoldRate,
+            luck = a.luck + b.luck,
+            cooldownReduction = a.cooldownReduction + b.cooldownReduction,
+            reviveCount = a.reviveCount + b.reviveCount
+        };
+
+        return result;
+    }
+
+    public static Stats operator *(Stats a, float multiplier)
+    {
+        if (a == null) return null;
+
+        Stats result = new Stats
+        {
+            maxHp = a.maxHp * multiplier,
+            maxMp = a.maxMp * multiplier,
+            mpRegen = a.mpRegen * multiplier,
+            maxDashCount = a.maxDashCount * multiplier,
+            dashRegen = a.dashRegen * multiplier,
+            dashDistance = a.dashDistance * multiplier,
+            attackDamage = a.attackDamage * multiplier,
+            attackRange = a.attackRange * multiplier,
+            attackSpeed = a.attackSpeed * multiplier,
+            projectileCount = a.projectileCount * multiplier,
+            projectileSpeed = a.projectileSpeed * multiplier,
+            moveSpeed = a.moveSpeed * multiplier,
+            criticalRate = a.criticalRate * multiplier,
+            criticalDamage = a.criticalDamage * multiplier,
+            shield = a.shield * multiplier,
+            bonusExpRate = a.bonusExpRate * multiplier,
+            bonusGoldRate = a.bonusGoldRate * multiplier,
+            luck = a.luck * multiplier,
+            cooldownReduction = a.cooldownReduction * multiplier,
+            reviveCount = (int)(a.reviveCount * multiplier)
+        };
+        return result;
+    }
 }
