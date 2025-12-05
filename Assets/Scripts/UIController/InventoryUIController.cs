@@ -3,11 +3,14 @@ using UnityEngine;
 public class InventoryUIController : MonoBehaviour
 {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
 =======
+=======
+>>>>>>> Stashed changes
     public GameObject inventoryPanel;                           // 인벤토리 패널 오브젝트 (인벤토리 부모 오브젝트)
     public GameObject slotPrefab;                               // 인벤토리 슬롯 프리팹
     public ItemDescriptionUIController descriptionUIController; // 아이템 설명 UI 컨트롤러
@@ -26,6 +29,9 @@ public class InventoryUIController : MonoBehaviour
 
         ClearAndCreateSlots();
         UpdateItemIcon();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 

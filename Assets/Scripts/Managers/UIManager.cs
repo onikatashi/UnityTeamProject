@@ -100,5 +100,8 @@ public class UIManager : MonoBehaviour
         itemDescriptionUIController = panel.GetComponent<ItemDescriptionUIController>();
         panel.SetActive(false);
     }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
