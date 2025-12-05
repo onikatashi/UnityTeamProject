@@ -57,6 +57,7 @@ public class PlayerAttack : MonoBehaviour
                 {
                     monster.TakeDamage(atkDmg);
                 }
+                */
             }
         }
     }

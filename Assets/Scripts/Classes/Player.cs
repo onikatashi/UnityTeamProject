@@ -53,9 +53,26 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(float value)
     {
-        //몬스터 쪽에서 들고가야함
-        currentHp -= value;
+        // 방어력(defense)이 있다면 데미지 감소 로직 추가 가능
+        // float finalDamage = Mathf.Max(0, value - GetFinalStat().defense); 
+        float finalDamage = value;
+
+        // 몬스터 쪽에서 들고가야함 -> 플레이어가 데미지를 받는 로직은 플레이어 쪽에 있어야 합니다.
+        currentHp -= finalDamage;
+
+        Debug.Log("Player took " + finalDamage + " damage. Current HP: " + currentHp);
 
         // 애니메이션 넣을거면 넣고, 피격효과 넣을거면 여기 넣어줘야함.
+        if (currentHp <= 0)
+        {
+            Die(); // 사망 처리 함수 (구현 필요)
+        }
+    }
+
+    private void Die()
+    {
+        // 플레이어 사망 처리 (게임 오버, 재시작 등)
+        Debug.Log("Player has died.");
+        // Time.timeScale = 0; // 예시
     }
 }
