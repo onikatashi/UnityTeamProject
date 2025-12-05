@@ -16,18 +16,10 @@ public class PlayerAttack : MonoBehaviour
     //적이 들어있는 레이어 (Enemy로 설정)
     public LayerMask enemyLayer;
 
-
-
-
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
-        BaseAttack();
+        TryAttack();
     }
 
     /// <summary>
