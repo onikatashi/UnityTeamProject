@@ -1,3 +1,4 @@
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 /// <summary>
@@ -10,8 +11,10 @@ public class Player : MonoBehaviour
     // 스탯들 다 정리해주고, 여기있는 이동속도를 PlayerMove에 넣어주기 / 공격력, 공격속도 등을 PlayerAttack에 넣어주기
     // Player는 Prefab으로 DungeonManager에서 만들어서 진행
     public static Player Instance;
-
     public ClassData classStat;
+
+    public float currentHp;
+    public float currentMp;
 
     private void Awake()
     {
@@ -24,12 +27,21 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        classStat.cBaseStat.moveSpeed = 10f;
+        currentHp = GetFinalStat().maxHp;
+        currentMp = GetFinalStat().maxMp;
     }
 
     public Stats GetFinalStat()
     {
         Stats finalStat = InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
         return finalStat;
+    }
+
+    public void TakeDamage(float value)
+    {
+        //몬스터 쪽에서 들고가야함
+        currentHp -= value;
+
+        // 애니메이션 넣을거면 넣고, 피격효과 넣을거면 여기 넣어줘야함.
     }
 }
