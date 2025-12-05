@@ -16,6 +16,13 @@ public class Player : MonoBehaviour
     public float currentHp;
     public float currentMp;
 
+    ////스킬(버프) 곱연산용 변수
+    //public float sRate;
+    ////아이템(버프) 곱연산용 변수
+    //public float iRate;
+
+    public Stats finalStats;
+
     private void Awake()
     {
         if (Instance == null)
@@ -27,14 +34,16 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        currentHp = GetFinalStat().maxHp;
-        currentMp = GetFinalStat().maxMp;
+        //sRate = 1f;
+        //iRate = 1f;
+        finalStats = GetFinalStat();
+        currentHp = finalStats.maxHp;
+        currentMp = finalStats.maxMp;
     }
 
     public Stats GetFinalStat()
     {
-        Stats finalStat = InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
-        return finalStat;
+        return InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;     // 여기에 곱연산을 넣어주기?
     }
 
     public void TakeDamage(float value)
