@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -18,92 +17,38 @@ public class InventoryManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        Inventory = new ItemData[9];
     }
 
-    public ItemData[] Inventory;                        // ÀÎº¥Åä¸® ¾ÆÀÌÅÛ ¹è¿­
-    int itemCount = 0;                                  // ÀÎº¥Åä¸® ¾ÆÀÌÅÛ °³¼ö
-
-    int currentIndex = 0;                               // ÇöÀç ¾ÆÀÌÅÛ µé¾î°¥ À§Ä¡ ÀÎµ¦½º
-    int lineSize = 3;                                   // ÇÑ ÁÙ¿¡ ÀÖ´Â ½½·Ô °³¼ö 
-    Dictionary<Enums.ItemSynergy, int> synergeCount;    // ½Ã³ÊÁöº° °³¼ö µñ¼Å³Ê¸®
-    Dictionary<int, int> reinforcedSlots;               // °­È­µÈ ½½·Ô µñ¼Å³Ê¸® (Å°: ½½·Ô ÀÎµ¦½º, °ª: °­È­ ·¹º§)
-    List<int[]> lineCheck;                              // ÇÑ ÁÙ¿¡ ½Ã³ÊÁö ºù°í°¡ µÇ¾îÀÖ´ÂÁö È®ÀÎÇÏ±â À§ÇÑ 2Â÷¿ø ¹è¿­
-      
+<<<<<<< Updated upstream
+    public List<Item> Inventory;
 
     void Start()
     {
-        Inventory = new ItemData[9];
+        
+=======
+    public ItemData[] Inventory; Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // ì¸ë²¤í† ë¦¬ ì•„ì´í…œ ë°°ì—´
+    int itemCount = 0; Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // ì¸ë²¤í† ë¦¬ ì•„ì´í…œ ìˆ˜
+
+    int currentIndex = 0; Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â // ë‹¤ìŒ ì•„ì´í…œì´ ë“¤ì–´ê°ˆ ìœ„ì¹˜ ì¸ë±ìŠ¤
+    int lineSize = 3; Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â // í•œ ì¤„ì— ìˆëŠ” ìŠ¬ë¡¯ ê°œìˆ˜
+    Dictionary<Enums.ItemSynergy, int> synergeCount; Â  Â  // ì‹œë„ˆì§€ íš¨ê³¼ ì¹´ìš´íŠ¸
+    public Dictionary<int, int> reinforcedSlots; Â  Â  Â  Â  // ê°•í™”ëœ ìŠ¬ë¡¯ ì¹´ìš´íŠ¸ (í‚¤: ìŠ¬ë¡¯ ì¸ë±ìŠ¤, ê°’: ê°•í™” ë ˆë²¨)
+    List<int[]> lineCheck;                               // ì¤„ ë³„ ì‹œë„ˆì§€ íš¨ê³¼ê°€ ì™„ì„±ë˜ì—ˆëŠ”ì§€ í™•ì¸í•˜ê¸° ìœ„í•œ 2ì°¨ì› ë°°ì—´
+
+    void Start()
+    {
         synergeCount = new Dictionary<Enums.ItemSynergy, int>();
-        reinforcedSlots = new Dictionary<int, int>();
+        InitReinforceSlots();
         GenerateLineCheck();
+
+        reinforcedSlots[0] = 2;
+>>>>>>> Stashed changes
     }
 
 
     void Update()
     {
         
-    }
-
-    // ºù°í Ã¼Å© ¶óÀÎ »ı¼º
-    void GenerateLineCheck()
-    {
-        lineCheck = new List<int[]>();
-
-        // °¡·Î ÁÙ Ã¼Å©¶óÀÎ »ı¼º
-        for (int i = 0; i < lineSize; i++)
-        {
-            int[] row = new int[lineSize];
-            for( int j = 0; j < lineSize; j++)
-            {
-                row[j] = i * lineSize + j;
-            }
-            lineCheck.Add(row);
-        }
-
-        // ¼¼·Î ÁÙ Ã¼Å©¶óÀÎ »ı¼º
-        for (int i = 0; i < lineSize; i++)
-        {
-            int[] column = new int[lineSize];
-            for (int j = 0; j < lineSize; j++)
-            {
-                column[j] = j * lineSize + i;
-            }
-            lineCheck.Add(column);
-        }
-
-        // ÁÂ»ó -> ¿ìÇÏ ´ë°¢¼± ¶óÀÎ »ı¼º
-        int[] diagonal1 = new int[lineSize];
-        for(int i = 0; i < lineSize; i++)
-        {
-            diagonal1[i] = i * (lineSize + 1);
-        }
-        lineCheck.Add(diagonal1);
-
-        // ¿ì»ó -> ÁÂÇÏ ´ë°¢¼± ¶óÀÎ »ı¼º
-        int[] diagonal2 = new int[lineSize];
-        for(int i = 0; i < lineSize; i++)
-        {
-            diagonal2[i] = (i + 1) * (lineSize - 1);
-        }
-        lineCheck.Add(diagonal2);
-    }
-
-    // ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛ Ãß°¡
-    public void AddItemToInventory(ItemData newItem)
-    {
-        if(itemCount >= Inventory.Length)
-        {
-            Debug.Log("ÀÎº¥Åä¸® ²ËÂü");
-            return;
-        }
-
-        Inventory[currentIndex] = newItem;
-        currentIndex++;
-        itemCount++;
-        if(currentIndex >= Inventory.Length)
-        {
-            currentIndex--; 
-        }
-        UIManager.Instance.inventoryUIController.UpdateItemIcon();
     }
 }

@@ -10,7 +10,7 @@ public class CanvasRegistrar : MonoBehaviour
         canvas = GetComponent<RectTransform>();
         if(canvas == null)
         {
-            Debug.LogError("canavas¸¦ Ã£À» ¼ö ¾øÀ½.");
+            Debug.LogError("canvasï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.");
         }
     }
 

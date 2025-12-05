@@ -19,16 +19,24 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+<<<<<<< Updated upstream
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+=======
 
     private RectTransform canvas;                           // 캔버스 참조
 
+    [Header("UI Controllers")]
     [SerializeField]
     private GameObject inventoryPanelPrefab;                // 인벤토리 패널 프리팹
-    public InventoryUIController inventoryUIController;    // 인벤토리 UI 컨트롤러
+    public InventoryUIController inventoryUIController;     // 인벤토리 UI 컨트롤러
+    [SerializeField]
+    private GameObject itemDescriptionPanelPrefab;          // 아이템 설명 패널 프리팹
+    public ItemDescriptionUIController itemDescriptionUIController; // 아이템 설명 UI 컨트롤러
 
+>>>>>>> Stashed changes
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -36,6 +44,8 @@ public class UIManager : MonoBehaviour
     {
         
     }
+<<<<<<< Updated upstream
+=======
 
     // Canvas 등록
     public void RegisterCanvas(RectTransform canvasTransform)
@@ -50,6 +60,7 @@ public class UIManager : MonoBehaviour
         canvas = canvasTransform;
 
         InstantiateInventoryPanel(canvas);
+        InstantiateItemDescriptionPanel(canvas);
     }
 
     // Canvas 등록 해제
@@ -80,4 +91,17 @@ public class UIManager : MonoBehaviour
         panel.SetActive(false);
         inventoryUIController.UpdateItemIcon();
     }
+
+    // ItemDescriptionPanel 생성
+    void InstantiateItemDescriptionPanel(RectTransform canvas)
+    {
+        // 아이템 설명 패널 생성 및 초기화
+        GameObject panel = Instantiate(itemDescriptionPanelPrefab, canvas);
+        itemDescriptionUIController = panel.GetComponent<ItemDescriptionUIController>();
+        panel.SetActive(false);
+    }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 }

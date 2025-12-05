@@ -1,20 +1,38 @@
-using NUnit.Framework;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InventoryUIController : MonoBehaviour
 {
-    public GameObject InventoryPanel;           // ÀÎº¥Åä¸® ÆĞ³Î ÇÁ¸®ÆÕ
-    public List<Image> itemIconsImage;          // ÀÎº¥Åä¸® ¾ÆÀÌÅÛ ¾ÆÀÌÄÜ ÀÌ¹ÌÁö ¸®½ºÆ®
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        
+=======
+=======
+>>>>>>> Stashed changes
+    public GameObject inventoryPanel; Â  Â  Â  Â  Â  Â                // ì¸ë²¤í† ë¦¬ íŒ¨ë„ ì˜¤ë¸Œì íŠ¸ (ì¸ë²¤í† ë¦¬ ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸)
+    public GameObject slotPrefab; Â  Â  Â  Â  Â  Â  Â  Â                // ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ í”„ë¦¬íŒ¹
+    public ItemDescriptionUIController descriptionUIController; // ì•„ì´í…œ ì„¤ëª… UI ì»¨íŠ¸ë¡¤ëŸ¬
+
+    public List<InventorySlotUI> inventorySlots = new List<InventorySlotUI>();
+
 
     InventoryManager inventoryManager;
+    UIManager uiManager;
 
-    // InventoryUIController ÃÊ±âÈ­
+    // InventoryUIController ì´ˆê¸°í™”
     public void InitInventoryUIController()
     {
         inventoryManager = InventoryManager.Instance;
-        FindLastChildObjectRecursive(InventoryPanel.transform);
+        uiManager = UIManager.Instance;
+
+        ClearAndCreateSlots();
+        UpdateItemIcon();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     }
 
     // Update is called once per frame
@@ -22,36 +40,74 @@ public class InventoryUIController : MonoBehaviour
     {
         
     }
+<<<<<<< Updated upstream
+}
+=======
 
-    // Àç±ÍÀûÀ¸·Î ¸¶Áö¸· ÀÚ½Ä ¿ÀºêÁ§Æ®¸¦ Ã£¾Æ Image ÄÄÆ÷³ÍÆ®¸¦ ¸®½ºÆ®¿¡ Ãß°¡
-    // ItemIcon ÀÌ¹ÌÁö¸¦ ¾÷µ¥ÀÌÆ®ÇÏ±â À§ÇØ »ç¿ë
-    void FindLastChildObjectRecursive(Transform transform)
+    // ìŠ¬ë¡¯ ìƒì„±
+    void ClearAndCreateSlots()
     {
-        if (transform.childCount == 0)
+        foreach (Transform child in inventoryPanel.transform)
         {
-            itemIconsImage.Add(transform.gameObject.GetComponent<Image>());
-            return;
+            Destroy(child.gameObject);
         }
+        inventorySlots.Clear();
 
-        foreach (Transform child in transform)
+        Debug.Log(inventoryManager);
+        Debug.Log(inventoryManager.Inventory.Length);
+        for (int i = 0; i < inventoryManager.Inventory.Length; i++)
         {
-            FindLastChildObjectRecursive(child);
+            GameObject newSlot = Instantiate(slotPrefab, inventoryPanel.transform);
+            newSlot.name = $"Slot_{i}";
+
+            InventorySlotUI slotUI = newSlot.GetComponent<InventorySlotUI>();
+
+            if (slotUI != null)
+            {
+                slotUI.slotIndex = i;
+                slotUI.SetUp(i, OnSlotClicked);
+                inventorySlots.Add(slotUI);
+            }
+            else
+            {
+                Debug.LogError("InventoryUIController: ìŠ¬ë¡¯ í”„ë¦¬íŒ¹ì— InventorySlotUI ì»´í¬ë„ŒíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤.");
+            }
         }
     }
 
-    // ÀÎº¥Åä¸® ¾ÆÀÌÅÛ ¾ÆÀÌÄÜ ¾÷µ¥ÀÌÆ®
+    public void OnSlotClicked(int slotIndex)
+    {
+        ItemData itemData = inventoryManager.Inventory[slotIndex];
+
+        ItemDescriptionUIController descriptionUI = uiManager.itemDescriptionUIController;
+
+        if(itemData != null)
+        {
+            descriptionUI.ShowItemDescription(itemData);
+        }
+        else
+        {
+            descriptionUI.HideItemDescription();
+        }
+    }
+
+
+    // ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ ì•„ì´ì½˜ ì—…ë°ì´íŠ¸
     public void UpdateItemIcon()
     {
         for (int i = 0; i < inventoryManager.Inventory.Length; i++)
         {
             if (inventoryManager.Inventory[i] != null)
             {
-                itemIconsImage[i].sprite = inventoryManager.Inventory[i].iIcon;
+                inventorySlots[i].itemIcon.sprite = inventoryManager.Inventory[i].iIcon;
+                inventorySlots[i].reinforceLevel.text = "+" + inventoryManager.reinforcedSlots[i].ToString();
             }
             else
             {
-                itemIconsImage[i].sprite = null;
+                inventorySlots[i].itemIcon.sprite = null;
+                inventorySlots[i].reinforceLevel.text = null;
             }
         }
     }
 }
+>>>>>>> Stashed changes
