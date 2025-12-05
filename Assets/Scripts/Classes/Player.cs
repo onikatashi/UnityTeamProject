@@ -1,4 +1,3 @@
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 /// <summary>
@@ -16,6 +15,13 @@ public class Player : MonoBehaviour
     public float currentHp;
     public float currentMp;
 
+    ////스킬(버프) 곱연산용 변수
+    //public float sRate;
+    ////아이템(버프) 곱연산용 변수
+    //public float iRate;
+
+    public Stats finalStats;
+
     private void Awake()
     {
         if (Instance == null)
@@ -27,21 +33,46 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        currentHp = GetFinalStat().maxHp;
-        currentMp = GetFinalStat().maxMp;
+        //sRate = 1f;
+        //iRate = 1f;
+        finalStats = GetFinalStat();
+        currentHp = finalStats.maxHp;
+        currentMp = finalStats.maxMp;
     }
+
+    //void LookAtTheCamera()
+    //{
+    //    Transform target = Camera.main.transform;
+    //    transform.rotation = transform.LookAt(target,target.tra);
+    //}
 
     public Stats GetFinalStat()
     {
-        Stats finalStat = InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
-        return finalStat;
+        return InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;     // 여기에 곱연산을 넣어주기?
     }
 
     public void TakeDamage(float value)
     {
-        //몬스터 쪽에서 들고가야함
-        currentHp -= value;
+        // 방어력(defense)이 있다면 데미지 감소 로직 추가 가능
+        // float finalDamage = Mathf.Max(0, value - GetFinalStat().defense); 
+        float finalDamage = value;
+
+        // 몬스터 쪽에서 들고가야함 -> 플레이어가 데미지를 받는 로직은 플레이어 쪽에 있어야 합니다.
+        currentHp -= finalDamage;
+
+        Debug.Log("Player took " + finalDamage + " damage. Current HP: " + currentHp);
 
         // 애니메이션 넣을거면 넣고, 피격효과 넣을거면 여기 넣어줘야함.
+        if (currentHp <= 0)
+        {
+            Die(); // 사망 처리 함수 (구현 필요)
+        }
+    }
+
+    private void Die()
+    {
+        // 플레이어 사망 처리 (게임 오버, 재시작 등)
+        Debug.Log("Player has died.");
+        // Time.timeScale = 0; // 예시
     }
 }

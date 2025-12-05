@@ -2,17 +2,13 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-
-
     CharacterController cc;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         cc = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
@@ -21,9 +17,7 @@ public class PlayerMove : MonoBehaviour
     void Move()
     {
         //Player 데이터에서 호출한 총합 MoveSpeed를 사용한 Move
-        float mvSpd = Player.Instance.GetFinalStat().moveSpeed;
-
-        
+        float mvSpd = Player.Instance.finalStats.moveSpeed;
 
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
