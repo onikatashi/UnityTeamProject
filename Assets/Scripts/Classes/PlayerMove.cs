@@ -20,8 +20,8 @@ public class PlayerMove : MonoBehaviour
 
     void Move()
     {
-
-            float mvSpd = Player.Instance.GetFinalStat().moveSpeed;
+        //Player 데이터에서 호출한 총합 MoveSpeed를 사용한 Move
+        float mvSpd = Player.Instance.GetFinalStat().moveSpeed;
 
         
 
