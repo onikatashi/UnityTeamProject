@@ -68,6 +68,11 @@ public class Monster : MonoBehaviour
     {
 
     }
+
+    public void TakeDamage(float value)
+    {
+        currentHp -= value;
+    }
     private void Die()
     {
 
