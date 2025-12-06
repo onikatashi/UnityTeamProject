@@ -432,7 +432,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9523e11cc7a76ef4a9cc7f0201d3ac39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryPanelPrefab: {fileID: 661653692554199393, guid: 645b8ea420c235b479012c7bd6b7ac5a, type: 3}
+  inventoryPanelPrefab: {fileID: 8896208142030246628, guid: 89e3a0857982d2d469bf891da968fd5a, type: 3}
+  inventoryUIController: {fileID: 0}
+  itemDescriptionPrefab: {fileID: 3719466339955442347, guid: ae03a871d88ed7948810f7f1b2360245, type: 3}
+  itemDescriptionUIController: {fileID: 0}
 --- !u!4 &1170795798
 Transform:
   m_ObjectHideFlags: 0
@@ -478,7 +481,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InventoryPanel: {fileID: 661653692554199393, guid: 645b8ea420c235b479012c7bd6b7ac5a, type: 3}
-  itemIconsImage: []
+  slotPrefab: {fileID: 0}
+  inventorySlots: []
 --- !u!4 &1238639149
 Transform:
   m_ObjectHideFlags: 0
