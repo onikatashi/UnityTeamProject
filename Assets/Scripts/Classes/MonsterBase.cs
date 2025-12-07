@@ -10,34 +10,35 @@ using UnityEngine.AI;
 /// 4. 몬스터 드롭 경험치 및 골드
 /// 5. 몬스터 행동 패턴 (후순위)
 /// </summary>
-public class Monster : MonoBehaviour
+public abstract class MonsterBase : MonoBehaviour
 {
+    [Header("공통 참조")]
     public GameObject player;
-    MonsterData md;
-    Enums.MonsterState state;
-    Animator anim;
-    CharacterController cc;
+    public MonsterData md;
+    
+    protected Enums.MonsterState state;
+    protected Animator anim;
+    protected NavMeshAgent agent;
 
+    [Header("공통 스탯")]
     public float currentHp = 100f;
     public float detectRange = 10f;
-    float timer = 0f;
 
-    NavMeshAgent agent;
+    public float timer = 0f;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
+        state = Enums.MonsterState.Idle;
+
         agent.isStopped = false;
         agent.updateRotation = true;
-        state = Enums.MonsterState.Idle;
     }
 
-    // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
-        switch(state)
+        switch (state)
         {
             case Enums.MonsterState.Idle:
                 Idle();
@@ -54,22 +55,24 @@ public class Monster : MonoBehaviour
         }
     }
 
-    private void Idle()
+    protected abstract void Idle();
+    protected abstract void Move();
+    protected abstract void Attack();
+    protected virtual void Die()
     {
-        
+        agent.isStopped = true;
+        agent.enabled = false;
+
+        anim.SetTrigger("Die");
     }
 
-    private void Move()
+    public virtual void TakeDamage(float dmg)
     {
-        
-    }
-
-    private void Attack()
-    {
-
-    }
-    private void Die()
-    {
-
+        currentHp -= dmg;
+        if (currentHp <= 0 && state != Enums.MonsterState.Die)
+        {
+            state = Enums.MonsterState.Die;
+            Die();
+        }
     }
 }
