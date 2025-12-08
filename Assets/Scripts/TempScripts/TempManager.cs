@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TempManager : MonoBehaviour
@@ -20,6 +21,12 @@ public class TempManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.I))
         {
             UIManager.Instance.ToggleInventory();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            int randIndex = UnityEngine.Random.Range(0, InventoryManager.Instance.Inventory.Length);
+            InventoryManager.Instance.ReinforceInventorySlot(randIndex);
         }
     }
 }
