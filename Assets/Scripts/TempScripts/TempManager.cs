@@ -28,45 +28,12 @@ public class TempManager : MonoBehaviour
 
     void testGetItem()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        for (int i = 0; i < 10; i++)
         {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(1));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(2));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(3));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(4));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(5));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(6));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(7));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(8));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(9));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(10));
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            {
+                InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(i + 1));
+            }
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
