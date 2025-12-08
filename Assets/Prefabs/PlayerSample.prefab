@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 61276898502365017}
   - component: {fileID: 1793059693268401928}
   - component: {fileID: 6132778415910225207}
+  - component: {fileID: 5952109370272144514}
   m_Layer: 3
   m_Name: PlayerSample
   m_TagString: Untagged
@@ -156,3 +157,39 @@ MonoBehaviour:
   acceleration: 25
   jumpForce: 5
   groundCheckDistance: 1.1
+--- !u!114 &5952109370272144514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2841023686670503093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f729b79d06cb4c4fb8b0027992448f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  classStat: {fileID: 0}
+  currentHp: 0
+  currentMp: 0
+  finalStats:
+    maxHp: 0
+    maxMp: 0
+    mpRegen: 0
+    maxDashCount: 0
+    dashRegen: 0
+    dashDistance: 0
+    attackDamage: 0
+    attackRange: 0
+    attackSpeed: 0
+    projectileCount: 0
+    projectileSpeed: 0
+    moveSpeed: 0
+    criticalRate: 0
+    criticalDamage: 0
+    shield: 0
+    bonusExpRate: 0
+    bonusGoldRate: 0
+    luck: 0
+    cooldownReduction: 0
+    reviveCount: 0
