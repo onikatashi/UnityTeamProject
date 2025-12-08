@@ -5,10 +5,10 @@ public class Enums
     // 아이템 등급
     public enum ItemRank
     {
-        Normal,
+        Common,
         Rare,
         Unique,
-        Legendery
+        Legendary
     }
 
     // 아이템 시너지
