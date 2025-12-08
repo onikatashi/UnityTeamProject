@@ -19,7 +19,7 @@ MonoBehaviour:
   maxExp: 0
   classPoints: 0
   cBaseStat:
-    maxHp: 50
+    maxHp: 500
     maxMp: 50
     mpRegen: 1
     maxDashCount: 1
