@@ -1,12 +1,10 @@
 using UnityEngine;
 /// <summary>
-/// ¿ø°Å¸® ¸ó½ºÅÍ ÆĞÅÏ1
+/// ì›ê±°ë¦¬ ëª¬ìŠ¤í„° íŒ¨í„´1
 /// </summary>
 public class Monster2 : MonsterBase
 {
-    [Header("°Å¸®¼³Á¤")]
-    public float keepDistance = 7f; 
-
+    
     protected override void Idle()
     {
         agent.isStopped = true;
@@ -27,18 +25,17 @@ public class Monster2 : MonsterBase
 
         float dis = Vector3.Distance(transform.position, player.transform.position);
 
-        //°¡±î¿ì¸é µµ¸Á
-        if (dis < keepDistance)
+        if (dis < md.attackRange)
         {
             agent.isStopped = false;
             agent.updateRotation = true;
 
             Vector3 dir = (transform.position - player.transform.position).normalized;
-            Vector3 escapePoint = transform.position + dir * 2f;  // µÚ·Î 2m ÀÌµ¿
+            Vector3 escapePoint = transform.position + dir * 2f; 
             agent.SetDestination(escapePoint);
         }
-        //µµ¸Á°£ÈÄ ´Ù½Ã Á¢±Ù
-        else if (dis > keepDistance)
+        
+        else if (dis > md.attackRange)
         {
             agent.isStopped = false;
             agent.updateRotation = true;
@@ -64,8 +61,8 @@ public class Monster2 : MonsterBase
 
         float dis = Vector3.Distance(transform.position, player.transform.position);
 
-        //°Å¸® ¸Ö¾îÁö¸é ´Ù½ÃÀÌµ¿
-        if (dis != keepDistance)
+        //ê±°ë¦¬ ë©€ì–´ì§€ë©´ ë‹¤ì‹œ ì´ë™
+        if (dis != md.attackRange)
         {
             state = Enums.MonsterState.Move;
             agent.updateRotation = true;
@@ -82,13 +79,12 @@ public class Monster2 : MonsterBase
         timer = 0f;
     }
 
-    // ¿ø°Å¸® ±âÁî¸ğ
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, keepDistance); // À¯Áö°Å¸®
+        Gizmos.DrawWireSphere(transform.position, md.attackRange);
 
         Gizmos.color = Color.red;
-        if (md != null) Gizmos.DrawWireSphere(transform.position, md.attackRange); //»ç°Å¸®
+        if (md != null) Gizmos.DrawWireSphere(transform.position, md.attackRange);
     }
 }

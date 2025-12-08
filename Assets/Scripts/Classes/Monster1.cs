@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// ±Ù°Å¸® ¸ó½ºÅÍ ÆĞÅÏ1
+/// ê·¼ì ‘ ëª¬ìŠ¤í„° íŒ¨í„´1
 /// </summary>
 public class Monster1 : MonsterBase
 {
