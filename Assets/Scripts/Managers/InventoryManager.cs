@@ -43,12 +43,6 @@ public class InventoryManager : MonoBehaviour
         uiManager = UIManager.Instance;
     }
 
-
-    void Update()
-    {
-
-    }
-
     // 강화슬롯 초기화
     void InitReinforceSlots()
     {
@@ -114,7 +108,7 @@ public class InventoryManager : MonoBehaviour
 
         Inventory[currentIndex] = newItem;
         // currentIndex 가 Inventory.Length 를 넘지 않도록 처리
-        // Remove 했을 때, 중간중간 위치에 아이템 넣는법
+        // Remove 했을 때, 중간 아이템이 비는 슬롯에 아이템 추가하도록 처리
         while (true)
         {
             if(currentIndex + 1 <= Inventory.Length -1 && Inventory[currentIndex + 1] != null)
@@ -132,9 +126,10 @@ public class InventoryManager : MonoBehaviour
         {
             currentIndex--;
         }
-        UIManager.Instance.inventoryUIController.UpdateItemIcon();
+        uiManager.inventoryUIController.UpdateItemIcon();
     }
 
+    // 인벤토리 아이템 최종 스탯 반환
     public Stats GetInventoryTotalStats()
     {
         Stats totalStats = new Stats();

@@ -22,12 +22,6 @@ public class InventoryUIController : MonoBehaviour
         UpdateItemIcon();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     // 슬롯 생성 및 초기화 (콜백 함수 연결)
     void ClearAndCreateSlots()
     {
