@@ -51,7 +51,7 @@ public class PlayerAttack : MonoBehaviour
                 //1. 공격 거리 안에 있고,
                 //2. 공격 각도 안에 있는 적
 
-                Monster monster = c.GetComponent<Monster>();
+                MonsterBase monster = c.GetComponent<MonsterBase>();
 
                 if (monster != null)
                 {

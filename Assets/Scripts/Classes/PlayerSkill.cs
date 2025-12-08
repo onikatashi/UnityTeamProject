@@ -76,7 +76,7 @@ public class PlayerSkill : MonoBehaviour
             foreach (Collider c in monsters)
             {
 
-                Monster monster = c.GetComponent<Monster>();
+                MonsterBase monster = c.GetComponent<MonsterBase>();
 
                 if (monster != null)
                 {

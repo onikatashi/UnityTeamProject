@@ -1,12 +1,13 @@
 using UnityEngine;
 /// <summary>
-/// ÀÏ´Ü ÀÚÆø ÆĞÅÏ
+/// í­8 ëª¬ìŠ¤í„° íŒ¨í„´1
 /// </summary>
 public class Monster3 : MonsterBase
 {
-    [Header("ÀÚÆø ¼³Á¤")]
-    public float explosionRanege = 3f;     // Æø¹ß ¹üÀ§
-    public float explosionDamage = 50f;    // Æø¹ß ÇÇÇØ
+    [Header("í­8ë²”ìœ„")]
+    public float explosionRanege = 3f;
+
+    public LayerMask Player;
 
     protected override void Idle()
     {
@@ -28,7 +29,6 @@ public class Monster3 : MonsterBase
 
         float dis = Vector3.Distance(transform.position, player.transform.position);
 
-        // »ç°Å¸® ¹ÛÀÌ¸é °è¼Ó ÃßÀû
         if (dis > md.attackRange)
         {
             agent.isStopped = false;
@@ -37,13 +37,12 @@ public class Monster3 : MonsterBase
         }
         else
         {
-            // »ç°Å¸® ¾È¿¡ µé¾î¿ÔÀ¸¸é ÀÚÆø ÁØºñ
             agent.isStopped = true;
             agent.updateRotation = false;
 
             state = Enums.MonsterState.Attack;
-            timer = 0f; 
-            anim.SetTrigger("Attack");  // ÀÚÆø ÁØºñ ¸ğ¼Ç
+            timer = 0f;
+            anim.SetTrigger("Attack");
         }
     }
 
@@ -56,7 +55,6 @@ public class Monster3 : MonsterBase
 
         float dis = Vector3.Distance(transform.position, player.transform.position);
 
-        //ÇÃ·¹ÀÌ¾î°¡ ³Ê¹« ¸Ö¸® µµ¸Á°¡¸é ÀÚÆø Ãë¼ÒÇÏ°í ´Ù½Ã Move·Î µ¹¾Æ°¥ ¼öµµ ÀÖÀ½
         if (dis > md.attackRange * 1.5f)
         {
             state = Enums.MonsterState.Move;
@@ -66,7 +64,6 @@ public class Monster3 : MonsterBase
             return;
         }
 
-        // µô·¹ÀÌ Å¸ÀÌ¸Ó (md.attackSpeed¸¸Å­ ´ë±â ÈÄ ÀÚÆø)
         timer += Time.deltaTime;
         if (timer < md.attackSpeed) return;
 
@@ -75,28 +72,27 @@ public class Monster3 : MonsterBase
 
     private void Explode()
     {
-        // Æø¹ß ¾Ö´Ï¸ŞÀÌ¼Ç (¼öÁ¤ÇÒ¼öµµ ÀÖÀ½)
         anim.SetTrigger("Explode");
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, explosionRanege); // OverlapSphere -> ¹üÀ§ ¾È¿¡ ÀÖ´Â ¿ÀºêÁ§Æ® °¨ÁöÇÏ´Â ÇÔ¼ö
+        Collider[] hits = Physics.OverlapSphere(transform.position, explosionRanege, Player); // OverlapSphere -> ì›í˜•ë²”ìœ„ë‚´ì˜ ì˜¤ë¸Œì íŠ¸ë¥¼ ì°¾ëŠ” í•¨ìˆ˜
+
         foreach (var hit in hits)
         {
-            if (hit.CompareTag("Player"))
+            if (player != null)
             {
-                
-                var hp = hit.GetComponent<Player>(); // ¼öÁ¤ÇÏ±â
+                var hp = hit.GetComponent<Player>();
                 if (hp != null)
                 {
-                    hp.TakeDamage(explosionDamage);
+                    hp.TakeDamage(md.attackDamage);
                 }
             }
         }
 
-        // ÀÚÆø ÈÄ ¸ó½ºÅÍ »ç¸Á
         state = Enums.MonsterState.Die;
         Die();
     }
 
+        
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
