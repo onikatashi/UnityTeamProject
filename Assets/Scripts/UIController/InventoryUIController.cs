@@ -52,6 +52,7 @@ public class InventoryUIController : MonoBehaviour
         if (itemData != null)
         {
             uiManager.itemDescriptionUIController.ShowItemDescription(itemData);
+            // 나중에 SetSlotIndex 같은걸로 함수화 시켜도 좋을듯
             uiManager.itemDescriptionUIController.slotIndex = slotIndex;
         }
         else
@@ -65,6 +66,7 @@ public class InventoryUIController : MonoBehaviour
     {
         for (int i = 0; i < inventoryManager.Inventory.Length; i++)
         {
+            // 나중에 reinforcedSlots을 얻는 함수로 바꿔도 될듯
             inventorySlots[i].reinforceLevel.text = "+" + inventoryManager.reinforcedSlots[i].ToString();
             if (inventoryManager.Inventory[i] != null)
             {
