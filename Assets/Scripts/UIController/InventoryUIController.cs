@@ -5,16 +5,21 @@ using UnityEngine.UI;
 
 public class InventoryUIController : MonoBehaviour
 {
-    public GameObject InventoryPanel;            // 인벤토리 패널 오브젝트
-    public List<Image> itemIconsImage;           // 인벤토리 슬롯 아이콘 이미지 리스트
+    public GameObject InventoryPanel;               // 인벤토리 패널 오브젝트
+    public GameObject slotPrefab;                   // 슬롯 프리팹
+    public List<InventorySlotUI> inventorySlots;    // 인벤토리 슬롯 UI 리스트
 
     InventoryManager inventoryManager;
+    UIManager uiManager;
 
     // InventoryUIController 초기화
     public void InitInventoryUIController()
     {
         inventoryManager = InventoryManager.Instance;
-        FindLastChildObjectRecursive(InventoryPanel.transform);
+        uiManager = UIManager.Instance;
+
+        ClearAndCreateSlots();
+        UpdateItemIcon();
     }
 
     // Update is called once per frame
@@ -23,19 +28,40 @@ public class InventoryUIController : MonoBehaviour
 
     }
 
-    // 특정 부모의 모든 마지막 자식 오브젝트를 찾아 Image 컴포넌트를 리스트에 추가
-    // ItemIcon 이미지를 업데이트하기 위한 작업
-    void FindLastChildObjectRecursive(Transform transform)
+    // 슬롯 생성 및 초기화 (콜백 함수 연결)
+    void ClearAndCreateSlots()
     {
-        if (transform.childCount == 0)
+        foreach(Transform child in InventoryPanel.transform)
         {
-            itemIconsImage.Add(transform.gameObject.GetComponent<Image>());
-            return;
+            Destroy(child.gameObject);
         }
+        inventorySlots.Clear();
 
-        foreach (Transform child in transform)
+        // 슬롯 생성
+        for (int i = 0; i < inventoryManager.Inventory.Length; i++)
         {
-            FindLastChildObjectRecursive(child);
+            GameObject newSlot = Instantiate(slotPrefab, InventoryPanel.transform);
+            newSlot.name = $"Slot_{i}";
+
+            InventorySlotUI slotUI = newSlot.GetComponent<InventorySlotUI>();
+
+            slotUI.SetUp(i, OnSlotClicked);
+            inventorySlots.Add(slotUI);
+        }
+    }
+
+    // 슬롯 클릭 이벤트 처리 함수 (콜백 함수)
+    public void OnSlotClicked(int slotIndex)
+    {
+        ItemData itemData = inventoryManager.Inventory[slotIndex];
+
+        if (itemData != null)
+        {
+            uiManager.itemDescriptionUIController.ShowItemDescription(itemData);
+        }
+        else
+        {
+            uiManager.itemDescriptionUIController.HideItemDescription();
         }
     }
 
@@ -46,11 +72,13 @@ public class InventoryUIController : MonoBehaviour
         {
             if (inventoryManager.Inventory[i] != null)
             {
-                itemIconsImage[i].sprite = inventoryManager.Inventory[i].iIcon;
+                inventorySlots[i].itemIcon.sprite = inventoryManager.Inventory[i].iIcon;
+                inventorySlots[i].reinforceLevel.text = inventoryManager.reinforcedSlots[i].ToString();
             }
             else
             {
-                itemIconsImage[i].sprite = null;
+                inventorySlots[i].itemIcon.sprite = null;
+                inventorySlots[i].reinforceLevel.text = null;
             }
         }
     }
