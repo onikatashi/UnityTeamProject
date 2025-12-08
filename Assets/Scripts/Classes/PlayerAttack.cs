@@ -32,35 +32,63 @@ public class PlayerAttack : MonoBehaviour
         // 1. 플레이어 중심으로 공격 범위 안에 있는 모든 Collider를 찾는다.
         Collider[] monsters = Physics.OverlapSphere(transform.position, atkRng, monsterLayer);
 
-        // 2. 찾은 레이어를 하나씩 꺼내면서, 실제로 공격 가능한 각도/거리인지 체크
+        // 가장 가까이 있는 몬스터를 저장해둘 변수
+        Collider nearest = null;
+
+        // 지금까지 찾은 몬스터들 중에서 최소 거리를 저장하는 변수
+        // 처음에는 어떤 몬스터의 거리든 이 값보다 작게 만들기 위해 엄청나게 큰 값으로 초기화해준다.
+        // 처음에는 무한대라고 설정해두고, 실제 거리값이 들어오면 무조건 이 값보다 작기 때문에
+        // '첫' 몬스터가 일단 '가장 가까운' 몬스터가 된다.
+        float minDist = Mathf.Infinity;
+
+        foreach (Collider m in monsters)
+        {
+            // 몬스터와의 거리, sqrMagnitude 사용
+            float dist = (transform.position - m.transform.position).sqrMagnitude;
+
+            // 만약 지금 계산한 거리(dist)가 지금까지 기록해둔 최소 거리 (minDist)보다 더 작다면,
+            // -> 이 몬스터가 현재까지 본 몬스터들 중 가장 가깝다
+            if (dist < minDist)
+            {
+                //minDist를 이 몬스터까지의 거리로 갱신
+                minDist = dist;
+
+                //가장 가까운 몬스터(변수)를 현재 이 몬스터로 바꿔줌
+                nearest = m;
+            }
+        }
+
+        // 2. 기준 방향 설정
+        // 방향만 필요하니까 normalized를 씀
+        Vector3 centerDir = (nearest.transform.position - transform.position).normalized;
+
+        // 3. 기준 방향 +-20도 안의 모든 적 공격
         foreach (Collider c in monsters)
         {
-            //적 각도 계산
-            Vector3 dirToMonster = (c.transform.position - transform.position).normalized;
+            //방향 벡터 노멀라이즈
+            Vector3 dir = (c.transform.position - transform.position).normalized;
 
-            //플레이어가 보고 있는 정면 방향
-            Vector3 forward = transform.forward;
+            // Vector3.Angle(a, b)
+            //두 방향 벡터 a, b 사이의 각도를 0~ 180도 사이의 float 값으로 반환
+            float angle = Vector3.Angle(centerDir, dir);
 
-            //두 벡터사이의 각도 구하기 ( 0도 = 정면 / 90도 = 옆 / 180도 = 뒤 )
-            float angle = Vector3.Angle(forward, dirToMonster);
-
-            //만약 angle이 attackAngle(20도) 이하라면 -> 전방 내에 들어온 것
+            // 이 몬스터가 가장 가까운 몬스터 방향에서 몇도 옆으로 떨어져있냐
+            // 20도 이하로 떨어져있다면,
             if (angle <= atkAngle)
             {
-                //이 if문에 들어온 적은
-                //1. 공격 거리 안에 있고,
-                //2. 공격 각도 안에 있는 적
-
+                //
                 Monster monster = c.GetComponent<Monster>();
-
                 if (monster != null)
                 {
                     monster.TakeDamage(atkDmg);
                 }
-                
             }
+
         }
+
     }
+
+
 
     /// <summary>
     /// 공격 시도하기 (쿨타임 계산)
@@ -76,7 +104,6 @@ public class PlayerAttack : MonoBehaviour
 
         // 주위에 적이 있을 때 실행되어야 함.
         Collider[] monsters = Physics.OverlapSphere(transform.position, atkRng, monsterLayer);
-        Collider nearestMonster = null;
 
         // 적 탐지가 안된 경우 false 반환
         if (monsters.Length == 0)
