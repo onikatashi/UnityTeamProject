@@ -42,6 +42,7 @@ public class Enums
     // 방(노드) 종류
     public enum RoomType
     {
+        None,
         Normal,
         Elite,
         Shop,
