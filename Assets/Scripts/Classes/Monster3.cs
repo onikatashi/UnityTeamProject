@@ -4,6 +4,12 @@ using UnityEngine;
 /// </summary>
 public class Monster3 : MonsterBase
 {
+    MonsterCharging mc;
+
+    private void Start()
+    {
+        mc = GetComponent<MonsterCharging>();
+    }
     [Header("폭8범위")]
     public float explosionRanege = 3f;
 
@@ -67,6 +73,7 @@ public class Monster3 : MonsterBase
         timer += Time.deltaTime;
         if (timer < md.attackSpeed) return;
 
+        mc.StartCharge();
         Debug.Log("자폭");
         Explode();
     }
