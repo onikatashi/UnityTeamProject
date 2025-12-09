@@ -5,10 +5,10 @@ public class Enums
     // 아이템 등급
     public enum ItemRank
     {
-        Normal,
+        Common,
         Rare,
         Unique,
-        Legendery
+        Legendary
     }
 
     // 아이템 시너지
@@ -42,6 +42,7 @@ public class Enums
     // 방(노드) 종류
     public enum RoomType
     {
+        None,
         Normal,
         Elite,
         Shop,

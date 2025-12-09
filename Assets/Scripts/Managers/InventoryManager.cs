@@ -7,6 +7,18 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
 
+    public ItemData[] Inventory;                            // 인벤토리 아이템 배열
+    int itemCount = 0;                                      // 인벤토리 아이템 수
+
+    int currentIndex = 0;                                   // 다음 아이템이 들어갈 위치 인덱스
+    int lineSize = 3;                                       // 한 줄에 있는 슬롯 개수
+    Dictionary<Enums.ItemSynergy, int> synergeCount;        // 시너지 효과 카운트 (키: 시너지 종류, 값: 활성화된 개수)
+    public Dictionary<int, int> reinforcedSlots;            // 강화된 슬롯 카운트 (키: 슬롯 인덱스, 값: 강화 레벨)
+    Dictionary<int, int> indexByItemId;                     // 아이템 ID로 슬롯 인덱스 찾기 위한 딕셔너리
+    List<int[]> lineCheck;                                  // 줄 별 시너지 효과가 완성되었는지 확인하기 위한 2차원 배열
+
+    UIManager uiManager;
+
     private void Awake()
     {
         if (Instance == null)
@@ -18,33 +30,22 @@ public class InventoryManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
         Inventory = new ItemData[9];
-    }
-
-    public ItemData[] Inventory;                         // 인벤토리 아이템 배열
-    int itemCount = 0;                                   // 인벤토리 아이템 수
-
-    int currentIndex = 0;                                // 다음 아이템이 들어갈 위치 인덱스
-    int lineSize = 3;                                    // 한 줄에 있는 슬롯 개수
-    Dictionary<Enums.ItemSynergy, int> synergeCount;     // 시너지 효과 카운트
-    public Dictionary<int, int> reinforcedSlots;         // 강화된 슬롯 카운트 (키: 슬롯 인덱스, 값: 강화 레벨)
-    List<int[]> lineCheck;                               // 줄 별 시너지 효과가 완성되었는지 확인하기 위한 2차원 배열
-
-    void Start()
-    {
         synergeCount = new Dictionary<Enums.ItemSynergy, int>();
-        InitReinforceSlots();
+        indexByItemId = new Dictionary<int, int>();
         GenerateLineCheck();
+        InitReinforceSlots();
 
         reinforcedSlots[0] = 2;
     }
 
-
-    void Update()
+    void Start()
     {
-
+        uiManager = UIManager.Instance;
     }
 
+    // 강화슬롯 초기화
     void InitReinforceSlots()
     {
         reinforcedSlots = new Dictionary<int, int>();
@@ -107,16 +108,37 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
+        if(CheckDuplicateItems(newItem.iId))
+        {
+            Debug.Log("이미 인벤토리에 있는 아이템");
+            return;
+        }
+
         Inventory[currentIndex] = newItem;
-        currentIndex++;
+        indexByItemId[newItem.iId] = currentIndex;
+        // currentIndex 가 Inventory.Length 를 넘지 않도록 처리
+        // Remove 했을 때, 중간 아이템이 비는 슬롯에 아이템 추가하도록 처리
+        while (true)
+        {
+            if(currentIndex + 1 <= Inventory.Length -1 && Inventory[currentIndex + 1] != null)
+            {
+                currentIndex++;
+            }
+            else
+            {
+                currentIndex++;
+                break;
+            }
+        }
         itemCount++;
         if (currentIndex >= Inventory.Length)
         {
             currentIndex--;
         }
-        UIManager.Instance.inventoryUIController.UpdateItemIcon();
+        uiManager.inventoryUIController.UpdateItemIcon();
     }
 
+    // 인벤토리 아이템 최종 스탯 반환
     public Stats GetInventoryTotalStats()
     {
         Stats totalStats = new Stats();
@@ -131,7 +153,55 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
-        Debug.Log(totalStats.maxHp);
         return totalStats;
+    }
+
+    // 인벤토리 슬롯 강화
+    public void ReinforceInventorySlot(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= Inventory.Length)
+        {
+            Debug.LogError("인벤토리 슬롯 범위를 벗어남");
+            return;
+        }
+
+        reinforcedSlots[slotIndex]++;
+        uiManager.inventoryUIController.UpdateItemIcon();
+    }
+
+    // 인벤토리 아이템 제거 (버리기 버튼을 통해 호출)
+    public void RemoveItemFromInventory(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= Inventory.Length)
+        {
+            Debug.LogError("인벤토리 슬롯 범위를 벗어남");
+            return;
+        }
+        if (Inventory[slotIndex] == null)
+        {
+            Debug.LogWarning("해당 슬롯에 아이템이 없음");
+            return;
+        }
+        indexByItemId.Remove(Inventory[slotIndex].iId);
+        Inventory[slotIndex] = null;
+        itemCount--;
+
+        if(currentIndex >= slotIndex)
+        {
+            currentIndex = slotIndex;
+        }
+        uiManager.inventoryUIController.UpdateItemIcon();
+    }
+
+    // 아이템 중복 체크
+    public bool CheckDuplicateItems(int itemId)
+    {
+        if (indexByItemId.ContainsKey(itemId)){
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

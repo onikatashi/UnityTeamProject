@@ -7,6 +7,15 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
+    private RectTransform canvas;                           // 캔버스 참조
+
+    [SerializeField]
+    private GameObject inventoryPanelPrefab;                // 인벤토리 패널 프리팹
+    public InventoryUIController inventoryUIController;     // 인벤토리 UI 컨트롤러
+    [SerializeField]
+    private GameObject itemDescriptionPrefab;               // 아이템 설명 패널 프리팹
+    public ItemDescriptionUIController itemDescriptionUIController; // 아이템 설명 UI 컨트롤러
+
     private void Awake()
     {
         if (Instance == null)
@@ -18,26 +27,6 @@ public class UIManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    private RectTransform canvas;                           // 캔버스 참조
-
-    [SerializeField]
-    private GameObject inventoryPanelPrefab;                // 인벤토리 패널 프리팹
-    public InventoryUIController inventoryUIController;     // 인벤토리 UI 컨트롤러
-    [SerializeField]
-    private GameObject itemDescriptionPrefab;               // 아이템 설명 패널 프리팹
-    public ItemDescriptionUIController itemDescriptionUIController; // 아이템 설명 UI 컨트롤러
-
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     // Canvas 등록

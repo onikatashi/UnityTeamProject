@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TempManager : MonoBehaviour
@@ -11,15 +12,36 @@ public class TempManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.CreateItemInstance(1));
-            InventoryManager.Instance.GetInventoryTotalStats();
-        }
-        
+        testGetItem();
+
         if(Input.GetKeyDown(KeyCode.I))
         {
             UIManager.Instance.ToggleInventory();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            int randIndex = UnityEngine.Random.Range(0, InventoryManager.Instance.Inventory.Length);
+            InventoryManager.Instance.ReinforceInventorySlot(randIndex);
+        }
+    }
+
+    void testGetItem()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            {
+                InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(i + 1));
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(11));
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            InventoryManager.Instance.AddItemToInventory(ItemManager.Instance.GetItemData(12));
         }
     }
 }

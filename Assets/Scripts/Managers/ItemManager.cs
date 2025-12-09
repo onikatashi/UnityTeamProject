@@ -43,7 +43,7 @@ public class ItemManager : MonoBehaviour
     }
 
     // ItemId를 통한 ItemData 반환
-    public ItemData CreateItemInstance(int itemId)
+    public ItemData GetItemData(int itemId)
     {
         if( !itemDictionary.TryGetValue(itemId, out var data))
         {

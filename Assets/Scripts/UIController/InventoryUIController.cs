@@ -22,12 +22,6 @@ public class InventoryUIController : MonoBehaviour
         UpdateItemIcon();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     // 슬롯 생성 및 초기화 (콜백 함수 연결)
     void ClearAndCreateSlots()
     {
@@ -58,6 +52,8 @@ public class InventoryUIController : MonoBehaviour
         if (itemData != null)
         {
             uiManager.itemDescriptionUIController.ShowItemDescription(itemData);
+            // 나중에 SetSlotIndex 같은걸로 함수화 시켜도 좋을듯
+            uiManager.itemDescriptionUIController.slotIndex = slotIndex;
         }
         else
         {
@@ -70,15 +66,15 @@ public class InventoryUIController : MonoBehaviour
     {
         for (int i = 0; i < inventoryManager.Inventory.Length; i++)
         {
+            // 나중에 reinforcedSlots을 얻는 함수로 바꿔도 될듯
+            inventorySlots[i].reinforceLevel.text = "+" + inventoryManager.reinforcedSlots[i].ToString();
             if (inventoryManager.Inventory[i] != null)
             {
                 inventorySlots[i].itemIcon.sprite = inventoryManager.Inventory[i].iIcon;
-                inventorySlots[i].reinforceLevel.text = inventoryManager.reinforcedSlots[i].ToString();
             }
             else
             {
                 inventorySlots[i].itemIcon.sprite = null;
-                inventorySlots[i].reinforceLevel.text = null;
             }
         }
     }
