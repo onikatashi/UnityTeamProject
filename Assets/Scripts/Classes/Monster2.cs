@@ -4,6 +4,8 @@ using UnityEngine;
 /// </summary>
 public class Monster2 : MonsterBase
 {
+
+    float tolerance = 2f;
     
     protected override void Idle()
     {
@@ -15,7 +17,7 @@ public class Monster2 : MonsterBase
         if (dis <= detectRange)
         {
             state = Enums.MonsterState.Move;
-            anim.SetTrigger("Move");
+            //anim.SetTrigger("Move");
         }
     }
 
@@ -25,17 +27,17 @@ public class Monster2 : MonsterBase
 
         float dis = Vector3.Distance(transform.position, player.transform.position);
 
-        if (dis < md.attackRange)
+        if (dis < md.attackRange - tolerance)
         {
             agent.isStopped = false;
             agent.updateRotation = true;
 
             Vector3 dir = (transform.position - player.transform.position).normalized;
-            Vector3 escapePoint = transform.position + dir * 2f; 
+            Vector3 escapePoint = transform.position + dir * 10f; 
             agent.SetDestination(escapePoint);
         }
         
-        else if (dis > md.attackRange)
+        else if (dis > md.attackRange + tolerance)
         {
             agent.isStopped = false;
             agent.updateRotation = true;
@@ -62,27 +64,30 @@ public class Monster2 : MonsterBase
         float dis = Vector3.Distance(transform.position, player.transform.position);
 
         //거리 멀어지면 다시 이동
-        if (dis != md.attackRange)
+        if (dis > md.attackRange + tolerance || dis < md.attackRange - tolerance)
         {
             state = Enums.MonsterState.Move;
             agent.updateRotation = true;
-            anim.SetTrigger("Move");
+            //anim.SetTrigger("Move");
             timer = 0f;
             return;
         }
 
         timer += Time.deltaTime;
         if (timer < md.attackSpeed) return;
+        Debug.Log("공격2");
 
-        anim.SetTrigger("Shoot"); 
+        //anim.SetTrigger("Shoot"); 
 
         timer = 0f;
+
+        
     }
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, md.attackRange);
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawWireSphere(transform.position, md.attackRange);
 
         Gizmos.color = Color.red;
         if (md != null) Gizmos.DrawWireSphere(transform.position, md.attackRange);

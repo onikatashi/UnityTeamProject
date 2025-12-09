@@ -13,7 +13,7 @@ public class Monster1 : MonsterBase
         if (dis <= detectRange)
         {
             state = Enums.MonsterState.Move;
-            anim.SetTrigger("Move");
+            //anim.SetTrigger("Move");
         }
     }
 
@@ -49,15 +49,15 @@ public class Monster1 : MonsterBase
         {
             agent.updateRotation = true;
             state = Enums.MonsterState.Move;
-            anim.SetTrigger("Move");
+            //anim.SetTrigger("Move");
 
             return;
         }
         timer += Time.deltaTime;
 
         if (timer < md.attackSpeed) return;
-
-        anim.SetTrigger("Attack");
+        Debug.Log("공격1");
+        //anim.SetTrigger("Attack");
 
         timer = 0f;
     }

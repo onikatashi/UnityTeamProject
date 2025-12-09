@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: MonsterData 2
   m_EditorClassIdentifier: 
   monsterRank: 0
-  mId: 0
+  mId: 3
   monsterName: 
   maxHp: 0
   attackDamage: 0
-  attackRange: 0
+  attackRange: 3
   attackSpeed: 0
   projectileCount: 0
   projectileSpeed: 0
@@ -25,5 +25,5 @@ MonoBehaviour:
   dropGold: 0
   dropExp: 0
   shield: 0
-  mosterPrefab: {fileID: 0}
+  mosterPrefab: {fileID: 4476216507470832447, guid: 7535cf132201f34418797a542e6a50cd, type: 3}
   stunGage: 0

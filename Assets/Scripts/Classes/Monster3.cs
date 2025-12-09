@@ -19,7 +19,7 @@ public class Monster3 : MonsterBase
         if (dis <= detectRange)
         {
             state = Enums.MonsterState.Move;
-            anim.SetTrigger("Move");
+            //anim.SetTrigger("Move");
         }
     }
 
@@ -42,7 +42,7 @@ public class Monster3 : MonsterBase
 
             state = Enums.MonsterState.Attack;
             timer = 0f;
-            anim.SetTrigger("Attack");
+            //anim.SetTrigger("Attack");
         }
     }
 
@@ -59,7 +59,7 @@ public class Monster3 : MonsterBase
         {
             state = Enums.MonsterState.Move;
             agent.updateRotation = true;
-            anim.SetTrigger("Move");
+            //anim.SetTrigger("Move");
             timer = 0f;
             return;
         }
@@ -67,12 +67,13 @@ public class Monster3 : MonsterBase
         timer += Time.deltaTime;
         if (timer < md.attackSpeed) return;
 
+        Debug.Log("자폭");
         Explode();
     }
 
     private void Explode()
     {
-        anim.SetTrigger("Explode");
+        //anim.SetTrigger("Explode");
 
         Collider[] hits = Physics.OverlapSphere(transform.position, explosionRanege, Player); // OverlapSphere -> 원형범위내의 오브젝트를 찾는 함수
 
@@ -97,5 +98,8 @@ public class Monster3 : MonsterBase
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, explosionRanege);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, md.attackRange);
     }
 }

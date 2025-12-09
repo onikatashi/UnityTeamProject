@@ -60,10 +60,10 @@ public abstract class MonsterBase : MonoBehaviour
     protected abstract void Attack();
     protected virtual void Die()
     {
-        agent.isStopped = true;
+        //agent.isStopped = true;
         agent.enabled = false;
 
-        anim.SetTrigger("Die");
+        //anim.SetTrigger("Die");
     }
 
     public virtual void TakeDamage(float dmg)

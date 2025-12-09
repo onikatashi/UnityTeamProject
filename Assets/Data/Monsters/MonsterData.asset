@@ -17,13 +17,13 @@ MonoBehaviour:
   monsterName: "\uACE0\uBE14\uB9B0"
   maxHp: 100
   attackDamage: 1
-  attackRange: 1
+  attackRange: 3
   attackSpeed: 1
   projectileCount: 1
   projectileSpeed: 1
-  moveSpeed: 1
+  moveSpeed: 2
   dropGold: 1
   dropExp: 1
   shield: 1
-  mosterPrefab: {fileID: 6235036953822567316, guid: 14578acb98d6c5f4ba1b19152b794c9c, type: 3}
+  mosterPrefab: {fileID: 571900488438951042, guid: 1fdee371b2bbc7b4dbdc48c598db98b1, type: 3}
   stunGage: 0
