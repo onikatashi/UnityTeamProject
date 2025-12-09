@@ -1,12 +1,15 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
     CharacterController cc;
+    Transform cam;
 
     void Start()
     {
         cc = GetComponent<CharacterController>();
+        cam = Camera.main.transform;
     }
 
     void Update()
@@ -16,15 +19,26 @@ public class PlayerMove : MonoBehaviour
 
     void Move()
     {
-        //Player 데이터에서 호출한 총합 MoveSpeed를 사용한 Move
         float mvSpd = Player.Instance.finalStats.moveSpeed;
 
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
-        Vector3 dir = new Vector3(x, 0, z);
-        dir.Normalize();
 
-        
+        //카메라 기준 방향 계산
+        Vector3 camForward = cam.forward;
+        Vector3 camRight = cam.right;
+
+        //위 / 아래 각도 무시
+        camForward.y = 0f;  
+        camRight.y = 0f;
+
+        //노멀라이즈
+        camForward.Normalize();
+        camRight.Normalize();
+
+        //카메라 기준 이동
+        Vector3 dir = camForward * z + camRight * x;
+
         cc.Move(dir * mvSpd * Time.deltaTime);
     }
 }
