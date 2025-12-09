@@ -128,6 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 29856571}
+  - component: {fileID: 29856572}
   m_Layer: 0
   m_Name: Dungeon Manager
   m_TagString: Untagged
@@ -144,12 +145,31 @@ Transform:
   m_GameObject: {fileID: 29856570}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 12.8, y: 0, z: -9.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &29856572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29856570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e615c202da76949a867a0102517369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomType: 1
+  spawnManager: {fileID: 671412118}
+  chestPrefab: {fileID: 2706818964019854786, guid: b4499a7818bfd23439d9375e10ac4821, type: 3}
+  chestSpawnPoint: {fileID: 466008906}
+  portalPrefab: {fileID: 4617036660772024948, guid: 52c7d057cba585641bb68312c10d7791, type: 3}
+  portalSpawnPoint: {fileID: 1769520138}
+  currentTheme: 1
 --- !u!1 &182145767
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,6 +475,37 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &466008905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 466008906}
+  m_Layer: 0
+  m_Name: Reward Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &466008906
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466008905}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &671412116
 GameObject:
   m_ObjectHideFlags: 0
@@ -499,13 +550,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc84e6e79fbabc545a58403beac9c31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 7565820433966401433, guid: c28650cf17daa9d40abd6160bab7a26e, type: 3}
-  spawnPoints:
-  - {fileID: 1034600451}
-  - {fileID: 795851296}
-  - {fileID: 768979484}
-  timeBetweenPhases: 5
-  maxSpawnOffset: 1
+  phases:
+  - delayBeforeNextPhase: 5
+    spawns:
+    - enemyPrefab: {fileID: 7565820433966401433, guid: c28650cf17daa9d40abd6160bab7a26e, type: 3}
+      spawnPoint: {fileID: 1034600451}
+      count: 3
+      spawnOffset: 2
+  - delayBeforeNextPhase: 5
+    spawns:
+    - enemyPrefab: {fileID: 7565820433966401433, guid: 006985cf7acc4c2438314a366448e68f, type: 3}
+      spawnPoint: {fileID: 795851296}
+      count: 3
+      spawnOffset: 2
+  - delayBeforeNextPhase: 5
+    spawns:
+    - enemyPrefab: {fileID: 7565820433966401433, guid: 1dcc0d4b24e61764a9aea89a8ba10596, type: 3}
+      spawnPoint: {fileID: 768979484}
+      count: 3
+      spawnOffset: 2
+  - delayBeforeNextPhase: 5
+    spawns:
+    - enemyPrefab: {fileID: 7565820433966401433, guid: c28650cf17daa9d40abd6160bab7a26e, type: 3}
+      spawnPoint: {fileID: 1034600451}
+      count: 2
+      spawnOffset: 2
+    - enemyPrefab: {fileID: 7565820433966401433, guid: 006985cf7acc4c2438314a366448e68f, type: 3}
+      spawnPoint: {fileID: 795851296}
+      count: 2
+      spawnOffset: 2
+    - enemyPrefab: {fileID: 7565820433966401433, guid: 1dcc0d4b24e61764a9aea89a8ba10596, type: 3}
+      spawnPoint: {fileID: 768979484}
+      count: 2
+      spawnOffset: 2
 --- !u!1 &768979483
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +608,7 @@ Transform:
   m_GameObject: {fileID: 768979483}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.74, y: 1, z: -13.9}
+  m_LocalPosition: {x: 0.7, y: 1.54, z: -12.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -562,7 +639,7 @@ Transform:
   m_GameObject: {fileID: 795851295}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.4, y: 1, z: 1.3}
+  m_LocalPosition: {x: 14.6, y: 1.54, z: -0.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -750,7 +827,7 @@ Transform:
   m_GameObject: {fileID: 1034600450}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2, y: 1, z: 16.3}
+  m_LocalPosition: {x: -0.24, y: 1.54, z: 15.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1137,6 +1214,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1677241017}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1769520137
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1769520138}
+  m_Layer: 0
+  m_Name: Portal Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1769520138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769520137}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.04, z: 9.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2064950884
 GameObject:
   m_ObjectHideFlags: 0
@@ -1337,6 +1445,8 @@ SceneRoots:
   - {fileID: 1034600451}
   - {fileID: 795851296}
   - {fileID: 768979484}
+  - {fileID: 1769520138}
+  - {fileID: 466008906}
   - {fileID: 29856571}
   - {fileID: 671412117}
   - {fileID: 2064950886}

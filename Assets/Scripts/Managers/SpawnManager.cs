@@ -1,82 +1,124 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SpawnManager : MonoBehaviour
 {
-    // 소환할 적 프리팹 (Inspector에서 연결)
-    public GameObject enemyPrefab;
+    public event System.Action OnAllEnemiesCleared;
 
-    // 적 소환 위치 (Inspector에서 3개의 빈 오브젝트를 연결)
-    public Transform[] spawnPoints = new Transform[3];
-
-    // 페이즈 간 대기 시간
-    public float timeBetweenPhases = 5.0f;
-
-    // 소환 시 적용할 무작위 오프셋의 최대 범위
-    public float maxSpawnOffset = 1.0f;
-
-    void Start()
+    [System.Serializable]
+    public class PhaseData
     {
-        // 필수 요소들이 연결되었는지 확인합니다.
-        if (enemyPrefab == null)
-        {
-            Debug.LogError("Enemy Prefab이 설정되지 않았습니다. SpawnManager.cs");
-            return;
-        }
+        [Tooltip("다음 페이즈로 넘어가기까지의 대기 시간")]
+        public float delayBeforeNextPhase = 3f;
 
-        if (spawnPoints.Length < 3 || spawnPoints[0] == null || spawnPoints[1] == null || spawnPoints[2] == null)
-        {
-            Debug.LogError("EnemySpawnPoint가 3개 모두 올바르게 설정되지 않았습니다. SpawnManager.cs");
-            return;
-        }
-
-        // 던전 진행 코루틴을 시작합니다.
-        StartCoroutine(DungeonFlow());
+        [Tooltip("이 페이즈에서 소환할 적들")]
+        public List<SpawnInfo> spawns = new List<SpawnInfo>();
     }
 
-    // 던전의 페이즈 진행을 관리하는 코루틴
-    IEnumerator DungeonFlow()
+    [System.Serializable]
+    public class SpawnInfo
     {
-        // 1 페이즈: Point 1에서 3마리 소환
-        Debug.Log("== 던전 시작: 1 페이즈 진입 ==");
-        SpawnEnemies(spawnPoints[0], 3);
-        yield return new WaitForSeconds(timeBetweenPhases);
-
-        // 2 페이즈: Point 2에서 3마리 소환
-        Debug.Log("== 2 페이즈 진입 ==");
-        SpawnEnemies(spawnPoints[1], 3);
-        yield return new WaitForSeconds(timeBetweenPhases);
-
-        // 3 페이즈: Point 3에서 3마리 소환
-        Debug.Log("== 3 페이즈 진입 ==");
-        SpawnEnemies(spawnPoints[2], 3);
-        yield return new WaitForSeconds(timeBetweenPhases);
-
-        // 4 페이즈: 모든 3 포인트에서 각각 2마리씩 소환 (총 6마리)
-        Debug.Log("== 4 페이즈 진입 (최종 웨이브) ==");
-        SpawnEnemies(spawnPoints[0], 2);
-        SpawnEnemies(spawnPoints[1], 2);
-        SpawnEnemies(spawnPoints[2], 2);
-
-        Debug.Log("== 모든 페이즈 소환 완료 ==");
+        public GameObject enemyPrefab;
+        public Transform spawnPoint;
+        public int count = 3;
+        public float spawnOffset = 1.0f;
     }
 
-    // 지정된 위치에서 지정된 수만큼 적을 소환하는 함수
-    void SpawnEnemies(Transform spawnPoint, int count)
+    [Header("페이즈 데이터")]
+    public List<PhaseData> phases = new List<PhaseData>();
+
+    List<GameObject> aliveEnemies = new List<GameObject>();
+    bool spawningFinished = false;
+
+
+    /// <summary>
+    /// DungeonManager 에서 직접 호출
+    /// </summary>
+    public void StartSpawning()
     {
-        for (int i = 0; i < count; i++)
+        StartCoroutine(SpawnFlow());
+    }
+
+
+    IEnumerator SpawnFlow()
+    {
+        for (int i = 0; i < phases.Count; i++)
         {
-            // 무작위 오프셋 계산 (X와 Z축에만 적용)
-            // -maxSpawnOffset 부터 +maxSpawnOffset 사이의 무작위 값
-            float offsetX = Random.Range(-maxSpawnOffset, maxSpawnOffset);
-            float offsetZ = Random.Range(-maxSpawnOffset, maxSpawnOffset);
+            var phase = phases[i];
+            Debug.Log($"== {i + 1} 페이즈 시작 ==");
 
-            // 소환 지점 위치에 오프셋을 더합니다. (Y축은 유지)
-            Vector3 spawnPosition = spawnPoint.position + new Vector3(offsetX, 0f, offsetZ);
+            // 페이즈 시작 즉시 스폰
+            foreach (var spawn in phase.spawns)
+            {
+                SpawnEnemies(spawn);
+            }
 
-            // 새로운 위치와 회전을 사용하여 적을 생성합니다.
-            Instantiate(enemyPrefab, spawnPosition, spawnPoint.rotation);
+            // 다음 페이즈까지 delay
+            yield return new WaitForSeconds(phase.delayBeforeNextPhase);
         }
-        Debug.Log(spawnPoint.name + "에서 적 " + count + "마리 소환 완료.");
+
+        spawningFinished = true;
+
+        // 페이즈는 끝났지만 아직 살아있는 적이 있을 수 있음 → 계속 체크
+        StartCoroutine(CheckClearState());
+    }
+
+
+    void SpawnEnemies(SpawnInfo info)
+    {
+        for (int i = 0; i < info.count; i++)
+        {
+            float offsetX = Random.Range(-info.spawnOffset, info.spawnOffset);
+            float offsetZ = Random.Range(-info.spawnOffset, info.spawnOffset);
+
+            Vector3 pos = info.spawnPoint.position + new Vector3(offsetX, 0f, offsetZ);
+
+            GameObject enemy = Instantiate(info.enemyPrefab, pos, info.spawnPoint.rotation);
+
+            aliveEnemies.Add(enemy);
+
+            // 적이 죽었을 때 리스트에서 제거하도록 EnemyHP 같은 스크립트에서 호출 필요
+            EnemyLifeBinder binder = enemy.AddComponent<EnemyLifeBinder>();
+            binder.manager = this;
+        }
+
+        Debug.Log($"{info.spawnPoint.name}에서 {info.count}마리 소환");
+    }
+
+
+    // Enemy 가 사망 시 호출될 함수
+    public void NotifyEnemyDeath(GameObject enemy)
+    {
+        aliveEnemies.Remove(enemy);
+    }
+
+
+    IEnumerator CheckClearState()
+    {
+        while (true)
+        {
+            if (spawningFinished && aliveEnemies.Count == 0)
+            {
+                Debug.Log("모든 적 제거 → 던전 클리어");
+                OnAllEnemiesCleared?.Invoke();
+                yield break;
+            }
+
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+}
+
+
+// 적이 죽었을 때 SpawnManager에 알리기 위한 간단한 바인더
+public class EnemyLifeBinder : MonoBehaviour
+{
+    public SpawnManager manager;
+
+    private void OnDestroy()
+    {
+        if (manager != null)
+            manager.NotifyEnemyDeath(gameObject);
     }
 }
