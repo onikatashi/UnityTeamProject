@@ -9,37 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed451b19c7608f441b0c843e4d21a9c8, type: 3}
-  m_Name: Warrior
+  m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
+  m_Name: boots2
   m_EditorClassIdentifier: 
-  classType: 0
-  cName: 
-  cLevel: 1
-  currentExp: 0
-  maxExp: 0
-  classPoints: 0
-  cBaseStat:
-    maxHp: 500
-    maxMp: 50
-    mpRegen: 1
-    maxDashCount: 1
-    dashRegen: 1
-    dashDistance: 1
-    attackDamage: 5
-    attackRange: 5
-    attackSpeed: 5
-    projectileCount: 0
-    projectileSpeed: 0
-    moveSpeed: 10
-    criticalRate: 0
-    criticalDamage: 0
-    shield: 0
-    bonusExpRate: 0
-    bonusGoldRate: 0
-    luck: 0
-    cooldownReduction: 0
-    reviveCount: 0
-  cTraitStat:
+  iId: 10
+  iIcon: {fileID: 21300000, guid: 6a411f8ab3ee58143a8e800c025b0ccf, type: 3}
+  iName: "\uB808\uC5B4\uC7A5\uD654"
+  iStatDescription: "\uC774\uB3D9\uC18D\uB3C4 + 5"
+  iDescription: "\uC7A5\uD6542"
+  iRank: 1
+  iSynergy: 0
+  iEffect: 0
+  iPrice: 0
+  iBaseStat:
     maxHp: 0
     maxMp: 0
     mpRegen: 0
@@ -60,8 +42,29 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
-  hpPerLevel: 0
-  mpPerLevel: 0
-  attackDamagePerLevel: 0
-  criticalRatePerLevel: 0
-  criticalDamagePerLevel: 0
+  iBonusStat:
+    maxHp: 0
+    maxMp: 0
+    mpRegen: 0
+    maxDashCount: 0
+    dashRegen: 0
+    dashDistance: 0
+    attackDamage: 0
+    attackRange: 0
+    attackSpeed: 0
+    projectileCount: 0
+    projectileSpeed: 0
+    moveSpeed: 0
+    criticalRate: 0
+    criticalDamage: 0
+    shield: 0
+    bonusExpRate: 0
+    bonusGoldRate: 0
+    luck: 0
+    cooldownReduction: 0
+    reviveCount: 0
+  iExtraAttackDamage: 0
+  iExtraRange: 0
+  iExtraAttackRange: 0
+  iExtraAttackSpeed: 0
+  iExtraProjectileSpeed: 0

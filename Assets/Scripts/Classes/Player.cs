@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Cinemachine;
 
 /// <summary>
 /// 1. 플레이어 스탯 (체력, 마나, 공격력, 방어력 등)
@@ -22,6 +23,11 @@ public class Player : MonoBehaviour
 
     public Stats finalStats;
 
+
+    // 플레이어 Sprite 항상 카메라 바라보기
+    public CinemachineCamera pCam;
+    public Transform pSprite;
+
     private void Awake()
     {
         if (Instance == null)
@@ -40,11 +46,10 @@ public class Player : MonoBehaviour
         currentMp = finalStats.maxMp;
     }
 
-    //void LookAtTheCamera()
-    //{
-    //    Transform target = Camera.main.transform;
-    //    transform.rotation = transform.LookAt(target,target.tra);
-    //}
+    private void Update()
+    {
+        LookAtPCam();
+    }
 
     public Stats GetFinalStat()
     {
@@ -74,5 +79,15 @@ public class Player : MonoBehaviour
         // 플레이어 사망 처리 (게임 오버, 재시작 등)
         Debug.Log("Player has died.");
         // Time.timeScale = 0; // 예시
+    }
+
+
+    /// <summary>
+    /// 캐릭터 Sprite가 항상 카메라를 바라보게 하기
+    /// 맵 상에 있는 Sprite들은 어지간하면 다 이걸 적용시켜줘야 함.
+    /// </summary>
+    void LookAtPCam()
+    {
+        pSprite.transform.LookAt(pCam.transform.position);
     }
 }
