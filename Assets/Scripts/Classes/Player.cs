@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
         currentMp = finalStats.maxMp;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         LookAtPCam();
     }
