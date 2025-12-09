@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +8,8 @@ using UnityEngine;
 public class PoolManager : MonoBehaviour
 {
     public static PoolManager Instance;
+
+    private Dictionary<Enums.PoolType, object> pools = new Dictionary<Enums.PoolType, object>();
 
     private void Awake()
     {
@@ -20,16 +23,40 @@ public class PoolManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    
+    // 오브젝트 풀링이 필요한 곳에서 풀 생성
+    public void CreatePool<T>(Enums.PoolType key, 
+        T prefab, int initialSize, Transform parent = null) where T : Component
     {
-        
+        if (pools.ContainsKey(key))
+        {
+            Debug.Log("이미 풀이 존재");
+            return;
+        }
+
+        ObjectPool<T> pool = new ObjectPool<T>(prefab, initialSize, parent);
+        pools[key] = pool;
     }
 
-    // Update is called once per frame
-    void Update()
+    // 풀에서 꺼내기
+    public T Get<T>(Enums.PoolType key) where T : Component
     {
-        
+        if (!pools.ContainsKey(key))
+        {
+            Debug.LogError($"{key}에 대한 풀이 없음");
+        }
+
+        return ((ObjectPool<T>)pools[key]).Get();
+    }
+
+    // 풀로 반환
+    public void Return<T>(Enums.PoolType key, T obj) where T : Component
+    {
+        if (!pools.ContainsKey(key))
+        {
+            Debug.LogError($"{key}에 대한 풀이 없음");
+        }
+
+        ((ObjectPool<T>)pools[key]).Return(obj);
     }
 }

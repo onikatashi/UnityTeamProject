@@ -59,6 +59,7 @@ public class InventoryUIController : MonoBehaviour
         {
             uiManager.itemDescriptionUIController.HideItemDescription();
         }
+
     }
 
     // 인벤토리 슬롯 아이콘 업데이트
