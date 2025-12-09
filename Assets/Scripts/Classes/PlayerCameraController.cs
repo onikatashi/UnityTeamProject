@@ -7,6 +7,8 @@ public class PlayerCameraController : MonoBehaviour
     CinemachineOrbitalFollow orbit;
     public Transform target;
     public float sensitivity = 10f;
+    public float minAngle = 10f;
+    public float maxAngle = 70f;
 
     bool dragging = false;
     Vector2 lastMousePos;
@@ -59,7 +61,7 @@ public class PlayerCameraController : MonoBehaviour
             //상하 회전
             orbit.VerticalAxis.Value -= delta.y * sensitivity * Time.deltaTime;
             //피치 제한
-            orbit.VerticalAxis.Value = Mathf.Clamp(orbit.VerticalAxis.Value, 10f, 70f);
+            orbit.VerticalAxis.Value = Mathf.Clamp(orbit.VerticalAxis.Value, minAngle, maxAngle);
         }
         //타겟을 따라가야 하니까 포지션 잡아주기
         transform.position = target.position;
