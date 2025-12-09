@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 
     // 플레이어 Sprite 항상 카메라 바라보기
     public CinemachineCamera pCam;
-    public Transform pSprite;
+    Transform pSprite;
 
     private void Awake()
     {
@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         else Destroy(gameObject);
+
+        pSprite = transform.Find("Sprite");
     }
     private void Start()
     {
@@ -71,6 +73,17 @@ public class Player : MonoBehaviour
         if (currentHp <= 0)
         {
             Die(); // 사망 처리 함수 (구현 필요)
+        }
+    }
+
+    public void Heal(float amount)
+    {
+        //Heal 수치만큼 현재 체력 회복
+        currentHp += amount;
+        //최대체력을 넘어가면, 
+        if (currentHp >= finalStats.maxHp)
+        {
+            currentHp = finalStats.maxHp;
         }
     }
 
