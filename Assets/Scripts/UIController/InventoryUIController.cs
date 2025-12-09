@@ -51,6 +51,7 @@ public class InventoryUIController : MonoBehaviour
 
         if (itemData != null)
         {
+            uiManager.itemDescriptionUIController.ReturnSynergyUI();
             uiManager.itemDescriptionUIController.ShowItemDescription(itemData);
             // 나중에 SetSlotIndex 같은걸로 함수화 시켜도 좋을듯
             uiManager.itemDescriptionUIController.slotIndex = slotIndex;

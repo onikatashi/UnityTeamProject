@@ -299,6 +299,7 @@ MonoBehaviour:
   slotIndex: 0
   synergyPanel: {fileID: 8085057033281286907}
   synergyUI: {fileID: -6400456090081010050, guid: 78ad8c0d7435fc84b8f7e659a3726244, type: 3}
+  synergyUIList: []
 --- !u!1 &6329036878029883926
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,7 +445,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8085057033281286907}
-  - component: {fileID: 5824055521529782314}
+  - component: {fileID: 5838487184261060126}
   m_Layer: 5
   m_Name: GameObject
   m_TagString: Untagged
@@ -471,7 +472,7 @@ RectTransform:
   m_AnchoredPosition: {x: -70, y: 180}
   m_SizeDelta: {x: 370, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5824055521529782314
+--- !u!114 &5838487184261060126
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -480,7 +481,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6659105524648465981}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
@@ -489,14 +490,12 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 140, y: 40}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 1
+  m_ConstraintCount: 3
 --- !u!1 &7149626002438424096
 GameObject:
   m_ObjectHideFlags: 0

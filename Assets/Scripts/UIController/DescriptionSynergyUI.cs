@@ -1,13 +1,21 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class DescriptionSynergyUI : MonoBehaviour
+public class DescriptionSynergyUI : MonoBehaviour, IPointerClickHandler
 {
-    public Sprite synergyIcon;
-    public string synergyName;
+    public Image synergyIcon;
+    public TextMeshProUGUI synergyName;
 
     public void SetUp(Sprite synergyIcon, string synergyName)
     {
-        this.synergyIcon = synergyIcon;
-        this.synergyName = synergyName;
+        this.synergyIcon.sprite = synergyIcon;
+        this.synergyName.text = synergyName;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+            // Å¬¸¯ ¾Æ´Ò ¶§ »ý°¢ÇØºÁ¶ó
     }
 }
