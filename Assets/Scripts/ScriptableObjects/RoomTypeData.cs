@@ -36,14 +36,12 @@ public class RoomTypeData : MonoBehaviour
         //딕셔너리를 통한 기본 확률 설정
         roomProbabilities.Clear();
 
-        roomProbabilities.Add(Enums.RoomType.Normal, 50f);
-        roomProbabilities.Add(Enums.RoomType.Elite,20f);
-        roomProbabilities.Add(Enums.RoomType.Shop, 10f);
-        roomProbabilities.Add(Enums.RoomType.Rest, 10f);
-        roomProbabilities.Add(Enums.RoomType.Forge,10f);
-
-        // 강제로 다뤄야 할 경우만 추가
-        //roomProbabilities.Add(Enums.RoomType.None, 30f);
+        roomProbabilities.Add(Enums.RoomType.Normal,30f);
+        roomProbabilities.Add(Enums.RoomType.Elite, 20f);
+        roomProbabilities.Add(Enums.RoomType.Shop,  10f);
+        roomProbabilities.Add(Enums.RoomType.Rest,  10f);
+        roomProbabilities.Add(Enums.RoomType.Forge, 10f);
+        roomProbabilities.Add(Enums.RoomType.None,  20f);
     }
 
 
