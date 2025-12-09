@@ -92,7 +92,8 @@ public class PlayerSkill : MonoBehaviour
             Collider[] monsters = Physics.OverlapSphere(transform.position, player.finalStats.attackRange, monsterLayer);
             foreach (Collider c in monsters)
             {
-                Monster monster = c.GetComponent<Monster>();
+
+                MonsterBase monster = c.GetComponent<MonsterBase>();
 
                 if (monster != null)
                 {
