@@ -21,14 +21,12 @@ public class ItemDescriptionUIController : MonoBehaviour
     InventoryManager inventoryManager;
     SynergyManager synergyManager;
     PoolManager poolManager;
-    UIManager uiManager;
 
     private void Awake()
     {
         inventoryManager = InventoryManager.Instance;
         synergyManager = SynergyManager.Instance;
         poolManager = PoolManager.Instance;
-        uiManager = UIManager.Instance;
 
         // 설명창의 시너지 설명 오브젝트 풀 생성
         poolManager.CreatePool(Enums.PoolType.DescriptionSynergy, synergyUI, 2, synergyPanel);
@@ -56,6 +54,7 @@ public class ItemDescriptionUIController : MonoBehaviour
         itemDescriptionPanel.SetActive(true);
         itemNameText.text = itemData.iName;
 
+        // 아이템 등급에 다른 아이템 이름 색 변경
         switch (itemData.iRank)
         {
             case Enums.ItemRank.Common:
@@ -72,7 +71,7 @@ public class ItemDescriptionUIController : MonoBehaviour
                 break;
         }
 
-
+        // 시너지 UI 오브젝트 풀에서 불러오기
         for (int i = 0; i < itemData.iSynergy.Count; i++)
         {
             DescriptionSynergyUI icon = poolManager.Get<DescriptionSynergyUI>(Enums.PoolType.DescriptionSynergy);

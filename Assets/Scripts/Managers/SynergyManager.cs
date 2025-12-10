@@ -32,6 +32,7 @@ public class SynergyManager : MonoBehaviour
         synergyDictionary = synergyData.allSyneries.ToDictionary(x => x.synergyType, x => x);
     }
 
+    // 시너지 타입을 통한 시너지 데이터 반환
     public SynergyData GetSynergyData(Enums.ItemSynergy synergy)
     {
         if (!synergyDictionary.TryGetValue(synergy, out var data))
