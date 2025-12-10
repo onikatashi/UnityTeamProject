@@ -13,22 +13,33 @@ public class SynergyEffectUIController : MonoBehaviour
     PoolManager poolManager;
     InventoryManager inventoryManager;
     SynergyManager synergyManager;
+    UIManager uiManager;
 
     private void Awake()
     {
         poolManager = PoolManager.Instance;
         inventoryManager = InventoryManager.Instance;
         synergyManager = SynergyManager.Instance;
+        uiManager = UIManager.Instance;
 
         poolManager.CreatePool<SynergySlotUI>(Enums.PoolType.SynergyEffects,
             synergySlot, 1, synergyEffectScroll);
         synergySlotUIList = new List<SynergySlotUI>();
     }
 
-
+    // 시너지 효과 UI 풀에서 가져오기 및 패널 활성화
     public void ShowSynergyEffect()
     {
-        synergyEffectUIPanel.SetActive(true);
+        // 인벤토리가 활성화 되었을 때만 활성화 되도록
+        if (uiManager.inventoryUIController.gameObject.activeSelf)
+        {
+            // 만약 활성화 되기 전에 미리 시너지 슬롯을 만들어놨다면 다시 Pool로 되돌림
+            if(synergySlotUIList. Count > 0)
+            {
+                ReturnSynergySlot();
+            }
+            synergyEffectUIPanel.SetActive(true);
+        }
         
         foreach (var keys in inventoryManager.synergyCount.Keys)
         {
@@ -43,12 +54,14 @@ public class SynergyEffectUIController : MonoBehaviour
         }
     }
 
+    // 시너지 효과 UI 풀에 돌려놓기 및 패널 숨기기
     public void HideSynergyEffectUI()
     {
         ReturnSynergySlot();
         synergyEffectUIPanel.SetActive(false);
     }
 
+    // 시너지 효과 Slot을 다시 오브젝트 풀에 되돌림
     public void ReturnSynergySlot()
     {
         if (synergySlotUIList == null || synergySlotUIList.Count == 0) return;

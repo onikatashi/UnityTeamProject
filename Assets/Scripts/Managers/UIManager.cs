@@ -61,7 +61,16 @@ public class UIManager : MonoBehaviour
     // 인벤토리 UI 토글
     public void ToggleInventory()
     {
+        // 인벤토리 UI 토글
         inventoryUIController.gameObject.SetActive(!inventoryUIController.gameObject.activeSelf);
+        
+        // 인벤토리가 비활성화 되어있는데 아이템 설명창이 남아있는 경우 아이템 설명창도 hide
+        if (!inventoryUIController.gameObject.activeSelf && itemDescriptionUIController.gameObject.activeSelf)
+        {
+            itemDescriptionUIController.HideItemDescription();
+        }
+
+        // 시너지 효과는 오브젝트 풀을 쓰기 때문에 프리팹을 돌려주기 위해서 이렇게 경우를 나눔
         if (synergyEffectUIController.gameObject.activeSelf)
         {
             synergyEffectUIController.HideSynergyEffectUI();
@@ -85,6 +94,7 @@ public class UIManager : MonoBehaviour
         inventoryUIController.UpdateItemIcon();
     }
 
+    // ItemDescriptionPanel 생성
     void InstantiateItemDescriptionPanel(RectTransform canvas)
     {
         // 아이템 설명 패널 생성 및 초기화
@@ -93,6 +103,7 @@ public class UIManager : MonoBehaviour
         panel.SetActive(false);
     }
 
+    // SynergyEffectPanel 생성
     void InstantiateSynergyEffectPanel(RectTransform canvas)
     {
         // 시너지 활성화 패널 생성 및 초기화

@@ -146,6 +146,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
+        // 아이템 획득 시 시너지 효과 업데이트
         uiManager.synergyEffectUIController.ReturnSynergySlot();
         uiManager.synergyEffectUIController.ShowSynergyEffect();
 
@@ -235,6 +236,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
+        // 아이템 제거 시, 시너지 효과 패널 업데이트
         uiManager.synergyEffectUIController.ReturnSynergySlot();
         uiManager.synergyEffectUIController.ShowSynergyEffect();
 
