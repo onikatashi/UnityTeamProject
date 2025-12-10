@@ -7,14 +7,17 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    private RectTransform canvas;                           // 캔버스 참조
+    private RectTransform canvas;                                   // 캔버스 참조
 
     [SerializeField]
-    private GameObject inventoryPanelPrefab;                // 인벤토리 패널 프리팹
-    public InventoryUIController inventoryUIController;     // 인벤토리 UI 컨트롤러
+    private GameObject inventoryPanelPrefab;                        // 인벤토리 패널 프리팹
+    public InventoryUIController inventoryUIController;             // 인벤토리 UI 컨트롤러
     [SerializeField]
-    private GameObject itemDescriptionPrefab;               // 아이템 설명 패널 프리팹
+    private GameObject itemDescriptionPanelPrefab;                  // 아이템 설명 패널 프리팹
     public ItemDescriptionUIController itemDescriptionUIController; // 아이템 설명 UI 컨트롤러
+    [SerializeField]
+    private GameObject synergyEffectPanelPrefab;                    // 시너지 효과 활성화 패널 프리팹
+    public SynergyEffectUIController synergyEffectUIController;     // 시너지 효과 UI 컨트롤러
 
     private void Awake()
     {
@@ -43,6 +46,7 @@ public class UIManager : MonoBehaviour
 
         InstantiateInventoryPanel(canvas);
         InstantiateItemDescriptionPanel(canvas);
+        InstantiateSynergyEffectPanel(canvas);
     }
 
     // Canvas 등록 해제
@@ -57,8 +61,15 @@ public class UIManager : MonoBehaviour
     // 인벤토리 UI 토글
     public void ToggleInventory()
     {
-
         inventoryUIController.gameObject.SetActive(!inventoryUIController.gameObject.activeSelf);
+        if (synergyEffectUIController.gameObject.activeSelf)
+        {
+            synergyEffectUIController.HideSynergyEffectUI();
+        }
+        else
+        {
+            synergyEffectUIController.ShowSynergyEffect();
+        }
     }
 
     // InventoryPanel 생성
@@ -77,8 +88,17 @@ public class UIManager : MonoBehaviour
     void InstantiateItemDescriptionPanel(RectTransform canvas)
     {
         // 아이템 설명 패널 생성 및 초기화
-        GameObject panel = Instantiate(itemDescriptionPrefab, canvas);
+        GameObject panel = Instantiate(itemDescriptionPanelPrefab, canvas);
         itemDescriptionUIController = panel.GetComponent<ItemDescriptionUIController>();
+        panel.SetActive(false);
+    }
+
+    void InstantiateSynergyEffectPanel(RectTransform canvas)
+    {
+        // 시너지 활성화 패널 생성 및 초기화
+        GameObject panel = Instantiate(synergyEffectPanelPrefab, canvas);
+        synergyEffectUIController = panel.GetComponent<SynergyEffectUIController>();
+
         panel.SetActive(false);
     }
 

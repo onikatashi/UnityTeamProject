@@ -39,33 +39,16 @@ public class InventoryUIController : MonoBehaviour
 
             InventorySlotUI slotUI = newSlot.GetComponent<InventorySlotUI>();
 
-            slotUI.SetUp(i, OnSlotClicked);
+            slotUI.SetUp(i);
             inventorySlots.Add(slotUI);
         }
     }
 
-    // 슬롯 클릭 이벤트 처리 함수 (콜백 함수)
-    public void OnSlotClicked(int slotIndex)
-    {
-        ItemData itemData = inventoryManager.Inventory[slotIndex];
+    // 슬롯 클릭 이벤트
+    //public void OnSlotClicked(int slotIndex)
+    //{
 
-        if (itemData != null)
-        {
-            // 프리팹을 아이템 풀에 다시 돌려주는 작업
-            uiManager.itemDescriptionUIController.ReturnSynergyUI();
-
-            // 아이템 설명창 활성화
-            uiManager.itemDescriptionUIController.ShowItemDescription(itemData);
-
-            // 나중에 SetSlotIndex 같은걸로 함수화 시켜도 좋을듯
-            uiManager.itemDescriptionUIController.slotIndex = slotIndex;
-        }
-        else
-        {
-            uiManager.itemDescriptionUIController.HideItemDescription();
-        }
-
-    }
+    //}
 
     // 인벤토리 슬롯 아이콘 업데이트
     public void UpdateItemIcon()
