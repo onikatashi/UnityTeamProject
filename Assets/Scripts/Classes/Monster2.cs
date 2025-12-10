@@ -4,9 +4,9 @@ using UnityEngine;
 /// </summary>
 public class Monster2 : MonsterBase
 {
-
+    public MonsterData monsterData;
     float tolerance = 2f;
-    
+
     protected override void Idle()
     {
         agent.isStopped = true;
@@ -75,6 +75,8 @@ public class Monster2 : MonsterBase
 
         timer += Time.deltaTime;
         if (timer < md.attackSpeed) return;
+
+
         Debug.Log("공격2");
 
         //anim.SetTrigger("Shoot"); 

@@ -126,3 +126,6 @@ MonoBehaviour:
   currentHp: 100
   detectRange: 10
   timer: 0
+  bulletPrefab: {fileID: 0}
+  firepoint: {fileID: 0}
+  monsterData: {fileID: 11400000, guid: 4ce72205deef66547a5f73f2edc39e16, type: 2}
