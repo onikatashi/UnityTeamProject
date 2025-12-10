@@ -51,6 +51,15 @@ public class Enums
         Boss
     }
 
+    // 던전 테마
+    public enum DungeonTheme
+    {
+        Desert,
+        Grass,
+        Lava,
+        Snow
+    }
+
     // 클래스(직업) 종류
     public enum ClassType
     {

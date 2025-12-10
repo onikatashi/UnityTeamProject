@@ -3,14 +3,6 @@ using static Enums;
 
 public class DungeonManager : MonoBehaviour
 {
-    public enum DungeonTheme
-    {
-        Desert,
-        Grass,
-        Lava,
-        Snow
-    }
-
     [Header("현재 방 타입 (외부에서 설정됨)")]
     public RoomType roomType;
 
