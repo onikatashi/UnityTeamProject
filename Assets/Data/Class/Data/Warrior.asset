@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Warrior
   m_EditorClassIdentifier: 
   classType: 0
-  cName: 
-  cLevel: 1
+  cLevel: 0
   currentExp: 0
   maxExp: 0
   classPoints: 0
@@ -24,10 +23,10 @@ MonoBehaviour:
     mpRegen: 1
     maxDashCount: 1
     dashRegen: 1
-    dashDistance: 1
-    attackDamage: 5
-    attackRange: 5
-    attackSpeed: 5
+    dashDistance: 3
+    attackDamage: 50
+    attackRange: 20
+    attackSpeed: 1
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 10
@@ -65,3 +64,4 @@ MonoBehaviour:
   attackDamagePerLevel: 0
   criticalRatePerLevel: 0
   criticalDamagePerLevel: 0
+  classLogic: {fileID: 11400000, guid: 0f5e5b350a40c39488749d761ba97d5c, type: 2}
