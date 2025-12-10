@@ -1,13 +1,18 @@
+using System.Collections;
 using UnityEngine;
-/// <summary>
-/// 폭8 몬스터 패턴1
-/// </summary>
+
 public class Monster3 : MonsterBase
 {
-    [Header("폭8범위")]
-    public float explosionRanege = 3f;
+    MonsterCharging mc;
 
+    [Header("폭발 범위")]
+    public float explosionRanege = 10f;
     public LayerMask Player;
+
+    void Start()
+    {
+        mc = GetComponent<MonsterCharging>();
+    }
 
     protected override void Idle()
     {
@@ -37,11 +42,15 @@ public class Monster3 : MonsterBase
         }
         else
         {
+            
             agent.isStopped = true;
             agent.updateRotation = false;
 
             state = Enums.MonsterState.Attack;
-            timer = 0f;
+            timer = 0f; 
+
+            if (mc != null) mc.StartCharge();
+
             //anim.SetTrigger("Attack");
         }
     }
@@ -50,19 +59,11 @@ public class Monster3 : MonsterBase
     {
         if (player == null || md == null) return;
 
+        // 자폭 중에는 제자리 고정
         agent.isStopped = true;
         agent.updateRotation = false;
 
         float dis = Vector3.Distance(transform.position, player.transform.position);
-
-        if (dis > md.attackRange * 1.5f)
-        {
-            state = Enums.MonsterState.Move;
-            agent.updateRotation = true;
-            //anim.SetTrigger("Move");
-            timer = 0f;
-            return;
-        }
 
         timer += Time.deltaTime;
         if (timer < md.attackSpeed) return;
@@ -75,17 +76,15 @@ public class Monster3 : MonsterBase
     {
         //anim.SetTrigger("Explode");
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, explosionRanege, Player); // OverlapSphere -> 원형범위내의 오브젝트를 찾는 함수
+        // 폭발 범위 내 플레이어 찾기
+        Collider[] hits = Physics.OverlapSphere(transform.position, explosionRanege, Player);
 
         foreach (var hit in hits)
         {
-            if (player != null)
+            var hp = hit.GetComponent<Player>(); 
+            if (hp != null)
             {
-                var hp = hit.GetComponent<Player>();
-                if (hp != null)
-                {
-                    hp.TakeDamage(md.attackDamage);
-                }
+                hp.TakeDamage(md.attackDamage);
             }
         }
 
@@ -93,13 +92,17 @@ public class Monster3 : MonsterBase
         Die();
     }
 
-        
     private void OnDrawGizmosSelected()
     {
+        // 폭발 범위
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, explosionRanege);
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, md.attackRange);
+        // 감지 범위
+        if (md != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, md.attackRange);
+        }
     }
 }

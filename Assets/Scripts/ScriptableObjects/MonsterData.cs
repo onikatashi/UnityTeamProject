@@ -20,6 +20,9 @@ public class MonsterData : ScriptableObject
     public float projectileSpeed;               // 몬스터 투사체 속도
     public float moveSpeed;                     // 몬스터 이동 속도
 
+
+
+
     public float dropGold;                      // 몬스터 드롭 골드
     public float dropExp;                       // 몬스터 드롭 경험치
 
