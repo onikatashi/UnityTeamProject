@@ -1,16 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 1. 방 종류 확률에 따라 맵 생성
-/// 2. 시작 노드 연결 보장
-/// 3. 직선 연결 길이 최소화
-/// </summary>
 public class DungeonMaker : MonoBehaviour
 {
-    private int maxFloor = 7;
-    private int maxColumn = 7;
-    private int startNodeCount = 1;
+    private int maxFloor = 8;
+    private int maxColumn = 6;
+    private int startNodeCount = 3;
 
     public LineDrawer lineDrawer;
 
@@ -25,12 +20,14 @@ public class DungeonMaker : MonoBehaviour
 
     public RoomTypeData roomTypeData;
 
-    [Header("Button Prefab & Parent")]
     public GameObject roomButtonPrefab;
     public Transform mapParent;
 
     private NodeButton[,] dungeonButtons;
-
+    private Dictionary<int, Enums.RoomType> forcedFloors = new Dictionary<int, Enums.RoomType>()
+    {
+        { 0, Enums.RoomType.Normal }
+    };
     void Start()
     {
         iconDictionary = new Dictionary<Enums.RoomType, Sprite>()
@@ -46,22 +43,30 @@ public class DungeonMaker : MonoBehaviour
         GenerateDungeon();
         SelectStartNodes();
         ConnectNodes_Optimized();
-
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
         PrintDungeonToConsole();
     }
 
     private void GenerateDungeon()
     {
-        Vector2 startPos = new Vector2(-250f, -250f);
+
+        Vector2 startPos = new Vector2(-300f, -350f);
         float xSpacing = 100f;
         float ySpacing = 100f;
+
 
         for (int floor = 0; floor < maxFloor; floor++)
         {
             for (int col = 0; col < maxColumn; col++)
             {
-                Enums.RoomType type = roomTypeData.GetRoomType(floor, col);
+                // 강제 타입이 설정된 층이면 그것으로 사용
+                Enums.RoomType type;
+
+                // 강제 타입이 설정된 층이면 그것으로 사용
+                if (forcedFloors.ContainsKey(floor))
+                    type = forcedFloors[floor];
+                else
+                    type = roomTypeData.GetRoomType(floor, col);
                 GameObject go = Instantiate(roomButtonPrefab, mapParent);
                 NodeButton nodeButton = go.GetComponent<NodeButton>();
 
@@ -74,8 +79,8 @@ public class DungeonMaker : MonoBehaviour
                 nodeButton.floor = floor;
                 nodeButton.col = col;
                 nodeButton.isAvailable = type != Enums.RoomType.None;
-
                 nodeButton.SetRoomType(type, type != Enums.RoomType.None ? iconDictionary[type] : null);
+
                 dungeonButtons[floor, col] = nodeButton;
 
                 RectTransform rt = go.GetComponent<RectTransform>();
@@ -86,19 +91,37 @@ public class DungeonMaker : MonoBehaviour
 
     private void SelectStartNodes()
     {
+        // 기존 startNodes 초기화
         startNodes.Clear();
+
+        // 0층에서 생성 가능한 컬럼 리스트
         List<int> availableCols = new List<int>();
         for (int c = 0; c < maxColumn; c++)
-            if (dungeonButtons[0, c] != null && dungeonButtons[0, c].isAvailable)
+        {
+            NodeButton node = dungeonButtons[0, c];
+            if (node != null && node.isAvailable)
                 availableCols.Add(c);
+        }
 
+        // startNodeCount 개수만큼 랜덤 선택
         int count = Mathf.Min(startNodeCount, availableCols.Count);
         for (int i = 0; i < count; i++)
         {
             int idx = Random.Range(0, availableCols.Count);
             int col = availableCols[idx];
             availableCols.RemoveAt(idx);
+
             startNodes.Add(dungeonButtons[0, col]);
+        }
+
+        // 선택되지 않은 0층 노드는 모두 None 처리
+        for (int c = 0; c < maxColumn; c++)
+        {
+            NodeButton node = dungeonButtons[0, c];
+            if (node != null && !startNodes.Contains(node))
+            {
+                node.SetRoomType(Enums.RoomType.None, null);
+            }
         }
     }
 
@@ -140,7 +163,7 @@ public class DungeonMaker : MonoBehaviour
 
     private void FixIsolatedNodes_Optimized()
     {
-        for (int f = 1; f < maxFloor; f++)
+        for (int f = 1; f < maxFloor; f++) // 0층 제외
         {
             for (int c = 0; c < maxColumn; c++)
             {
@@ -190,8 +213,7 @@ public class DungeonMaker : MonoBehaviour
     private List<NodeButton> GetSideCandidates(NodeButton current, int nextFloor)
     {
         List<NodeButton> sideCandidates = new List<NodeButton>();
-
-        for (int offset = -1; offset <= 1; offset += 2) // 좌우
+        for (int offset = -1; offset <= 1; offset += 2)
         {
             int col = current.col + offset;
             if (col >= 0 && col < maxColumn)
