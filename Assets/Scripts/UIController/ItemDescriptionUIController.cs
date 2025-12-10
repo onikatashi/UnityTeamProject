@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,22 +8,32 @@ public class ItemDescriptionUIController : MonoBehaviour
 {
     public GameObject itemDescriptionPanel;             // 아이템 설명 패널 오브젝트
     public TextMeshProUGUI itemNameText;                // 아이템 이름 텍스트
-    public TextMeshProUGUI itemSynergyText;             // 아이템 시너지 텍스트
     public TextMeshProUGUI itemStatDescriptionText;     // 아이템 스탯 설명 텍스트
     public TextMeshProUGUI itemDescriptionText;         // 아이템 설명 텍스트
     public Image itemIcon;                              // 아이템 아이콘 이미지
-    public Image synergeIcon;                           // 시너지 아이콘 이미지
     public Button discardItemButton;                    // 아이템 버리기 버튼
     public int slotIndex;                               // 현재 선택된 슬롯 인덱스
 
-    InventoryManager inventoryManager;
-    UIManager uiManager;
+    public Transform synergyPanel;                      // 시너지 아이콘 텍스트 프리팹의 부모 패널
+    public DescriptionSynergyUI synergyUI;              // 시너지 아이콘과 텍스트 프리팹
+    public List<DescriptionSynergyUI> synergyUIList;    // 활성화 되어있는 시너지UI를 저장하는 리스트
 
-    private void Start()
+    InventoryManager inventoryManager;
+    SynergyManager synergyManager;
+    PoolManager poolManager;
+
+    private void Awake()
     {
         inventoryManager = InventoryManager.Instance;
-        uiManager = UIManager.Instance;
+        synergyManager = SynergyManager.Instance;
+        poolManager = PoolManager.Instance;
 
+        // 설명창의 시너지 설명 오브젝트 풀 생성
+        poolManager.CreatePool(Enums.PoolType.DescriptionSynergy, synergyUI, 2, synergyPanel);
+        synergyUIList = new List<DescriptionSynergyUI>();
+    }
+    private void Start()
+    {
         // 버리기 버튼 클릭 이벤트 등록
         discardItemButton.onClick.AddListener( () =>
         {
@@ -42,6 +54,7 @@ public class ItemDescriptionUIController : MonoBehaviour
         itemDescriptionPanel.SetActive(true);
         itemNameText.text = itemData.iName;
 
+        // 아이템 등급에 다른 아이템 이름 색 변경
         switch (itemData.iRank)
         {
             case Enums.ItemRank.Common:
@@ -58,16 +71,39 @@ public class ItemDescriptionUIController : MonoBehaviour
                 break;
         }
 
-        itemSynergyText.text = itemData.iSynergy.ToString();
+        // 시너지 UI 오브젝트 풀에서 불러오기
+        for (int i = 0; i < itemData.iSynergy.Count; i++)
+        {
+            DescriptionSynergyUI icon = poolManager.Get<DescriptionSynergyUI>(Enums.PoolType.DescriptionSynergy);
+            SynergyData sd = synergyManager.GetSynergyData(itemData.iSynergy[i]);
+            Debug.Log(sd.synergyName);
+            icon.SetUp(sd.synergyIcon, sd.synergyName);
+            synergyUIList.Add(icon);
+        }
+        Debug.Log(synergyUIList.Count);
+        
         itemStatDescriptionText.text = itemData.iStatDescription;
         itemDescriptionText.text = itemData.iDescription;
         itemIcon.sprite = itemData.iIcon;
-        // 시너지 아이콘 설정은 추후에 아이콘 리소스가 준비되면 구현
+
     }
 
     // 아이템 설명 패널 비활성화
     public void HideItemDescription()
     {
         itemDescriptionPanel.SetActive(false);
+    }
+
+    // 시너지 UI 오브젝트 풀로 돌려주는 함수
+    public void ReturnSynergyUI()
+    {
+        if (synergyUIList == null || synergyUIList.Count == 0) return;
+
+        for (int i = 0; i < synergyUIList.Count; i++)
+        {
+            poolManager.Return(Enums.PoolType.DescriptionSynergy, synergyUIList[i]);
+            Debug.Log(synergyUIList[i].synergyName);
+        }
+        synergyUIList.Clear();
     }
 }

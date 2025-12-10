@@ -51,7 +51,12 @@ public class InventoryUIController : MonoBehaviour
 
         if (itemData != null)
         {
+            // 프리팹을 아이템 풀에 다시 돌려주는 작업
+            uiManager.itemDescriptionUIController.ReturnSynergyUI();
+
+            // 아이템 설명창 활성화
             uiManager.itemDescriptionUIController.ShowItemDescription(itemData);
+
             // 나중에 SetSlotIndex 같은걸로 함수화 시켜도 좋을듯
             uiManager.itemDescriptionUIController.slotIndex = slotIndex;
         }
@@ -59,6 +64,7 @@ public class InventoryUIController : MonoBehaviour
         {
             uiManager.itemDescriptionUIController.HideItemDescription();
         }
+
     }
 
     // 인벤토리 슬롯 아이콘 업데이트

@@ -77,4 +77,12 @@ public class Enums
         Attack,
         Die
     }
+
+    // 오브젝트 풀링 오브젝트 타입
+    public enum PoolType
+    {
+        DescriptionSynergy,
+        SynergyEffects
+        // 여기에 투사체, 몬스터 등 추가 가능 일단 당장 사용 안하니 냅둠
+    }
 }

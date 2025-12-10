@@ -18,7 +18,7 @@ MonoBehaviour:
   iStatDescription: "\uCCB4\uB825 + 100"
   iDescription: A_Armor04
   iRank: 0
-  iSynergy: 0
+  iSynergy: 00000000
   iEffect: 0
   iPrice: 100
   iBaseStat:

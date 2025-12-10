@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -8,6 +9,13 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     public static ItemManager Instance;
+
+    // 모든 아이템 정보를 가지고 있는 SO를 이용
+    [SerializeField]
+    AllItemsData allItemDatas;
+
+    // 아이템 데이터를 ID로 편하게 찾기위한 Dictionary
+    Dictionary<int, ItemData> itemDictionary = new Dictionary<int, ItemData>();
     private void Awake()
     {
         if (Instance == null)
@@ -21,25 +29,10 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    // 모든 아이템 데이터 (직접 넣어줌)
-    [SerializeField]
-    List<ItemData> allItemDatas;
-    
-    // 아이템 데이터를 ID로 편하게 찾기위한 Dictionary
-    Dictionary<int, ItemData> itemDictionary = new Dictionary<int, ItemData>();
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // 아이템 딕셔너리  채워주기
-        foreach (ItemData itemdata in allItemDatas)
-        {
-            if(itemdata == null)
-            {
-                continue;
-            }
-            itemDictionary[itemdata.iId] = itemdata;
-        }
+        itemDictionary = allItemDatas.allItems.ToDictionary(x => x.iId, x => x);
     }
 
     // ItemId를 통한 ItemData 반환

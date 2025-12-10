@@ -81,4 +81,9 @@ public class UIManager : MonoBehaviour
         itemDescriptionUIController = panel.GetComponent<ItemDescriptionUIController>();
         panel.SetActive(false);
     }
+
+    public Transform GetCanvas()
+    {
+        return canvas;
+    }
 }
