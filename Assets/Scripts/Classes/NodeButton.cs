@@ -8,6 +8,9 @@ using UnityEngine.UI;
 /// </summary>
 public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public int floor; // 층 정보
+    public int col;   // 컬럼 정보
+
 
     private GameObject highlight;
     private Image icon;

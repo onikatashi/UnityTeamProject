@@ -21,8 +21,18 @@ public class LineDrawer : MonoBehaviour
                 NodeButton from = nodes[f, c];
                 if (from == null || from.nextNodes == null) continue;
 
+                // from이 None이면 건너뜀
+                if (from.CurrentRoomType == Enums.RoomType.None)
+                    continue;
+
+
+
                 foreach (NodeButton to in from.nextNodes)
                 {
+                    // to가 None인 경우 제외
+                    if (to == null) continue;
+                    if (to.CurrentRoomType == Enums.RoomType.None)
+                        continue;
                     DrawLine(from, to);
                 }
             }
