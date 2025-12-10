@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed451b19c7608f441b0c843e4d21a9c8, type: 3}
-  m_Name: Warrior
+  m_Name: Archer
   m_EditorClassIdentifier: 
-  classType: 0
-  cName: 
-  cLevel: 1
+  classType: 2
+  cLevel: 0
   currentExp: 0
   maxExp: 0
   classPoints: 0
@@ -24,13 +23,13 @@ MonoBehaviour:
     mpRegen: 1
     maxDashCount: 1
     dashRegen: 1
-    dashDistance: 1
-    attackDamage: 5
-    attackRange: 5
-    attackSpeed: 5
-    projectileCount: 0
-    projectileSpeed: 0
-    moveSpeed: 10
+    dashDistance: 4
+    attackDamage: 50
+    attackRange: 25
+    attackSpeed: 2
+    projectileCount: 1
+    projectileSpeed: 20
+    moveSpeed: 15
     criticalRate: 0
     criticalDamage: 0
     shield: 0
@@ -65,3 +64,4 @@ MonoBehaviour:
   attackDamagePerLevel: 0
   criticalRatePerLevel: 0
   criticalDamagePerLevel: 0
+  classLogic: {fileID: 0}

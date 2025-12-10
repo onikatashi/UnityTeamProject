@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     // 스탯들 다 정리해주고, 여기있는 이동속도를 PlayerMove에 넣어주기 / 공격력, 공격속도 등을 PlayerAttack에 넣어주기
     // Player는 Prefab으로 DungeonManager에서 만들어서 진행
     public static Player Instance;
+
+    //직업 데이터 넣는곳, 처음은 Warrior고정, 직업 변경시 바꿔줘야함.
     public ClassData classStat;
 
     public float currentHp;
@@ -23,6 +25,11 @@ public class Player : MonoBehaviour
 
     public Stats finalStats;
 
+    //아처 오브젝트 풀 큐 만들기
+    //ScriptableObject(Job_Archer)는 “씬에 있는 풀”을 직접 관리하면 안 됨
+    public ArcherProjectile arrowPrefab;        //화살 프리팹
+    public int arrowPoolSize = 5;               //풀 화살 갯수 저장
+    ObjectPool<ArcherProjectile> arrowPool;     //풀 만들기
 
     // 플레이어 Sprite 항상 카메라 바라보기
     public CinemachineCamera pCam;
@@ -41,11 +48,11 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        //sRate = 1f;
-        //iRate = 1f;
         finalStats = GetFinalStat();
         currentHp = finalStats.maxHp;
         currentMp = finalStats.maxMp;
+
+        arrowPool = new ObjectPool<ArcherProjectile>(arrowPrefab, arrowPoolSize, null);
     }
 
     private void Update()
@@ -53,11 +60,19 @@ public class Player : MonoBehaviour
         LookAtPCam();
     }
 
+    /// <summary>
+    /// 최종 데미지 스탯 갱신해주기
+    /// </summary>
+    /// <returns></returns>
     public Stats GetFinalStat()
     {
-        return InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;     // 여기에 곱연산을 넣어주기?
+        return InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;     
     }
 
+    /// <summary>
+    /// 플레이어가 데미지 입었을 때 호출될 함수
+    /// </summary>
+    /// <param name="value"></param>
     public void TakeDamage(float value)
     {
         // 방어력(defense)이 있다면 데미지 감소 로직 추가 가능
@@ -76,6 +91,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 체력 회복 함수 (스킬이나 상호작용 등에 쓰일 예정)
+    /// </summary>
+    /// <param name="amount"></param>
     public void Heal(float amount)
     {
         //Heal 수치만큼 현재 체력 회복
@@ -87,6 +106,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어 죽을 시 실행될 함수
+    /// </summary>
     private void Die()
     {
         // 플레이어 사망 처리 (게임 오버, 재시작 등)
@@ -94,6 +116,23 @@ public class Player : MonoBehaviour
         // Time.timeScale = 0; // 예시
     }
 
+    /// <summary>
+    /// 화살 하나 꺼내오기
+    /// </summary>
+    /// <returns></returns>
+    public ArcherProjectile GetArrow()
+    {
+        return arrowPool.Get();
+    }
+
+    /// <summary>
+    /// 화살 집어넣기 (Projectile에서 이 함수 호출)
+    /// </summary>
+    /// <param name="arrow"></param>
+    public void ReturnArrow(ArcherProjectile arrow)
+    {
+        arrowPool.Return(arrow);
+    }
 
     /// <summary>
     /// 캐릭터 Sprite가 항상 카메라를 바라보게 하기

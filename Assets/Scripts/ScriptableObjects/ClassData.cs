@@ -8,18 +8,15 @@ using UnityEngine;
 public class ClassData : ScriptableObject
 {
     public Enums.ClassType classType;           // 직업 타입
-    public string cName;                        // 직업 이름
+    
     public int cLevel;                          // 직업 레벨
     public float currentExp;                    // 직업 현재 경험치
     public float maxExp;                        // 직업 최대 경험치
-    // 추후에 이용
-    public int classPoints;                     // 직업 포인트
+    public int classPoints;                     // 직업 포인트 (추후에 이용)
 
-    // 직업 베이스 능력치
     public Stats cBaseStat;                     // 직업 능력치
 
-    // 직업 특성 포인트로 올라가는 능력치
-    public Stats cTraitStat;                    // 직업 특성 능력치
+    public Stats cTraitStat;                    // 직업 특성 포인트로 올라가는 능력치
 
     // 레벨에 따라 올라가는 수치들
     // 이건 변수명 안정해서 얘기해 봐야함.
@@ -29,5 +26,6 @@ public class ClassData : ScriptableObject
     public float criticalRatePerLevel;          // 레벨당 치명타 확률 증가량
     public float criticalDamagePerLevel;        // 레벨당 치명타 피해 증가량 -> 이건 없어도 될거같음
 
+    public ClassBase classLogic;                // 직업별 행동 로직(기본 공격)
     // maxExp 계산용 변수가 필요한가?
 }
