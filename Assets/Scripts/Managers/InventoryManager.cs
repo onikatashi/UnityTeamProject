@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +13,8 @@ public class InventoryManager : MonoBehaviour
 
     int currentIndex = 0;                                   // 다음 아이템이 들어갈 위치 인덱스
     int lineSize = 3;                                       // 한 줄에 있는 슬롯 개수
-    Dictionary<Enums.ItemSynergy, int> synergeCount;        // 시너지 효과 카운트 (키: 시너지 종류, 값: 활성화된 개수)
+    public Dictionary<Enums.ItemSynergy, int> synergyCount;        // 시너지 효과 카운트 (키: 시너지 종류, 값: 시너지 개수)
+    public Dictionary<Enums.ItemSynergy, int> synergyActiveCount;  // 시너지 활성화 개수 (키: 시너지 종류, 값: 활성화된 시너지 개수)
     public Dictionary<int, int> reinforcedSlots;            // 강화된 슬롯 카운트 (키: 슬롯 인덱스, 값: 강화 레벨)
     Dictionary<int, int> indexByItemId;                     // 아이템 ID로 슬롯 인덱스 찾기 위한 딕셔너리
     List<int[]> lineCheck;                                  // 줄 별 시너지 효과가 완성되었는지 확인하기 위한 2차원 배열
@@ -32,10 +34,12 @@ public class InventoryManager : MonoBehaviour
         }
 
         Inventory = new ItemData[9];
-        synergeCount = new Dictionary<Enums.ItemSynergy, int>();
+        synergyCount = new Dictionary<Enums.ItemSynergy, int>();
+        synergyActiveCount = new Dictionary<Enums.ItemSynergy, int>();
         indexByItemId = new Dictionary<int, int>();
         GenerateLineCheck();
         InitReinforceSlots();
+        InitSynergyActiveCount();
 
         reinforcedSlots[0] = 2;
     }
@@ -53,6 +57,18 @@ public class InventoryManager : MonoBehaviour
         {
             reinforcedSlots[i] = 0;
         }
+    }
+
+    // 시너지 활성화 딕셔너리 초기화
+    void InitSynergyActiveCount()
+    {
+        // 미리 모든 아이템 시너지를 Key로 만들어둠
+        // 아이템 효과 중 무작위 시너지 효과 레벨 +1 등이 생길 때 사용하기 위해서
+        foreach (Enums.ItemSynergy type in Enum.GetValues(typeof(Enums.ItemSynergy)))
+        {
+            synergyActiveCount[type] = 0;
+        }
+
     }
 
     // 라인 체크 배열 생성
@@ -116,6 +132,24 @@ public class InventoryManager : MonoBehaviour
 
         Inventory[currentIndex] = newItem;
         indexByItemId[newItem.iId] = currentIndex;
+
+        // 아이템 추가할 때, 해당 아이템의 시너지를 저장
+        for (int i = 0; i < newItem.iSynergy.Count; i++)
+        {
+            if (newItem.iSynergy[i] != Enums.ItemSynergy.None)
+            {
+                if (!synergyCount.ContainsKey(newItem.iSynergy[i]))
+                {
+                    synergyCount[newItem.iSynergy[i]] = 0;
+                }
+                synergyCount[newItem.iSynergy[i]]++;
+            }
+        }
+
+        // 아이템 획득 시 시너지 효과 업데이트
+        uiManager.synergyEffectUIController.ReturnSynergySlot();
+        uiManager.synergyEffectUIController.ShowSynergyEffect();
+
         // currentIndex 가 Inventory.Length 를 넘지 않도록 처리
         // Remove 했을 때, 중간 아이템이 비는 슬롯에 아이템 추가하도록 처리
         while (true)
@@ -130,7 +164,10 @@ public class InventoryManager : MonoBehaviour
                 break;
             }
         }
+        
+        // 아이템 개수 증가
         itemCount++;
+
         if (currentIndex >= Inventory.Length)
         {
             currentIndex--;
@@ -182,6 +219,27 @@ public class InventoryManager : MonoBehaviour
             Debug.LogWarning("해당 슬롯에 아이템이 없음");
             return;
         }
+
+        // 시너지 개수 카운트 줄여주고 0이면 제거
+        for (int i = 0; i < Inventory[slotIndex].iSynergy.Count; i++)
+        {
+            if (Inventory[slotIndex].iSynergy[i] != Enums.ItemSynergy.None)
+            {
+                if (synergyCount.ContainsKey(Inventory[slotIndex].iSynergy[i]))
+                {
+                    synergyCount[Inventory[slotIndex].iSynergy[i]]--;
+                }
+                if (synergyCount[Inventory[slotIndex].iSynergy[i]] == 0)
+                {
+                    synergyCount.Remove(Inventory[slotIndex].iSynergy[i]);
+                }
+            }
+        }
+
+        // 아이템 제거 시, 시너지 효과 패널 업데이트
+        uiManager.synergyEffectUIController.ReturnSynergySlot();
+        uiManager.synergyEffectUIController.ShowSynergyEffect();
+
         indexByItemId.Remove(Inventory[slotIndex].iId);
         Inventory[slotIndex] = null;
         itemCount--;

@@ -15,4 +15,5 @@ MonoBehaviour:
   synergyIcon: {fileID: 21300000, guid: c6de6be50d3654e4d84a63ee0d4d53cf, type: 3}
   synergyType: 2
   synergyName: "\uC5BC\uC74C"
-  tiers: []
+  maxLevel: 5
+  levels: []
