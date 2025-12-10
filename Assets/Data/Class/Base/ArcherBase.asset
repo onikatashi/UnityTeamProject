@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: ArcherBase
   m_EditorClassIdentifier: 
   className: Archer
-  classSkills: []
+  classSkills:
+  - {fileID: 11400000, guid: b0f2f1b152e95b04ab1b09db0b1b3811, type: 2}
+  - {fileID: 11400000, guid: d573a67e9ccb70f4e9cec17f8796cd5e, type: 2}

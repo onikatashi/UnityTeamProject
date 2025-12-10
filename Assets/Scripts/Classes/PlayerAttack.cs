@@ -8,6 +8,14 @@ public class PlayerAttack : MonoBehaviour
     //적이 들어있는 레이어 (monster로 설정)
     public LayerMask monsterLayer;
 
+    //Player불러오기
+    Player player;
+
+    private void Start()
+    {
+        player = Player.Instance;
+    }
+
     void Update()
     {
         TryAttack();
@@ -21,7 +29,6 @@ public class PlayerAttack : MonoBehaviour
     /// <returns></returns>
     public bool TryAttack()
     {
-        Player player = Player.Instance;
 
         float atkSpd = player.finalStats.attackSpeed;
         float atkRng = player.finalStats.attackRange;
@@ -37,22 +44,27 @@ public class PlayerAttack : MonoBehaviour
         if (m.Length == 0) return false;
 
         // 쿨타임 체크 (쿨타임 안돌면 공격 안함
-        if (Time.time < nextAtkTime) return false;
+        if (Time.time < nextAtkTime)
+        {
+            return false;
+        }
 
         //다음 공격 시간 설정
         nextAtkTime = Time.time + (1f / atkSpd);
 
         //현재 직업 가져오기
         ClassBase c = player.classStat.classLogic;
-        if( c == null )
+        if (c == null)
         {
-            Debug.LogError("Player ClassData에 JobBase(job) 할당이 필요함.");
             return false;
         }
+
+        Debug.Log($"[TryAttack] using class logic = {c.name}");
 
         //직업의 기본 공격 실행
         c.BasicAttack(player, monsterLayer);
 
+        Debug.Log("TryAttack 실행");
         return true;
     }
 
@@ -62,7 +74,7 @@ public class PlayerAttack : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         //공격 범위
-        float atkRng = Player.Instance.finalStats.attackRange;
+        float atkRng = player.finalStats.attackRange;
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, atkRng);

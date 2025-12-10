@@ -21,10 +21,11 @@ public class ArcherProjectile : MonoBehaviour
     }
 
     // 타겟 설정
-    public void SetTarget(Transform target, float damage)
+    public void SetTarget(Transform target, float damage, float maxDis)
     {
         this.target = target;            // 타겟 저장
         this.damage = damage;            // 데미지 저장
+        this.maxDistance = maxDis;
     }
 
     void Update()
@@ -36,7 +37,7 @@ public class ArcherProjectile : MonoBehaviour
         }
 
         // 타겟 방향 계산
-        Vector3 dir = (target.position - transform.position).normalized;
+        Vector3 dir = (target.position - transform.position).normalized;      //유도 할거면 startPos -> trasnform.position으로 바꿔보기
         transform.position += dir * speed * Time.deltaTime; // 이동
 
         // 몬스터 맞았는지 체크 (근처 도달 체크 / 여기서만 Distance를 쓴 이유는, 근접했는지 한번만 체크하는 방식이라 최적화가 크게 필요없어서 사용 )

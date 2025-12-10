@@ -25,7 +25,7 @@ MonoBehaviour:
     dashRegen: 1
     dashDistance: 4
     attackDamage: 50
-    attackRange: 25
+    attackRange: 50
     attackSpeed: 2
     projectileCount: 1
     projectileSpeed: 20
@@ -64,4 +64,4 @@ MonoBehaviour:
   attackDamagePerLevel: 0
   criticalRatePerLevel: 0
   criticalDamagePerLevel: 0
-  classLogic: {fileID: 0}
+  classLogic: {fileID: 11400000, guid: 390be119dde920b46a0fe5e86c811556, type: 2}

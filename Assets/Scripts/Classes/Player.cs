@@ -27,9 +27,9 @@ public class Player : MonoBehaviour
 
     //아처 오브젝트 풀 큐 만들기
     //ScriptableObject(Job_Archer)는 “씬에 있는 풀”을 직접 관리하면 안 됨
+    PoolManager poolManager;                    //캐싱용
     public ArcherProjectile arrowPrefab;        //화살 프리팹
     public int arrowPoolSize = 5;               //풀 화살 갯수 저장
-    ObjectPool<ArcherProjectile> arrowPool;     //풀 만들기
 
     // 플레이어 Sprite 항상 카메라 바라보기
     public CinemachineCamera pCam;
@@ -45,14 +45,20 @@ public class Player : MonoBehaviour
         else Destroy(gameObject);
 
         pSprite = transform.Find("Sprite");
+
+        poolManager = PoolManager.Instance;
     }
     private void Start()
     {
         finalStats = GetFinalStat();
         currentHp = finalStats.maxHp;
         currentMp = finalStats.maxMp;
-
-        arrowPool = new ObjectPool<ArcherProjectile>(arrowPrefab, arrowPoolSize, null);
+        if (arrowPrefab == null)
+        {
+            Debug.LogError("ArrowPrefab이 비어있음!");
+            return; // 또는 예외 처리하고 진행 중단
+        }
+        poolManager.CreatePool<ArcherProjectile>(Enums.PoolType.ArrowPool, arrowPrefab, arrowPoolSize, transform);
     }
 
     private void Update()
@@ -122,7 +128,7 @@ public class Player : MonoBehaviour
     /// <returns></returns>
     public ArcherProjectile GetArrow()
     {
-        return arrowPool.Get();
+        return poolManager.Get<ArcherProjectile>(Enums.PoolType.ArrowPool);
     }
 
     /// <summary>
@@ -131,7 +137,7 @@ public class Player : MonoBehaviour
     /// <param name="arrow"></param>
     public void ReturnArrow(ArcherProjectile arrow)
     {
-        arrowPool.Return(arrow);
+        poolManager.Return<ArcherProjectile>(Enums.PoolType.ArrowPool, arrow);
     }
 
     /// <summary>

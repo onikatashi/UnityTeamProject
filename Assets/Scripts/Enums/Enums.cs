@@ -82,7 +82,8 @@ public class Enums
     public enum PoolType
     {
         DescriptionSynergy,
-        SynergyEffects
+        SynergyEffects,
+        ArrowPool
         // 여기에 투사체, 몬스터 등 추가 가능 일단 당장 사용 안하니 냅둠
     }
 }

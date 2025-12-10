@@ -8,10 +8,10 @@ public class MageClass : ClassBase
     public override void BasicAttack(Player p, LayerMask monsterLayer)
     {
         float atk = p.finalStats.attackDamage;       // 플레이어 공격력
-        float range = p.finalStats.attackRange;      // 플레이어 사정거리
+        float rng = p.finalStats.attackRange;      // 플레이어 사정거리
 
         // 1) 가장 가까운 적 찾기
-        Collider[] monsters = Physics.OverlapSphere(p.transform.position, range, monsterLayer);
+        Collider[] monsters = Physics.OverlapSphere(p.transform.position, rng, monsterLayer);
 
         float minDist = Mathf.Infinity;
         Collider nearest = null;
@@ -38,6 +38,7 @@ public class MageClass : ClassBase
             MonsterBase mob = c.GetComponent<MonsterBase>();
             if (mob != null)
                 mob.TakeDamage(atk);                      // 폭발 데미지 적용
+            Debug.Log($"Hit Monster : {mob.name}");
         }
 
         // 폭발 이펙트 Instantiate 가능

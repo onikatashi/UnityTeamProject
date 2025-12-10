@@ -7,10 +7,14 @@ public class ArcherClass : ClassBase
     public override void BasicAttack(Player p, LayerMask monsterLayer)
     {
         float atk = p.finalStats.attackDamage;     // 플레이어 공격력
-        float range = p.finalStats.attackRange;    // 플레이어 사정거리
+        float rng = p.finalStats.attackRange;    // 플레이어 사정거리
+
+        Debug.Log($"[Archer.BasicAttack] atk={atk}, rng={rng}");
 
         // 가장 가까운 몬스터 찾기
-        Collider[] monsters = Physics.OverlapSphere(p.transform.position, range, monsterLayer);
+        Collider[] monsters = Physics.OverlapSphere(p.transform.position, rng, monsterLayer);
+
+        Debug.Log($"[Archer.BasicAttack] monsters in range = {monsters.Length}");
 
         float minDist = Mathf.Infinity;                 // 최소 거리 초기화
         Collider nearest = null;                        // 가장 가까운 몬스터 저장
@@ -18,6 +22,9 @@ public class ArcherClass : ClassBase
         foreach (Collider m in monsters)
         {
             float dist = (m.transform.position - p.transform.position).sqrMagnitude;
+
+            Debug.Log($"[Archer.BasicAttack] candidate {m.name}, sqrDist={dist}");
+
             if (dist < minDist)
             {
                 minDist = dist;
@@ -25,10 +32,22 @@ public class ArcherClass : ClassBase
             }
         }
 
-        if (nearest == null) return;                     // 적이 없으면 종료
+        if (nearest == null)
+        {
+            Debug.Log("[Archer.BasicAttack] nearest == null, return");
+            return;     // 적이 없으면 /죽는중이라 collider만 남아있는 경우 공격x
+        }
+
+        if (nearest.GetComponent<MonsterBase>() == null)
+        {
+            Debug.Log($"[Archer.BasicAttack] {nearest.name} 에 MonsterBase 없음");
+            return;     // 적이 없으면 /죽는중이라 collider만 남아있는 경우 공격x
+        }
 
         //화살 하나 꺼내오기
         ArcherProjectile arrow = p.GetArrow();
+
+        Debug.Log($"[Archer.BasicAttack] arrow = {arrow}");
 
         //위치/ 회전 초기화
         arrow.transform.position = p.transform.position;
@@ -38,7 +57,7 @@ public class ArcherClass : ClassBase
         arrow.Init(p);
 
         //타겟과 데미지 전달
-        arrow.SetTarget(nearest.transform, atk);
+        arrow.SetTarget(nearest.transform, atk, rng);
 
     }
 }
