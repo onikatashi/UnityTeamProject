@@ -26,7 +26,7 @@ public class DungeonMaker : MonoBehaviour
 
     //시작노드 정보(층수,열, 사용하는가?, RoomType,다음노드 정보)
     private List<NodeButton> startNodes = new List<NodeButton>();
-    
+
     //룸 타입 스크립트에서 정보 가져오기.
     public RoomTypeData roomTypeData;
 
@@ -37,7 +37,7 @@ public class DungeonMaker : MonoBehaviour
     //던전 버튼의 층수,열의 정보.;
     private NodeButton[,] dungeonButtons;
 
- 
+
     //---------------------------------------------------------------------------------------------
 
     void Start()
@@ -52,11 +52,11 @@ public class DungeonMaker : MonoBehaviour
         };
         //NodeButton타입을 가진 2차원 배열 생성
         dungeonButtons = new NodeButton[maxFloor, maxColumn];
-        
+
         //
         GenerateDungeon();
-       
-        ConnectNodes_Optimized();
+
+        ConnectNodes_Line();
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
         PrintDungeonToConsole();
     }
@@ -76,11 +76,11 @@ public class DungeonMaker : MonoBehaviour
         {
             for (int col = 0; col < maxColumn; col++)
             {
-                
+
                 Enums.RoomType type;
                 type = roomTypeData.GetRoomType(floor, col);
-                
-                    
+
+
                 GameObject nodePrefab = Instantiate(roomButtonPrefab, mapParent);
                 NodeButton nodeButton = nodePrefab.GetComponent<NodeButton>();
 
@@ -118,7 +118,7 @@ public class DungeonMaker : MonoBehaviour
     /// <param name="limitCount">총 개수 선택</param>
     private void LimitFloorNodeCount(int floor, int limitCount)
     {
-        
+
         List<NodeButton> activeNode = new List<NodeButton>();
 
         // 1. 해당 층에서 현재 활성 노드 수집
@@ -135,13 +135,13 @@ public class DungeonMaker : MonoBehaviour
             return;
 
         // 2. 남길 개수만큼 랜덤으로 선택
-        List<NodeButton> randomSelecrtNode = new List<NodeButton>(); 
+        List<NodeButton> randomSelecrtNode = new List<NodeButton>();
         for (int currentCount = 0; currentCount < limitCount; currentCount++)
         {
             //활성노드 중 하나 선택
             int selectNode = Random.Range(0, activeNode.Count);
             randomSelecrtNode.Add(activeNode[selectNode]);
-            
+
             //선택된 노드는 activeNode리스트에서 제거하여 다시 선택 금지.
             activeNode.RemoveAt(selectNode);
         }
@@ -159,7 +159,7 @@ public class DungeonMaker : MonoBehaviour
     //라인 생성부---------------------------------------------------------------------------------------------
 
     //노드 라인연결 로직.
-    private void ConnectNodes_Optimized()
+    private void ConnectNodes_Line()
     {
         foreach (var startNode in startNodes)
         {
@@ -170,21 +170,23 @@ public class DungeonMaker : MonoBehaviour
             {
                 int nextFloor = f + 1;
                 NodeButton picked = FindNextNodeWithExpandedRange(current, nextFloor);
-
                 if (picked == null) break;
 
-                if (straightCount >= 2 && picked.col == current.col)
+                bool isStraight = picked.col == current.col;
+
+                // 직진 2번 이상이면 강제 좌우 이동
+                if (straightCount >= 2 && isStraight)
                 {
-                    List<NodeButton> sideCandidates = GetSideCandidates(current, nextFloor);
-                    if (sideCandidates.Count > 0)
+                    var sides = GetSideCandidates(current, nextFloor);
+                    if (sides.Count > 0)
                     {
-                        picked = sideCandidates[Random.Range(0, sideCandidates.Count)];
+                        picked = sides[Random.Range(0, sides.Count)];
                         straightCount = 1;
                     }
                 }
                 else
                 {
-                    straightCount = (picked.col == current.col) ? straightCount + 1 : 1;
+                    straightCount = isStraight ? straightCount + 1 : 1;
                 }
 
                 ConnectSafe(current, picked);
@@ -197,22 +199,22 @@ public class DungeonMaker : MonoBehaviour
     //격리 노드 연결시키기.
     private void FixIsolatedNodes_Optimized()
     {
-        for (int f = 1; f < maxFloor; f++) // 0층 제외
+        for (int f = 0; f < maxFloor; f++)
         {
             for (int c = 0; c < maxColumn; c++)
             {
                 NodeButton node = dungeonButtons[f, c];
                 if (node == null || !node.isAvailable) continue;
 
-                if (node.prevNodes.Count == 0)
+                if (node.prevNodes.Count == 0 && f > 0)
                 {
-                    NodeButton prev = FindNearestPreviousNode(f, c);
+                    NodeButton prev = FindNearestNode(f, c, true);
                     if (prev != null) ConnectSafe(prev, node);
                 }
 
                 if (node.nextNodes.Count == 0 && f < maxFloor - 1)
                 {
-                    NodeButton next = FindNearestNextNode(f, c);
+                    NodeButton next = FindNearestNode(f, c, false);
                     if (next != null) ConnectSafe(node, next);
                 }
             }
@@ -223,84 +225,111 @@ public class DungeonMaker : MonoBehaviour
     {
         for (int range = 1; range < maxColumn; range++)
         {
-            List<NodeButton> candidates = new List<NodeButton>();
             int startCol = Mathf.Max(0, current.col - range);
             int endCol = Mathf.Min(maxColumn - 1, current.col + range);
 
-            for (int c = startCol; c <= endCol; c++)
-            {
-                NodeButton to = dungeonButtons[nextFloor, c];
-                if (to != null && to.isAvailable)
-                    candidates.Add(to);
-            }
+            NodeButton found = FindNodeInRange(
+                nextFloor,
+                startCol,
+                endCol,
+                current.transform,
+                true
+            );
 
-            if (candidates.Count > 0)
-            {
-                candidates.Sort((a, b) => Vector2.Distance(current.transform.position, a.transform.position)
-                    .CompareTo(Vector2.Distance(current.transform.position, b.transform.position)));
-                return candidates[0];
-            }
+            if (found != null) return found;
         }
+
         return null;
     }
     //+-1안쪽 없을 때 확장로직.
+    private readonly List<NodeButton> sideList = new List<NodeButton>(2);
+
     private List<NodeButton> GetSideCandidates(NodeButton current, int nextFloor)
     {
-        List<NodeButton> sideCandidates = new List<NodeButton>();
-        for (int offset = -1; offset <= 1; offset += 2)
+        sideList.Clear();
+
+        int col = current.col;
+
+        if (col - 1 >= 0)
         {
-            int col = current.col + offset;
-            if (col >= 0 && col < maxColumn)
-            {
-                NodeButton node = dungeonButtons[nextFloor, col];
-                if (node != null && node.isAvailable)
-                    sideCandidates.Add(node);
-            }
+            var left = dungeonButtons[nextFloor, col - 1];
+            if (left != null && left.isAvailable) sideList.Add(left);
         }
-        return sideCandidates;
+
+        if (col + 1 < maxColumn)
+        {
+            var right = dungeonButtons[nextFloor, col + 1];
+            if (right != null && right.isAvailable) sideList.Add(right);
+        }
+
+        return sideList;
     }
-    //가까운 이전노드 검색.
-    private NodeButton FindNearestPreviousNode(int floor, int col)
+
+    private NodeButton FindNearestNode(int floor, int col, bool isPrev)
+    {
+        int targetFloor = isPrev ? floor - 1 : floor + 1;
+        if (targetFloor < 0 || targetFloor >= maxFloor) return null;
+
+        NodeButton origin = dungeonButtons[floor, col];
+        if (origin == null) return null;
+
+        return FindNodeInRange(
+            targetFloor,
+            0,
+            maxColumn - 1,
+            origin.transform,
+            true
+        );
+    }
+
+    private NodeButton FindNodeInRange(int targetFloor,int startCol, int endCol,Transform origin,bool useDistance)
     {
         NodeButton best = null;
-        float minDist = float.MaxValue;
+        float bestDist = float.MaxValue;
 
-        for (int nc = 0; nc < maxColumn; nc++)
+        if (targetFloor < 0 || targetFloor >= maxFloor)
+            return null;
+
+        bool leftToRight = Random.value < 0.5f;
+
+        if (leftToRight)
         {
-            NodeButton candidate = dungeonButtons[floor - 1, nc];
-            if (candidate != null && candidate.isAvailable)
+            for (int c = startCol; c <= endCol; c++)
+                Evaluate(c);
+        }
+        else
+        {
+            for (int c = endCol; c >= startCol; c--)
+                Evaluate(c);
+        }
+
+        return best;
+
+        void Evaluate(int c)
+        {
+            var candidate = dungeonButtons[targetFloor, c];
+            if (candidate == null || !candidate.isAvailable) return;
+
+            if (!useDistance)
             {
-                float dist = Vector2.Distance(candidate.transform.position, dungeonButtons[floor, col].transform.position);
-                if (dist < minDist)
-                {
-                    minDist = dist;
-                    best = candidate;
-                }
+                best = candidate;
+                return;
+            }
+
+            // 거리 비교를 위한 sqrMagnitude 적용
+            Vector2 diff = (Vector2)candidate.transform.position - (Vector2)origin.position;
+            float dist = diff.sqrMagnitude;
+
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                best = candidate;
             }
         }
-        return best;
     }
-    //가까운 다음 노드 검색.
-    private NodeButton FindNearestNextNode(int floor, int col)
-    {
-        NodeButton best = null;
-        float minDist = float.MaxValue;
 
-        for (int nc = 0; nc < maxColumn; nc++)
-        {
-            NodeButton candidate = dungeonButtons[floor + 1, nc];
-            if (candidate != null && candidate.isAvailable)
-            {
-                float dist = Vector2.Distance(candidate.transform.position, dungeonButtons[floor, col].transform.position);
-                if (dist < minDist)
-                {
-                    minDist = dist;
-                    best = candidate;
-                }
-            }
-        }
-        return best;
-    }
+
+
 
     private void ConnectSafe(NodeButton from, NodeButton to)
     {
