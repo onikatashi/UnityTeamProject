@@ -53,14 +53,20 @@ public class RoomTypeData : MonoBehaviour
         // [4층 2열] → 휴식방
         // 예시 : forcedRooms.Add((4, 2), Enums.RoomType.Rest);
 
-        // [7층은 전부 상점]
-        // 예시forcedFloors.Add(7, Enums.RoomType.Shop);
+        // [0층(시작노드는 전부 노말 던전]
+        forcedFloors.Add(0, Enums.RoomType.Normal);
     }
 
     //-----------------------------------------------------------------------
 
 
     //DungeonMaker.cs에서 노드 생성시 호출.
+
+    //.TryGetValue( 키값 검색 out var [있으면 True, 없으면 False해서 처리안함.])
+    //               ㄴ> [InitForcedRooms]에서 미리선언됨 forcedFloors.Add(0, Enums.RoomType.Normal) ==0층은 노말!
+    
+    //로직 => 현재 노드가 1.특정노드냐? 2.특정층이냐? 3.둘다 아니면 일반 확률기반 생성.
+    
     public Enums.RoomType GetRoomType(int floor, int column)
     {
         // 1️. 특정 노드 강제

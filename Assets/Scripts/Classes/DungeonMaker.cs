@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class DungeonMaker : MonoBehaviour
 {
+    //노드 생성설정
     private int maxFloor = 8;
     private int maxColumn = 6;
     private int startNodeCount = 3;
 
-    public LineDrawer lineDrawer;
 
-    private Dictionary<Enums.RoomType, Sprite> iconDictionary;
-    private List<NodeButton> startNodes = new List<NodeButton>();
+
+    //Button의 Type에 따른 Sprite연결을 위한 Dictionary
+    private Dictionary<Enums.RoomType, Sprite> iconSpriteDictionary;
 
     public Sprite normalSprite;
     public Sprite eliteSprite;
@@ -18,19 +19,31 @@ public class DungeonMaker : MonoBehaviour
     public Sprite restSprite;
     public Sprite forgeSprite;
 
+
+
+    //라인 처리 스크립트 inspector창에서 연결.
+    public LineDrawer lineDrawer;
+
+    //시작노드 정보(층수,열, 사용하는가?, RoomType,다음노드 정보)
+    private List<NodeButton> startNodes = new List<NodeButton>();
+    
+
+    //룸 타입 스크립트에서 정보 가져오기.
     public RoomTypeData roomTypeData;
 
+    //버튼 프리팹 연결 및 생성위치.
     public GameObject roomButtonPrefab;
     public Transform mapParent;
 
+    //던전 버튼의 층수,열의 정보.;
     private NodeButton[,] dungeonButtons;
-    private Dictionary<int, Enums.RoomType> forcedFloors = new Dictionary<int, Enums.RoomType>()
-    {
-        { 0, Enums.RoomType.Normal }
-    };
+
+ 
+
+
     void Start()
     {
-        iconDictionary = new Dictionary<Enums.RoomType, Sprite>()
+        iconSpriteDictionary = new Dictionary<Enums.RoomType, Sprite>()
         {
             { Enums.RoomType.Normal, normalSprite },
             { Enums.RoomType.Elite, eliteSprite },
@@ -38,10 +51,12 @@ public class DungeonMaker : MonoBehaviour
             { Enums.RoomType.Rest, restSprite },
             { Enums.RoomType.Forge, forgeSprite }
         };
-
+        //NodeButton타입을 가진 2차원 배열 생성
         dungeonButtons = new NodeButton[maxFloor, maxColumn];
+        
+        //
         GenerateDungeon();
-        SelectStartNodes();
+       
         ConnectNodes_Optimized();
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
         PrintDungeonToConsole();
@@ -49,24 +64,22 @@ public class DungeonMaker : MonoBehaviour
 
     private void GenerateDungeon()
     {
-
+        // [0,0노드]로 부터 위치 조정
         Vector2 startPos = new Vector2(-300f, -350f);
         float xSpacing = 100f;
         float ySpacing = 100f;
 
-
+        //2차원 배열을 이용한 랜덤Type 노드 생성.
         for (int floor = 0; floor < maxFloor; floor++)
         {
             for (int col = 0; col < maxColumn; col++)
             {
-                // 강제 타입이 설정된 층이면 그것으로 사용
+                
                 Enums.RoomType type;
 
-                // 강제 타입이 설정된 층이면 그것으로 사용
-                if (forcedFloors.ContainsKey(floor))
-                    type = forcedFloors[floor];
-                else
-                    type = roomTypeData.GetRoomType(floor, col);
+                type = roomTypeData.GetRoomType(floor, col);
+                
+                    
                 GameObject go = Instantiate(roomButtonPrefab, mapParent);
                 NodeButton nodeButton = go.GetComponent<NodeButton>();
 
@@ -79,7 +92,9 @@ public class DungeonMaker : MonoBehaviour
                 nodeButton.floor = floor;
                 nodeButton.col = col;
                 nodeButton.isAvailable = type != Enums.RoomType.None;
-                nodeButton.SetRoomType(type, type != Enums.RoomType.None ? iconDictionary[type] : null);
+
+                //NodeButton.cs - SetRoomType() 버튼에 이미지 붙이기.
+                nodeButton.SetRoomType(type, type != Enums.RoomType.None ? iconSpriteDictionary[type] : null);
 
                 dungeonButtons[floor, col] = nodeButton;
 
@@ -87,41 +102,50 @@ public class DungeonMaker : MonoBehaviour
                 rt.anchoredPosition = new Vector2(startPos.x + col * xSpacing, startPos.y + floor * ySpacing);
             }
         }
+        LimitFloorNodeCount(0, startNodeCount);
     }
 
-    private void SelectStartNodes()
+    /// <summary>
+    /// 지정한 층의 노드 개수 조정
+    /// </summary>
+    /// <param name="floor">층수 선택</param>
+    /// <param name="limitCount">개수 선택</param>
+    private void LimitFloorNodeCount(int floor, int limitCount)
     {
-        // 기존 startNodes 초기화
-        startNodes.Clear();
+        
+        List<NodeButton> activeNode = new List<NodeButton>();
 
-        // 0층에서 생성 가능한 컬럼 리스트
-        List<int> availableCols = new List<int>();
-        for (int c = 0; c < maxColumn; c++)
+        // 1. 해당 층에서 현재 활성 노드 수집
+        for (int col = 0; col < maxColumn; col++)
         {
-            NodeButton node = dungeonButtons[0, c];
+            NodeButton node = dungeonButtons[floor, col];
+
             if (node != null && node.isAvailable)
-                availableCols.Add(c);
+                activeNode.Add(node);
         }
 
-        // startNodeCount 개수만큼 랜덤 선택
-        int count = Mathf.Min(startNodeCount, availableCols.Count);
-        for (int i = 0; i < count; i++)
-        {
-            int idx = Random.Range(0, availableCols.Count);
-            int col = availableCols[idx];
-            availableCols.RemoveAt(idx);
+        // 남길 개수보다 작으면 아무 작업 안함
+        if (activeNode.Count <= limitCount)
+            return;
 
-            startNodes.Add(dungeonButtons[0, col]);
+        // 2. 남길 개수만큼 랜덤으로 선택
+        List<NodeButton> randomSelecrtNode = new List<NodeButton>();
+
+        for (int currentCount = 0; currentCount < limitCount; currentCount++)
+        {
+            //다수의 노드 중 하나 선택
+            int selectNode = Random.Range(0, activeNode.Count);
+            randomSelecrtNode.Add(activeNode[selectNode]);
+            
+            //선택된 노드는 activeNode리스트에서 제거하여 다시 선택 금지.
+            activeNode.RemoveAt(selectNode);
         }
 
-        // 선택되지 않은 0층 노드는 모두 None 처리
-        for (int c = 0; c < maxColumn; c++)
+        // 3. 선택되지 않은 노드는 모두 None 처리
+        foreach (NodeButton notChoiceNode in activeNode)
         {
-            NodeButton node = dungeonButtons[0, c];
-            if (node != null && !startNodes.Contains(node))
-            {
-                node.SetRoomType(Enums.RoomType.None, null);
-            }
+            notChoiceNode.isAvailable = false;
+            notChoiceNode.SetRoomType(Enums.RoomType.None, null);
         }
     }
 
