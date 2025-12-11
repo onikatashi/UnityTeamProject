@@ -1,17 +1,26 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 /// <summary>
 /// 마우스 인식 관련 핸들 추가(IPointerEnterHandler, IPointerExitHandler)
 /// </summary>
 public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public int floor; // 층 정보
+    public int col;   // 컬럼 정보
+
 
     private GameObject highlight;
     private Image icon;
 
     public bool isAvailable = true;
+    public Enums.RoomType CurrentRoomType { get; private set; } // 현재 방 타입
+
+    // DungeonMaker에서 연결하기 위한 그래프 구조
+    public List<NodeButton> nextNodes = new List<NodeButton>();   // 아래층(다음층) 노드들
+    public List<NodeButton> prevNodes = new List<NodeButton>();   // 위층(이전층) 노드들
 
     void Awake()
     {
@@ -29,18 +38,41 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     void Start()
     {
-        //코드 수정 예정 아직 연동 코드 없음.
-        //RefreshVisual();
+       
+        RefreshVisual();
     }
+    public void SetRoomType(Enums.RoomType type, Sprite sprite)
+    {
+        CurrentRoomType = type;
+
+        if (type == Enums.RoomType.None)
+        {
+            isAvailable = false;
+            gameObject.SetActive(false);
+            return;
+        }
+
+        isAvailable = true;
+        gameObject.SetActive(true);
+
+        if (icon != null)
+        {
+            icon.sprite = sprite;
+            icon.color = Color.white;
+        }
+
+        RefreshVisual();
+    }
+
 
     private void RefreshVisual()
     {
-        //if (icon == null) return;
+        if (icon == null) return;
 
-        //// 이동 가능 여부 
-        //var color = icon.color;
-        //color.a = isAvailable ? 1f : 0.3f; // 이동 가능 여부에 따라 알파값
-        //icon.color = color;
+        // 이동 가능 여부 
+        var color = icon.color;
+        color.a = isAvailable ? 1f : 0.3f; // 이동 가능 여부에 따라 알파값
+        icon.color = color;
     }
 
     // 마우스가 이미지 범위 위에 있음.
