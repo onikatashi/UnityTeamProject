@@ -90,6 +90,11 @@ public class Monster3 : MonsterBase
             }
         }
 
+        if (mc != null)
+        {
+            mc.EndCharge();
+        }
+
         state = Enums.MonsterState.Die;
         Die();
     }

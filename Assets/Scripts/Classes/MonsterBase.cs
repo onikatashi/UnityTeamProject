@@ -75,7 +75,7 @@ public abstract class MonsterBase : MonoBehaviour
     {
         //agent.isStopped = true;
         agent.enabled = false;
-
+        Destroy(gameObject, 4f);
         //anim.SetTrigger("Die");
     }
 
