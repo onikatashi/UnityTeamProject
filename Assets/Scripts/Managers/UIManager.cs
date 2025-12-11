@@ -7,14 +7,17 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    private RectTransform canvas;                           // 캔버스 참조
+    private RectTransform canvas;                                   // 캔버스 참조
 
     [SerializeField]
-    private GameObject inventoryPanelPrefab;                // 인벤토리 패널 프리팹
-    public InventoryUIController inventoryUIController;     // 인벤토리 UI 컨트롤러
+    private GameObject inventoryPanelPrefab;                        // 인벤토리 패널 프리팹
+    public InventoryUIController inventoryUIController;             // 인벤토리 UI 컨트롤러
     [SerializeField]
-    private GameObject itemDescriptionPrefab;               // 아이템 설명 패널 프리팹
+    private GameObject itemDescriptionPanelPrefab;                  // 아이템 설명 패널 프리팹
     public ItemDescriptionUIController itemDescriptionUIController; // 아이템 설명 UI 컨트롤러
+    [SerializeField]
+    private GameObject synergyEffectPanelPrefab;                    // 시너지 효과 활성화 패널 프리팹
+    public SynergyEffectUIController synergyEffectUIController;     // 시너지 효과 UI 컨트롤러
 
     private void Awake()
     {
@@ -43,6 +46,7 @@ public class UIManager : MonoBehaviour
 
         InstantiateInventoryPanel(canvas);
         InstantiateItemDescriptionPanel(canvas);
+        InstantiateSynergyEffectPanel(canvas);
     }
 
     // Canvas 등록 해제
@@ -57,8 +61,24 @@ public class UIManager : MonoBehaviour
     // 인벤토리 UI 토글
     public void ToggleInventory()
     {
-
+        // 인벤토리 UI 토글
         inventoryUIController.gameObject.SetActive(!inventoryUIController.gameObject.activeSelf);
+        
+        // 인벤토리가 비활성화 되어있는데 아이템 설명창이 남아있는 경우 아이템 설명창도 hide
+        if (!inventoryUIController.gameObject.activeSelf && itemDescriptionUIController.gameObject.activeSelf)
+        {
+            itemDescriptionUIController.HideItemDescription();
+        }
+
+        // 시너지 효과는 오브젝트 풀을 쓰기 때문에 프리팹을 돌려주기 위해서 이렇게 경우를 나눔
+        if (synergyEffectUIController.gameObject.activeSelf)
+        {
+            synergyEffectUIController.HideSynergyEffectUI();
+        }
+        else
+        {
+            synergyEffectUIController.ShowSynergyEffect();
+        }
     }
 
     // InventoryPanel 생성
@@ -74,11 +94,22 @@ public class UIManager : MonoBehaviour
         inventoryUIController.UpdateItemIcon();
     }
 
+    // ItemDescriptionPanel 생성
     void InstantiateItemDescriptionPanel(RectTransform canvas)
     {
         // 아이템 설명 패널 생성 및 초기화
-        GameObject panel = Instantiate(itemDescriptionPrefab, canvas);
+        GameObject panel = Instantiate(itemDescriptionPanelPrefab, canvas);
         itemDescriptionUIController = panel.GetComponent<ItemDescriptionUIController>();
+        panel.SetActive(false);
+    }
+
+    // SynergyEffectPanel 생성
+    void InstantiateSynergyEffectPanel(RectTransform canvas)
+    {
+        // 시너지 활성화 패널 생성 및 초기화
+        GameObject panel = Instantiate(synergyEffectPanelPrefab, canvas);
+        synergyEffectUIController = panel.GetComponent<SynergyEffectUIController>();
+
         panel.SetActive(false);
     }
 
