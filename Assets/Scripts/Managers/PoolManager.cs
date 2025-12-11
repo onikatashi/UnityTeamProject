@@ -23,7 +23,7 @@ public class PoolManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
     // 오브젝트 풀링이 필요한 곳에서 풀 생성
     public void CreatePool<T>(Enums.PoolType key, 
         T prefab, int initialSize, Transform parent = null) where T : Component

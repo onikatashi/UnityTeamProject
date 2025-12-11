@@ -394,33 +394,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 202371295}
   m_CullTransparentMesh: 1
---- !u!1 &416933346 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2681786641243824683, guid: 70597a6d87de43a47bc45d55ac8dc810, type: 3}
-  m_PrefabInstance: {fileID: 4011297305517502432}
-  m_PrefabAsset: {fileID: 0}
---- !u!195 &416933352
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 416933346}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1
-  m_BaseOffset: 0.5
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &418803745
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,6 +497,11 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!4 &557228804 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3025332474507110704, guid: 70597a6d87de43a47bc45d55ac8dc810, type: 3}
+  m_PrefabInstance: {fileID: 4011297305517502432}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &768983073
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +691,50 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &912935752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 912935754}
+  - component: {fileID: 912935753}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &912935753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912935752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034dedd863b05dd43a6d688412f86d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &912935754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912935752}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.738528, y: -20.26762, z: 39.506496}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &943210733
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,7 +940,7 @@ GameObject:
   - component: {fileID: 1265434367}
   m_Layer: 3
   m_Name: player
-  m_TagString: Monster
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1085,8 +1107,9 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+  arrowPrefab: {fileID: 0}
+  arrowPoolSize: 5
   pCam: {fileID: 1813494983}
-  pSprite: {fileID: 1265434364}
 --- !u!1 &1465954805
 GameObject:
   m_ObjectHideFlags: 0
@@ -1564,20 +1587,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6819896112475095973, guid: 70597a6d87de43a47bc45d55ac8dc810, type: 3}
-      propertyPath: md
-      value: 
-      objectReference: {fileID: 11400000, guid: a88617f2daccf7746b3c5255d5e7b5da, type: 2}
-    - target: {fileID: 6819896112475095973, guid: 70597a6d87de43a47bc45d55ac8dc810, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1265434360}
+    - target: {fileID: 6819896112475095973, guid: 70597a6d87de43a47bc45d55ac8dc810, type: 3}
+      propertyPath: firepoint
+      value: 
+      objectReference: {fileID: 557228804}
+    - target: {fileID: 6819896112475095973, guid: 70597a6d87de43a47bc45d55ac8dc810, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 9077996087677029699, guid: a5308720e74fabf459340cbd886a2b4e, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2681786641243824683, guid: 70597a6d87de43a47bc45d55ac8dc810, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 416933352}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70597a6d87de43a47bc45d55ac8dc810, type: 3}
 --- !u!1001 &7550248842673208146
 PrefabInstance:
@@ -1680,3 +1704,4 @@ SceneRoots:
   - {fileID: 4011297305517502432}
   - {fileID: 7550248842673208146}
   - {fileID: 4318796}
+  - {fileID: 912935754}

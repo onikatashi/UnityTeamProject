@@ -9,6 +9,8 @@ public class Monster3 : MonsterBase
     public float explosionRanege = 10f;
     public LayerMask Player;
 
+    float timer = 0f;
+
     void Start()
     {
         mc = GetComponent<MonsterCharging>();

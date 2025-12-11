@@ -24,7 +24,10 @@ public abstract class MonsterBase : MonoBehaviour
     public float currentHp = 100f;
     public float detectRange = 10f;
 
-    public float timer = 0f;
+    public MonsterProjectile bulletPrefab;
+    public Transform firepoint;
+
+    PoolManager poolManager;
 
     protected virtual void Awake()
     {
@@ -34,6 +37,16 @@ public abstract class MonsterBase : MonoBehaviour
 
         agent.isStopped = false;
         agent.updateRotation = true;
+        poolManager = PoolManager.Instance;
+    }
+
+    private void Start()
+    {
+        if(bulletPrefab != null || firepoint != null)
+        {
+            poolManager.CreatePool<MonsterProjectile>(Enums.PoolType.MonsterProjectile, bulletPrefab, 5, null);
+        }
+        
     }
 
     protected virtual void Update()
@@ -74,5 +87,15 @@ public abstract class MonsterBase : MonoBehaviour
             state = Enums.MonsterState.Die;
             Die();
         }
+    }
+
+    public virtual MonsterProjectile GetMonsterProjectile()
+    {
+        return poolManager.Get<MonsterProjectile>(Enums.PoolType.MonsterProjectile);
+    }
+
+    public virtual void ReturnMonsterProjectile(MonsterProjectile mp)
+    {
+        poolManager.Return(Enums.PoolType.MonsterProjectile, mp);
     }
 }
