@@ -15,6 +15,8 @@ public class MonsterCharging : MonoBehaviour
     Vector2 rangeFillSize;
     Vector2 exSize;
     public MonsterData md;      // 공격 범위 참조할 데이터
+    int playerLayer;
+    Monster3 monster3;
 
     void Start()
     {
@@ -54,5 +56,23 @@ public class MonsterCharging : MonoBehaviour
         
         if (rangeFill != null) rangeFill.fillAmount = 0f;
     }
-
+    public void EndCharge()
+    {
+        isCharging = false;
+        rangeFill.gameObject.SetActive(false);
+        ex.rectTransform.sizeDelta = exSize;
+        timer = 0f;
+        
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == playerLayer)
+        {
+            Player player = other.GetComponent<Player>();
+            if (player != null)
+            {
+                player.TakeDamage(monster3.md.attackDamage);
+            }
+        }
+    }
 }
