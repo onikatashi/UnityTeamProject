@@ -11,7 +11,12 @@ public class MonsterProjectile : MonoBehaviour
     Vector3 moveDir;
     Vector3 startPosition;
     Monster2 monster2;
-    public LayerMask playerLayer;
+    int playerLayer;
+
+    private void Awake()
+    {
+        playerLayer = LayerMask.NameToLayer("Player");
+    }
 
     void Update()
     {
@@ -42,10 +47,13 @@ public class MonsterProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var player = other.GetComponent<Player>();
-        if(player != null)
+        if(other.gameObject.layer == playerLayer)
         {
-            player.TakeDamage(monster2.md.attackDamage);
+            Player player = other.GetComponent<Player>();
+            if (player != null)
+            {
+                player.TakeDamage(monster2.md.attackDamage);
+            }
         }
     }
     
