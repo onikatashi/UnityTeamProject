@@ -4,8 +4,8 @@ using UnityEngine;
 /// </summary>
 public class Monster2 : MonsterBase
 {
-    public MonsterData monsterData;
     float tolerance = 2f;
+    float timer = 0f;
 
     protected override void Idle()
     {
@@ -76,8 +76,21 @@ public class Monster2 : MonsterBase
         timer += Time.deltaTime;
         if (timer < md.attackSpeed) return;
 
+        //풀에서 총알가져오기
+        MonsterProjectile mp = GetMonsterProjectile();
 
-        Debug.Log("공격2");
+        //발사위치
+        Vector3 shootPos = firepoint != null ? firepoint.position : transform.position;
+        mp.transform.position = shootPos;
+
+        //플레이어 방향계산
+        Vector3 targetPos = player.transform.position;
+        Vector3 dir = (targetPos - shootPos).normalized;
+
+        //회전방향 잡아주는애
+        if(dir.sqrMagnitude > 0.0001f) mp.transform.rotation = Quaternion.LookRotation(dir);
+
+        mp.Init(this, dir);
 
         //anim.SetTrigger("Shoot"); 
 

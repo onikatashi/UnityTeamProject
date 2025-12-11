@@ -5,6 +5,8 @@ using UnityEngine;
 /// </summary>
 public class Monster1 : MonsterBase
 {
+    float timer = 0f;
+
     protected override void Idle()
     {
         agent.isStopped = true;

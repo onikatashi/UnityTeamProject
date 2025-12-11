@@ -24,8 +24,6 @@ public abstract class MonsterBase : MonoBehaviour
     public float currentHp = 100f;
     public float detectRange = 10f;
 
-    public float timer = 0f;
-
     public MonsterProjectile bulletPrefab;
     public Transform firepoint;
 
@@ -44,7 +42,11 @@ public abstract class MonsterBase : MonoBehaviour
 
     private void Start()
     {
-        poolManager.CreatePool<MonsterProjectile>(Enums.PoolType.MonsterProjectile, bulletPrefab, 5, firepoint);
+        if(bulletPrefab != null || firepoint != null)
+        {
+            poolManager.CreatePool<MonsterProjectile>(Enums.PoolType.MonsterProjectile, bulletPrefab, 5, null);
+        }
+        
     }
 
     protected virtual void Update()

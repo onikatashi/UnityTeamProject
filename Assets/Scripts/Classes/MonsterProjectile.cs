@@ -8,32 +8,22 @@ public class MonsterProjectile : MonoBehaviour
 {
     public float speed = 10f;
     public float destroyDistance = 20f;
+    Vector3 moveDir;
     Vector3 startPosition;
-
-    public Transform firepoint;
-    MonsterData md;
     Monster2 monster2;
-    float timer = 0;
-    
-    void Start()
-    {
-        startPosition = transform.position;
-        md = GetComponent<MonsterData>();
-    }
+    public LayerMask playerLayer;
 
     void Update()
     {
-        timer += Time.deltaTime;
-        if (timer > md.attackSpeed)
-        {
-            fire();
-        }
-
+        fire();
     }
 
-    public void Init(Monster2 mt2)
+    public void Init(Monster2 mt2, Vector3 dir)
     {
         this.monster2 = mt2;
+        startPosition = transform.position;
+        moveDir = dir.normalized;
+        gameObject.SetActive(true);
 
     }
 
@@ -48,8 +38,17 @@ public class MonsterProjectile : MonoBehaviour
             return;
         }
 
-        timer = 0;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        var player = other.GetComponent<Player>();
+        if(player != null)
+        {
+            player.TakeDamage(monster2.md.attackDamage);
+        }
+    }
+    
 
     public void ReloadPool()
     {
