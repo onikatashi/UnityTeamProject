@@ -18,7 +18,7 @@ MonoBehaviour:
   iStatDescription: "\uACF5\uACA9\uB825 + 10"
   iDescription: "\uD754\uD55C \uAC80"
   iRank: 0
-  iSynergy: 00000000
+  iSynergy: 0000000001000000
   iEffect: 0
   iPrice: 0
   iBaseStat:
