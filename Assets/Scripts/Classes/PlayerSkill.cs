@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.Layouts;
 
 /// <summary>
 /// 스킬 실행 스크립트
@@ -6,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerSkill : MonoBehaviour
 {
+    public Skill_Meteor meteor;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -14,5 +17,7 @@ public class PlayerSkill : MonoBehaviour
             SkillSlotManager.Instance.UseSkill(1);
         if (Input.GetKeyDown(KeyCode.Alpha3))
             SkillSlotManager.Instance.UseSkill(2);
+
+        if (Input.GetKeyDown(KeyCode.Space)) SkillSlotManager.Instance.AddSkill(meteor);
     }
 }

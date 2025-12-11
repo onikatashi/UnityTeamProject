@@ -20,7 +20,7 @@ public class Skill_DamageBuff : SkillBase
         if (!CanUse()) return;
 
         //마지막 사용 시간 갱신
-        lastUseTime = Time.time;
+        lastUseTime = Time.realtimeSinceStartup;
 
         //코루틴 실행
         player.StartCoroutine(DoDamageBuff(player));

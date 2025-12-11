@@ -13,7 +13,7 @@ public class Skill_Heal : SkillBase
     {
         if (!CanUse()) return;
 
-        lastUseTime = Time.time;
+        lastUseTime = Time.realtimeSinceStartup;
 
         //만약 현재체력이 최대체력보다 적으면, 한대라도 맞았으면
         if(player.currentHp < player.finalStats.maxHp)
