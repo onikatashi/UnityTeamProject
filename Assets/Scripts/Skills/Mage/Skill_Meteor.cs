@@ -23,6 +23,7 @@ public class Skill_Meteor : SkillBase
 
     GameObject rangeInstance;                   //사정거리UI 인스턴스
     GameObject areaInstance;                    //데미지 범위UI 인스턴스 (나중에 범위늘려주는 옵션 넣을수도 있음)
+    GameObject meteorInstance;                  //메테오 오브젝트 인스턴스
 
     bool isAiming = false;                      //스킬 조준하고 있는 중인지 (나중에 스킬 취소 용)
     Coroutine runningRoutine = null;            //현재 돌고있는 코루틴
@@ -93,6 +94,7 @@ public class Skill_Meteor : SkillBase
         {
             areaInstance = GameObject.Instantiate(areaIndicatorPrefab);
         }
+        
 
         //Instantiate 된 Instance 켜주기
         if(rangeInstance != null) rangeInstance.SetActive(true);
@@ -174,7 +176,7 @@ public class Skill_Meteor : SkillBase
         {
             //타겟 위로 10만큼 높이에서 떨어지게하기 (나중에 수치조정 해도됨)
             Vector3 start = targetPos + Vector3.up * 10f;
-            GameObject.Instantiate(meteorPrefab, start, Quaternion.identity);
+            meteorInstance = Instantiate(meteorPrefab, start, Quaternion.identity);
         }
 
         // 메테오 떨어지는거 기다려주고
@@ -188,6 +190,9 @@ public class Skill_Meteor : SkillBase
             var mob = m.GetComponent<MonsterBase>();
             if (mob != null) mob.TakeDamage(dmg);
             Debug.Log($"맞은 몬스터 : {mob.name}");
+            
         }
+
+        Destroy(meteorInstance);
     }
 }
