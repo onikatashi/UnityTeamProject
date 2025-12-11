@@ -48,6 +48,7 @@ public class SkillSlotManager : MonoBehaviour
 
                 //슬롯에 넣어주기
                 skillSlots[i] = instance;
+                skillSlots[i].ResetRuntime();
 
                 Debug.Log($"스킬 {instance.skillName} 이(가) {i}번 슬롯에 장착됨");
                 return;

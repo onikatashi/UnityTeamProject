@@ -50,6 +50,12 @@ public abstract class SkillBase : ScriptableObject
     /// <returns></returns>
     public bool CanUse()
     {
-        return Time.time >= lastUseTime + cooldown;
+        return Time.realtimeSinceStartup >= lastUseTime + cooldown;
+    }
+
+    //스킬 시작하자마자 time.realtimeSinceStartUp을 안하는 경우 사용해야 하는 것
+    public virtual void ResetRuntime()
+    {
+        lastUseTime = -999f;
     }
 }
