@@ -8,21 +8,24 @@ using UnityEngine.UI;
 /// </summary>
 public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    //노드 정보----------------------------------------------------------------------
     public int floor; // 층 정보
     public int col;   // 컬럼 정보
+
+    public bool isAvailable = true; //현재 Room사용 가능 유무(RoomType == None 또는 Null체크시 사용)
+    public Enums.RoomType CurrentRoomType { get; private set; }  // 현재 방 타입
 
     //이미지 스프라이트와 하이라이트 UI연동
     private Image icon;
     private GameObject highlight;
-   
-
-    //현재 방의 정보
-    public bool isAvailable = true;
-    public Enums.RoomType CurrentRoomType { get; private set; } // 현재 방 타입
+    
+    //--------------------------------------------------------------------------------
 
     // DungeonMaker에서 연결하기 위한 그래프 구조
     public List<NodeButton> nextNodes = new List<NodeButton>();   // 아래층(다음층) 노드들
     public List<NodeButton> prevNodes = new List<NodeButton>();   // 위층(이전층) 노드들
+
+    //--------------------------------------------------------------------------------
 
     void Awake()
     {

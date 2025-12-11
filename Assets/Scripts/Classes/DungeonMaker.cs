@@ -6,7 +6,7 @@ public class DungeonMaker : MonoBehaviour
     //노드 생성설정
     private int maxFloor = 8;
     private int maxColumn = 6;
-    private int startNodeCount = 3;
+    private int startNodeCountLimit = 3;
 
 
 
@@ -27,7 +27,6 @@ public class DungeonMaker : MonoBehaviour
     //시작노드 정보(층수,열, 사용하는가?, RoomType,다음노드 정보)
     private List<NodeButton> startNodes = new List<NodeButton>();
     
-
     //룸 타입 스크립트에서 정보 가져오기.
     public RoomTypeData roomTypeData;
 
@@ -39,7 +38,7 @@ public class DungeonMaker : MonoBehaviour
     private NodeButton[,] dungeonButtons;
 
  
-
+    //---------------------------------------------------------------------------------------------
 
     void Start()
     {
@@ -62,6 +61,9 @@ public class DungeonMaker : MonoBehaviour
         PrintDungeonToConsole();
     }
 
+    //---------------------------------------------------------------------------------------------
+
+    //노드 생성부---------------------------------------------------------------------------------------------
     private void GenerateDungeon()
     {
         // [0,0노드]로 부터 위치 조정
@@ -76,12 +78,11 @@ public class DungeonMaker : MonoBehaviour
             {
                 
                 Enums.RoomType type;
-
                 type = roomTypeData.GetRoomType(floor, col);
                 
                     
-                GameObject go = Instantiate(roomButtonPrefab, mapParent);
-                NodeButton nodeButton = go.GetComponent<NodeButton>();
+                GameObject nodePrefab = Instantiate(roomButtonPrefab, mapParent);
+                NodeButton nodeButton = nodePrefab.GetComponent<NodeButton>();
 
                 if (nodeButton == null)
                 {
@@ -89,27 +90,32 @@ public class DungeonMaker : MonoBehaviour
                     continue;
                 }
 
+                //NodeButton.cs에 각 노드 정보 저장.----------------------------------------------------------
                 nodeButton.floor = floor;
                 nodeButton.col = col;
-                nodeButton.isAvailable = type != Enums.RoomType.None;
+                nodeButton.isAvailable = (type != Enums.RoomType.None);//RoomType이 None이 아니면 True저장.
 
                 //NodeButton.cs - SetRoomType() 버튼에 이미지 붙이기.
                 nodeButton.SetRoomType(type, type != Enums.RoomType.None ? iconSpriteDictionary[type] : null);
 
                 dungeonButtons[floor, col] = nodeButton;
 
-                RectTransform rt = go.GetComponent<RectTransform>();
-                rt.anchoredPosition = new Vector2(startPos.x + col * xSpacing, startPos.y + floor * ySpacing);
+                //노드 일정간격 배치.
+                RectTransform nodeTransform = nodePrefab.GetComponent<RectTransform>();
+                nodeTransform.anchoredPosition = new Vector2(startPos.x + col * xSpacing, startPos.y + floor * ySpacing);
+
+                //---------------------------------------------------------------------------------------------
             }
         }
-        LimitFloorNodeCount(0, startNodeCount);
+        //모든 노드 생성 후 선택한 층 [개수 제한].
+        LimitFloorNodeCount(0, startNodeCountLimit);
     }
 
     /// <summary>
     /// 지정한 층의 노드 개수 조정
     /// </summary>
     /// <param name="floor">층수 선택</param>
-    /// <param name="limitCount">개수 선택</param>
+    /// <param name="limitCount">총 개수 선택</param>
     private void LimitFloorNodeCount(int floor, int limitCount)
     {
         
@@ -129,11 +135,10 @@ public class DungeonMaker : MonoBehaviour
             return;
 
         // 2. 남길 개수만큼 랜덤으로 선택
-        List<NodeButton> randomSelecrtNode = new List<NodeButton>();
-
+        List<NodeButton> randomSelecrtNode = new List<NodeButton>(); 
         for (int currentCount = 0; currentCount < limitCount; currentCount++)
         {
-            //다수의 노드 중 하나 선택
+            //활성노드 중 하나 선택
             int selectNode = Random.Range(0, activeNode.Count);
             randomSelecrtNode.Add(activeNode[selectNode]);
             
@@ -149,6 +154,11 @@ public class DungeonMaker : MonoBehaviour
         }
     }
 
+    //-------------------------------------------------------------------------------------------------------
+
+    //라인 생성부---------------------------------------------------------------------------------------------
+
+    //노드 라인연결 로직.
     private void ConnectNodes_Optimized()
     {
         foreach (var startNode in startNodes)
@@ -184,7 +194,7 @@ public class DungeonMaker : MonoBehaviour
 
         FixIsolatedNodes_Optimized();
     }
-
+    //격리 노드 연결시키기.
     private void FixIsolatedNodes_Optimized()
     {
         for (int f = 1; f < maxFloor; f++) // 0층 제외
@@ -208,7 +218,7 @@ public class DungeonMaker : MonoBehaviour
             }
         }
     }
-
+    //다음 노드 확장 검색.
     private NodeButton FindNextNodeWithExpandedRange(NodeButton current, int nextFloor)
     {
         for (int range = 1; range < maxColumn; range++)
@@ -233,7 +243,7 @@ public class DungeonMaker : MonoBehaviour
         }
         return null;
     }
-
+    //+-1안쪽 없을 때 확장로직.
     private List<NodeButton> GetSideCandidates(NodeButton current, int nextFloor)
     {
         List<NodeButton> sideCandidates = new List<NodeButton>();
@@ -249,7 +259,7 @@ public class DungeonMaker : MonoBehaviour
         }
         return sideCandidates;
     }
-
+    //가까운 이전노드 검색.
     private NodeButton FindNearestPreviousNode(int floor, int col)
     {
         NodeButton best = null;
@@ -270,7 +280,7 @@ public class DungeonMaker : MonoBehaviour
         }
         return best;
     }
-
+    //가까운 다음 노드 검색.
     private NodeButton FindNearestNextNode(int floor, int col)
     {
         NodeButton best = null;
