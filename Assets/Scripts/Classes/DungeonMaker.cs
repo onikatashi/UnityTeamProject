@@ -56,7 +56,7 @@ public class DungeonMaker : MonoBehaviour
         //
         GenerateDungeon();
 
-        ConnectNodes_Line();
+        ConnectNodes();
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
         PrintDungeonToConsole();
     }
@@ -159,16 +159,23 @@ public class DungeonMaker : MonoBehaviour
     //라인 생성부---------------------------------------------------------------------------------------------
 
     //노드 라인연결 로직.
-    private void ConnectNodes_Line()
+    private void ConnectNodes()
     {
+        //startNodes안에있는 노드의 값을 startNode에 입력
         foreach (var startNode in startNodes)
         {
+            //현재 사용중인 노드 조작을 위해  NodeButton current 
             NodeButton current = startNode;
+            //연속 노드 체크
             int straightCount = 1;
 
-            for (int f = current.floor; f < maxFloor - 1; f++)
+
+            //현재 노드의 floor으로 부터 maxFloor까지 순회하면서 체크
+            for (int floor = current.floor; floor < maxFloor - 1; floor++)
             {
-                int nextFloor = f + 1;
+                //현재 층보다 상위 층 확인.
+                int nextFloor = floor + 1;
+                
                 NodeButton picked = FindNextNodeWithExpandedRange(current, nextFloor);
                 if (picked == null) break;
 
@@ -196,6 +203,26 @@ public class DungeonMaker : MonoBehaviour
 
         FixIsolatedNodes_Optimized();
     }
+
+    //다음 노드 확장 검색.
+    private NodeButton FindNextNodeWithExpandedRange(NodeButton current, int nextFloor)
+    {
+        //
+        for (int checkrange = 1; checkrange < maxColumn; checkrange++)
+        {
+            //Column의 검색 구간 최소, 최대 범위 설정.
+            int startCol = Mathf.Max(0, current.col - checkrange);
+            int endCol = Mathf.Min(maxColumn - 1, current.col + checkrange);
+
+            //범위 설정.
+            NodeButton found = FindNodeInRange(nextFloor, startCol, endCol, current.transform, true);
+            if (found != null) return found;
+        }
+        return null;
+    }
+
+
+
     //격리 노드 연결시키기.
     private void FixIsolatedNodes_Optimized()
     {
@@ -220,28 +247,9 @@ public class DungeonMaker : MonoBehaviour
             }
         }
     }
-    //다음 노드 확장 검색.
-    private NodeButton FindNextNodeWithExpandedRange(NodeButton current, int nextFloor)
-    {
-        for (int range = 1; range < maxColumn; range++)
-        {
-            int startCol = Mathf.Max(0, current.col - range);
-            int endCol = Mathf.Min(maxColumn - 1, current.col + range);
-
-            NodeButton found = FindNodeInRange(
-                nextFloor,
-                startCol,
-                endCol,
-                current.transform,
-                true
-            );
-
-            if (found != null) return found;
-        }
-
-        return null;
-    }
+    
     //+-1안쪽 없을 때 확장로직.
+
     private readonly List<NodeButton> sideList = new List<NodeButton>(2);
 
     private List<NodeButton> GetSideCandidates(NodeButton current, int nextFloor)

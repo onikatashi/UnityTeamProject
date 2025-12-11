@@ -30,9 +30,6 @@ public class LineDrawer : MonoBehaviour
                     continue;
                 }
 
-
-
-
                 foreach (NodeButton targetNode in NodeData.nextNodes)
                 {
                     if (targetNode == null || targetNode.CurrentRoomType == Enums.RoomType.None)
