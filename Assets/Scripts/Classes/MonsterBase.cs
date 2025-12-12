@@ -28,6 +28,7 @@ public abstract class MonsterBase : MonoBehaviour
     public Transform firepoint;
 
     PoolManager poolManager;
+    public bool isDef = false;
 
     protected virtual void Awake()
     {
@@ -51,6 +52,8 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (isDef) return;
+
         switch (state)
         {
             case Enums.MonsterState.Idle:

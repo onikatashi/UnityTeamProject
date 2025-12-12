@@ -1,13 +1,14 @@
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
-/// 근접 몬스터 패턴1
+/// 근접 몬스터 패턴2
 /// </summary>
-public class Monster1 : MonsterBase
+public class Monster4 : MonsterBase
 {
     float timer = 0f;
-    int playerLayer;
-
+    float duration = 5f;
+    
     protected override void Idle()
     {
         agent.isStopped = true;
@@ -44,10 +45,12 @@ public class Monster1 : MonsterBase
     }
     protected override void Attack()
     {
+        if (isDef) return;
         agent.isStopped = true;
         agent.updateRotation = false;
 
         float dis = Vector3.Distance(transform.position, player.transform.position);
+        
         if (dis > md.attackRange)
         {
             agent.updateRotation = true;
@@ -56,25 +59,43 @@ public class Monster1 : MonsterBase
 
             return;
         }
-        timer += Time.deltaTime;
 
-        if (timer < md.attackSpeed) return;
-        Debug.Log("공격1");
-        //anim.SetTrigger("Attack");
-
+        StartCoroutine(Def());
         timer = 0f;
     }
 
-    private void OnTriggerEnter(Collider other)
+    IEnumerator Def()
     {
-        if (other.gameObject.layer == playerLayer)
+        isDef = true;
+        while(timer < duration)
         {
-            Player player = other.GetComponent<Player>();
-            if (player != null)
-            {
-                player.TakeDamage(this.md.attackDamage);
-            }
+            timer += Time.deltaTime;
+            state = Enums.MonsterState.Attack;
+            //anim.SetTrigger("Attack");
+            Debug.Log("공격2");
         }
+        yield return new WaitForSeconds(duration);
+        isDef = false;
+    }
+
+    public override void TakeDamage(float dmg)
+    {
+        Vector3 dir = (player.transform.position - transform.position).normalized;
+
+        float dot = Vector3.Dot(transform.forward, dir);
+
+        if (dot > 0)  // 정면
+        {
+            float frontDmg = dmg * 0.2f;  // 80% 감소
+            currentHp -= frontDmg;
+        }
+
+        else  // 후면
+        {
+            currentHp -= dmg;
+        }
+
+        if (currentHp <= 0) Die();
     }
 
     private void OnDrawGizmosSelected()

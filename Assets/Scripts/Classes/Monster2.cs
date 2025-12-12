@@ -101,8 +101,8 @@ public class Monster2 : MonsterBase
 
     private void OnDrawGizmosSelected()
     {
-        //Gizmos.color = Color.blue;
-        //Gizmos.DrawWireSphere(transform.position, md.attackRange);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, detectRange);
 
         Gizmos.color = Color.red;
         if (md != null) Gizmos.DrawWireSphere(transform.position, md.attackRange);
