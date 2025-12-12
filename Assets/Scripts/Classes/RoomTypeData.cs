@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class RoomTypeData : MonoBehaviour
 {
+    public DungeonMaker dungeonMaker;
     // 1.기본 방 확률 딕셔너리. <방종류, 확률>
     private Dictionary<Enums.RoomType, float> roomProbabilities
         = new Dictionary<Enums.RoomType, float>();
@@ -54,7 +55,29 @@ public class RoomTypeData : MonoBehaviour
         // 예시 : forcedRooms.Add((4, 2), Enums.RoomType.Rest);
 
         // [0층(시작노드는 전부 노말 던전]
-        forcedFloors.Add(0, Enums.RoomType.Normal);
+        
+        forcedFloors.Add(dungeonMaker.maxFloor - 1, Enums.RoomType.Boss);//맨끝 보스 노드
+        forcedFloors.Add(dungeonMaker.maxFloor - 2, Enums.RoomType.Rest);//보스전 휴식
+        forcedFloors.Add(dungeonMaker.maxFloor - 3, Enums.RoomType.Elite);//휴식직전 엘리트던전
+        forcedFloors.Add(0, Enums.RoomType.Normal);//시작 노드 노말
+
+        //2종류 번갈아 출현시키기.
+        //// [보스 직전층(maxFloor - 2)] → 번갈아 Shop / Rest 생성
+        //int restFloor = dungeonMaker.maxFloor - 2;
+
+        //// 50% 확률로 첫 번째 타입(Random Start)
+        //bool startWithRest = Random.value < 0.5f;
+        //Enums.RoomType firstType = startWithRest ? Enums.RoomType.Rest : Enums.RoomType.Shop;
+        //Enums.RoomType secondType = startWithRest ? Enums.RoomType.Shop : Enums.RoomType.Rest;
+
+        //// 열마다 번갈이 배치
+        //for (int col = 0; col < dungeonMaker.maxColumn; col++)
+        //{
+        //    Enums.RoomType assignedType = (col % 2 == 0) ? firstType : secondType;
+        //    forcedRooms.Add((restFloor, col), assignedType);
+        //}
+
+
     }
 
     //-----------------------------------------------------------------------
@@ -64,9 +87,9 @@ public class RoomTypeData : MonoBehaviour
 
     //.TryGetValue( 키값 검색 out var [있으면 True, 없으면 False해서 처리안함.])
     //               ㄴ> [InitForcedRooms]에서 미리선언됨 forcedFloors.Add(0, Enums.RoomType.Normal) ==0층은 노말!
-    
+
     //로직 => 현재 노드가 1.특정노드냐? 2.특정층이냐? 3.둘다 아니면 일반 확률기반 생성.
-    
+
     public Enums.RoomType GetRoomType(int floor, int column)
     {
         // 1️. 특정 노드 강제
