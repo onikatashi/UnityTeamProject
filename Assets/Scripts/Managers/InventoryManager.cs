@@ -1,8 +1,7 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -146,6 +145,9 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
+        // 아이템 시너지 카운트 업데이트
+        CheckActiveSynergy();
+
         // 아이템 획득 시 시너지 효과 업데이트
         uiManager.synergyEffectUIController.ReturnSynergySlot();
         uiManager.synergyEffectUIController.ShowSynergyEffect();
@@ -236,12 +238,16 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
+        indexByItemId.Remove(Inventory[slotIndex].iId);
+        Inventory[slotIndex] = null;
+
+        // 아이템 시너지 카운트 업데이트
+        CheckActiveSynergy();
+
         // 아이템 제거 시, 시너지 효과 패널 업데이트
         uiManager.synergyEffectUIController.ReturnSynergySlot();
         uiManager.synergyEffectUIController.ShowSynergyEffect();
 
-        indexByItemId.Remove(Inventory[slotIndex].iId);
-        Inventory[slotIndex] = null;
         itemCount--;
 
         if(currentIndex >= slotIndex)
@@ -260,6 +266,79 @@ public class InventoryManager : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    // 시너지 빙고 확인
+    public void CheckActiveSynergy()
+    {
+        // 재계산 전에 모든 시너지 카운트를 0으로 초기화
+        var synergyTypes = synergyActiveCount.Keys.ToList();
+        foreach (var type in synergyTypes)
+        {
+            synergyActiveCount[type] = 0;
+        }
+
+        foreach(int[] line in lineCheck)
+        {
+            // 첫 번째 슬롯에 아이템이 없거나, 첫 번째 아이템에 시너지가 없으면 다음 라인 확인
+            if (Inventory[line[0]] == null 
+                || Inventory[line[0]].iSynergy == null 
+                || Inventory[line[0]].iSynergy.Count == 0)
+            {
+                continue;
+            }
+
+            // 첫 번째 슬롯에 있는 아이템의 모든 시너지를 HashSet으로 설정
+            HashSet<Enums.ItemSynergy> checkSynergy = Inventory[line[0]].iSynergy
+                .Where(x => x != Enums.ItemSynergy.None)
+                .ToHashSet();
+
+            // 시너지가 없다면 다음 라인 확인
+            if (checkSynergy.Count == 0)
+            {
+                continue;
+            }
+
+            // 나머지 슬롯을 순회하며 교집합 업데이트
+            bool isLineEmpty = false;
+            for (int i = 1; i < line.Length; i++)
+            {
+                int index = line[i];
+
+                // 아이템이 비어있거나 시너지가 비어있으면 실패
+                if (Inventory[index] == null
+                || Inventory[index].iSynergy == null
+                || Inventory[index].iSynergy.Count == 0)
+                {
+                    isLineEmpty = true;
+                    break;
+                }
+
+                // 현재 슬롯에 있는 아이템의 모든 시너지를 HashSet을 생성
+                HashSet<Enums.ItemSynergy> currentItemSynergy = Inventory[index].iSynergy
+                    .Where(x => x != Enums.ItemSynergy.None)
+                    .ToHashSet();
+
+                // 첫 번째 슬롯의 아이템 시너지와 교집합 연산
+                checkSynergy.IntersectWith(currentItemSynergy);
+
+                // 교집합 결과가 비어있다면, 공통 시너지 존재하지 않음
+                if (checkSynergy.Count == 0)
+                {
+                    break;
+                }
+            }
+
+            // 아이템이 비어있으면 다음 라인으로
+            if (isLineEmpty) continue;
+
+            // 남은 공통 시너지 활성화
+            foreach (var synergy in checkSynergy)
+            {
+                synergyActiveCount[synergy]++;
+            }
+
         }
     }
 }

@@ -5,25 +5,34 @@ using UnityEngine.UI;
 
 public class SynergySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public SynergyData synergyData;                 // 시너지 데이터
     public Image synergyIcon;                       // 시너지 아이콘
     public TextMeshProUGUI synergyName;             // 시너지 이름
     public TextMeshProUGUI activeSynergyCount;      // 활성화된 시너지 수 / 최대 활성화 수
 
-    public void SetUp(Sprite synergyIcon, string synergyName, int activeCount, int maxCount)
+    UIManager uiManager;
+
+    private void Start()
     {
-        this.synergyIcon.sprite = synergyIcon;
-        this.synergyName.text = synergyName;
+        uiManager = UIManager.Instance;
+    }
+
+    public void SetUp(SynergyData synergyData, int activeCount, int maxCount)
+    {
+        this.synergyData = synergyData;
+        this.synergyIcon.sprite = synergyData.synergyIcon;
+        this.synergyName.text = synergyData.synergyName;
         activeSynergyCount.text = activeCount.ToString() + " / " + maxCount.ToString();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-
+        uiManager.SynergyDescriptionUIController.ShowSynergyDescription(synergyData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-
+        uiManager.SynergyDescriptionUIController.HideSynergyDescription();
     }
 
 }
