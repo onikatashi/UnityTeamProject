@@ -62,7 +62,7 @@ public class PlayerAttack : MonoBehaviour
         Debug.Log($"[TryAttack] using class logic = {c.name}");
 
         //직업의 기본 공격 실행
-        //c.BasicAttack(player, monsterLayer);
+        c.BasicAttack(player, monsterLayer);
 
         Debug.Log("TryAttack 실행");
         return true;
