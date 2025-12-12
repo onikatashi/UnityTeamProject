@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: "\uBC29\uD328\uBAAC\uC2A4\uD0C0"
   m_EditorClassIdentifier: 
   monsterRank: 0
-  mId: 4
+  mId: 0
   monsterName: 
   maxHp: 0
   attackDamage: 0
-  attackRange: 2
-  attackSpeed: 1
+  attackRange: 0
+  attackSpeed: 0
   projectileCount: 0
   projectileSpeed: 0
   moveSpeed: 0
   dropGold: 0
   dropExp: 0
   shield: 0
-  mosterPrefab: {fileID: 3631506312208516394, guid: f74d423eb36dfe64880d6babdecb24f9, type: 3}
+  mosterPrefab: {fileID: 0}
   stunGage: 0
