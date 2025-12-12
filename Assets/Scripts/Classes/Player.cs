@@ -12,6 +12,9 @@ public class Player : MonoBehaviour
     // Player는 Prefab으로 DungeonManager에서 만들어서 진행
     public static Player Instance;
 
+    //스킬에 player로 들고올수 있게 캐싱
+    public PlayerMove move;
+
     //직업 데이터 넣는곳, 처음은 Warrior고정, 직업 변경시 바꿔줘야함.
     public ClassData classStat;
 
@@ -43,6 +46,8 @@ public class Player : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         else Destroy(gameObject);
+
+        move = GetComponent<PlayerMove>();
 
         pSprite = transform.Find("Sprite");
 

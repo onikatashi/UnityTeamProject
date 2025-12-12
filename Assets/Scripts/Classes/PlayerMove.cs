@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
+
     CharacterController cc;
     Transform cam;
+
+    public bool canMove = true;         //외부에서 사용해야해서 public 생성
 
     void Start()
     {
@@ -19,6 +22,8 @@ public class PlayerMove : MonoBehaviour
 
     void Move()
     {
+        if (!canMove) return;       //canMove상태가 아니면 못움직임
+
         float mvSpd = Player.Instance.finalStats.moveSpeed;
 
         float x = Input.GetAxisRaw("Horizontal");
