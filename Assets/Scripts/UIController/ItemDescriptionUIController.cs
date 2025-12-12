@@ -83,6 +83,10 @@ public class ItemDescriptionUIController : MonoBehaviour
         for (int i = 0; i < itemData.iSynergy.Count; i++)
         {
             DescriptionSynergyUI icon = poolManager.Get<DescriptionSynergyUI>(Enums.PoolType.DescriptionSynergy);
+
+            // 오브젝트의 자식 인덱스를 정해줌 (위부터 차례대로 나오게 하기 위함)
+            icon.transform.SetSiblingIndex(i);
+
             SynergyData sd = synergyManager.GetSynergyData(itemData.iSynergy[i]);
             icon.SetUp(sd.synergyIcon, sd.synergyName);
             synergyUIList.Add(icon);

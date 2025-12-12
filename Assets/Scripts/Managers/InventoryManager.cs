@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
@@ -12,13 +13,14 @@ public class InventoryManager : MonoBehaviour
 
     int currentIndex = 0;                                   // 다음 아이템이 들어갈 위치 인덱스
     int lineSize = 3;                                       // 한 줄에 있는 슬롯 개수
-    public Dictionary<Enums.ItemSynergy, int> synergyCount;        // 시너지 효과 카운트 (키: 시너지 종류, 값: 시너지 개수)
-    public Dictionary<Enums.ItemSynergy, int> synergyActiveCount;  // 시너지 활성화 개수 (키: 시너지 종류, 값: 활성화된 시너지 개수)
+    public SortedDictionary<Enums.ItemSynergy, int> synergyCount;        // 시너지 효과 카운트 (키: 시너지 종류, 값: 시너지 개수)
+    public SortedDictionary<Enums.ItemSynergy, int> synergyActiveCount;  // 시너지 활성화 개수 (키: 시너지 종류, 값: 활성화된 시너지 개수)
     public Dictionary<int, int> reinforcedSlots;            // 강화된 슬롯 카운트 (키: 슬롯 인덱스, 값: 강화 레벨)
     Dictionary<int, int> indexByItemId;                     // 아이템 ID로 슬롯 인덱스 찾기 위한 딕셔너리
     List<int[]> lineCheck;                                  // 줄 별 시너지 효과가 완성되었는지 확인하기 위한 2차원 배열
 
     UIManager uiManager;
+    ItemManager itemManager;
 
     private void Awake()
     {
@@ -33,8 +35,9 @@ public class InventoryManager : MonoBehaviour
         }
 
         Inventory = new ItemData[9];
-        synergyCount = new Dictionary<Enums.ItemSynergy, int>();
-        synergyActiveCount = new Dictionary<Enums.ItemSynergy, int>();
+        synergyCount = new SortedDictionary<Enums.ItemSynergy, int>();
+        synergyActiveCount = new SortedDictionary<Enums.ItemSynergy, int>();
+
         indexByItemId = new Dictionary<int, int>();
         GenerateLineCheck();
         InitReinforceSlots();
@@ -46,6 +49,7 @@ public class InventoryManager : MonoBehaviour
     void Start()
     {
         uiManager = UIManager.Instance;
+        itemManager = ItemManager.Instance;
     }
 
     // 강화슬롯 초기화
@@ -152,27 +156,70 @@ public class InventoryManager : MonoBehaviour
         uiManager.synergyEffectUIController.ReturnSynergySlot();
         uiManager.synergyEffectUIController.ShowSynergyEffect();
 
-        // currentIndex 가 Inventory.Length 를 넘지 않도록 처리
-        // Remove 했을 때, 중간 아이템이 비는 슬롯에 아이템 추가하도록 처리
-        while (true)
+        // currentIndex 다시 설정
+        for (int i = 0; i < Inventory.Length; i++)
         {
-            if(currentIndex + 1 <= Inventory.Length -1 && Inventory[currentIndex + 1] != null)
+            if (Inventory[i] == null)
             {
-                currentIndex++;
-            }
-            else
-            {
-                currentIndex++;
+                currentIndex = i;
                 break;
             }
         }
-        
         // 아이템 개수 증가
         itemCount++;
 
         if (currentIndex >= Inventory.Length)
         {
             currentIndex--;
+        }
+        uiManager.inventoryUIController.UpdateItemIcon();
+    }
+
+    // 인벤토리에 아이템 추가 인덱스 기반
+    public void AddItemToInventoryByIndex(int index, ItemData newItem)
+    {
+        if (itemCount >= Inventory.Length)
+        {
+            Debug.Log("인벤토리 가득 참");
+            return;
+        }
+
+        Inventory[index] = newItem;
+        if (newItem != null)
+        {
+            indexByItemId[newItem.iId] = index;
+
+            // 아이템 추가할 때, 해당 아이템의 시너지를 저장
+            for (int i = 0; i < newItem.iSynergy.Count; i++)
+            {
+                if (newItem.iSynergy[i] != Enums.ItemSynergy.None)
+                {
+                    if (!synergyCount.ContainsKey(newItem.iSynergy[i]))
+                    {
+                        synergyCount[newItem.iSynergy[i]] = 0;
+                    }
+                    synergyCount[newItem.iSynergy[i]]++;
+                }
+            }
+        }
+
+        // 아이템 시너지 카운트 업데이트
+        CheckActiveSynergy();
+
+        // 아이템 획득 시 시너지 효과 업데이트
+        uiManager.synergyEffectUIController.ReturnSynergySlot();
+        uiManager.synergyEffectUIController.ShowSynergyEffect();
+
+        // 아이템 개수 증가
+        itemCount++;
+
+        for (int i = 0; i < Inventory.Length; i++)
+        {
+            if (Inventory[i] == null)
+            {
+                currentIndex = i;
+                break;
+            }
         }
         uiManager.inventoryUIController.UpdateItemIcon();
     }
@@ -204,6 +251,7 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
+        // 강화 수치도 랜덤하게 올라가고 싶으면 여기 수정
         reinforcedSlots[slotIndex]++;
         uiManager.inventoryUIController.UpdateItemIcon();
     }
@@ -339,6 +387,143 @@ public class InventoryManager : MonoBehaviour
                 synergyActiveCount[synergy]++;
             }
 
+        }
+    }
+
+    // 인벤토리 아이템 위치 변환
+    public void SwapItem(int index1, int index2)
+    {
+        ItemData temp = Inventory[index1];
+        ItemData temp2 = Inventory[index2];
+
+        RemoveItemFromInventory(index1);
+        RemoveItemFromInventory(index2);
+
+        AddItemToInventoryByIndex(index2, temp);
+        AddItemToInventoryByIndex(index1, temp2);
+
+        // 스왑 후 시너지 빙고 확인
+        CheckActiveSynergy();
+
+        // 인벤토리 슬롯 이미지 업데이트
+        uiManager.inventoryUIController.UpdateItemIcon();
+    }
+
+    // 아이템 등급 업 => 랜덤 아이템으로
+    public void RankUpItem(int index)
+    {
+        if (Inventory[index] == null)
+        {
+            Debug.Log("아무것도 없다");
+            return;
+        }
+        if (Inventory[index].iRank == Enums.ItemRank.Legendary)
+        {
+            Debug.Log("이미 최고 등급");
+            return;
+        }
+
+        int currentRankValue = (int)Inventory[index].iRank;
+        int nextRankValue = currentRankValue + 1;
+        Type rankEnumType = typeof(Enums.ItemRank);
+
+        if (Enum.IsDefined(rankEnumType, nextRankValue))
+        {
+            Enums.ItemRank nextRank = (Enums.ItemRank)nextRankValue;
+
+            if (itemManager.itemDictionaryForRank.ContainsKey(nextRank)) {
+
+                // 현재 등급 다음 단계의 아이템 리스트를 가져옴
+                List<ItemData> nextRankItemList = itemManager.itemDictionaryForRank[nextRank];
+
+                // 해당 등급 중 랜덤한 아이템 가져옴
+                int randomIndex = UnityEngine.Random.Range(0, nextRankItemList.Count);
+
+                // 중복 아이템이 나오지 않을때까지 반복
+                while (CheckDuplicateItems(nextRankItemList[randomIndex].iId))
+                {
+                    randomIndex = UnityEngine.Random.Range(0, nextRankItemList.Count);
+                }
+
+                RemoveItemFromInventory(index);
+                AddItemToInventoryByIndex(index, nextRankItemList[randomIndex]);
+
+                // 아이템 등급 업 후 시너지 체크
+                CheckActiveSynergy();
+
+                // 인벤토리 슬롯 이미지 업데이트
+                uiManager.inventoryUIController.UpdateItemIcon();
+            }
+        }
+    }
+
+    // 아이템 등급 업 => 시너지 효과 유지한 채로 (시너지가 2개 이상이면 둘 중 하나라도 유지)
+    public void RankUpItemWithSynergy(int index)
+    {
+        if (Inventory[index] == null)
+        {
+            Debug.Log("아무것도 없다");
+            return;
+        }
+        if (Inventory[index].iRank == Enums.ItemRank.Legendary)
+        {
+            Debug.Log("이미 최고 등급");
+            return;
+        }
+
+        int currentRankValue = (int)Inventory[index].iRank;
+        int nextRankValue = currentRankValue + 1;
+        Type rankEnumType = typeof(Enums.ItemRank);
+
+        if (Enum.IsDefined(rankEnumType, nextRankValue))
+        {
+            Enums.ItemRank nextRank = (Enums.ItemRank)nextRankValue;
+
+            if (itemManager.itemDictionaryForRank.ContainsKey(nextRank)) {
+
+                // 현재 등급 다음 단계의 아이템 리스트를 가져옴
+                List<ItemData> rankUpItemList = itemManager.itemDictionaryForRank[nextRank];
+
+                List<HashSet<ItemData>> synergyItemList = new List<HashSet<ItemData>>();
+
+                // 현재 인덱스의 있는 시너지를 가진 아이템 리스트를 HashSet으로 가져옴
+                foreach (Enums.ItemSynergy synergy in Inventory[index].iSynergy)
+                {
+                    synergyItemList.Add(itemManager.itemDictionaryForSynergy[synergy].ToHashSet());
+                }
+
+                // 다음 등급의 아이템 리스트와 현재 시너지의 아이템 리스트의 교집합을 구함
+                foreach (var itemList in synergyItemList)
+                {
+                    itemList.IntersectWith(rankUpItemList);
+                }
+
+                HashSet<ItemData> finalItemList = new HashSet<ItemData>();
+
+                // 해당 교집합을 합하면 다음 등급의 아이템과 현재 아이템의 시너지를 이어받는 아이템 리스트가 나옴
+                foreach (var itemList in synergyItemList)
+                {
+                    finalItemList.UnionWith(itemList);
+                }
+
+                // 최종 리스트에서 랜덤한 아이템 가져옴
+                int randomIndex = UnityEngine.Random.Range(0, finalItemList.Count);
+
+                // 중복 아이템이 나오지 않을때까지 반복
+                while (CheckDuplicateItems(finalItemList.ToList()[randomIndex].iId))
+                {
+                    randomIndex = UnityEngine.Random.Range(0, finalItemList.Count);
+                }
+
+                RemoveItemFromInventory(index);
+                AddItemToInventoryByIndex(index, finalItemList.ToList()[randomIndex]);
+
+                // 아이템 등급 업 후 시너지 체크
+                CheckActiveSynergy();
+
+                // 인벤토리 슬롯 이미지 업데이트
+                uiManager.inventoryUIController.UpdateItemIcon();
+            }
         }
     }
 }

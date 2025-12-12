@@ -19,8 +19,12 @@ public class UIManager : MonoBehaviour
     private GameObject synergyEffectPanelPrefab;                    // 시너지 효과 활성화 패널 프리팹
     public SynergyEffectUIController synergyEffectUIController;     // 시너지 효과 UI 컨트롤러
     [SerializeField]
-    private GameObject SynergyDescriptionPanelPrefab;               // 시너지 설명 패널 프리팹
-    public SynergyDescriptionUIController SynergyDescriptionUIController;   // 시너지 설명 패널 UI 컨트롤러
+    private GameObject synergyDescriptionPanelPrefab;               // 시너지 설명 패널 프리팹
+    public SynergyDescriptionUIController synergyDescriptionUIController;   // 시너지 설명 패널 UI 컨트롤러
+    [SerializeField]
+    private GameObject modeUIPrefab;                                // 강화, 스왑 모드 UI 프리팹
+    public ModeUIController modeUIController;                       // 강화, 스왑 모드 UI 컨트롤러
+
 
     private void Awake()
     {
@@ -51,6 +55,7 @@ public class UIManager : MonoBehaviour
         InstantiateItemDescriptionPanel(canvas);
         InstantiateSynergyEffectPanel(canvas);
         InstantiateSynergyDescriptionPanel(canvas);
+        InstantiateModeUI(canvas);
     }
 
     // Canvas 등록 해제
@@ -67,7 +72,7 @@ public class UIManager : MonoBehaviour
     {
         // 인벤토리 UI 토글
         inventoryUIController.gameObject.SetActive(!inventoryUIController.gameObject.activeSelf);
-        
+
         // 인벤토리가 비활성화 되어있는데 아이템 설명창이 남아있는 경우 아이템 설명창도 hide
         if (!inventoryUIController.gameObject.activeSelf && itemDescriptionUIController.gameObject.activeSelf)
         {
@@ -75,13 +80,18 @@ public class UIManager : MonoBehaviour
         }
 
         // 시너지 효과는 오브젝트 풀을 쓰기 때문에 프리팹을 돌려주기 위해서 이렇게 경우를 나눔
+        // ModeUI도 이 때 같이 켜져야 하기 때문에 추가적인 조건 없이 여기에 추가
+
+        modeUIController.UpdateModeUI();
         if (synergyEffectUIController.gameObject.activeSelf)
         {
             synergyEffectUIController.HideSynergyEffectUI();
+            modeUIController.HideModeUI();
         }
         else
         {
             synergyEffectUIController.ShowSynergyEffect();
+            modeUIController.ShowModeUI();
         }
     }
 
@@ -121,10 +131,19 @@ public class UIManager : MonoBehaviour
     void InstantiateSynergyDescriptionPanel(RectTransform canvas)
     {
         // 시너지 설명 패널 생성 및 초기화
-        GameObject panel = Instantiate(SynergyDescriptionPanelPrefab, canvas);
-        SynergyDescriptionUIController = panel.GetComponent<SynergyDescriptionUIController>();
+        GameObject panel = Instantiate(synergyDescriptionPanelPrefab, canvas);
+        synergyDescriptionUIController = panel.GetComponent<SynergyDescriptionUIController>();
 
         panel.SetActive(false);
+    }
+
+    // ModeUI 생성
+    void InstantiateModeUI(RectTransform canvas)
+    {
+        GameObject ui = Instantiate(modeUIPrefab, canvas);
+        modeUIController = ui.GetComponent<ModeUIController>();
+
+        ui.SetActive(false);
     }
 
     public Transform GetCanvas()
