@@ -18,7 +18,7 @@ public class Skill_Meteor : SkillBase
     public LayerMask groundLayer;               //바닥 레이어(RayCast용)
 
     public GameObject rangeIndicatorPrefab;     //스킬 사정거리 UI 프리팹
-    public GameObject areaIndicatorPrefab;      //데미지 주는 범위 UI 프리팹
+    public GameObject areaIndicatorPrefab;      //데미지 적용 범위 UI 프리팹
     public GameObject meteorPrefab;             //떨어지는 이펙트나 3d Asset 프리팹
 
     GameObject rangeInstance;                   //사정거리UI 인스턴스
@@ -142,7 +142,7 @@ public class Skill_Meteor : SkillBase
             //사정거리/ 범위 위치&크기 갱신
             if(rangeInstance != null)
             {
-                rangeInstance.transform.position = playerPos;                               //스킬 사정거리니까 플레이어 기준
+                rangeInstance.transform.position = playerPos + Vector3.up * 0.01f;          //스킬 사정거리니까 플레이어 기준 / 땅이랑 겹치지 않게 살짝 올리기
                 rangeInstance.transform.localScale = Vector3.one * (maxRange * 2f);         //반지름이니까 2배
             }
             if(areaInstance != null)
@@ -194,5 +194,14 @@ public class Skill_Meteor : SkillBase
         }
 
         Destroy(meteorInstance);
+    }
+
+    public override void LevelUp()
+    {
+        //기본적으로 있는 것
+        base.LevelUp();
+
+        //추가로 메테오의 데미지도 증가
+        baseDamage *= 1.2f;
     }
 }
