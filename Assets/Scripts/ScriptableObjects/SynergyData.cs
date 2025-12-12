@@ -8,10 +8,24 @@ public class SynergyData : ScriptableObject
     public Sprite synergyIcon;                      // 시너지 아이콘
     public Enums.ItemSynergy synergyType;           // 시너지 타입
     public string synergyName;                      // 시너지 명칭
+    public string synergyDescription;               // 시너지 설명
     public int maxLevel;                            // 시너지 최대 활성화 개수
     public List<SynergyLevel> levels;               // 시너지 활성화 개수에 따른 추가 능력치
 
     private Dictionary<int, Stats> statsByLevel;    // 시너지 레벨에 따른 스탯 딕셔너리
+
+    // levels 리스트 requiredLines를 기준으로 오름차순 정렬
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if( levels != null)
+        {
+            levels.Sort((a, b) => a.requiredLines.CompareTo(b.requiredLines));
+        }
+
+        statsByLevel = null;
+    }
+#endif
 
     // 딕셔너리 초기화
     private void InitStatsByLevel()

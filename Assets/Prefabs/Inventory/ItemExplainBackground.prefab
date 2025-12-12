@@ -461,7 +461,7 @@ GameObject:
   - component: {fileID: 8085057033281286907}
   - component: {fileID: 5838487184261060126}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: SelectedItemSynergies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
