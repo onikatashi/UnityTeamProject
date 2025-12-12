@@ -101,11 +101,15 @@ public class Monster3 : MonsterBase
 
     private void OnDrawGizmosSelected()
     {
+        //감지 범위
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, detectRange);
+
         // 폭발 범위
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, explosionRanege);
 
-        // 감지 범위
+        // 공격을 시작하는 범위
         if (md != null)
         {
             Gizmos.color = Color.blue;
