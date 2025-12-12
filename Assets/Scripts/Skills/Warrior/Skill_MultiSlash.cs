@@ -33,7 +33,7 @@ public class Skill_MultiSlash : SkillBase
         if (!CanUse()) return;
 
         //마지막 사용 시간 갱신
-        lastUseTime = Time.time;
+        lastUseTime = Time.realtimeSinceStartup;
 
         //Coroutine은 MonoBehaviour에서만 실행 가능하므로 Player를 통해 코루틴 실행
         player.StartCoroutine(DoSlash(player));
