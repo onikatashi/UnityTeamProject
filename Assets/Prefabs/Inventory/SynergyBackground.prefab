@@ -61,7 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   synergyEffectUIPanel: {fileID: 3191535583934080593}
   synergyEffectScroll: {fileID: 5934571785601658762}
-  synergySlot: {fileID: 4123643071452853015, guid: 41656c31e8b3be34d963cddb18739383, type: 3}
+  synergySlot: {fileID: -8954202569920622220, guid: 0d8a67c790aae174f8ba62b0bec8111c, type: 3}
   synergySlotUIList: []
 --- !u!1 &3664955175510757058
 GameObject:
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
