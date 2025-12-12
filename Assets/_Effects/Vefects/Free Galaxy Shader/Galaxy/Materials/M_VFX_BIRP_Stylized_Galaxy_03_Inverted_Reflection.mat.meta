@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cc14c327fbd45b44d804d4304f949f8a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 323300
+  packageName: Free Galaxy Shader
+  packageVersion: 1.0.0
+  assetPath: Assets/Vefects/Free Galaxy Shader/Galaxy/Materials/M_VFX_BIRP_Stylized_Galaxy_03_Inverted_Reflection.mat
+  uploadId: 764064

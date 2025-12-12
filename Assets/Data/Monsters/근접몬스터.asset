@@ -17,7 +17,7 @@ MonoBehaviour:
   monsterName: "\uACE0\uBE14\uB9B0"
   maxHp: 100
   attackDamage: 1
-  attackRange: 3
+  attackRange: 2
   attackSpeed: 1
   projectileCount: 1
   projectileSpeed: 1
