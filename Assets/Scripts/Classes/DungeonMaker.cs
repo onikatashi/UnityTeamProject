@@ -8,8 +8,6 @@ public class DungeonMaker : MonoBehaviour
     private int maxColumn = 6;
     private int startNodeCountLimit = 3;
 
-
-
     //Button의 Type에 따른 Sprite연결을 위한 Dictionary
     private Dictionary<Enums.RoomType, Sprite> iconSpriteDictionary;
 
@@ -18,8 +16,6 @@ public class DungeonMaker : MonoBehaviour
     public Sprite shopSprite;
     public Sprite restSprite;
     public Sprite forgeSprite;
-
-
 
     //라인 처리 스크립트 inspector창에서 연결.
     public LineDrawer lineDrawer;
@@ -42,6 +38,7 @@ public class DungeonMaker : MonoBehaviour
 
     void Start()
     {
+        
         iconSpriteDictionary = new Dictionary<Enums.RoomType, Sprite>()
         {
             { Enums.RoomType.Normal, normalSprite },
@@ -53,10 +50,8 @@ public class DungeonMaker : MonoBehaviour
         //NodeButton타입을 가진 2차원 배열 생성
         dungeonButtons = new NodeButton[maxFloor, maxColumn];
 
-        //
         GenerateDungeon();
-
-        ConnectNodes();
+        GenerateNodeConnections();
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
         PrintDungeonToConsole();
     }
@@ -159,35 +154,41 @@ public class DungeonMaker : MonoBehaviour
     //라인 생성부---------------------------------------------------------------------------------------------
 
     //노드 라인연결 로직.
-    private void ConnectNodes()
+    private void GenerateNodeConnections()
     {
         //startNodes안에있는 노드의 값을 startNode에 입력
-        foreach (var startNode in startNodes)
+        foreach (var entryNode in startNodes)
         {
             //현재 사용중인 노드 조작을 위해  NodeButton current 
-            NodeButton current = startNode;
+            NodeButton currentNode = entryNode;
             //연속 노드 체크
             int straightCount = 1;
 
 
             //현재 노드의 floor으로 부터 maxFloor까지 순회하면서 체크
-            for (int floor = current.floor; floor < maxFloor - 1; floor++)
+            for (int floor = currentNode.floor; floor < maxFloor - 1; floor++)
             {
-                //현재 층보다 상위 층 확인.
+                //다음 층 확인.
                 int nextFloor = floor + 1;
                 
-                NodeButton picked = FindNextNodeWithExpandedRange(current, nextFloor);
+                //다음 층의 연결 가능 노드 찾기(None노드 인가? 체크)
+                NodeButton picked = FindNextAvailableNode(currentNode, nextFloor);
                 if (picked == null) break;
 
-                bool isStraight = picked.col == current.col;
+                //선택한 노드와 현재 노드가 같은 열인가?
+                bool isStraight = picked.col == currentNode.col;
 
-                // 직진 2번 이상이면 강제 좌우 이동
+                // 직진 3번 이상이면 강제 좌우 이동 아니면 초기화.
                 if (straightCount >= 2 && isStraight)
                 {
-                    var sides = GetSideCandidates(current, nextFloor);
+                    //GetSideCandidates를 이용해 다음 층(nextFloor)의 좌우 노드 값 가져오기.
+                    var sides = GetSideCandidates(currentNode, nextFloor);
+                    
+                    //좌우 노드가 한개라도 있으면  둘중하나 연결.
                     if (sides.Count > 0)
                     {
                         picked = sides[Random.Range(0, sides.Count)];
+                        // 틀어졌으므로 연속연결 초기화
                         straightCount = 1;
                     }
                 }
@@ -195,157 +196,179 @@ public class DungeonMaker : MonoBehaviour
                 {
                     straightCount = isStraight ? straightCount + 1 : 1;
                 }
-
-                ConnectSafe(current, picked);
-                current = picked;
+                //안전 연결을 위한 코드.
+                ConnectSafe(currentNode, picked);
+                //다음 노드(picked)를 currentNode에 넣어 해당 과정 반복.
+                currentNode = picked;
             }
         }
 
-        FixIsolatedNodes_Optimized();
+        ConnectIsolatedNodes();
     }
 
-    //다음 노드 확장 검색.
-    private NodeButton FindNextNodeWithExpandedRange(NodeButton current, int nextFloor)
+    /// <summary>
+    /// 다음 층에서 노드 찾기
+    /// </summary>
+    /// <param name="currentNode">현재 노드</param>
+    /// <param name="nextFloor">검색할 다음 층 </param>
+    /// <returns></returns>
+    private NodeButton FindNextAvailableNode(NodeButton currentNode, int nextFloor)
     {
-        //
-        for (int checkrange = 1; checkrange < maxColumn; checkrange++)
+        
+        for (int checkRange = 1; checkRange < maxColumn; checkRange++)
         {
             //Column의 검색 구간 최소, 최대 범위 설정.
-            int startCol = Mathf.Max(0, current.col - checkrange);
-            int endCol = Mathf.Min(maxColumn - 1, current.col + checkrange);
+            int startCol = Mathf.Max(0, currentNode.col - checkRange);
+            int endCol = Mathf.Min(maxColumn - 1, currentNode.col + checkRange);
 
             //범위 설정.
-            NodeButton found = FindNodeInRange(nextFloor, startCol, endCol, current.transform, true);
+            NodeButton found = FindNodeWithinRange(nextFloor, startCol, endCol, currentNode.transform, true);
             if (found != null) return found;
         }
         return null;
     }
 
-
-
-    //격리 노드 연결시키기.
-    private void FixIsolatedNodes_Optimized()
+    
+    private NodeButton FindNodeWithinRange(int targetFloor, int startCol, int endCol, Transform origin, bool useDistance)
     {
-        for (int f = 0; f < maxFloor; f++)
+        //노드 
+        NodeButton bestNode = null;
+        float minDistSqr = float.MaxValue;
+
+        if (targetFloor < 0 || targetFloor >= maxFloor)
+            return null;
+
+        // 랜덤 방향 (50%확률로 좌,우 -> 좌측 쏠림 완화.)
+        bool searchLeftToRight = Random.value < 0.5f;
+
+        //해당 층의 노드 연결 후보 평가.
+        if (searchLeftToRight)
         {
-            for (int c = 0; c < maxColumn; c++)
+            for (int columRange = startCol; columRange <= endCol; columRange++) EvaluateCandidate(columRange);
+        }
+        else
+        {
+            for (int columRange = endCol; columRange >= startCol; columRange--) EvaluateCandidate(columRange);
+        }
+
+        return bestNode;
+
+        void EvaluateCandidate(int selectColum)
+        {
+            //다음층(targetFloor)의 해당 열의 후보노드가 쓸만한가?
+            var candidateNode = dungeonButtons[targetFloor, selectColum];
+            if (candidateNode == null || !candidateNode.isAvailable) return;
+
+            // 거리계산 모드 체크 : 거리 계산을 사용하지 않는 모드일 경우, 첫 번째 유효 노드를 바로 선택 후 종료.
+            if (!useDistance)
             {
-                NodeButton node = dungeonButtons[f, c];
-                if (node == null || !node.isAvailable) continue;
+                bestNode = candidateNode;
+                return;
+            }
 
-                if (node.prevNodes.Count == 0 && f > 0)
-                {
-                    NodeButton prev = FindNearestNode(f, c, true);
-                    if (prev != null) ConnectSafe(prev, node);
-                }
+            // 거리 비교 (sqrMagnitude)
+            Vector2 delta = ((Vector2)candidateNode.transform.position - (Vector2)origin.position);
+            float distSqr = delta.sqrMagnitude;
 
-                if (node.nextNodes.Count == 0 && f < maxFloor - 1)
-                {
-                    NodeButton next = FindNearestNode(f, c, false);
-                    if (next != null) ConnectSafe(node, next);
-                }
+            if (distSqr < minDistSqr)
+            {
+                minDistSqr = distSqr;
+                bestNode = candidateNode;
             }
         }
     }
-    
-    //+-1안쪽 없을 때 확장로직.
 
+    // sideList를 미리 2개 지정해 놓아서 좌우Node체크용으로 재활용(생성 -> 제거 리소스 아끼기)
     private readonly List<NodeButton> sideList = new List<NodeButton>(2);
-
-    private List<NodeButton> GetSideCandidates(NodeButton current, int nextFloor)
+   
+    private List<NodeButton> GetSideCandidates(NodeButton currentNode, int nextFloor)
     {
+        //재활용하기 위해 Clear
         sideList.Clear();
 
-        int col = current.col;
-
-        if (col - 1 >= 0)
+        //현재 노드의 열을 넣고
+        int colum = currentNode.col;
+        //다음층 의 좌우 확인.
+        if (colum - 1 >= 0)
         {
-            var left = dungeonButtons[nextFloor, col - 1];
+            var left = dungeonButtons[nextFloor, colum - 1];
             if (left != null && left.isAvailable) sideList.Add(left);
         }
 
-        if (col + 1 < maxColumn)
+        if (colum + 1 < maxColumn)
         {
-            var right = dungeonButtons[nextFloor, col + 1];
+            var right = dungeonButtons[nextFloor, colum + 1];
             if (right != null && right.isAvailable) sideList.Add(right);
         }
 
         return sideList;
     }
 
+    //격리 노드 연결시키기.
+    private void ConnectIsolatedNodes()
+    {
+        //모든 노드 순회하며 확인.
+        for (int floor = 0; floor < maxFloor; floor++)
+        {
+            for (int colum = 0; colum < maxColumn; colum++)
+            {
+
+                NodeButton checkNode = dungeonButtons[floor, colum];
+                
+                //현재 노드가 없으면 지나가기.
+                if (checkNode == null || !checkNode.isAvailable) continue;
+
+                //현재 노드가 시작노드보다 높고 이전노드 연결이 없을 경우.
+                if (checkNode.prevNodes.Count == 0 && floor > 0)
+                {
+                    NodeButton prev = FindNearestNode(floor, colum, true);
+                    if (prev != null) ConnectSafe(prev, checkNode);
+                }
+
+                //현재 노드가 보스방직전보다 낮고고 다음노드와 연결이 없을 경우.
+                if (checkNode.nextNodes.Count == 0 && floor < maxFloor - 1)
+                {
+                    NodeButton next = FindNearestNode(floor, colum, false);
+                    if (next != null) ConnectSafe(checkNode, next);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 가까운 노드 검색 공용함수 (위, 아래 양방향)
+    /// </summary>
+    /// <param name="floor">가까운 노드의 층</param>
+    /// <param name="col">가까운 노드의 열</param>
+    /// <param name="isPrev"> [True이면 Pre floor체크,False이면 Next floor체크] => 리소스 아끼기 위해 Bool사용</param>
+    /// <returns></returns>
     private NodeButton FindNearestNode(int floor, int col, bool isPrev)
     {
         int targetFloor = isPrev ? floor - 1 : floor + 1;
+        
+        //노드들이 범위를 벗어나면 Null
         if (targetFloor < 0 || targetFloor >= maxFloor) return null;
 
+        //내부에 있으면 origin위치 설정.
         NodeButton origin = dungeonButtons[floor, col];
         if (origin == null) return null;
 
-        return FindNodeInRange(
-            targetFloor,
-            0,
-            maxColumn - 1,
-            origin.transform,
-            true
-        );
+        return FindNodeWithinRange(targetFloor,0,maxColumn - 1, origin.transform, true );
     }
 
-    private NodeButton FindNodeInRange(int targetFloor,int startCol, int endCol,Transform origin,bool useDistance)
+    private void ConnectSafe(NodeButton currentNode, NodeButton nextNode)
     {
-        NodeButton best = null;
-        float bestDist = float.MaxValue;
+        //둘 중 하나라도 null이면 함수 종료.
+        if (currentNode == null || nextNode == null) return;
 
-        if (targetFloor < 0 || targetFloor >= maxFloor)
-            return null;
-
-        bool leftToRight = Random.value < 0.5f;
-
-        if (leftToRight)
-        {
-            for (int c = startCol; c <= endCol; c++)
-                Evaluate(c);
-        }
-        else
-        {
-            for (int c = endCol; c >= startCol; c--)
-                Evaluate(c);
-        }
-
-        return best;
-
-        void Evaluate(int c)
-        {
-            var candidate = dungeonButtons[targetFloor, c];
-            if (candidate == null || !candidate.isAvailable) return;
-
-            if (!useDistance)
-            {
-                best = candidate;
-                return;
-            }
-
-            // 거리 비교를 위한 sqrMagnitude 적용
-            Vector2 diff = (Vector2)candidate.transform.position - (Vector2)origin.position;
-            float dist = diff.sqrMagnitude;
-
-            if (dist < bestDist)
-            {
-                bestDist = dist;
-                best = candidate;
-            }
-        }
+        //[중복연결 방지]
+        // currentNode노드의 다음 연결nextNode가 이미 있는지 확인.
+        if (!currentNode.nextNodes.Contains(nextNode)) currentNode.nextNodes.Add(nextNode);
+        //'nextNode' 노드의 이전 연결(prevNodes)에 'currentNode'이 없다면 추가.
+        if (!nextNode.prevNodes.Contains(currentNode)) nextNode.prevNodes.Add(currentNode);
     }
 
-
-
-
-    private void ConnectSafe(NodeButton from, NodeButton to)
-    {
-        if (from == null || to == null) return;
-        if (!from.nextNodes.Contains(to)) from.nextNodes.Add(to);
-        if (!to.prevNodes.Contains(from)) to.prevNodes.Add(from);
-    }
-
+    // 내부 지도 Type 콘솔로 확인.
     private void PrintDungeonToConsole()
     {
         Debug.Log("===== Dungeon Result =====");
