@@ -62,7 +62,7 @@ public class DungeonMaker : MonoBehaviour
     private void GenerateDungeon()
     {
         // [0,0노드]로 부터 위치 조정
-        Vector2 startPos = new Vector2(-300f, -350f);
+        Vector2 startPos = new Vector2(-250f, -350f);
         float xSpacing = 100f;
         float ySpacing = 100f;
 
