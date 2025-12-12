@@ -8,19 +8,24 @@ using UnityEngine.UI;
 /// </summary>
 public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    //노드 정보----------------------------------------------------------------------
     public int floor; // 층 정보
     public int col;   // 컬럼 정보
 
+    public bool isAvailable = true; //현재 Room사용 가능 유무(RoomType == None 또는 Null체크시 사용)
+    public Enums.RoomType CurrentRoomType { get; private set; }  // 현재 방 타입
 
-    private GameObject highlight;
+    //이미지 스프라이트와 하이라이트 UI연동
     private Image icon;
-
-    public bool isAvailable = true;
-    public Enums.RoomType CurrentRoomType { get; private set; } // 현재 방 타입
+    private GameObject highlight;
+    
+    //--------------------------------------------------------------------------------
 
     // DungeonMaker에서 연결하기 위한 그래프 구조
     public List<NodeButton> nextNodes = new List<NodeButton>();   // 아래층(다음층) 노드들
     public List<NodeButton> prevNodes = new List<NodeButton>();   // 위층(이전층) 노드들
+
+    //--------------------------------------------------------------------------------
 
     void Awake()
     {
@@ -38,13 +43,21 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     void Start()
     {
-       
         RefreshVisual();
     }
+   
+
+    /// <summary>
+    /// DungeonMaker.cs - GenerateDungeon()에서 생성된 기준대로 룸타입과 이미지 재위치.
+    /// </summary>
+    /// <param name="type">랜덤으로 정해진 RoomType수령</param>
+    /// <param name="sprite">sprite 이미지 수령</param>
     public void SetRoomType(Enums.RoomType type, Sprite sprite)
     {
+        //DungeonMaker로부터 수령한 타입 저장.
         CurrentRoomType = type;
 
+        //수령한 타입이 None인 경우 isAvailable = false로 사용불가판정
         if (type == Enums.RoomType.None)
         {
             isAvailable = false;
@@ -52,6 +65,7 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             return;
         }
 
+        //사용 가능시 세팅.
         isAvailable = true;
         gameObject.SetActive(true);
 
@@ -64,16 +78,16 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         RefreshVisual();
     }
 
-
     private void RefreshVisual()
     {
         if (icon == null) return;
 
-        // 이동 가능 여부 
+        // 노드 활성화 여부(isAvailable) 에 따라서 알파값 변경
         var color = icon.color;
-        color.a = isAvailable ? 1f : 0.3f; // 이동 가능 여부에 따라 알파값
+        color.a = isAvailable ? 1f : 0.3f; 
         icon.color = color;
     }
+
 
     // 마우스가 이미지 범위 위에 있음.
     public void OnPointerEnter(PointerEventData eventData)
@@ -88,4 +102,5 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (highlight != null)
             highlight.SetActive(false);
     }
+
 }

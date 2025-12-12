@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class LineDrawer : MonoBehaviour
 {
-    public GameObject linePrefab;               // 라인 UI(Image)
-    public RectTransform lineParent;            // 라인 부모
-    public float lineThickness = 6f;
+    public GameObject linePrefab;               // 라인 UI(Image) 프리펩
+    public RectTransform lineParent;            // 프리펩 생성위치 설정
+    public float lineThickness = 4f;            // 라인 두깨 설정.
 
+    //
     private readonly List<GameObject> activeLines = new List<GameObject>();
 
 
@@ -14,26 +15,28 @@ public class LineDrawer : MonoBehaviour
     {
         ClearAllLines();
 
-        for (int f = 0; f < maxFloor; f++)
+        for (int floor = 0; floor < maxFloor; floor++)
         {
-            for (int c = 0; c < maxColumn; c++)
+            for (int Column = 0; Column < maxColumn; Column++)
             {
-                NodeButton from = nodes[f, c];
-                if (from == null || from.nextNodes == null) continue;
-
-                // from이 None이면 건너뜀
-                if (from.CurrentRoomType == Enums.RoomType.None)
-                    continue;
+                NodeButton NodeData = nodes[floor, Column];
 
 
-
-                foreach (NodeButton to in from.nextNodes)
+                //(현 노드 or 다음노드가 Null이거나), RoomType이 None이면 continue
+                if ((NodeData == null ||
+                     NodeData.nextNodes == null ||
+                    (NodeData.CurrentRoomType == Enums.RoomType.None)))
                 {
-                    // to가 None인 경우 제외
-                    if (to == null) continue;
-                    if (to.CurrentRoomType == Enums.RoomType.None)
+                    continue;
+                }
+
+                foreach (NodeButton targetNode in NodeData.nextNodes)
+                {
+                    if (targetNode == null || targetNode.CurrentRoomType == Enums.RoomType.None)
+                    {
                         continue;
-                    DrawLine(from, to);
+                    }
+                    DrawLine(NodeData, targetNode);
                 }
             }
         }
@@ -50,32 +53,33 @@ public class LineDrawer : MonoBehaviour
     }
 
 
-    private void DrawLine(NodeButton from, NodeButton to)
+    private void DrawLine(NodeButton startNode, NodeButton targetNode)
     {
-        if (from == null || to == null) return;
-
+        if (startNode == null || targetNode == null) return;
+        //라인 프리펩을 이용한 선잇기.
         GameObject lineObj = Instantiate(linePrefab, lineParent);
         activeLines.Add(lineObj);
 
-        RectTransform rt = lineObj.GetComponent<RectTransform>();
-
-        RectTransform fromRect = from.GetComponent<RectTransform>();
-        RectTransform toRect = to.GetComponent<RectTransform>();
+        //라인의 위치값
+        RectTransform lineRect  = lineObj.GetComponent<RectTransform>();
+        //시작노드와 목적지 노드의 위치.
+        RectTransform startRect = startNode.GetComponent<RectTransform>();
+        RectTransform targetRect = targetNode.GetComponent<RectTransform>();
 
         // 1. UI anchoredPosition 직접 사용 (가장 정확한 방법)
-        Vector2 start = fromRect.anchoredPosition;
-        Vector2 end = toRect.anchoredPosition;
+        Vector2 start = startRect.anchoredPosition;
+        Vector2 end = targetRect.anchoredPosition;
 
         // 2. 중간 지점 배치
         Vector2 center = (start + end) * 0.5f;
-        rt.anchoredPosition = center;
+        lineRect.anchoredPosition = center;
 
         // 3. 라인 길이 설정
         float distance = Vector2.Distance(start, end);
-        rt.sizeDelta = new Vector2(distance, lineThickness);
+        lineRect.sizeDelta = new Vector2(distance, lineThickness);
 
         // 4. 각도 적용
         float angle = Mathf.Atan2(end.y - start.y, end.x - start.x) * Mathf.Rad2Deg;
-        rt.localRotation = Quaternion.Euler(0, 0, angle);
+        lineRect.localRotation = Quaternion.Euler(0, 0, angle);
     }
 }
