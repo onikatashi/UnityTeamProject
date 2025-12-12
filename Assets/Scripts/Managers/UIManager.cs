@@ -18,6 +18,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject synergyEffectPanelPrefab;                    // 시너지 효과 활성화 패널 프리팹
     public SynergyEffectUIController synergyEffectUIController;     // 시너지 효과 UI 컨트롤러
+    [SerializeField]
+    private GameObject SynergyDescriptionPanelPrefab;               // 시너지 설명 패널 프리팹
+    public SynergyDescriptionUIController SynergyDescriptionUIController;   // 시너지 설명 패널 UI 컨트롤러
 
     private void Awake()
     {
@@ -47,6 +50,7 @@ public class UIManager : MonoBehaviour
         InstantiateInventoryPanel(canvas);
         InstantiateItemDescriptionPanel(canvas);
         InstantiateSynergyEffectPanel(canvas);
+        InstantiateSynergyDescriptionPanel(canvas);
     }
 
     // Canvas 등록 해제
@@ -109,6 +113,16 @@ public class UIManager : MonoBehaviour
         // 시너지 활성화 패널 생성 및 초기화
         GameObject panel = Instantiate(synergyEffectPanelPrefab, canvas);
         synergyEffectUIController = panel.GetComponent<SynergyEffectUIController>();
+
+        panel.SetActive(false);
+    }
+
+    // SynergyDescriptionPanel 생성
+    void InstantiateSynergyDescriptionPanel(RectTransform canvas)
+    {
+        // 시너지 설명 패널 생성 및 초기화
+        GameObject panel = Instantiate(SynergyDescriptionPanelPrefab, canvas);
+        SynergyDescriptionUIController = panel.GetComponent<SynergyDescriptionUIController>();
 
         panel.SetActive(false);
     }

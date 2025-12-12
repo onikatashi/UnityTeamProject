@@ -44,11 +44,8 @@ public class SynergyEffectUIController : MonoBehaviour
         foreach (var keys in inventoryManager.synergyCount.Keys)
         {
             SynergySlotUI slot = poolManager.Get<SynergySlotUI>(Enums.PoolType.SynergyEffects);
-
-            slot.synergyIcon.sprite = synergyManager.GetSynergyData(keys).synergyIcon;
-            slot.synergyName.text = synergyManager.GetSynergyData(keys).synergyName;
-            slot.activeSynergyCount.text = inventoryManager.synergyActiveCount[keys].ToString()
-                + " / " + synergyManager.GetSynergyData(keys).maxLevel.ToString();
+            slot.SetUp(synergyManager.GetSynergyData(keys), inventoryManager.synergyActiveCount[keys],
+                synergyManager.GetSynergyData(keys).maxLevel);
 
             synergySlotUIList.Add(slot);
         }
