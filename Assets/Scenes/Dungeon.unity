@@ -243,11 +243,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomType: 1
   spawnManager: {fileID: 671412118}
-  chestPrefab: {fileID: 8842781599502487845, guid: d8fa65272d8a62d4882cb9bd19077f1c, type: 3}
+  chestPrefab: {fileID: 865888289449158580, guid: 981a45dfcc4f88744bfda949f42b6d1e, type: 3}
   chestSpawnPoint: {fileID: 466008906}
   portalPrefab: {fileID: 4617036660772024948, guid: 52c7d057cba585641bb68312c10d7791, type: 3}
   portalSpawnPoint: {fileID: 1769520138}
-  currentTheme: 0
+  currentTheme: 3
   grassGroup: {fileID: 1470482559}
   snowGroup: {fileID: 1893410460}
   desertGroup: {fileID: 1393153738}
