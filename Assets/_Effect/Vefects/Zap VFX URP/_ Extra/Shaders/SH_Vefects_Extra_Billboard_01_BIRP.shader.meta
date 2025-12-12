@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4b020162110e25140acd39623f7a678a
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 323300
+  packageName: Free Galaxy Shader
+  packageVersion: 1.0.0
+  assetPath: Assets/_Effect/Vefects/Zap VFX URP/_ Extra/Shaders/SH_Vefects_Extra_Billboard_01_BIRP.shader
+  uploadId: 764064

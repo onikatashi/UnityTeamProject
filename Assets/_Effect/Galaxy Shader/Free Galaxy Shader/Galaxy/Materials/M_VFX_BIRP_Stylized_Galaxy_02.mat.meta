@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d02c55bf464eb6f4792de384c3747344
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 323300
+  packageName: Free Galaxy Shader
+  packageVersion: 1.0.0
+  assetPath: Assets/Vefects/Free Galaxy Shader/Galaxy/Materials/M_VFX_BIRP_Stylized_Galaxy_02.mat
+  uploadId: 764064
