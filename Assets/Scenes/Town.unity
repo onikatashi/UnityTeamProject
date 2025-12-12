@@ -530,11 +530,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &989748462 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
-  m_PrefabInstance: {fileID: 1316192920}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1316192920
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -593,10 +588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1341447252}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3574362967237534929, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
       insertIndex: -1
@@ -843,11 +835,11 @@ Transform:
   m_GameObject: {fileID: 1341447248}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.02, y: 0.62, z: -0.05999899}
+  m_LocalPosition: {x: 0.15, y: 0.62, z: 12.710001}
   m_LocalScale: {x: 1.63, y: 1, z: 1.63}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 989748462}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1341447253
 MonoBehaviour:
@@ -861,7 +853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b0b36bf768c394d8152a9f43d22367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetSceneName: Dungeon
+  targetSceneName: DungeonMap
 --- !u!1 &1670054413
 GameObject:
   m_ObjectHideFlags: 0
@@ -916,5 +908,6 @@ SceneRoots:
   - {fileID: 182145768}
   - {fileID: 1336858367}
   - {fileID: 1316192920}
+  - {fileID: 1341447252}
   - {fileID: 1670054414}
   - {fileID: 420629616}

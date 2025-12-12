@@ -247,7 +247,7 @@ MonoBehaviour:
   chestSpawnPoint: {fileID: 466008906}
   portalPrefab: {fileID: 4617036660772024948, guid: 52c7d057cba585641bb68312c10d7791, type: 3}
   portalSpawnPoint: {fileID: 1769520138}
-  currentTheme: 3
+  currentTheme: 0
   grassGroup: {fileID: 1470482559}
   snowGroup: {fileID: 1893410460}
   desertGroup: {fileID: 1393153738}
@@ -1144,27 +1144,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc84e6e79fbabc545a58403beac9c31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IntervalTime: 9999
   phases:
-  - delayBeforeNextPhase: 5
-    spawns:
+  - spawns:
     - enemyPrefab: {fileID: 7565820433966401433, guid: c28650cf17daa9d40abd6160bab7a26e, type: 3}
       spawnPoint: {fileID: 1034600451}
       count: 3
       spawnOffset: 2
-  - delayBeforeNextPhase: 5
-    spawns:
+  - spawns:
     - enemyPrefab: {fileID: 7565820433966401433, guid: 006985cf7acc4c2438314a366448e68f, type: 3}
       spawnPoint: {fileID: 795851296}
       count: 3
       spawnOffset: 2
-  - delayBeforeNextPhase: 5
-    spawns:
+  - spawns:
     - enemyPrefab: {fileID: 7565820433966401433, guid: 1dcc0d4b24e61764a9aea89a8ba10596, type: 3}
       spawnPoint: {fileID: 768979484}
       count: 3
       spawnOffset: 2
-  - delayBeforeNextPhase: 5
-    spawns:
+  - spawns:
     - enemyPrefab: {fileID: 7565820433966401433, guid: c28650cf17daa9d40abd6160bab7a26e, type: 3}
       spawnPoint: {fileID: 1034600451}
       count: 2
@@ -2649,7 +2646,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1470482560
 Transform:
   m_ObjectHideFlags: 0
@@ -3288,7 +3285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1893410461
 Transform:
   m_ObjectHideFlags: 0

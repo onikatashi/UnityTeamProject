@@ -4,9 +4,12 @@ using UnityEngine;
 public class DungeonMaker : MonoBehaviour
 {
     //노드 생성설정
-    private int maxFloor = 8;
-    private int maxColumn = 6;
+    public int maxFloor = 8;
+    public int maxColumn = 6;
+    
     private int startNodeCountLimit = 3;
+    private int bossNodeCountLimit = 3;
+    private int eliteNodeCountLimit = 4;
 
     //Button의 Type에 따른 Sprite연결을 위한 Dictionary
     private Dictionary<Enums.RoomType, Sprite> iconSpriteDictionary;
@@ -16,6 +19,7 @@ public class DungeonMaker : MonoBehaviour
     public Sprite shopSprite;
     public Sprite restSprite;
     public Sprite forgeSprite;
+    public Sprite bossSprite;
 
     //라인 처리 스크립트 inspector창에서 연결.
     public LineDrawer lineDrawer;
@@ -45,7 +49,8 @@ public class DungeonMaker : MonoBehaviour
             { Enums.RoomType.Elite, eliteSprite },
             { Enums.RoomType.Shop, shopSprite },
             { Enums.RoomType.Rest, restSprite },
-            { Enums.RoomType.Forge, forgeSprite }
+            { Enums.RoomType.Forge, forgeSprite },
+            { Enums.RoomType.Boss, bossSprite }
         };
         //NodeButton타입을 가진 2차원 배열 생성
         dungeonButtons = new NodeButton[maxFloor, maxColumn];
@@ -62,7 +67,7 @@ public class DungeonMaker : MonoBehaviour
     private void GenerateDungeon()
     {
         // [0,0노드]로 부터 위치 조정
-        Vector2 startPos = new Vector2(-300f, -350f);
+        Vector2 startPos = new Vector2(-250f, -350f);
         float xSpacing = 100f;
         float ySpacing = 100f;
 
@@ -104,6 +109,9 @@ public class DungeonMaker : MonoBehaviour
         }
         //모든 노드 생성 후 선택한 층 [개수 제한].
         LimitFloorNodeCount(0, startNodeCountLimit);
+        
+        LimitFloorNodeCount(maxFloor - 3, eliteNodeCountLimit);
+        LimitFloorNodeCount(maxFloor - 1, bossNodeCountLimit);
     }
 
     /// <summary>
