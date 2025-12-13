@@ -27,12 +27,12 @@ public class SynergySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        uiManager.SynergyDescriptionUIController.ShowSynergyDescription(synergyData);
+        uiManager.synergyDescriptionUIController.ShowSynergyDescription(synergyData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        uiManager.SynergyDescriptionUIController.HideSynergyDescription();
+        uiManager.synergyDescriptionUIController.HideSynergyDescription();
     }
 
 }
