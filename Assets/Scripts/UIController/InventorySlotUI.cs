@@ -52,9 +52,10 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (selectedFrame != null)
         {
             selectedFrame.SetActive(true);
+            uiManager.itemDescriptionUIController.slotIndex = slotIndex;
             uiManager.itemDescriptionUIController.
                 ShowItemDescription(inventoryManager.Inventory[slotIndex]);
-            uiManager.itemDescriptionUIController.slotIndex = slotIndex;
+            uiManager.itemDescriptionUIController.IncreaseItemDescriptionSize();
         }
     }
 
@@ -66,6 +67,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
             selectedFrame.SetActive(false);
             // 프리팹을 아이템 풀에 다시 돌려주는 작업
             uiManager.itemDescriptionUIController.HideItemDescription();
+            uiManager.itemDescriptionUIController.DecreaseItemDescriptionSize();
         }
     }
 
@@ -79,7 +81,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
             // 스왑 모드
             case Enums.InventoryMode.Swap:
-                if (!uiManager.modeUIController.CheckSwapModeCanClick())
+                if (!uiManager.modeUIController.CheckSwapModeCanClick() && clickedCheck.enabled == false)
                 {
                     return;
                 }
@@ -102,7 +104,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
             // 아이템 등급 강화 모드
             case Enums.InventoryMode.RankUp:
             case Enums.InventoryMode.RanKUpWithSynergy:
-                if (!uiManager.modeUIController.CheckRankUpModeCanClick())
+                if (!uiManager.modeUIController.CheckRankUpModeCanClick() && clickedCheck.enabled == false)
                 {
                     return;
                 }
