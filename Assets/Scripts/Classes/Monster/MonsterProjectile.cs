@@ -10,7 +10,7 @@ public class MonsterProjectile : MonoBehaviour
     public float destroyDistance = 20f;
     Vector3 moveDir;
     Vector3 startPosition;
-    Monster2 monster2;
+    public MonsterBase owner;
     int playerLayer;
 
     private void Awake()
@@ -23,13 +23,12 @@ public class MonsterProjectile : MonoBehaviour
         fire();
     }
 
-    public void Init(Monster2 mt2, Vector3 dir)
+    public void Init(MonsterBase owner, Vector3 dir)
     {
-        this.monster2 = mt2;
+        this.owner = owner;
         startPosition = transform.position;
         moveDir = dir.normalized;
         gameObject.SetActive(true);
-
     }
 
     public void fire()
@@ -50,9 +49,19 @@ public class MonsterProjectile : MonoBehaviour
         if(other.gameObject.layer == playerLayer)
         {
             Player player = other.GetComponent<Player>();
-            if (player != null)
+            if (player != null && owner != null & owner.md != null)
             {
-                player.TakeDamage(monster2.md.attackDamage);
+                float dmg = owner.md.attackDamage;
+
+                BuffReceiver buff = owner.GetComponent<BuffReceiver>();
+                if (buff != null)
+                {
+                    dmg *= buff.AttackMultiplier;
+                }
+
+                player.TakeDamage(dmg);
+                ReloadPool(); //맞으면 탄환 회수
+
             }
         }
     }
@@ -60,9 +69,9 @@ public class MonsterProjectile : MonoBehaviour
 
     public void ReloadPool()
     {
-        if (monster2 != null)
+        if (owner != null)
         {
-            monster2.ReturnMonsterProjectile(this);
+            owner.ReturnMonsterProjectile(this);
         }
         else
         {

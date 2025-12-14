@@ -43,7 +43,7 @@ public abstract class MonsterBase : MonoBehaviour
 
     private void Start()
     {
-        if(bulletPrefab != null || firepoint != null)
+        if(bulletPrefab != null && firepoint != null)
         {
             poolManager.CreatePool<MonsterProjectile>(Enums.PoolType.MonsterProjectile, bulletPrefab, 5, null);
         }
@@ -84,6 +84,11 @@ public abstract class MonsterBase : MonoBehaviour
 
     public virtual void TakeDamage(float dmg)
     {
+        BuffReceiver buff = GetComponent<BuffReceiver>();
+        if (buff != null)
+        {
+            dmg *= buff.DamageTakenMultiplier;
+        }
         currentHp -= dmg;
         if (currentHp <= 0 && state != Enums.MonsterState.Die)
         {
