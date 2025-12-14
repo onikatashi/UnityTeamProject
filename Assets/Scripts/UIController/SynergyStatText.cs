@@ -7,7 +7,8 @@ public class SynergyStatText : MonoBehaviour
 
     public void Setup(int currentSynergyLevel, int synergyLevel, SynergyData synergyData)
     {
-        statText.text = "(" + synergyLevel.ToString() + ")" + "효과";
+        statText.text = "(" + synergyLevel.ToString() + ")" +
+            ItemDataHelper.GetSynergyStatsDescription(synergyData, synergyLevel);
         if (currentSynergyLevel >= synergyLevel)
         {
             statText.color = Color.green;

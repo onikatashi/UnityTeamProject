@@ -70,6 +70,8 @@ public static class ItemDataHelper
             }
         }
 
+
+
         // 문자열 생성
         foreach(var stat in itemStatInfo)
         {
@@ -86,6 +88,48 @@ public static class ItemDataHelper
 
         return statStringBuilder.ToString();
 
+    }
+
+    // 아이템 시너지 스탯 목록을 문자열로 변환
+    public static string GetSynergyStatsDescription(SynergyData synergyData, int synergyLevel)
+    {
+        if (synergyData == null) return "시너지 정보 없음";
+
+        StringBuilder statStringBuilder = new StringBuilder();
+
+        // 튜플을 이용해 스탯 이름, 기본 스탯, 추가 스탯을 한 번에 묶어서 관리
+        List<(string name, float baseStat)> synergyStatInfo = new List<(string, float)>();
+
+        // Stats 필드 정보 가져오기
+        // 인스턴스 멤버 포함 | public 멤버 포함
+        FieldInfo[] fields = typeof(Stats).GetFields(BindingFlags.Instance | BindingFlags.Public);
+
+        // 모든 스탯 필드를 순회하여 값 계산
+        foreach (FieldInfo field in fields)
+        {
+            // 해당 레벨의 시너지 효과 스탯 정보 가져오기
+            float bonusValue = GetFieldValue(synergyData.GetBonusStats(synergyLevel), field);
+
+            // 유의미한 아이템 스탯만 필터링
+            if (Mathf.Abs(bonusValue) > 0.01f)
+            {
+                // 스탯 한글 명칭으로 추가
+                if (statName.TryGetValue(field.Name, out string koreanName))
+                {
+                    synergyStatInfo.Add((koreanName, bonusValue));
+                }
+            }
+        }
+
+        // 문자열 생성
+        foreach (var stat in synergyStatInfo)
+        {
+            string basePart = $"{stat.name}: {stat.baseStat}  ";
+
+            statStringBuilder.Append($"{basePart}");
+        }
+
+        return statStringBuilder.ToString();
     }
 
     // Stats 구조체에서 필드 값을 안전하게 가져오는 보조 함수
