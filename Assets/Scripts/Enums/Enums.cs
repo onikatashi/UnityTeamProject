@@ -85,6 +85,7 @@ public class Enums
         SynergyEffects,
         SynergyStatText,
         ArrowPool,
-        MonsterProjectile
+        MonsterProjectile,
+        MonsterArcProjectile
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Cinemachine;
+using System.Collections;
 
 /// <summary>
 /// 1. 플레이어 스탯 (체력, 마나, 공격력, 방어력 등)
@@ -24,6 +25,11 @@ public class Player : MonoBehaviour
     //public float iRate;
 
     public Stats finalStats;
+    bool isStunned = false;
+    public bool IsStunned => isStunned;
+    bool isInputReversed = false;
+    public bool IsInputReversed => isInputReversed;
+
 
     //아처 오브젝트 풀 큐 만들기
     //ScriptableObject(Job_Archer)는 “씬에 있는 풀”을 직접 관리하면 안 됨
@@ -147,5 +153,33 @@ public class Player : MonoBehaviour
     void LookAtPCam()
     {
         pSprite.transform.LookAt(pCam.transform.position);
+    }
+
+    public void Stun(float duration)
+    {
+        if (!gameObject.activeInHierarchy) return;
+        StopCoroutine(nameof(CoStun));
+        StartCoroutine(CoStun(duration));
+    }
+
+    IEnumerator CoStun(float d)
+    {
+        isStunned = true;
+        
+        yield return new WaitForSeconds(d);
+
+        isStunned = false;
+    }
+    public void ReverseInput(float duration)
+    {
+        if (!gameObject.activeInHierarchy) return;
+        StopCoroutine(nameof(CoReverse));
+        StartCoroutine(CoReverse(duration));
+    }
+    IEnumerator CoReverse(float d)
+    {
+        isInputReversed = true;
+        yield return new WaitForSeconds(d);
+        isInputReversed = false;
     }
 }
