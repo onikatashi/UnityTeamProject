@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq; // LINQ 사용을 위해 추가
+using static Enums; // RoomType Enum 접근을 위해 필요. DungeonManager.cs에 이미 'using static Enums;'가 있으므로 가정합니다.
 
 public class SpawnManager : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class SpawnManager : MonoBehaviour
     [System.Serializable]
     public class PhaseData
     {
-        // 이전 PhaseData에 있던 delayBeforeNextPhase는 제거되었습니다.
         [Tooltip("이 페이즈에서 소환할 적들")]
         public List<SpawnInfo> spawns = new List<SpawnInfo>();
     }
@@ -25,45 +25,60 @@ public class SpawnManager : MonoBehaviour
     }
 
     [Header("전역 설정")]
-    [Tooltip("다음 페이즈로 넘어가기까지의 인터벌 시간 (이 시간 내에 모든 적 제거 시 즉시 다음 페이즈)")]
-    public float IntervalTime = 3f; // Delay Befor Next Phase → Interval Time (전역 설정)
+    [Tooltip("다음 페이즈로 넘어가기까지의 인터벌 시간")]
+    public float IntervalTime = 3f;
 
-    [Header("페이즈 데이터")]
-    public List<PhaseData> phases = new List<PhaseData>();
+    // -----------------------------------------------------
+    [Header("룸 타입별 페이즈 데이터")]
+    [Tooltip("Normal 방에서 사용할 페이즈 설정")]
+    public List<PhaseData> normalPhases = new List<PhaseData>();
+
+    [Tooltip("Elite 방에서 사용할 페이즈 설정")]
+    public List<PhaseData> elitePhases = new List<PhaseData>();
+
+    [Tooltip("Boss 방에서 사용할 페이즈 설정")]
+    public List<PhaseData> bossPhases = new List<PhaseData>();
+    // -----------------------------------------------------
+
 
     List<GameObject> aliveEnemies = new List<GameObject>();
     bool spawningFinished = false;
-
-    // 현재 페이즈 진행 여부를 체크하는 변수 추가
     bool isPhaseActive = false;
 
 
     /// <summary>
-    /// DungeonManager 에서 직접 호출
+    /// DungeonManager 에서 현재 방 타입과 함께 호출됩니다.
     /// </summary>
-    public void StartSpawning()
+    public void StartSpawning(RoomType roomType)
     {
-        StartCoroutine(SpawnFlow());
+        StartCoroutine(SpawnFlow(roomType));
     }
 
 
-    IEnumerator SpawnFlow()
+    IEnumerator SpawnFlow(RoomType currentRoomType)
     {
-        for (int i = 0; i < phases.Count; i++)
+        // 1. 현재 룸 타입에 맞는 페이즈 리스트 선택
+        List<PhaseData> currentPhases = GetPhasesForRoomType(currentRoomType);
+
+        if (currentPhases == null || currentPhases.Count == 0)
         {
-            var phase = phases[i];
-            Debug.Log($"== {i + 1} 페이즈 시작 ==");
-            isPhaseActive = true; // 페이즈 시작
+            Debug.LogWarning($"{currentRoomType} 타입에 설정된 페이즈 데이터가 없습니다. 스폰을 건너뜁니다.");
+            spawningFinished = true;
+            StartCoroutine(CheckClearState()); // 페이즈가 없더라도 클리어 상태 체크는 시작
+            yield break;
+        }
+
+        for (int i = 0; i < currentPhases.Count; i++)
+        {
+            var phase = currentPhases[i];
+            Debug.Log($"== {currentRoomType} - {i + 1} 페이즈 시작 ==");
+            isPhaseActive = true;
 
             // 페이즈 시작 즉시 스폰
             foreach (var spawn in phase.spawns)
             {
                 SpawnEnemies(spawn);
             }
-
-            // 다음 페이즈 진입 조건:
-            // 1. IntervalTime 동안 대기 (시간 초과)
-            // 2. IntervalTime 내에 모든 적을 제거하면 즉시 다음 페이즈로 이동 (WaitUntil 조건)
 
             float timer = 0f;
 
@@ -81,7 +96,7 @@ public class SpawnManager : MonoBehaviour
                 yield return null; // 1프레임 대기
             }
 
-            isPhaseActive = false; // 페이즈 대기 종료
+            isPhaseActive = false;
 
             // 만약 인터벌 타임이 초과되었는데도 적이 남아있다면 경고 로그 출력
             if (aliveEnemies.Count > 0 && timer >= IntervalTime)
@@ -97,8 +112,29 @@ public class SpawnManager : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 현재 룸 타입에 맞는 페이즈 리스트를 반환합니다.
+    /// </summary>
+    private List<PhaseData> GetPhasesForRoomType(RoomType roomType)
+    {
+        switch (roomType)
+        {
+            case RoomType.Normal:
+                return normalPhases;
+            case RoomType.Elite:
+                return elitePhases;
+            case RoomType.Boss:
+                return bossPhases;
+            default:
+                Debug.LogWarning($"RoomType {roomType}에는 스폰 로직이 정의되어 있지 않습니다.");
+                return null;
+        }
+    }
+
+
     void SpawnEnemies(SpawnInfo info)
     {
+        // (기존 SpawnEnemies 함수 내용은 동일)
         for (int i = 0; i < info.count; i++)
         {
             float offsetX = Random.Range(-info.spawnOffset, info.spawnOffset);
@@ -119,19 +155,16 @@ public class SpawnManager : MonoBehaviour
     }
 
 
-    // Enemy 가 사망 시 호출될 함수
+    // Enemy 가 사망 시 호출될 함수 (기존과 동일)
     public void NotifyEnemyDeath(GameObject enemy)
     {
         aliveEnemies.Remove(enemy);
-
-        // **중요:** 인터벌 타임 내에 다음 페이즈로 즉시 넘어가도록 하기 위해
-        // CheckClearState 대신 SpawnFlow 코루틴 내에서 상태를 확인합니다.
     }
 
 
     IEnumerator CheckClearState()
     {
-        // 이 코루틴은 모든 페이즈가 끝난 후에만 호출됩니다.
+        // (기존 CheckClearState 코루틴 내용은 동일)
         while (true)
         {
             if (spawningFinished && aliveEnemies.Count == 0)
@@ -146,8 +179,7 @@ public class SpawnManager : MonoBehaviour
     }
 }
 
-
-// 적이 죽었을 때 SpawnManager에 알리기 위한 간단한 바인더
+// 적이 죽었을 때 SpawnManager에 알리기 위한 간단한 바인더 (기존과 동일)
 public class EnemyLifeBinder : MonoBehaviour
 {
     public SpawnManager manager;

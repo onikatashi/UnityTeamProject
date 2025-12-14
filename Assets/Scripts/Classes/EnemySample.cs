@@ -39,11 +39,20 @@ public class EnemySample : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        // 충돌체의 루트 오브젝트 가져오기
         Transform root = collision.transform.root;
 
+        // null 체크 추가
+        if (root == null || root.gameObject == null) return;
+
+        // 레이어 체크
         if (root.gameObject.layer == playerLayer)
         {
-            Destroy(gameObject);
+            // 충돌 시 Destroy(gameObject) 전에 혹시 모를 Null 체크 추가
+            if (this != null && gameObject != null)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

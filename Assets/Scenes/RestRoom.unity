@@ -119,61 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &29856570
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 29856571}
-  - component: {fileID: 29856572}
-  m_Layer: 0
-  m_Name: Dungeon Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &29856571
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 29856570}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.8, y: 0, z: -9.6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &29856572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 29856570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e615c202da76949a867a0102517369, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roomType: 1
-  spawnManager: {fileID: 0}
-  chestPrefab: {fileID: 865888289449158580, guid: 981a45dfcc4f88744bfda949f42b6d1e, type: 3}
-  chestSpawnPoint: {fileID: 466008906}
-  portalPrefab: {fileID: 4617036660772024948, guid: 52c7d057cba585641bb68312c10d7791, type: 3}
-  portalSpawnPoint: {fileID: 1769520138}
-  currentTheme: 0
-  grassGroup: {fileID: 1470482559}
-  snowGroup: {fileID: 0}
-  desertGroup: {fileID: 0}
-  lavaGroup: {fileID: 0}
 --- !u!1 &182145767
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,5 +788,4 @@ SceneRoots:
   - {fileID: 466008906}
   - {fileID: 1470482560}
   - {fileID: 1606155983}
-  - {fileID: 29856571}
   - {fileID: 2064950886}
