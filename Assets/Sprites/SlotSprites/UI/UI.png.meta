@@ -3180,6 +3180,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: _coin
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 375
+        width: 5
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7a8560be3c905742a8302b02c185cd4
+      internalID: 1816133261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -3331,6 +3353,7 @@ TextureImporter:
       _PlayerStatus: -650110446
       _circleSlot: -1646259740
       _circleThinSlot: -1792623966
+      _coin: 1816133261
       _hpBar: -1469757917
       _mpBar: 763020140
   mipmapLimitGroupName: 

@@ -7,25 +7,19 @@ public class LineDrawer : MonoBehaviour
     public RectTransform lineParent;            // 프리펩 생성위치 설정
     public float lineThickness = 4f;            // 라인 두깨 설정.
 
-    //
     private readonly List<GameObject> activeLines = new List<GameObject>();
-
 
     public void DrawAllConnections(NodeButton[,] nodes, int maxFloor, int maxColumn)
     {
         ClearAllLines();
-
+        //모든 노드 순회
         for (int floor = 0; floor < maxFloor; floor++)
         {
             for (int Column = 0; Column < maxColumn; Column++)
             {
                 NodeButton NodeData = nodes[floor, Column];
-
-
                 //(현 노드 or 다음노드가 Null이거나), RoomType이 None이면 continue
-                if ((NodeData == null ||
-                     NodeData.nextNodes == null ||
-                    (NodeData.CurrentRoomType == Enums.RoomType.None)))
+                if ((NodeData == null ||NodeData.nextNodes == null ||(NodeData.CurrentRoomType == Enums.RoomType.None)))
                 {
                     continue;
                 }
