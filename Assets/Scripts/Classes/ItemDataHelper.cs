@@ -6,64 +6,64 @@ using UnityEngine;
 
 public static class ItemDataHelper
 {
-    // ½ºÅÈÀÇ ÇÑ±Û ¸íÄª ¸ÊÇÎ
+    // ìŠ¤íƒ¯ì˜ í•œê¸€ ëª…ì¹­ ë§µí•‘
     private static Dictionary<string, string> statName = new Dictionary<string, string>()
     {
-        {"maxHp", "ÃÖ´ë Ã¼·Â" },
-        {"maxMp", "ÃÖ´ë ¸¶³ª" },
-        {"mpRegen", "¸¶³ª Àç»ı ¼Óµµ" },
-        {"maxDashCount", "ÃÖ´ë ´ë½Ã È½¼ö" },
-        {"dashRegen", "´ë½Ã Àç»ı ¼Óµµ" },
-        {"dashDistance", "´ë½Ã °Å¸®" },
-        {"attackDamage", "°ø°İ·Â" },
-        {"attackRange", "»ç°Å¸®" },
-        {"attackSpeed", "°ø°İ ¼Óµµ" },
-        {"projectileCount", "Åõ»çÃ¼ °³¼ö" },
-        {"projectileSpeed", "Åõ»çÃ¼ ¼Óµµ" },
-        {"moveSpeed", "ÀÌµ¿ ¼Óµµ" },
-        {"criticalRate", "Ä¡¸íÅ¸ È®·ü" },
-        {"criticalDamage", "Ä¡¸íÅ¸ ÇÇÇØ" },
-        {"shield", "º¸È£¸·" },
-        {"bonusExpRate", "Ãß°¡ °æÇèÄ¡ È¹µæ·®" },
-        {"bonusGoldRate", "Ãß°¡ °ñµå È¹µæ·®" },
-        {"luck", "Çà¿î" },
-        {"cooldownReduction", "½ºÅ³ °¡¼Ó" },
-        {"reviveCount", "ºÎÈ° È½¼ö" }
+        {"maxHp", "ìµœëŒ€ ì²´ë ¥" },
+        {"maxMp", "ìµœëŒ€ ë§ˆë‚˜" },
+        {"mpRegen", "ë§ˆë‚˜ ì¬ìƒ ì†ë„" },
+        {"maxDashCount", "ìµœëŒ€ ëŒ€ì‹œ íšŸìˆ˜" },
+        {"dashRegen", "ëŒ€ì‹œ ì¬ìƒ ì†ë„" },
+        {"dashDistance", "ëŒ€ì‹œ ê±°ë¦¬" },
+        {"attackDamage", "ê³µê²©ë ¥" },
+        {"attackRange", "ì‚¬ê±°ë¦¬" },
+        {"attackSpeed", "ê³µê²© ì†ë„" },
+        {"projectileCount", "íˆ¬ì‚¬ì²´ ê°œìˆ˜" },
+        {"projectileSpeed", "íˆ¬ì‚¬ì²´ ì†ë„" },
+        {"moveSpeed", "ì´ë™ ì†ë„" },
+        {"criticalRate", "ì¹˜ëª…íƒ€ í™•ë¥ " },
+        {"criticalDamage", "ì¹˜ëª…íƒ€ í”¼í•´" },
+        {"shield", "ë³´í˜¸ë§‰" },
+        {"bonusExpRate", "ì¶”ê°€ ê²½í—˜ì¹˜ íšë“ëŸ‰" },
+        {"bonusGoldRate", "ì¶”ê°€ ê³¨ë“œ íšë“ëŸ‰" },
+        {"luck", "í–‰ìš´" },
+        {"cooldownReduction", "ìŠ¤í‚¬ ê°€ì†" },
+        {"reviveCount", "ë¶€í™œ íšŸìˆ˜" }
     };
-    
-    // ¾ÆÀÌÅÛÀÇ »ó½Â ½ºÅÈ ¸ñ·ÏÀ» ¹®ÀÚ¿­·Î ¹İÈ¯
+
+    // ì•„ì´í…œì˜ ìƒìŠ¹ ìŠ¤íƒ¯ ëª©ë¡ì„ ë¬¸ìì—´ë¡œ ë°˜í™˜
     public static string GetItemStatsDescription(ItemData itemData, int reinforce)
     {
-        if (itemData == null) return "¾ÆÀÌÅÛ Á¤º¸ ¾øÀ½";
+        if (itemData == null) return "ì•„ì´í…œ ì •ë³´ ì—†ìŒ";
 
-        // stringÀº ºÒº¯ °´Ã¼·Î ¹®ÀÚ¿­À» º¯°æÇÒ ¶§¸¶´Ù »õ·Î¿î StringÀ» »ı¼º -> ¼º´É ÀúÇÏ
-        // ==> ¸Ş¸ğ¸®¿¡¼­ ÀÌÀü ÂüÁ¶°ªÀ» ¹ö¸®°í »õ·Î¿î ÂüÁ¶°ªÀ¸·Î º¯°æ
-        // StringBuilder´Â °¡º¯ °´Ã¼·Î ¹öÆÛ¶ó´Â µ¿Àû ¹è¿­À» °¡Áö°í ÀÖ¾î, ÀÌ ¹öÆÛ¿¡ ¹®ÀÚ¿­À» Ãß°¡
-        // ==> ÂüÁ¶°ªÀÌ º¯°æµÇÁö ¾Ê°í Èü ¸Ş¸ğ¸®¿¡¼­ °ªÀÌ »ğÀÔ, Ãß°¡, Á¦°Å
+        // stringì€ ë¶ˆë³€ ê°ì²´ë¡œ ë¬¸ìì—´ì„ ë³€ê²½í•  ë•Œë§ˆë‹¤ ìƒˆë¡œìš´ Stringì„ ìƒì„± -> ì„±ëŠ¥ ì €í•˜
+        // ==> ë©”ëª¨ë¦¬ì—ì„œ ì´ì „ ì°¸ì¡°ê°’ì„ ë²„ë¦¬ê³  ìƒˆë¡œìš´ ì°¸ì¡°ê°’ìœ¼ë¡œ ë³€ê²½
+        // StringBuilderëŠ” ê°€ë³€ ê°ì²´ë¡œ ë²„í¼ë¼ëŠ” ë™ì  ë°°ì—´ì„ ê°€ì§€ê³  ìˆì–´, ì´ ë²„í¼ì— ë¬¸ìì—´ì„ ì¶”ê°€
+        // ==> ì°¸ì¡°ê°’ì´ ë³€ê²½ë˜ì§€ ì•Šê³  í™ ë©”ëª¨ë¦¬ì—ì„œ ê°’ì´ ì‚½ì…, ì¶”ê°€, ì œê±°
         StringBuilder statStringBuilder = new StringBuilder();
 
-        // Æ©ÇÃÀ» ÀÌ¿ëÇØ ½ºÅÈ ÀÌ¸§, ±âº» ½ºÅÈ, Ãß°¡ ½ºÅÈÀ» ÇÑ ¹ø¿¡ ¹­¾î¼­ °ü¸®
+        // íŠœí”Œì„ ì´ìš©í•´ ìŠ¤íƒ¯ ì´ë¦„, ê¸°ë³¸ ìŠ¤íƒ¯, ì¶”ê°€ ìŠ¤íƒ¯ì„ í•œ ë²ˆì— ë¬¶ì–´ì„œ ê´€ë¦¬
         List<(string name, float baseStat, float bonusStat)> itemStatInfo
             = new List<(string, float, float)>();
 
-        // Stats ÇÊµå Á¤º¸ °¡Á®¿À±â
-        // ÀÎ½ºÅÏ½º ¸â¹ö Æ÷ÇÔ | public ¸â¹ö Æ÷ÇÔ
+        // Stats í•„ë“œ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+        // ì¸ìŠ¤í„´ìŠ¤ ë©¤ë²„ í¬í•¨ | public ë©¤ë²„ í¬í•¨
         FieldInfo[] fields = typeof(Stats).GetFields(BindingFlags.Instance | BindingFlags.Public);
 
-        // ¸ğµç ½ºÅÈ ÇÊµå¸¦ ¼øÈ¸ÇÏ¿© °ª °è»ê
+        // ëª¨ë“  ìŠ¤íƒ¯ í•„ë“œë¥¼ ìˆœíšŒí•˜ì—¬ ê°’ ê³„ì‚°
         foreach (FieldInfo field in fields)
         {
-            // ¾ÆÀÌÅÛ µ¥ÀÌÅÍ¿¡¼­ iBaseStat, iBonusStat°´Ã¼¿¡¼­ ÇÊµå °ªÀ» °¡Á®¿È
+            // ì•„ì´í…œ ë°ì´í„°ì—ì„œ iBaseStat, iBonusStatê°ì²´ì—ì„œ í•„ë“œ ê°’ì„ ê°€ì ¸ì˜´
             float baseValue = GetFieldValue(itemData.iBaseStat, field);
             float bonusValue = GetFieldValue(itemData.iBonusStat, field);
 
-            bonusValue *= reinforce; 
+            bonusValue *= reinforce;
 
-            // À¯ÀÇ¹ÌÇÑ ¾ÆÀÌÅÛ ½ºÅÈ¸¸ ÇÊÅÍ¸µ
+            // ìœ ì˜ë¯¸í•œ ì•„ì´í…œ ìŠ¤íƒ¯ë§Œ í•„í„°ë§
             if (Mathf.Abs(baseValue) > 0.01f || Mathf.Abs(bonusValue) > 0.01f)
             {
-                // ½ºÅÈ ÇÑ±Û ¸íÄªÀ¸·Î Ãß°¡
-                if(statName.TryGetValue(field.Name, out string koreanName))
+                // ìŠ¤íƒ¯ í•œê¸€ ëª…ì¹­ìœ¼ë¡œ ì¶”ê°€
+                if (statName.TryGetValue(field.Name, out string koreanName))
                 {
                     itemStatInfo.Add((koreanName, baseValue, bonusValue));
                 }
@@ -72,14 +72,14 @@ public static class ItemDataHelper
 
 
 
-        // ¹®ÀÚ¿­ »ı¼º
-        foreach(var stat in itemStatInfo)
+        // ë¬¸ìì—´ ìƒì„±
+        foreach (var stat in itemStatInfo)
         {
             string basePart = $"{stat.name}: {stat.baseStat}";
             string bonusPart = "";
 
-            // °­È­ ¼öÄ¡°¡ 0º¸´Ù Å©´Ù¸é, °­È­ º¸³Ê½º Á¤º¸ Ãß°¡
-            if(stat.bonusStat > 0)
+            // ê°•í™” ìˆ˜ì¹˜ê°€ 0ë³´ë‹¤ í¬ë‹¤ë©´, ê°•í™” ë³´ë„ˆìŠ¤ ì •ë³´ ì¶”ê°€
+            if (stat.bonusStat > 0)
             {
                 bonusPart = $" + {stat.bonusStat}";
             }
@@ -90,30 +90,30 @@ public static class ItemDataHelper
 
     }
 
-    // ¾ÆÀÌÅÛ ½Ã³ÊÁö ½ºÅÈ ¸ñ·ÏÀ» ¹®ÀÚ¿­·Î º¯È¯
+    // ì•„ì´í…œ ì‹œë„ˆì§€ ìŠ¤íƒ¯ ëª©ë¡ì„ ë¬¸ìì—´ë¡œ ë³€í™˜
     public static string GetSynergyStatsDescription(SynergyData synergyData, int synergyLevel)
     {
-        if (synergyData == null) return "½Ã³ÊÁö Á¤º¸ ¾øÀ½";
+        if (synergyData == null) return "ì‹œë„ˆì§€ ì •ë³´ ì—†ìŒ";
 
         StringBuilder statStringBuilder = new StringBuilder();
 
-        // Æ©ÇÃÀ» ÀÌ¿ëÇØ ½ºÅÈ ÀÌ¸§, ±âº» ½ºÅÈ, Ãß°¡ ½ºÅÈÀ» ÇÑ ¹ø¿¡ ¹­¾î¼­ °ü¸®
+        // íŠœí”Œì„ ì´ìš©í•´ ìŠ¤íƒ¯ ì´ë¦„, ê¸°ë³¸ ìŠ¤íƒ¯, ì¶”ê°€ ìŠ¤íƒ¯ì„ í•œ ë²ˆì— ë¬¶ì–´ì„œ ê´€ë¦¬
         List<(string name, float baseStat)> synergyStatInfo = new List<(string, float)>();
 
-        // Stats ÇÊµå Á¤º¸ °¡Á®¿À±â
-        // ÀÎ½ºÅÏ½º ¸â¹ö Æ÷ÇÔ | public ¸â¹ö Æ÷ÇÔ
+        // Stats í•„ë“œ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+        // ì¸ìŠ¤í„´ìŠ¤ ë©¤ë²„ í¬í•¨ | public ë©¤ë²„ í¬í•¨
         FieldInfo[] fields = typeof(Stats).GetFields(BindingFlags.Instance | BindingFlags.Public);
 
-        // ¸ğµç ½ºÅÈ ÇÊµå¸¦ ¼øÈ¸ÇÏ¿© °ª °è»ê
+        // ëª¨ë“  ìŠ¤íƒ¯ í•„ë“œë¥¼ ìˆœíšŒí•˜ì—¬ ê°’ ê³„ì‚°
         foreach (FieldInfo field in fields)
         {
-            // ÇØ´ç ·¹º§ÀÇ ½Ã³ÊÁö È¿°ú ½ºÅÈ Á¤º¸ °¡Á®¿À±â
+            // í•´ë‹¹ ë ˆë²¨ì˜ ì‹œë„ˆì§€ íš¨ê³¼ ìŠ¤íƒ¯ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
             float bonusValue = GetFieldValue(synergyData.GetBonusStats(synergyLevel), field);
 
-            // À¯ÀÇ¹ÌÇÑ ¾ÆÀÌÅÛ ½ºÅÈ¸¸ ÇÊÅÍ¸µ
+            // ìœ ì˜ë¯¸í•œ ì•„ì´í…œ ìŠ¤íƒ¯ë§Œ í•„í„°ë§
             if (Mathf.Abs(bonusValue) > 0.01f)
             {
-                // ½ºÅÈ ÇÑ±Û ¸íÄªÀ¸·Î Ãß°¡
+                // ìŠ¤íƒ¯ í•œê¸€ ëª…ì¹­ìœ¼ë¡œ ì¶”ê°€
                 if (statName.TryGetValue(field.Name, out string koreanName))
                 {
                     synergyStatInfo.Add((koreanName, bonusValue));
@@ -121,7 +121,7 @@ public static class ItemDataHelper
             }
         }
 
-        // ¹®ÀÚ¿­ »ı¼º
+        // ë¬¸ìì—´ ìƒì„±
         foreach (var stat in synergyStatInfo)
         {
             string basePart = $"{stat.name}: {stat.baseStat}  ";
@@ -132,7 +132,7 @@ public static class ItemDataHelper
         return statStringBuilder.ToString();
     }
 
-    // Stats ±¸Á¶Ã¼¿¡¼­ ÇÊµå °ªÀ» ¾ÈÀüÇÏ°Ô °¡Á®¿À´Â º¸Á¶ ÇÔ¼ö
+    // Stats êµ¬ì¡°ì²´ì—ì„œ í•„ë“œ ê°’ì„ ì•ˆì „í•˜ê²Œ ê°€ì ¸ì˜¤ëŠ” ë³´ì¡° í•¨ìˆ˜
     private static float GetFieldValue(Stats stats, FieldInfo field)
     {
         if (stats == null) return 0f;
