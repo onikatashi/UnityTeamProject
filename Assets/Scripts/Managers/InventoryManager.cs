@@ -21,6 +21,7 @@ public class InventoryManager : MonoBehaviour
 
     UIManager uiManager;
     ItemManager itemManager;
+    SynergyManager synergyManager;
 
     private void Awake()
     {
@@ -50,6 +51,7 @@ public class InventoryManager : MonoBehaviour
     {
         uiManager = UIManager.Instance;
         itemManager = ItemManager.Instance;
+        synergyManager = SynergyManager.Instance;
     }
 
     // 강화슬롯 초기화
@@ -175,7 +177,7 @@ public class InventoryManager : MonoBehaviour
         uiManager.inventoryUIController.UpdateItemIcon();
     }
 
-    // 인벤토리에 아이템 추가 인덱스 기반
+    // 인벤토리에 아이템 추가 인덱스 기반 (스왑할 때 사용)
     public void AddItemToInventoryByIndex(int index, ItemData newItem)
     {
         if (itemCount >= Inventory.Length)
@@ -238,6 +240,14 @@ public class InventoryManager : MonoBehaviour
                     totalStats += itemData.iBaseStat + itemData.iBonusStat * reinforcedSlots[i];
                 }
             }
+        }
+
+        List<Enums.ItemSynergy> activeSyenrgies = synergyActiveCount
+                        .Where(k => k.Value > 0).Select(k => k.Key).ToList();
+        for (int i = 0; i < activeSyenrgies.Count; i++)
+        {
+            totalStats += synergyManager.GetSynergyData(activeSyenrgies[i])
+                .GetBonusStats(synergyActiveCount[activeSyenrgies[i]]);
         }
         return totalStats;
     }
@@ -433,8 +443,8 @@ public class InventoryManager : MonoBehaviour
 
             if (itemManager.itemDictionaryForRank.ContainsKey(nextRank)) {
 
-                // 현재 등급 다음 단계의 아이템 리스트를 가져옴
-                List<ItemData> nextRankItemList = itemManager.itemDictionaryForRank[nextRank];
+                // 현재 등급 다음 단계의 아이템 리스트를 가져옴 (깊은 복사)
+                List<ItemData> nextRankItemList = new List<ItemData>(itemManager.itemDictionaryForRank[nextRank]);
 
                 // 해당 등급 중 랜덤한 아이템 가져옴
                 int randomIndex = UnityEngine.Random.Range(0, nextRankItemList.Count);
@@ -442,6 +452,17 @@ public class InventoryManager : MonoBehaviour
                 // 중복 아이템이 나오지 않을때까지 반복
                 while (CheckDuplicateItems(nextRankItemList[randomIndex].iId))
                 {
+                    // 만약 중복 아이템이 나오면 그 아이템을 리스트에서 제거
+                    nextRankItemList.RemoveAt(randomIndex);
+                   
+                    // 다음 랭크 아이템을 모두 가지고 있을 때, 강제종료
+                    if(nextRankItemList.Count == 0)
+                    {
+                        Debug.Log("남은 아이템이 없음");
+                        return;
+                    }
+
+                    // 랜덤인덱스 재설정
                     randomIndex = UnityEngine.Random.Range(0, nextRankItemList.Count);
                 }
 
@@ -481,8 +502,8 @@ public class InventoryManager : MonoBehaviour
 
             if (itemManager.itemDictionaryForRank.ContainsKey(nextRank)) {
 
-                // 현재 등급 다음 단계의 아이템 리스트를 가져옴
-                List<ItemData> rankUpItemList = itemManager.itemDictionaryForRank[nextRank];
+                // 현재 등급 다음 단계의 아이템 리스트를 가져옴 (깊은 복사)
+                List<ItemData> rankUpItemList = new List<ItemData>(itemManager.itemDictionaryForRank[nextRank]);
 
                 List<HashSet<ItemData>> synergyItemList = new List<HashSet<ItemData>>();
 
@@ -498,25 +519,38 @@ public class InventoryManager : MonoBehaviour
                     itemList.IntersectWith(rankUpItemList);
                 }
 
-                HashSet<ItemData> finalItemList = new HashSet<ItemData>();
+                HashSet<ItemData> finalItemHashSet = new HashSet<ItemData>();
 
                 // 해당 교집합을 합하면 다음 등급의 아이템과 현재 아이템의 시너지를 이어받는 아이템 리스트가 나옴
                 foreach (var itemList in synergyItemList)
                 {
-                    finalItemList.UnionWith(itemList);
+                    finalItemHashSet.UnionWith(itemList);
                 }
+
+                List<ItemData> finalItemList = finalItemHashSet.ToList();
 
                 // 최종 리스트에서 랜덤한 아이템 가져옴
                 int randomIndex = UnityEngine.Random.Range(0, finalItemList.Count);
 
                 // 중복 아이템이 나오지 않을때까지 반복
-                while (CheckDuplicateItems(finalItemList.ToList()[randomIndex].iId))
+                while (CheckDuplicateItems(finalItemList[randomIndex].iId))
                 {
+                    // 중복 아이템을 리스트에서 제거
+                    finalItemList.RemoveAt(randomIndex);
+
+                    // 다음 랭크 아이템을 모두 가지고 있을 때, 강제종료
+                    if (finalItemList.Count == 0)
+                    {
+                        Debug.Log("남은 아이템이 없음");
+                        return;
+                    }
+
+                    // 랜덤 인덱스 재설정
                     randomIndex = UnityEngine.Random.Range(0, finalItemList.Count);
                 }
 
                 RemoveItemFromInventory(index);
-                AddItemToInventoryByIndex(index, finalItemList.ToList()[randomIndex]);
+                AddItemToInventoryByIndex(index, finalItemList[randomIndex]);
 
                 // 아이템 등급 업 후 시너지 체크
                 CheckActiveSynergy();
