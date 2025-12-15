@@ -60,6 +60,19 @@ public class TempManager : MonoBehaviour
         {
             testStat = InventoryManager.Instance.GetInventoryTotalStats();
         }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            SoundManager.Instance.PlayBGM("town");
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            SoundManager.Instance.Play("fire");
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            SoundManager.Instance.StopBGM();
+        }
     }
 
     void testGetItem()

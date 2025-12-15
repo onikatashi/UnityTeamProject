@@ -401,6 +401,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3be2f60e0f4e00a48bba23f0d8ff93ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testStat:
+    maxHp: 0
+    maxMp: 0
+    mpRegen: 0
+    maxDashCount: 0
+    dashRegen: 0
+    dashDistance: 0
+    attackDamage: 0
+    attackRange: 0
+    attackSpeed: 0
+    projectileCount: 0
+    projectileSpeed: 0
+    moveSpeed: 0
+    criticalRate: 0
+    criticalDamage: 0
+    shield: 0
+    bonusExpRate: 0
+    bonusGoldRate: 0
+    luck: 0
+    cooldownReduction: 0
+    reviveCount: 0
 --- !u!1 &625999390
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,53 +516,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 960, y: 540, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1238639147
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1238639149}
-  - component: {fileID: 1238639148}
-  m_Layer: 0
-  m_Name: InventoryUIController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1238639148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1238639147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bb16caaffcd02444ab6ea1d556afc29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InventoryPanel: {fileID: 661653692554199393, guid: 645b8ea420c235b479012c7bd6b7ac5a, type: 3}
-  slotPrefab: {fileID: 0}
-  inventorySlots: []
---- !u!4 &1238639149
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1238639147}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -951,6 +925,5 @@ SceneRoots:
   - {fileID: 248482086}
   - {fileID: 1170795798}
   - {fileID: 1255429467}
-  - {fileID: 1238639149}
   - {fileID: 164941602}
   - {fileID: 1998032314}
