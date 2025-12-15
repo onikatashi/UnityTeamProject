@@ -44,12 +44,6 @@ public class InventoryUIController : MonoBehaviour
         }
     }
 
-    // 슬롯 클릭 이벤트
-    //public void OnSlotClicked(int slotIndex)
-    //{
-
-    //}
-
     // 인벤토리 슬롯 아이콘 업데이트
     public void UpdateItemIcon()
     {
@@ -65,6 +59,15 @@ public class InventoryUIController : MonoBehaviour
             {
                 inventorySlots[i].itemIcon.sprite = null;
             }
+        }
+    }
+
+    // 모든 인벤토리 슬롯 체크(클릭 했을 때 슬롯을 덮는 이미지) 해제
+    public void UnCheckAllSlot()
+    {
+        foreach(InventorySlotUI slotUI in inventorySlots)
+        {
+            slotUI.clickedCheck.enabled = false;
         }
     }
 }

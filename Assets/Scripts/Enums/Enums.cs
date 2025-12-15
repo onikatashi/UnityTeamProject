@@ -78,6 +78,15 @@ public class Enums
         Die
     }
 
+    // 인벤토리 모드
+    public enum InventoryMode
+    {
+        None,               // 기본 상태
+        Swap,               // 아이템 위치 교환 모드
+        RankUp,             // 아이템 등급 상승 모드
+        RanKUpWithSynergy   // 시너지 유지 아이템 등급 상승 모드
+    }
+
     // 오브젝트 풀링 오브젝트 타입
     public enum PoolType
     {

@@ -7,20 +7,13 @@ using System.Collections;
 [CreateAssetMenu(menuName = "Skills/MultiSlash")]
 public class Skill_MultiSlash : SkillBase
 {
-    //레벨 1 기준 추가 데미지
-    public float baseDamage = 10f;
+    
+    public float baseDamage = 10f;          //레벨 1 기준 추가 데미지
+    public float range = 4f;                //공격 범위 반경
+    public float hitInterval = 0.4f;        //타격 사이 간격
+    public int baseHitCount = 3;            //기본 타격 횟수 (1레벨 기준 3회)
 
-    //공격 범위 반경
-    public float range = 4f;
-
-    //타격 사이 간격
-    public float hitInterval = 0.4f;
-
-    //기본 타격 횟수 (1레벨 기준 3회)
-    public int baseHitCount = 3;
-
-    //몬스터 레이어 확인용
-    public LayerMask monsterLayer;
+    public LayerMask monsterLayer;          //몬스터 레이어 확인용
 
     /// <summary>
     /// 스킬 실행 함수
@@ -52,8 +45,7 @@ public class Skill_MultiSlash : SkillBase
                 range,                                      //범위안에
                 monsterLayer);                              //몬스터레이어
 
-            //데미지 계산
-            //플레이어 현재 공격력 + 스킬 데미지
+            //데미지 계산 (플레이어 현재 공격력 + 스킬 데미지)
             float damage = player.finalStats.attackDamage + baseDamage * level;
 
             foreach(var c in monsters)

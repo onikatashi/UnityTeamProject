@@ -7,9 +7,12 @@ using UnityEngine.UI;
 public class ItemDescriptionUIController : MonoBehaviour
 {
     public GameObject itemDescriptionPanel;             // 아이템 설명 패널 오브젝트
+    public RectTransform itemDescriptionSize;           // 아이템 설명 패널 크기
     public TextMeshProUGUI itemNameText;                // 아이템 이름 텍스트
     public TextMeshProUGUI itemStatDescriptionText;     // 아이템 스탯 설명 텍스트
+    public float statTextHeight;                        // 스탯 설명 텍스트 높이
     public TextMeshProUGUI itemDescriptionText;         // 아이템 설명 텍스트
+    public float descriptionTextHeight;                 // 아이템 설명 텍스트 높이
     public Image itemIcon;                              // 아이템 아이콘 이미지
     public int slotIndex;                               // 현재 선택된 슬롯 인덱스
 
@@ -83,15 +86,37 @@ public class ItemDescriptionUIController : MonoBehaviour
         for (int i = 0; i < itemData.iSynergy.Count; i++)
         {
             DescriptionSynergyUI icon = poolManager.Get<DescriptionSynergyUI>(Enums.PoolType.DescriptionSynergy);
+
+            // 오브젝트의 자식 인덱스를 정해줌 (위부터 차례대로 나오게 하기 위함)
+            icon.transform.SetSiblingIndex(i);
+
             SynergyData sd = synergyManager.GetSynergyData(itemData.iSynergy[i]);
             icon.SetUp(sd.synergyIcon, sd.synergyName);
             synergyUIList.Add(icon);
         }
-        
-        itemStatDescriptionText.text = itemData.iStatDescription;
+
+        //itemStatDescriptionText.text = itemData.iStatDescription;
+        itemStatDescriptionText.text = ItemDataHelper.GetItemStatsDescription
+            (itemData, inventoryManager.reinforcedSlots[slotIndex]);
         itemDescriptionText.text = itemData.iDescription;
         itemIcon.sprite = itemData.iIcon;
+    }
 
+    // 설명 텍스트 크기에 따른 패널 크기 조절
+    public void IncreaseItemDescriptionSize()
+    {
+        statTextHeight = itemStatDescriptionText.preferredHeight;
+        descriptionTextHeight = itemDescriptionText.preferredHeight;
+        itemDescriptionSize.sizeDelta = new Vector2(
+            itemDescriptionSize.sizeDelta.x, itemDescriptionSize.sizeDelta.y + statTextHeight + descriptionTextHeight);
+    }
+
+    public void DecreaseItemDescriptionSize()
+    {
+        //statTextHeight = itemStatDescriptionText.preferredHeight;
+        //descriptionTextHeight = itemDescriptionText.preferredHeight;
+        itemDescriptionSize.sizeDelta = new Vector2(
+            itemDescriptionSize.sizeDelta.x, itemDescriptionSize.sizeDelta.y - statTextHeight - descriptionTextHeight);
     }
 
     // 아이템 설명 패널 비활성화

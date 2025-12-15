@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class TempManager : MonoBehaviour
 {
+    public Stats testStat;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -23,6 +24,41 @@ public class TempManager : MonoBehaviour
         {
             int randIndex = UnityEngine.Random.Range(0, InventoryManager.Instance.Inventory.Length);
             InventoryManager.Instance.ReinforceInventorySlot(randIndex);
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ModeManager.Instance.SetMode(Enums.InventoryMode.None);
+            Debug.Log("일반모드");
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            ModeManager.Instance.SetMode(Enums.InventoryMode.Swap);
+            UIManager.Instance.ToggleInventory();
+            UIManager.Instance.ToggleInventory();
+            Debug.Log("스왑모드");
+        }
+
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            ModeManager.Instance.SetMode(Enums.InventoryMode.RankUp);
+            UIManager.Instance.ToggleInventory();
+            UIManager.Instance.ToggleInventory();
+            Debug.Log("강화모드");
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            ModeManager.Instance.SetMode(Enums.InventoryMode.RanKUpWithSynergy);
+            UIManager.Instance.ToggleInventory();
+            UIManager.Instance.ToggleInventory();
+            Debug.Log("시너지 유지 강화모드");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            testStat = InventoryManager.Instance.GetInventoryTotalStats();
         }
     }
 

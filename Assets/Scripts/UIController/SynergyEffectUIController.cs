@@ -40,10 +40,17 @@ public class SynergyEffectUIController : MonoBehaviour
             }
             synergyEffectUIPanel.SetActive(true);
         }
-        
+
+        int i = 0;
+
         foreach (var keys in inventoryManager.synergyCount.Keys)
         {
             SynergySlotUI slot = poolManager.Get<SynergySlotUI>(Enums.PoolType.SynergyEffects);
+
+            // 오브젝트의 자식 인덱스를 정해줌 (위부터 차례대로 나오게 하기 위함)
+            slot.transform.SetSiblingIndex(i);
+            i++;
+
             slot.SetUp(synergyManager.GetSynergyData(keys), inventoryManager.synergyActiveCount[keys],
                 synergyManager.GetSynergyData(keys).maxLevel);
 

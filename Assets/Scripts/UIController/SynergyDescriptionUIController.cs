@@ -55,7 +55,10 @@ public class SynergyDescriptionUIController : MonoBehaviour
         for (int i = 0; i < synergyData.levels.Count; i++)
         {
             SynergyStatText statText = poolManager.Get<SynergyStatText>(Enums.PoolType.SynergyStatText);
+
+            // 오브젝트의 자식 인덱스를 정해줌 (위부터 차례대로 나오게 하기 위함)
             statText.transform.SetSiblingIndex(i);
+
             statText.Setup(inventoryManager.synergyActiveCount[synergyData.synergyType],
                 synergyData.levels[i].requiredLines, synergyData);
             synergyStatTextList.Add(statText);
