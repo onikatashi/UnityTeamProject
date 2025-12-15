@@ -34,6 +34,7 @@ public class SoundManager : MonoBehaviour
     Dictionary<string, Sound> soundDictionary;
 
     AudioSource bgmSource;
+    AudioSource sfxSource;
     string currentBGM = "";
 
     [Header("볼륨 설정")]
@@ -49,7 +50,7 @@ public class SoundManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -59,51 +60,38 @@ public class SoundManager : MonoBehaviour
 
         soundDictionary = new Dictionary<string, Sound>();
 
-        // BGM Sound 객체 초기화
-        foreach (Sound s in bgmSounds)
-        {
-            // 각 사운드에 AudioSource를 붙여서 자식 오브젝트로 생성
-            GameObject soundObject = new GameObject("BGM_" + s.name);
-            soundObject.transform.SetParent(transform);
-
-            s.source = soundObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
-            s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-            s.source.loop = true; // BGM은 기본적으로 반복 재생으로 설정 (Sound 클래스의 loop 변수를 덮어씀)
-
-            // 딕셔너리에 추가
-            soundDictionary.Add(s.name, s);
-        }
-
-        // Effect Sound 객체 초기화
-        foreach (Sound s in effectSounds)
-        {
-            // 각 사운드에 AudioSource를 붙여서 자식 오브젝트로 생성
-            GameObject soundObject = new GameObject("EFFECT_" + s.name);
-            soundObject.transform.SetParent(transform);
-
-            s.source = soundObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
-            s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-            s.source.loop = s.loop; // 효과음은 Sound 클래스의 loop 설정 따름
-
-            // 딕셔너리에 추가
-            soundDictionary.Add(s.name, s);
-        }
-
         // BGM 재생 전용 AudioSource 생성
         GameObject bgmObject = new GameObject("BGM_Player");
         bgmObject.transform.SetParent(transform);
         bgmSource = bgmObject.AddComponent<AudioSource>();
         bgmSource.loop = true; // BGM 전용 플레이어는 반복 재생
 
+        // SFX 재생 전용 AudioSource 생성
+        GameObject sfxObject = new GameObject("SFX_Player");
+        sfxObject.transform.SetParent(transform);
+        sfxSource = sfxObject.AddComponent<AudioSource>();
+
+        // 딕셔너리에 모든 사운드 데이터 등록
+        // BGM과 SFX 모두 등록
+        foreach (Sound s in bgmSounds) AddSoundToDictionary(s);
+        foreach (Sound s in effectSounds) AddSoundToDictionary(s);
+
         // BGM 데이터 사전 로드 (Preload)
         if (bgmSounds != null && bgmSounds.Length > 0)
         {
             StartCoroutine(PreloadBGMs());
         }
+    }
+
+    // 딕셔너리에 사운드를 등록하는 헬퍼 함수
+    private void AddSoundToDictionary(Sound s)
+    {
+        if (soundDictionary.ContainsKey(s.name))
+        {
+            Debug.LogWarning($"{s.name} 중복");
+            return;
+        }
+        soundDictionary.Add(s.name, s);
     }
 
     IEnumerator PreloadBGMs()
@@ -137,10 +125,10 @@ public class SoundManager : MonoBehaviour
         }
 
         // 최종 볼륨 계산 및 설정 (마스터 * SFX * 사운드 * 추가배율)
-        sound.source.volume = masterVolume * sfxVolume * sound.volume * volumeScale;
+        float finalVolume = masterVolume * sfxVolume * sound.volume * volumeScale;
 
         // 재생
-        sound.source.Play();
+        sfxSource.PlayOneShot(sound.clip, finalVolume);
     }
 
 
