@@ -82,6 +82,8 @@ public class ItemDescriptionUIController : MonoBehaviour
                 break;
         }
 
+        itemData.SanitizeData();
+
         // 시너지 UI 오브젝트 풀에서 불러오기
         for (int i = 0; i < itemData.iSynergy.Count; i++)
         {
