@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7336675861539045571}
   - component: {fileID: 6819896112475095973}
   - component: {fileID: 2080683527389675315}
+  - component: {fileID: 6819144426631270719}
   m_Layer: 0
   m_Name: monster2
   m_TagString: Untagged
@@ -127,10 +128,9 @@ MonoBehaviour:
   md: {fileID: 11400000, guid: a88617f2daccf7746b3c5255d5e7b5da, type: 2}
   currentHp: 100
   detectRange: 10
-  timer: 0
   bulletPrefab: {fileID: 0}
   firepoint: {fileID: 0}
-  monsterData: {fileID: 11400000, guid: 4ce72205deef66547a5f73f2edc39e16, type: 2}
+  isDef: 0
 --- !u!195 &2080683527389675315
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -153,6 +153,18 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6819144426631270719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2681786641243824683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1795edc2ce6032c459cc3b4b12908afc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5417195605843079919
 GameObject:
   m_ObjectHideFlags: 0

@@ -70,7 +70,7 @@ public class Monster3 : MonsterBase
         timer += Time.deltaTime;
         if (timer < md.attackSpeed) return;
 
-        Debug.Log("자폭");
+        //Debug.Log("자폭");
         Explode();
     }
 
