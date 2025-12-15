@@ -45,6 +45,7 @@ public class DungeonMaker : MonoBehaviour
         
         iconSpriteDictionary = new Dictionary<Enums.RoomType, Sprite>()
         {
+            { Enums.RoomType.None, null },
             { Enums.RoomType.Normal, normalSprite },
             { Enums.RoomType.Elite, eliteSprite },
             { Enums.RoomType.Shop, shopSprite },
@@ -52,16 +53,125 @@ public class DungeonMaker : MonoBehaviour
             { Enums.RoomType.Forge, forgeSprite },
             { Enums.RoomType.Boss, bossSprite }
         };
+
+
+
+
+
         //NodeButton타입을 가진 2차원 배열 생성
         dungeonButtons = new NodeButton[maxFloor, maxColumn];
 
-        GenerateDungeon();
-        GenerateNodeConnections();
+
+        // 던전 데이터 체크.
+        if (MapTestManager.Instance != null && MapTestManager.Instance.HasDungeonData())
+        {
+            LoadDungeonFromData(MapTestManager.Instance.GetDungeonData());
+            Debug.Log("[DungeonMaker] 기존 던전 데이터 로드 완료");
+        }
+        else
+        {
+            //[[[신규 던전 생성.]]]
+
+            //던전 노드 생성
+            GenerateDungeon();
+            //던전 선 연결
+            GenerateNodeConnections();
+
+            //생성된 던전 데이터 DungeonManager쪽에 저장.
+            DungeonMapData saveData = ExportDungeonData();
+            MapTestManager.Instance?.SaveDungeonData(saveData);
+            Debug.Log("[DungeonMaker] 신규 던전 생성 및 저장 완료");
+        }
+
+        //모든 노드, 선 정보를 기반으로 선그리기.
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
         PrintDungeonToConsole();
     }
 
-    //---------------------------------------------------------------------------------------------
+    //던전 재생성.-------------------------------------------------------------------------------------------
+
+
+    private DungeonMapData ExportDungeonData()
+    {
+        DungeonMapData saveData = new DungeonMapData();
+        saveData.maxFloor = maxFloor;
+        saveData.maxColumn = maxColumn;
+
+        for (int f = 0; f < maxFloor; f++)
+        {
+            for (int c = 0; c < maxColumn; c++)
+            {
+                NodeButton node = dungeonButtons[f, c];
+                if (node == null) continue;
+
+                DungeonNodeData nodeData = new DungeonNodeData()
+                {
+                    floor = f,
+                    col = c,
+                    roomType = node.CurrentRoomType,
+                    isAvailable = node.isAvailable,
+                    uiPosition = node.GetComponent<RectTransform>().anchoredPosition
+                };
+
+                // 다음 연결된 노드의 좌표 저장
+                foreach (var next in node.nextNodes)
+                    nodeData.nextNodes.Add(new Vector2Int(next.floor, next.col));
+
+                saveData.nodes.Add(nodeData);
+            }
+        }
+        return saveData;
+    }
+
+    private void LoadDungeonFromData(DungeonMapData data)
+    {
+        foreach (var nodeData in data.nodes)
+        {
+            GameObject nodePrefab = Instantiate(roomButtonPrefab, mapParent);
+            NodeButton node = nodePrefab.GetComponent<NodeButton>();
+            if (node == null) continue;
+
+            node.floor = nodeData.floor;
+            node.col = nodeData.col;
+            node.isAvailable = nodeData.isAvailable;
+            if (nodeData.roomType == Enums.RoomType.None)
+            {
+                node.SetRoomType(Enums.RoomType.None, null);
+            }
+            else
+            {
+                node.SetRoomType(nodeData.roomType, iconSpriteDictionary[nodeData.roomType]);
+            }
+
+            RectTransform rect = nodePrefab.GetComponent<RectTransform>();
+            rect.anchoredPosition = nodeData.uiPosition;
+
+            dungeonButtons[nodeData.floor, nodeData.col] = node;
+        }
+
+        // 연결 복원
+        foreach (var nodeData in data.nodes)
+        {
+            NodeButton node = dungeonButtons[nodeData.floor, nodeData.col];
+            if (node == null) continue;
+
+            foreach (var next in nodeData.nextNodes)
+            {
+                NodeButton nextNode = dungeonButtons[next.x, next.y];
+                if (nextNode != null && !node.nextNodes.Contains(nextNode))
+                {
+                    node.nextNodes.Add(nextNode);
+                    nextNode.prevNodes.Add(node);
+                }
+            }
+        }
+    }
+
+
+
+
+
+
 
     //노드 생성부---------------------------------------------------------------------------------------------
     private void GenerateDungeon()
@@ -156,6 +266,8 @@ public class DungeonMaker : MonoBehaviour
             notChoiceNode.SetRoomType(Enums.RoomType.None, null);
         }
     }
+
+    
 
     //-------------------------------------------------------------------------------------------------------
 
