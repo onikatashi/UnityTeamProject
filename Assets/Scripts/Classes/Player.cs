@@ -121,6 +121,7 @@ public class Player : MonoBehaviour
         {
             currentHp = finalStats.maxHp;
         }
+        Debug.Log("힐");
     }
 
     /// <summary>

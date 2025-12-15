@@ -8,13 +8,13 @@ public class Monster10 : MonsterBase
 
     [Header("Mark Bomb")]
     public GroundTelegraph telegraphPrefab;
-    public float markDelay = 1.2f;        // Ç¥½Ã ÈÄ Æø¹ß±îÁö
-    public float explodeRadius = 3.5f;
-    public float stunDuration = 1.0f;
-    public LayerMask groundMask;          // (¼±ÅÃ) ¹Ù´Ú¿ë
+    public float markDelay = 1.2f;        // í‘œì‹ ìƒì„± í›„ í­ë°œê¹Œì§€ ì§€ì—° ì‹œê°„
+    public float explodeRadius = 3.5f;    // í­ë°œ ë°˜ê²½
+    public float stunDuration = 1.0f;     // ìŠ¤í„´ ì§€ì† ì‹œê°„
+    public LayerMask groundMask;          // ë°”ë‹¥ ë ˆì´ì–´
 
     [Header("Damage")]
-    public float damageMultiplier = 1f;   // md.attackDamage * multiplier
+    public float damageMultiplier = 1f;   // ìµœì¢… í”¼í•´ëŸ‰ = md.attackDamage * ë°°ìœ¨
 
     bool casting = false;
 
@@ -63,7 +63,7 @@ public class Monster10 : MonsterBase
         timer += Time.deltaTime;
         if (timer < md.attackSpeed) return;
 
-        // ¹ß»ç ¼ø°£ ÇÃ·¹ÀÌ¾î À§Ä¡ °íÁ¤
+        // í˜„ì¬ í”Œë ˆì´ì–´ ìœ„ì¹˜ì— í‘œì‹ ìƒì„±
         Vector3 targetPos = player.transform.position;
 
         StartCoroutine(CoMarkExplode(targetPos));
@@ -75,15 +75,16 @@ public class Monster10 : MonsterBase
     {
         casting = true;
 
-        // Â÷Â¡»ı¼º
-        GroundTelegraph tg = Instantiate(telegraphPrefab, pos, Quaternion.Euler(90f, 0f, 0f));
+        // í‘œì‹ ìƒì„±
+        GroundTelegraph tg = Instantiate(
+            telegraphPrefab, pos, Quaternion.Euler(90f, 0f, 0f));
         tg.Setup(explodeRadius, markDelay);
         tg.StartCharge();
 
-        // ´ë±â
+        // í­ë°œ ëŒ€ê¸°
         yield return new WaitForSeconds(markDelay);
 
-        // Æø¹ß ÆÇÁ¤
+        // í­ë°œ íŒì •
         Collider[] hits = Physics.OverlapSphere(pos, explodeRadius);
         int playerLayer = LayerMask.NameToLayer("Player");
 
@@ -97,7 +98,7 @@ public class Monster10 : MonsterBase
                 float dmg = md.attackDamage * damageMultiplier;
                 p.TakeDamage(dmg);
 
-                // ±âÀı
+                // ìŠ¤í„´ ì ìš©
                 p.Stun(stunDuration);
             }
         }

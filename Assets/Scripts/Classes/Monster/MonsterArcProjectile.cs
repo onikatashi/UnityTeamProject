@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MonsterArcProjectile : MonoBehaviour
@@ -8,9 +9,13 @@ public class MonsterArcProjectile : MonoBehaviour
     public LayerMask groundMask;
 
     [Header("Explosion")]
-    public float explodeRadius = 4.5f;    // ¹üÀ§
-    public float stunDuration = 2f;     // ±âÀı ½Ã°£
-    
+    public float explodeRadius = 4.5f;
+    public float stunDuration = 2f;
+
+    [Header("Telegraph")]
+    public GroundTelegraph telegraphPrefab;
+    public float delayMark = 1.2f;
+
     Vector3 velocity;
     Vector3 startPos;
 
@@ -18,13 +23,14 @@ public class MonsterArcProjectile : MonoBehaviour
     PoolManager pool;
     int playerLayer;
 
+    bool landed = false; // ë°”ë‹¥ì— ë‹¿ì•˜ëŠ”ì§€(í•œ ë²ˆë§Œ)
+
     void Awake()
     {
         pool = PoolManager.Instance;
         playerLayer = LayerMask.NameToLayer("Player");
     }
 
-    /// <param name="arcHeight">Æ÷¹°¼± ÃÖ°íÁ¡ ³ôÀÌ(Å¬¼ö·Ï ´õ ³ôÀÌ ¶ä)</param>
     public void Init(MonsterBase owner, Vector3 from, Vector3 to, float arcHeight)
     {
         this.owner = owner;
@@ -32,7 +38,7 @@ public class MonsterArcProjectile : MonoBehaviour
         transform.position = from;
         startPos = from;
 
-        // ÃÊ±â ¼Óµµ °è»ê
+        landed = false;
         velocity = CalculateArcVelocity(from, to, arcHeight);
 
         gameObject.SetActive(true);
@@ -40,39 +46,69 @@ public class MonsterArcProjectile : MonoBehaviour
 
     void Update()
     {
-        // Áß·Â
-        velocity.y -= gravity * Time.deltaTime;
+        // ë°”ë‹¥ì— ë‹¿ìœ¼ë©´ ë” ì´ìƒ ì´ë™/ì¤‘ë ¥ ì ìš© ê¸ˆì§€
+        if (landed) return;
 
-        // ÀÌµ¿
+        velocity.y -= gravity * Time.deltaTime;
         transform.position += velocity * Time.deltaTime;
 
-        // ³¯¾Æ°¡´Â ¹æÇâÀ¸·Î È¸Àü
         if (velocity.sqrMagnitude > 0.001f)
             transform.rotation = Quaternion.LookRotation(velocity.normalized);
 
-        // ³Ê¹« ¸Ö¾îÁö¸é È¸¼ö
         if ((transform.position - startPos).sqrMagnitude > destroyDistance * destroyDistance)
-        {
             ReturnToPool();
-        }
     }
 
-    // Áö¸é Ãæµ¹ °¨Áö - Collider°¡ Trigger¿©µµ ¹Ù´Ú Ã¼Å©ÇÏ·Á¸é Raycast°¡ ¾ÈÀüÇÔ
     void LateUpdate()
     {
-        // ¾Æ·¡·Î Âª°Ô ·¹ÀÌ ½÷¼­ Áö¸é ´êÀ¸¸é Æø¹ß
-        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out var hit, 0.25f, groundMask))
+        if (landed) return;
+
+        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 0.25f, groundMask))
         {
-            Explode();
+            landed = true;
+
+            // íˆ¬ì‚¬ì²´ë¥¼ ë°”ë‹¥ ìœ„ì— ê³ ì • 
+            Vector3 groundPoint = hit.point + Vector3.up * 0.02f;
+            transform.position = groundPoint;
+
+            // ì´ë™ ì™„ì „ ì •ì§€
+            velocity = Vector3.zero;
+
+            StartCoroutine(CoChargeThenExplode(groundPoint));
         }
     }
 
-    void Explode()
+    IEnumerator CoChargeThenExplode(Vector3 groundPoint)
     {
-        // ÀÌ¹Ì ºñÈ°¼ºÈ­ µÇ¾ú°Å³ª, owner°¡ ¾ø´Â °æ¿ì ¹æ¾î
-        if (!gameObject.activeSelf) return;
+        GroundTelegraph tg = null;
 
-        // Æø¹ß ¹üÀ§ ³» ÇÃ·¹ÀÌ¾î Å½»ö
+        // í…”ë ˆê·¸ë˜í”„ ìƒì„±
+        if (telegraphPrefab != null)
+        {
+            tg = Instantiate(telegraphPrefab, groundPoint, Quaternion.Euler(90f, 0f, 0f));
+            tg.Setup(explodeRadius, delayMark);
+            tg.StartCharge();
+        }
+
+        // ì°¨ì§• ëŒ€ê¸°
+        yield return new WaitForSeconds(delayMark);
+
+        // í­ë°œ ë°ë¯¸ì§€ ì²˜ë¦¬
+        DoExplosionDamage();
+
+        // í…”ë ˆê·¸ë˜í”„ ì œê±°
+        if (tg != null)
+        {
+            tg.StopAndHide();
+            Destroy(tg.gameObject);
+        }
+
+        // íˆ¬ì‚¬ì²´ í’€ ë°˜í™˜
+        ReturnToPool();
+    }
+
+    void DoExplosionDamage()
+    {
         Collider[] hits = Physics.OverlapSphere(transform.position, explodeRadius);
 
         for (int i = 0; i < hits.Length; i++)
@@ -90,17 +126,12 @@ public class MonsterArcProjectile : MonoBehaviour
             p.TakeDamage(dmg);
             p.Stun(stunDuration);
         }
-
-        ReturnToPool();
     }
 
     Vector3 CalculateArcVelocity(Vector3 from, Vector3 to, float arcHeight)
     {
-        // Æ÷¹°¼± ºñÇà ½Ã°£À» ³ôÀÌ·Î ´ëÃæ °áÁ¤
-        // ³ôÀÌ¸¦ Å©°Ô ÁÖ¸é timeÀÌ ´Ã°í, ¼öÆò ¼Óµµ°¡ ÁÙ¾îµê
         float timeUp = Mathf.Sqrt(2f * arcHeight / gravity);
-        float timeDown = timeUp;
-        float totalTime = Mathf.Max(0.15f, timeUp + timeDown);
+        float totalTime = Mathf.Max(0.15f, timeUp * 2f);
 
         Vector3 delta = to - from;
         Vector3 deltaXZ = new Vector3(delta.x, 0f, delta.z);
@@ -108,7 +139,7 @@ public class MonsterArcProjectile : MonoBehaviour
         float vxz = deltaXZ.magnitude / totalTime;
         Vector3 dirXZ = (deltaXZ.sqrMagnitude > 0.0001f) ? deltaXZ.normalized : Vector3.zero;
 
-        float vy = gravity * timeUp; // ÃÖ°íÁ¡±îÁö ¿Ã¶ó°¡±â À§ÇÑ ÃÊ±â y¼Óµµ
+        float vy = gravity * timeUp;
 
         return dirXZ * vxz + Vector3.up * vy;
     }
@@ -116,11 +147,5 @@ public class MonsterArcProjectile : MonoBehaviour
     void ReturnToPool()
     {
         pool.Return(Enums.PoolType.MonsterArcProjectile, this);
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(transform.position, explodeRadius);
     }
 }

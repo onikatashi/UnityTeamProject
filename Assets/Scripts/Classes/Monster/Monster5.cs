@@ -1,9 +1,9 @@
 using UnityEngine;
 
 /// <summary>
-/// ¿ø°Å¸® ¸ó½ºÅÍ + Èú (Èú ¿ì¼±)
-/// Èú ¹üÀ§ ³» ¾Æ±ºÀÌ ÇÇÇØ »óÅÂ¸é °ø°İ ´ë½Å Èú
-/// ÈúÇÒ ¾Æ±ºÀÌ ¾øÀ¸¸é ¿ø·¡Ã³·³ Åõ»çÃ¼ °ø°İ
+/// ì›ê±°ë¦¬ ê³µê²© + í
+/// í ëŒ€ìƒì´ ìˆì„ ê²½ìš° ê³µê²©ìƒíƒœë¥¼ í ìƒíƒœë¡œ ì „í™˜
+/// íì€ ì¼ì • ì£¼ê¸°ë§ˆë‹¤ ë²”ìœ„ ë‚´ ì•„êµ° ì „ì²´ì—ê²Œ ì ìš©
 /// </summary>
 public class Monster5 : MonsterBase
 {
@@ -38,7 +38,7 @@ public class Monster5 : MonsterBase
     {
         if (player == null || md == null) return;
 
-        // Èú ¹üÀ§ ³» ÇÇÇØ ¾Æ±ºÀÌ ÀÖÀ¸¸é °ø°İ(=Èú/°ø°İ ÆÇ´Ü) »óÅÂ·Î
+        // í ëŒ€ìƒì´ ì¡´ì¬í•˜ë©´ ê³µê²©ì„ ë©ˆì¶”ê³  í ìƒíƒœë¡œ ì „í™˜
         if (HasInjuredAllyInHealRange())
         {
             agent.isStopped = true;
@@ -60,7 +60,7 @@ public class Monster5 : MonsterBase
         }
         else
         {
-            // »ç°Å¸® Àû´çÈ÷ µé¾î¿À¸é °ø°İ »óÅÂ·Î
+            // ì‚¬ì •ê±°ë¦¬ ë‚´ ì§„ì… ì‹œ ê³µê²© ìƒíƒœë¡œ ì „í™˜
             agent.isStopped = true;
             agent.updateRotation = false;
 
@@ -77,7 +77,7 @@ public class Monster5 : MonsterBase
         agent.isStopped = true;
         agent.updateRotation = false;
 
-        // Èú ¿ì¼± - ÁÖº¯ ¾Æ±ºÀÌ ÇÇÇØ »óÅÂ¸é °ø°İ ¾È ÇÏ°í Èú
+        // í ìš°ì„ : ì£¼ë³€ì— ì²´ë ¥ì´ ê°ì†Œí•œ ì•„êµ°ì´ ìˆìœ¼ë©´ íë§Œ ìˆ˜í–‰
         if (HasInjuredAllyInHealRange())
         {
             healTimer += Time.deltaTime;
@@ -96,11 +96,11 @@ public class Monster5 : MonsterBase
                 state = Enums.MonsterState.Move;
                 agent.updateRotation = true;
             }
-
-            return; // Èú ÁßÀÌ¸é °ø°İ ½ºÅµ
+            //Debug.Log("ê³µê²©");
+            return; // í ì¤‘ì¼ ë•ŒëŠ” ê³µê²© ë¡œì§ì„ ìˆ˜í–‰í•˜ì§€ ì•ŠìŒ
         }
 
-        // ÈúÇÒ ¾Æ±ºÀÌ ¾øÀ¸¸é °ø°İ
+        // ê³µê²© ëŒ€ìƒì´ í”Œë ˆì´ì–´ì¼ ê²½ìš° ì›ê±°ë¦¬ ê³µê²© ìˆ˜í–‰
         float dis = Vector3.Distance(transform.position, player.transform.position);
 
         if (dis > md.attackRange + tolerance)
@@ -148,8 +148,7 @@ public class Monster5 : MonsterBase
             float maxHp = GetMaxHp(ally);
             if (maxHp <= 0f) continue;
 
-            if (ally.currentHp < maxHp - 0.001f)
-                return true;
+            if (ally.currentHp < maxHp - 0.001f) return true;
         }
 
         return false;
@@ -173,14 +172,14 @@ public class Monster5 : MonsterBase
             if (ally.currentHp >= maxHp) continue;
 
             ally.currentHp = Mathf.Min(ally.currentHp + healAmount, maxHp);
+            //Debug.Log("í");
         }
     }
 
 
     float GetMaxHp(MonsterBase m)
     {
-        if (m.md != null)
-            return m.md.maxHp;
+        if (m.md != null) return m.md.maxHp;
 
         return 100f;
     }

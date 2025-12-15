@@ -6,19 +6,19 @@ public class Monster8 : MonsterBase
     enum JumpPhase { None, Windup, Air, LandRecovery }
 
     [Header("Jump Attack")]
-    public float jumpMinDistance = 2.5f;   // ³Ê¹« °¡±î¿ì¸é Á¡ÇÁ ¾È ÇÔ
-    public float jumpMaxDistance = 6.0f;   // ÀÌ °Å¸® ¾ÈÀÌ¸é Á¡ÇÁ ½Ãµµ
-    public float windupTime = 0.25f;       // Á¡ÇÁ Àü ÁØºñ½Ã°£
-    public float airTime = 0.45f;          // °øÁß ÀÌµ¿ ½Ã°£
-    public float landingRecovery = 0.25f;  // ÂøÁö ÈÄ µô·¹ÀÌ
-    public float landingHitRadius = 1.8f;  // ÂøÁö ÆÇÁ¤ ¹İ°æ
-    public float jumpArcHeight = 1.5f;     // Á¡ÇÁ Æ÷¹°¼± ³ôÀÌ
+    public float jumpMinDistance = 2.5f;   // ë„ˆë¬´ ê°€ê¹Œìš°ë©´ ì í”„í•˜ì§€ ì•ŠìŒ
+    public float jumpMaxDistance = 6.0f;   // ì´ ê±°ë¦¬ ì´ë‚´ì¼ ë•Œ ì í”„ ì‹œë„
+    public float windupTime = 0.25f;       // ì í”„ ì „ ì¤€ë¹„ ì‹œê°„
+    public float airTime = 0.45f;          // ê³µì¤‘ ì´ë™ ì‹œê°„
+    public float landingRecovery = 0.25f;  // ì°©ì§€ í›„ ê²½ì§ ì‹œê°„
+    public float landingHitRadius = 1.8f;  // ì°©ì§€ ê³µê²© íŒì • ë°˜ê²½
+    public float jumpArcHeight = 1.5f;     // ì í”„ í¬ë¬¼ì„  ë†’ì´
 
     float timer = 0f;
     JumpPhase phase = JumpPhase.None;
 
     Vector3 jumpStartPos;
-    Vector3 jumpTargetPos;   // Á¡ÇÁ ½ÃÀÛ½Ã ¸ñÇ¥ °íÁ¤
+    Vector3 jumpTargetPos;   // ì í”„ ì‹œì‘ ì‹œ ëª©í‘œ ì¢Œí‘œ ì €ì¥
     float phaseStartTime;
 
     int playerLayer;
@@ -48,7 +48,7 @@ public class Monster8 : MonsterBase
 
         float dis = Vector3.Distance(transform.position, player.transform.position);
 
-        // Á¡ÇÁ °ø°İ Á¶°Ç: ÀÏÁ¤ °Å¸® ¾È
+        // ì í”„ ê³µê²© ì¡°ê±´: ì§€ì •ëœ ê±°ë¦¬ ë²”ìœ„ ë‚´
         if (dis <= jumpMaxDistance && dis >= jumpMinDistance)
         {
             agent.isStopped = true;
@@ -64,7 +64,7 @@ public class Monster8 : MonsterBase
             return;
         }
 
-        // Á¡ÇÁ Á¶°Ç ¾Æ´Ï¸é ±âÁ¸ ±ÙÁ¢ ÃßÀû
+        // ì í”„ ì¡°ê±´ì´ ì•„ë‹ˆë©´ ì¼ë°˜ ì´ë™ / ì¶”ì 
         if (dis > md.attackRange)
         {
             agent.isStopped = false;
@@ -82,7 +82,7 @@ public class Monster8 : MonsterBase
     {
         if (player == null || md == null) return;
 
-        // Attack »óÅÂ´Â Á¡ÇÁ °ø°İ Àü¿ë
+        // Attack ìƒíƒœì—ì„œëŠ” ì í”„ ë‹¨ê³„ë³„ ë¡œì§ ì²˜ë¦¬
         switch (phase)
         {
             case JumpPhase.Windup:
@@ -95,7 +95,7 @@ public class Monster8 : MonsterBase
                 HandleLandRecovery();
                 break;
             default:
-                // ¾ÈÀüÀåÄ¡
+                // ì˜ˆì™¸ ì²˜ë¦¬
                 phase = JumpPhase.None;
                 state = Enums.MonsterState.Move;
                 break;
@@ -119,11 +119,12 @@ public class Monster8 : MonsterBase
     void HandleAir()
     {
         float t = Mathf.Clamp01((Time.time - phaseStartTime) / airTime);
+        Vector3 targetPos = new Vector3(jumpTargetPos.x, jumpStartPos.y, jumpTargetPos.z);
 
-        // ¸ñÇ¥´Â jumpTargetPos °íÁ¤. °øÁß¿¡¼­ player À§Ä¡ ¾È º½.
-        Vector3 flatPos = Vector3.Lerp(jumpStartPos, jumpTargetPos, t);
+        // ëª©í‘œëŠ” jumpTargetPos ê³ ì • (ì¤‘ê°„ì— í”Œë ˆì´ì–´ ìœ„ì¹˜ëŠ” ê°±ì‹ í•˜ì§€ ì•ŠìŒ)
+        Vector3 flatPos = Vector3.Lerp(jumpStartPos, targetPos, t);
 
-        // Æ÷¹°¼±(À§·Î ¼Ú¾Ò´Ù°¡ ³»·Á¿À°Ô)
+        // í¬ë¬¼ì„  ì´ë™ (ì¤‘ê°„ì— ê°€ì¥ ë†’ê³  ì‹œì‘/ëì€ ë‚®ìŒ)
         float arc = Mathf.Sin(t * Mathf.PI) * jumpArcHeight;
         Vector3 pos = new Vector3(flatPos.x, flatPos.y + arc, flatPos.z);
 
@@ -131,7 +132,7 @@ public class Monster8 : MonsterBase
 
         if (t >= 1f)
         {
-            // ÂøÁö
+            // ì°©ì§€
             DoLandingHitOnce();
 
             phase = JumpPhase.LandRecovery;
@@ -144,7 +145,7 @@ public class Monster8 : MonsterBase
     {
         if (Time.time - phaseStartTime >= landingRecovery)
         {
-            // NavMesh º¹±¸
+            // NavMesh ì¬í™œì„±í™”
             agent.enabled = true;
             agent.isStopped = false;
             agent.updateRotation = true;
@@ -156,7 +157,7 @@ public class Monster8 : MonsterBase
 
     void DoLandingHitOnce()
     {
-        // ÂøÁö ÁöÁ¡ ±âÁØÀ¸·Î ÇÃ·¹ÀÌ¾î°¡ ¹İ°æ ¾ÈÀÌ¸é µ¥¹ÌÁö
+        // ì°©ì§€ ì‹œ ì£¼ë³€ì— í”Œë ˆì´ì–´ê°€ ë°˜ê²½ ì•ˆì— ìˆìœ¼ë©´ í”¼í•´ ì ìš©
         Collider[] hits = Physics.OverlapSphere(transform.position, landingHitRadius);
 
         for (int i = 0; i < hits.Length; i++)
@@ -169,6 +170,7 @@ public class Monster8 : MonsterBase
                 p.TakeDamage(md.attackDamage);
                 break;
             }
+            //Debug.Log("ê³µê²©");
         }
     }
 

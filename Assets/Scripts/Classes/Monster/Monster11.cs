@@ -9,7 +9,12 @@ public class Monster11 : MonsterBase
     public float pullRange = 8f;
     public float pullCooldown = 4f;
     public float pullDuration = 0.35f;
-    public float pullStrength = 12f; // Å¬¼ö·Ï »¡¸® ²ø¸²
+    public float pullStrength = 12f; // ëŒì–´ë‹¹ê¸°ëŠ” í˜ì˜ ì„¸ê¸°
+
+    [Header("Pull Effect")]
+    public GameObject pullEffectPrefab;
+    public float effectHeight = 0.05f;   // ë°”ë‹¥ì—ì„œ ì‚´ì§ ë„ìš°ê¸°
+
 
     float lastPull = -999f;
     bool pulling = false;
@@ -44,12 +49,13 @@ public class Monster11 : MonsterBase
 
     protected override void Attack()
     {
-        if (player == null || pulling) 
-        { 
-            state = Enums.MonsterState.Move; return; 
+        if (player == null || pulling)
+        {
+            state = Enums.MonsterState.Move;
+            return;
         }
 
-        // Ç® ½ºÅ³ 1È¸ ½ÇÇà
+        // í’€ ìŠ¤í‚¬ 1íšŒ ì‚¬ìš©
         lastPull = Time.time;
         StartCoroutine(CoPullPlayer());
 
@@ -60,38 +66,51 @@ public class Monster11 : MonsterBase
     {
         pulling = true;
 
-        // anim.SetTrigger("Pull");
-
         Rigidbody rb = player.GetComponent<Rigidbody>();
         Transform pt = player.transform;
+
+        // ëª¬ìŠ¤í„° ì¤‘ì‹¬ ì´í™íŠ¸ ìƒì„±
+        GameObject effect = null;
+        if (pullEffectPrefab != null)
+        {
+            Vector3 pos = transform.position;
+            pos.y += effectHeight;
+
+            effect = Instantiate(pullEffectPrefab, pos, Quaternion.Euler(90f, 0f, 0f));
+        }
 
         float t = 0f;
         while (t < pullDuration)
         {
             t += Time.deltaTime;
 
+            // ëª¬ìŠ¤í„° ì¤‘ì‹¬ìœ¼ë¡œ ëŒì–´ë‹¹ê¹€
             Vector3 dir = (transform.position - pt.position);
             dir.y = 0f;
             dir = dir.normalized;
 
             if (rb != null)
             {
-                // Rigidbody¸é ¹°¸®ÀûÀ¸·Î ²ø±â(¼Óµµ ¹æ½Ä)
                 Vector3 v = dir * pullStrength;
                 rb.linearVelocity = new Vector3(v.x, rb.linearVelocity.y, v.z);
             }
             else
             {
-                // Rigidbody ¾øÀ¸¸é À§Ä¡ º¸Á¤(ÄÁÆ®·Ñ·¯¶û Ãæµ¹ÇÒ ¼ö ÀÖÀ½)
                 pt.position += dir * pullStrength * Time.deltaTime;
             }
 
             yield return null;
         }
 
-        // rb ¼Óµµ Á¤¸®
-        if (rb != null) rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+        // ì†ë„ ì´ˆê¸°í™”
+        if (rb != null)
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+
+        // ì´í™íŠ¸ ì œê±°
+        if (effect != null) Destroy(effect);
 
         pulling = false;
     }
+
+
 }

@@ -5,26 +5,32 @@ public class BuffReceiver : MonoBehaviour
 {
     struct BuffInfo
     {
-        public float value;     // °ø°İ: >1 ¹èÀ², ¹æ¾î: <1 ÇÇ°İ¹èÀ²
+        public float value;     // ë°°ìœ¨ ê°’: > 1ì´ë©´ ì¦ê°€, < 1ì´ë©´ ê°ì†Œ
         public float endTime;
     }
 
-    // ¼Ò½º(¹öÇÁ ¸ó½ºÅÍ)º°·Î µû·Î ÀúÀå ¡æ ¿©·¯ ¸¶¸® ÁßÃ¸
+    // ì†ŒìŠ¤(ì‹œì „ì) ê¸°ì¤€ìœ¼ë¡œ ë²„í”„ë¥¼ ê´€ë¦¬í•˜ì—¬ ê°™ì€ ì†ŒìŠ¤ì˜ ë²„í”„ëŠ” ì¤‘ì²©ë˜ì§€ ì•ŠìŒ
     Dictionary<int, BuffInfo> atkBuffs = new Dictionary<int, BuffInfo>(16);
     Dictionary<int, BuffInfo> defBuffs = new Dictionary<int, BuffInfo>(16);
 
+    // ë§Œë£Œëœ ë²„í”„ í‚¤ ì œê±°ìš© ì„ì‹œ ë¦¬ìŠ¤íŠ¸
     static readonly List<int> s_RemoveKeys = new List<int>(32);
 
-    /// <summary>°ø°İ ¹èÀ²(°ö¿¬»ê ÁßÃ¸)</summary>
+    /// <summary>ê³µê²© ë°°ìœ¨ (ê³µê²©ë ¥ ë²„í”„ ì¤‘ì²© ê²°ê³¼)</summary>
     public float AttackMultiplier => ComputeMultiplier(atkBuffs, defaultValue: 1f);
 
-    /// <summary>ÇÇÇØ ¹èÀ²(°ö¿¬»ê ÁßÃ¸) / 1º¸´Ù ÀÛÀ»¼ö·Ï ´ú ¸ÂÀ½</summary>
+    /// <summary>
+    /// í”¼ê²© ë°°ìœ¨ (ë°©ì–´ ë²„í”„ ì¤‘ì²© ê²°ê³¼)
+    /// 1ë³´ë‹¤ ì‘ì„ìˆ˜ë¡ ë°›ëŠ” í”¼í•´ ê°ì†Œ
+    /// </summary>
     public float DamageTakenMultiplier => ComputeMultiplier(defBuffs, defaultValue: 1f);
 
     public void ApplyAttackBuff(MonsterBase source, float multiplier, float duration)
         => ApplyBuff(atkBuffs, source, multiplier, duration);
 
-    /// <param name="multiplier">0.8ÀÌ¸é 20% ´ú ¸ÂÀ½(ÇÇÇØ * 0.8)</param>
+    /// <param name="multiplier">
+    /// ì˜ˆ) 0.8ì´ë©´ 20% í”¼í•´ ê°ì†Œ (ë°›ëŠ” í”¼í•´ * 0.8)
+    /// </param>
     public void ApplyDefenseBuff(MonsterBase source, float multiplier, float duration)
         => ApplyBuff(defBuffs, source, multiplier, duration);
 
@@ -37,14 +43,16 @@ public class BuffReceiver : MonoBehaviour
 
         if (dict.TryGetValue(key, out BuffInfo info))
         {
-            // °°Àº ¼Ò½º°¡ °»½ÅÇÏ¸é ´õ °­ÇÑ °ª/´õ ±ä ½Ã°£À¸·Î °»½Å
-            // °ø°İ: Å« °ªÀÌ °­ÇÔ / ¹æ¾î(ÇÇÇØ¹èÀ²): ÀÛÀº °ªÀÌ °­ÇÔ
+            // ë™ì¼í•œ ì†ŒìŠ¤ì—ì„œ ë‹¤ì‹œ ì ìš©ë  ê²½ìš°
+            // ê³µê²© ë²„í”„: ë” í° ê°’ ìœ ì§€
+            // ë°©ì–´ ë²„í”„(í”¼í•´ ê°ì†Œ): ë” ì‘ì€ ê°’ ìœ ì§€
             if (dict == defBuffs) info.value = Mathf.Min(info.value, value);
             else
             {
                 info.value = Mathf.Max(info.value, value);
             }
-            
+
+            // ì§€ì† ì‹œê°„ì€ ë” ê¸´ ìª½ìœ¼ë¡œ ê°±ì‹ 
             info.endTime = Mathf.Max(info.endTime, end);
             dict[key] = info;
         }
@@ -63,12 +71,11 @@ public class BuffReceiver : MonoBehaviour
 
         foreach (var kv in dict)
         {
-            if (Time.time >= kv.Value.endTime) s_RemoveKeys.Add(kv.Key);
-            else mul *= kv.Value.value;
+            if (Time.time >= kv.Value.endTime) s_RemoveKeys.Add(kv.Key);    // ë§Œë£Œëœ ë²„í”„ ì œê±° ëŒ€ìƒ
+            else mul *= kv.Value.value;                                     // ìœ íš¨í•œ ë²„í”„ëŠ” ëª¨ë‘ ê³±ì—°ì‚°
         }
 
-        for (int i = 0; i < s_RemoveKeys.Count; i++)
-            dict.Remove(s_RemoveKeys[i]);
+        for (int i = 0; i < s_RemoveKeys.Count; i++) dict.Remove(s_RemoveKeys[i]);
 
         return mul;
     }

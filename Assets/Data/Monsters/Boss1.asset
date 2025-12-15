@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08bd4ad4ec8022e429577107dd1e2dd9, type: 3}
   m_Name: Boss1
   m_EditorClassIdentifier: 
-  monsterRank: 0
+  monsterRank: 2
   mId: 12
   monsterName: 
   maxHp: 0
   attackDamage: 0
-  attackRange: 0
+  attackRange: 5
   attackSpeed: 0
   projectileCount: 0
   projectileSpeed: 0

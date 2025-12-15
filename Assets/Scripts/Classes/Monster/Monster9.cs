@@ -14,14 +14,13 @@ public class Monster9 : MonsterBase
     protected override void Awake()
     {
         base.Awake();
-        pool = PoolManager.Instance;
     }
 
     void Start()
     {
-        // Æ÷¹°¼± Åõ»çÃ¼ Ç® »ı¼º
-        pool.CreatePool<MonsterArcProjectile>(
-            Enums.PoolType.MonsterArcProjectile, arcProjectilePrefab, 5, null);
+        pool = PoolManager.Instance;
+        // ëª¬ìŠ¤í„° íˆ¬ì‚¬ì²´ í’€ ìƒì„±
+        pool.CreatePool<MonsterArcProjectile>(Enums.PoolType.MonsterArcProjectile, arcProjectilePrefab, 5, null);
     }
 
     protected override void Idle()

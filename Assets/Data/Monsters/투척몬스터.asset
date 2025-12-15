@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: "\uD22C\uCC99\uBAAC\uC2A4\uD130"
   m_EditorClassIdentifier: 
   monsterRank: 0
-  mId: 0
+  mId: 9
   monsterName: 
   maxHp: 0
   attackDamage: 0
-  attackRange: 0
+  attackRange: 10
   attackSpeed: 0
   projectileCount: 0
   projectileSpeed: 0

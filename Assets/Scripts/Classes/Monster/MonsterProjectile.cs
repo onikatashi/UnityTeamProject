@@ -49,7 +49,7 @@ public class MonsterProjectile : MonoBehaviour
         if(other.gameObject.layer == playerLayer)
         {
             Player player = other.GetComponent<Player>();
-            if (player != null && owner != null & owner.md != null)
+            if (player != null && owner != null && owner.md != null)
             {
                 float dmg = owner.md.attackDamage;
 

@@ -3,27 +3,36 @@ using UnityEngine.UI;
 
 public class GroundTelegraph : MonoBehaviour
 {
-    [Header("UI ¿ø ÀÌ¹ÌÁö")]
-    public Image ex;                 
-    public RectTransform exRect;
+    [Header("UI - ë°”ê¹¥(ìµœì¢… ë²”ìœ„ í‘œì‹œ)")]
+    public Image outer;                 
+    public RectTransform outerRect;
 
-    [Header("Â÷Â¡")]
-    public float chargeTime = 1.5f;  // Ç¥½Ã ÈÄ Æø¹ß±îÁö ½Ã°£
-    public float radius = 3f;        // ¿ùµå ´ÜÀ§ ¹İ°æ
+    [Header("UI - ì•ˆìª½(ì°¨ì§• ì§„í–‰ í‘œì‹œ)")]
+    public Image inner;               
+    public RectTransform innerRect;
 
-    [Tooltip("¿ùµå 1À¯´Ö´ç UI ½ºÄÉÀÏ º¸Á¤°ª(ÇÁ¸®ÆÕ¿¡ ¸Â°Ô Á¶Àı)")]
+    [Header("ì°¨ì§•")]
+    public float chargeTime = 1.5f;     // í‘œì‹ ìƒì„± í›„ í­ë°œê¹Œì§€ ì‹œê°„
+    public float radius = 3f;           // ì‹¤ì œ í­ë°œ ë°˜ê²½
+
+    //ì›”ë“œ 1ìœ ë‹›ë‹¹ UI í¬ê¸° ë³´ì •ê°’ (ìº”ë²„ìŠ¤ ìŠ¤ì¼€ì¼ì— ë§ê²Œ ì¡°ì ˆ)"
     public float worldToUIScale = 1f;
+
+    //ì•ˆìª½ ì› ì‹œì‘ í¬ê¸° ë¹„ìœ¨(0~1)
+    [Range(0f, 1f)]
+    public float innerStartRatio = 0f;
 
     float timer;
     bool charging;
 
-    Vector2 startSize; 
-    Vector2 endSize;
+    Vector2 outerTargetSize;   // ìµœì¢… ì™¸ê³½ í¬ê¸°
+    Vector2 innerStartSize;    // ì•ˆìª½ ì‹œì‘ í¬ê¸°
+    Vector2 innerTargetSize;   // ì•ˆìª½ ìµœì¢… í¬ê¸°
 
     void Awake()
     {
-        if (exRect == null && ex != null) exRect = ex.rectTransform;
-        if (exRect != null) startSize = exRect.sizeDelta;
+        if (outerRect == null && outer != null) outerRect = outer.rectTransform;
+        if (innerRect == null && inner != null) innerRect = inner.rectTransform;
     }
 
     public void Setup(float radius, float chargeTime)
@@ -31,32 +40,40 @@ public class GroundTelegraph : MonoBehaviour
         this.radius = radius;
         this.chargeTime = chargeTime;
 
-        // ¸ñÇ¥ »çÀÌÁî = Áö¸§
         float diameter = radius * 2f * worldToUIScale;
+        outerTargetSize = new Vector2(diameter, diameter);
+        innerTargetSize = outerTargetSize;
 
-        if (exRect != null)
-        {
-            endSize = new Vector2(diameter, diameter);
-            // ½ÃÀÛ »çÀÌÁî´Â ÇöÀç exRect.sizeDelta¸¦ »ç¿ë
-            startSize = exRect.sizeDelta;
-        }
+        innerStartSize = innerTargetSize * innerStartRatio;
+
+        // ë°”ê¹¥ ì›ì€ ì²˜ìŒë¶€í„° ìµœì¢… í¬ê¸°ë¡œ ê³ ì •
+        if (outerRect != null) outerRect.sizeDelta = outerTargetSize;
+
+        // ì•ˆìª½ ì›ì€ ì‹œì‘ í¬ê¸°
+        if (innerRect != null) innerRect.sizeDelta = innerStartSize;
     }
 
     public void StartCharge()
     {
         charging = true;
         timer = 0f;
-        if (ex != null) ex.gameObject.SetActive(true);
+
+        if (outer != null) outer.gameObject.SetActive(true);
+        if (inner != null) inner.gameObject.SetActive(true);
     }
 
     void Update()
     {
-        if (!charging || exRect == null) return;
+        if (!charging || innerRect == null) return;
 
         timer += Time.deltaTime;
         float t = Mathf.Clamp01(timer / chargeTime);
 
-        exRect.sizeDelta = Vector2.Lerp(startSize, endSize, t);
+        // ì•ˆìª½ ì›ë§Œ ì ì  ì»¤ì§
+        innerRect.sizeDelta = Vector2.Lerp(innerStartSize, innerTargetSize, t);
+
+        // fillAmount ë°©ì‹ë„ ê°€ëŠ¥:
+        // if (inner != null) inner.fillAmount = t;
     }
 
     public bool IsDone() => charging && timer >= chargeTime;
@@ -64,8 +81,12 @@ public class GroundTelegraph : MonoBehaviour
     public void StopAndHide()
     {
         charging = false;
-        if (ex != null) ex.gameObject.SetActive(false);
         timer = 0f;
-        if (exRect != null) exRect.sizeDelta = startSize;
+
+        if (outer != null) outer.gameObject.SetActive(false);
+        if (inner != null) inner.gameObject.SetActive(false);
+
+        // ë¦¬ì…‹(ë‹¤ìŒ ì‚¬ìš© ëŒ€ë¹„)
+        if (innerRect != null) innerRect.sizeDelta = innerStartSize;
     }
 }

@@ -16,7 +16,7 @@ MonoBehaviour:
   mId: 8
   monsterName: 
   maxHp: 0
-  attackDamage: 0
+  attackDamage: 2
   attackRange: 0
   attackSpeed: 0
   projectileCount: 0

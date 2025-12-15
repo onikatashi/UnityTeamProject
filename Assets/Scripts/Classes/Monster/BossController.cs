@@ -88,7 +88,7 @@ public class BossController : MonsterBase
 
     void Start()
     {
-        // ¾À ½ÃÀÛ ½Ã ÇÑ ¹ø Ã£±â
+        // ì‹œì‘ ì‹œ í”Œë ˆì´ì–´ ì°¾ê¸°
         FindPlayerByLayer();
     }
 
@@ -103,15 +103,16 @@ public class BossController : MonsterBase
 
     void FindPlayerByLayer()
     {
-        // ¾À¿¡ ÀÖ´Â ¸ğµç Player ÄÄÆ÷³ÍÆ® Áß ·¹ÀÌ¾î°¡ ¸Â´Â °Í Ã£±â
+        // í˜„ì¬ ì¡´ì¬í•˜ëŠ” Player ì»´í¬ë„ŒíŠ¸ ì¤‘ ë ˆì´ì–´ê°€ ë§ëŠ” ê²ƒ ì°¾ê¸°
         Player p = Object.FindFirstObjectByType<Player>(FindObjectsInactive.Include);
         if (p != null && p.gameObject.layer == playerLayer)
         {
             playerComp = p;
             player = p.gameObject;
+            return;
         }
-        
-        // ¸ø Ã£À¸¸é null À¯Áö
+
+        // ëª» ì°¾ì•˜ìœ¼ë©´ null ì²˜ë¦¬
         playerComp = null;
         player = null;
     }
@@ -154,11 +155,11 @@ public class BossController : MonsterBase
             EnsurePlayer();
             if (player == null || playerComp == null) yield break;
 
-            // ÈÄº¸ ¼öÁı(Á¶°ÇºÎ)
+            // ì¡°ê±´ë¶€ íŒ¨í„´(ìƒí™© íŒ¨í„´)
             List<BossPattern> conditional = new List<BossPattern>();
             if (Vector3.Distance(transform.position, player.transform.position) <= slamRange) conditional.Add(BossPattern.SlamStun);
 
-            // playerComp ±â¹İÀ¸·Î ½ºÅÏ ¿©ºÎ Ã¼Å©
+            // playerComp ìƒíƒœì—ì„œ ìŠ¤í„´ ì—¬ë¶€ ì²´í¬
             if (playerComp.IsStunned) conditional.Add(BossPattern.ExecuteCharge);
 
             if (randomMonsterPrefabs != null && randomMonsterPrefabs.Length > 0) conditional.Add(BossPattern.SummonAdds);
@@ -166,7 +167,7 @@ public class BossController : MonsterBase
 
             bool canUltimate = (Time.time >= lastUltimate + ultimateCd);
 
-            // ÇÊ»ì±â
+            // í•„ì‚´ê¸°
             if (canUltimate && Random.value < 0.12f)
             {
                 lastUltimate = Time.time;
@@ -175,7 +176,7 @@ public class BossController : MonsterBase
                 continue;
             }
 
-            // ½ºÅÏ Áß Áï»ç±â ¿ì¼±
+            // ìŠ¤í„´ì¤‘ì´ë©´ ì´ íŒ¨í„´ ìš°ì„ 
             if (playerComp.IsStunned && Random.value < executeChanceIfStunned)
             {
                 yield return StartCoroutine(Pattern_ExecuteCharge());
@@ -183,7 +184,7 @@ public class BossController : MonsterBase
                 continue;
             }
 
-            // Á¶°ÇºÎ ÆĞÅÏ È®·ü
+            // ì¡°ê±´ë¶€ íŒ¨í„´ ë°œë™í™•ë¥ 
             if (conditional.Count > 0 && Random.value < 0.45f)
             {
                 BossPattern picked = conditional[Random.Range(0, conditional.Count)];
@@ -192,7 +193,7 @@ public class BossController : MonsterBase
                 continue;
             }
 
-            // 5) ÀÏ¹İÆĞÅÏ 4°³(25%¾¿)
+            // ì¼ë°˜íŒ¨í„´ ëœë¤
             int r = Random.Range(0, 4);
             BossPattern normal =
                 (r == 0) ? BossPattern.Laser :
@@ -223,7 +224,7 @@ public class BossController : MonsterBase
         }
     }
 
-    // ====== ÆĞÅÏµé ======
+    // ====== íŒ¨í„´ ======
 
     IEnumerator Pattern_Laser()
     {
@@ -259,7 +260,7 @@ public class BossController : MonsterBase
 
             if (tick >= laserTick)
             {
-                laser.TryHit(playerComp, md.attackDamage); // Æ½ µ¥¹ÌÁö
+                laser.TryHit(playerComp, md.attackDamage); // í‹±ë€
                 tick = 0f;
 
                 if (!reversedOnce && Random.value < 0.35f)
@@ -349,7 +350,7 @@ public class BossController : MonsterBase
 
         agent.isStopped = true;
 
-        // pullRange ¹ÛÀÌ¸é »ç¿ëÇÏÁö ¾Ê°Ô(Á¶°ÇºÎ ´À³¦)
+        // pullRange ë°–ì´ë©´ ë°œë™í•˜ì§€ ì•ŠìŒ(ì¡°ê±´ë¶€ íŒ¨í„´ìš©)
         if (Vector3.Distance(transform.position, player.transform.position) > pullRange)
         {
             agent.isStopped = false;
@@ -392,7 +393,7 @@ public class BossController : MonsterBase
             if (rb != null)
             {
                 Vector3 v = dir * strength;
-                rb.linearVelocity = new Vector3(v.x, rb.linearVelocity.y, v.z); // 3D Rigidbody´Â velocity
+                rb.linearVelocity = new Vector3(v.x, rb.linearVelocity.y, v.z); // 3D RigidbodyëŠ” linearVelocity ì‚¬ìš©
             }
             else
             {
@@ -442,7 +443,7 @@ public class BossController : MonsterBase
         EnsurePlayer();
         if (player == null || playerComp == null || markPrefab == null) yield break;
 
-        // ½ºÅÏ ÁßÀÌ ¾Æ´Ï¸é ÀÇ¹Ì ¾øÀ½
+        // í”Œë ˆì´ì–´ê°€ ìŠ¤í„´ ìƒíƒœê°€ ì•„ë‹ˆë©´ ì˜ë¯¸ ì—†ìŒ
         if (!playerComp.IsStunned) yield break;
 
         agent.isStopped = true;
@@ -457,7 +458,7 @@ public class BossController : MonsterBase
         float dis = Vector3.Distance(player.transform.position, pos);
         if (dis <= executeRadius)
         {
-            playerComp.TakeDamage(999999f); // ÀÌÁ¦ ÄÄÆ÷³ÍÆ®·Î È£Ãâ
+            playerComp.TakeDamage(999999f); // ì¦‰ì‚¬ ë°ë¯¸ì§€ë¡œ ì²˜ë¦¬
         }
 
         if (tg != null) { tg.StopAndHide(); Destroy(tg.gameObject); }
@@ -494,7 +495,7 @@ public class BossController : MonsterBase
         if (topCenterPoint == null) yield break;
 
         agent.isStopped = true;
-        transform.position = topCenterPoint.position; // ¿öÇÁ(¿¬ÃâÀº ³ªÁß¿¡)
+        transform.position = topCenterPoint.position; // ì í”„(ë§µ ìƒë‹¨ ì¤‘ì•™ìœ¼ë¡œ)
         yield return new WaitForSeconds(0.35f);
 
         agent.isStopped = false;
@@ -512,7 +513,7 @@ public class BossController : MonsterBase
         float fire = 0f;
         float spiralAngle = 0f;
 
-        // ¼¼Æ® 1: ½ºÆÄÀÌ·² (Åº ¸¹°Ô)
+        // ìŠ¤íŒŒì´ëŸ´
         while (t < hellDuration * 0.34f)
         {
             t += Time.deltaTime;
@@ -525,19 +526,19 @@ public class BossController : MonsterBase
                 fire = 0f;
                 FireBulletAtAngle(spiralAngle);
                 FireBulletAtAngle(spiralAngle + 180f);
-                FireBulletAtAngle(spiralAngle + 90f);   // ´õ ºı¼¼°Ô
-                FireBulletAtAngle(spiralAngle + 270f);  // ´õ ºı¼¼°Ô
+                FireBulletAtAngle(spiralAngle + 90f);   // 90ë„
+                FireBulletAtAngle(spiralAngle + 270f);  // 270ë„
             }
             yield return null;
         }
 
-        // ¼¼Æ® 2: ¸µ 2¹ø
+        // ë§
         FireRing(hellRingBullets);
         yield return new WaitForSeconds(0.55f);
         FireRing(hellRingBullets);
         yield return new WaitForSeconds(0.55f);
 
-        // ¼¼Æ® 3: ºÎÃ¤²Ã 2¹ø
+        // ë¶€ì±„ê¼´
         EnsurePlayer();
         if (player != null)
         {

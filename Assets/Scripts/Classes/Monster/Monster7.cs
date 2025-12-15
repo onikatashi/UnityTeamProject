@@ -8,11 +8,11 @@ public class Monster7 : MonsterBase
 
     [Header("Defense Buff")]
     public float buffRange = 6f;
-    public float damageTakenMultiplier = 0.8f; // 0.8 = 20% «««ÿ ∞®º“
+    public float damageTakenMultiplier = 0.8f; // 0.8 = Î∞õÎäî ÌîºÌï¥ 20% Í∞êÏÜå
     public float buffDuration = 3f;
     public float buffTickInterval = 0.5f;
     public bool includeSelf = false;
-    public LayerMask monster = 0;
+    public LayerMask monster;
 
     float buffTimer = 0f;
 
@@ -21,8 +21,7 @@ public class Monster7 : MonsterBase
         agent.isStopped = true;
         if (player == null) return;
 
-        if (Vector3.Distance(transform.position, player.transform.position) <= detectRange)
-            state = Enums.MonsterState.Move;
+        if (Vector3.Distance(transform.position, player.transform.position) <= detectRange) state = Enums.MonsterState.Move;
     }
 
     protected override void Move()
@@ -62,7 +61,7 @@ public class Monster7 : MonsterBase
         agent.isStopped = true;
         agent.updateRotation = false;
 
-        // πˆ«¡ øÏº±
+        // Î≤ÑÌîÑ Ïö∞ÏÑ†
         if (HasBuffTargetInRange())
         {
             buffTimer += Time.deltaTime;
@@ -75,11 +74,11 @@ public class Monster7 : MonsterBase
 
             if (Vector3.Distance(transform.position, player.transform.position) > md.attackRange + tolerance)
                 state = Enums.MonsterState.Move;
-
+            //Debug.Log("Í≥µÍ≤©");
             return;
         }
 
-        // ∞¯∞›
+        // Í≥µÍ≤©
         float dis = Vector3.Distance(transform.position, player.transform.position);
         if (dis > md.attackRange + tolerance)
         {
@@ -130,7 +129,20 @@ public class Monster7 : MonsterBase
             BuffReceiver r = ally.GetComponentInParent<BuffReceiver>();
             if (r == null) continue;
 
-            r.ApplyDefenseBuff(this, damageTakenMultiplier, buffDuration); // º“Ω∫∫∞ ¡ﬂ√∏
+            r.ApplyDefenseBuff(this, damageTakenMultiplier, buffDuration); // ÏÜåÏä§Î≥Ñ Ï§ëÏ≤©
+            //Debug.Log("Î∞©Ïñ¥Î≤ÑÌîÑ");
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, detectRange);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, buffRange);
+
+        Gizmos.color = Color.red;
+        if (md != null) Gizmos.DrawWireSphere(transform.position, md.attackRange);
     }
 }

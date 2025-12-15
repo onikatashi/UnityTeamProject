@@ -8,11 +8,11 @@ public class Monster6 : MonsterBase
 
     [Header("Attack Buff")]
     public float buffRange = 6f;
-    public float buffMultiplier = 1.5f;     // °ø°Ý 1.5¹è
+    public float buffMultiplier = 1.5f;
     public float buffDuration = 3f;
     public float buffTickInterval = 0.5f;
     public bool includeSelf = false;
-    public LayerMask monster = 0;
+    public LayerMask monster;
 
     float buffTimer = 0f;
 
@@ -21,8 +21,7 @@ public class Monster6 : MonsterBase
         agent.isStopped = true;
         if (player == null) return;
 
-        if (Vector3.Distance(transform.position, player.transform.position) <= detectRange)
-            state = Enums.MonsterState.Move;
+        if (Vector3.Distance(transform.position, player.transform.position) <= detectRange) state = Enums.MonsterState.Move;
     }
 
     protected override void Move()
@@ -62,7 +61,6 @@ public class Monster6 : MonsterBase
         agent.isStopped = true;
         agent.updateRotation = false;
 
-        // ¹öÇÁ ¿ì¼±
         if (HasBuffTargetInRange())
         {
             buffTimer += Time.deltaTime;
@@ -73,13 +71,11 @@ public class Monster6 : MonsterBase
                 // anim.SetTrigger("Buff");
             }
 
-            if (Vector3.Distance(transform.position, player.transform.position) > md.attackRange + tolerance)
-                state = Enums.MonsterState.Move;
-
-            return; // ¹öÇÁ Áß °ø°Ý ½ºÅµ
+            if (Vector3.Distance(transform.position, player.transform.position) > md.attackRange + tolerance) state = Enums.MonsterState.Move;
+            //Debug.Log("ê³µê²©");
+            return;
         }
 
-        // ¹öÇÁ ´ë»ó ¾øÀ¸¸é °ø°Ý
         float dis = Vector3.Distance(transform.position, player.transform.position);
         if (dis > md.attackRange + tolerance)
         {
@@ -114,7 +110,6 @@ public class Monster6 : MonsterBase
             if (!includeSelf && ally == this) continue;
             if (ally.currentHp <= 0f) continue;
 
-            // ¹öÇÁ ¼ö½Å±â ÀÖ´Â ¾Ö¸¸
             if (ally.GetComponentInParent<BuffReceiver>() == null) continue;
 
             return true;
@@ -135,7 +130,19 @@ public class Monster6 : MonsterBase
             BuffReceiver r = ally.GetComponentInParent<BuffReceiver>();
             if (r == null) continue;
 
-            r.ApplyAttackBuff(this, buffMultiplier, buffDuration); //¼Ò½ºº° ÁßÃ¸
+            r.ApplyAttackBuff(this, buffMultiplier, buffDuration);
+            //Debug.Log("ê³µê²©ë²„í”„");
         }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, detectRange);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, buffRange);
+
+        Gizmos.color = Color.red;
+        if (md != null) Gizmos.DrawWireSphere(transform.position, md.attackRange);
     }
 }

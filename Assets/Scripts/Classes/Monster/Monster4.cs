@@ -72,7 +72,7 @@ public class Monster4 : MonsterBase
             timer += Time.deltaTime;
             state = Enums.MonsterState.Attack;
             //anim.SetTrigger("Attack");
-            Debug.Log("공격2");
+            //Debug.Log("공격2");
         }
         yield return new WaitForSeconds(duration);
         isDef = false;

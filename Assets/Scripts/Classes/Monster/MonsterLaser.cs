@@ -11,7 +11,8 @@ public class MonsterLaser : MonoBehaviour
 
     public void BeginWindup(float windup)
     {
-        // ¿©±â¼­ ¶óÀÎ·»´õ·¯ ÄÑ°í »ö ¹Ù²Ù°í µî ¿¬Ãâ °¡´É
+        // ì—¬ê¸°ì„œ ë ˆì´ì € ì°¨ì§• ì—°ì¶œì„ ì¼œê³ ,
+        // windup ì‹œê°„ í›„ BeginFire()ê°€ í˜¸ì¶œë˜ë„ë¡ ì—°ê²°í•˜ë©´ ë¨
     }
 
     public void BeginFire() => firing = true;
@@ -19,15 +20,20 @@ public class MonsterLaser : MonoBehaviour
 
     public void UpdateAim(Vector3 origin, Vector3 forward)
     {
-        transform.position = origin + Vector3.up * 1.2f; // ³ôÀÌ º¸Á¤
-        if (forward.sqrMagnitude > 0.001f) transform.rotation = Quaternion.LookRotation(forward);
+        // ë ˆì´ì € ì‹œì‘ ìœ„ì¹˜ë¥¼ ì•½ê°„ ìœ„ë¡œ ë³´ì •
+        transform.position = origin + Vector3.up * 1.2f;
+
+        // ìœ íš¨í•œ ë°©í–¥ ë²¡í„°ê°€ ìˆì„ ë•Œë§Œ íšŒì „ ì ìš©
+        if (forward.sqrMagnitude > 0.001f)
+            transform.rotation = Quaternion.LookRotation(forward);
     }
 
     public void TryHit(Player player, float damagePerTick)
     {
         if (!firing || player == null) return;
 
-        // ·¹ÀÌÀú¸¦ ¡°¹Ú½ºÄ³½ºÆ®¡±·Î ÆÇÁ¤ (µÎ²² ÀÖ´Â ·¹ÀÌÀú ´À³¦)
+        // ë ˆì´ì €ë¥¼ ë°•ìŠ¤ ì˜¤ë²„ë©(OverlapBox) ë°©ì‹ìœ¼ë¡œ íŒì •
+        // í­ê³¼ ê¸¸ì´ë¥¼ ê°€ì§„ ë ˆì´ì € ì¶©ëŒ ì˜ì—­ì„ ì‚¬ìš©
         Vector3 origin = transform.position;
         Vector3 halfExtents = new Vector3(width * 0.5f, 1.0f, length * 0.5f);
         Vector3 center = origin + transform.forward * (length * 0.5f);
@@ -39,15 +45,19 @@ public class MonsterLaser : MonoBehaviour
             Player p = hits[i].GetComponent<Player>();
             if (p != null)
             {
-                p.TakeDamage(Player.Instance != null ? 1f : 1f);
+                // ë ˆì´ì € í‹± ë°ë¯¸ì§€ ì ìš©
+                p.TakeDamage(damagePerTick);
                 return;
             }
         }
     }
+
     void OnDrawGizmosSelected()
     {
+        // ë ˆì´ì € íŒì • ë²”ìœ„ ì‹œê°í™”
         Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(new Vector3(0, 0, length * 0.5f), new Vector3(width, 2f, length));
+        Gizmos.DrawWireCube(new Vector3(0, 0, length * 0.5f), new Vector3(width, 2f, length)
+        );
     }
 }

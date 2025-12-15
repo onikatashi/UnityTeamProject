@@ -38,12 +38,13 @@ public abstract class MonsterBase : MonoBehaviour
 
         agent.isStopped = false;
         agent.updateRotation = true;
-        poolManager = PoolManager.Instance;
+        
     }
 
     private void Start()
     {
-        if(bulletPrefab != null && firepoint != null)
+        poolManager = PoolManager.Instance;
+        if (bulletPrefab != null && firepoint != null)
         {
             poolManager.CreatePool<MonsterProjectile>(Enums.PoolType.MonsterProjectile, bulletPrefab, 5, null);
         }
