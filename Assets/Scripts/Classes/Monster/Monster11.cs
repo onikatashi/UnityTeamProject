@@ -66,7 +66,6 @@ public class Monster11 : MonsterBase
     {
         pulling = true;
 
-        Rigidbody rb = player.GetComponent<Rigidbody>();
         Transform pt = player.transform;
 
         // 몬스터 중심 이펙트 생성
@@ -89,22 +88,10 @@ public class Monster11 : MonsterBase
             dir.y = 0f;
             dir = dir.normalized;
 
-            if (rb != null)
-            {
-                Vector3 v = dir * pullStrength;
-                rb.linearVelocity = new Vector3(v.x, rb.linearVelocity.y, v.z);
-            }
-            else
-            {
-                pt.position += dir * pullStrength * Time.deltaTime;
-            }
-
+            pt.position += dir * pullStrength * Time.deltaTime;
+            
             yield return null;
         }
-
-        // 속도 초기화
-        if (rb != null)
-            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
 
         // 이펙트 제거
         if (effect != null) Destroy(effect);

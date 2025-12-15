@@ -1,10 +1,9 @@
 using UnityEngine;
+using static Enums;
 
 
 public class Monster8 : MonsterBase
 {
-    enum JumpPhase { None, Windup, Air, LandRecovery }
-
     [Header("Jump Attack")]
     public float jumpMinDistance = 2.5f;   // 너무 가까우면 점프하지 않음
     public float jumpMaxDistance = 6.0f;   // 이 거리 이내일 때 점프 시도
