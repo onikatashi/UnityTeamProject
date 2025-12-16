@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1687012901151951465}
   - component: {fileID: 2235950033277404538}
   - component: {fileID: 3565244176392922228}
-  - component: {fileID: -9155868082779181229}
   m_Layer: 5
   m_Name: selectedSynegyStat
   m_TagString: Untagged
@@ -37,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -4, y: -86}
-  m_SizeDelta: {x: 550, y: 50}
+  m_SizeDelta: {x: 550, y: 39.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1687012901151951465
 CanvasRenderer:
@@ -151,17 +150,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statText: {fileID: 2235950033277404538}
---- !u!114 &-9155868082779181229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3214576094548303513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
