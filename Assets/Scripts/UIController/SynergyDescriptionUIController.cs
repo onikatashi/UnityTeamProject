@@ -33,12 +33,10 @@ public class SynergyDescriptionUIController : MonoBehaviour
 
     public void UpdateSynergyDescriptionSize(int count)
     {
-        
         textHeight = synergyStatText.statText.rectTransform.sizeDelta.y * count;
 
         synergyDescriptionPanel.sizeDelta = new Vector2(
             synergyDescriptionPanel.sizeDelta.x, synergyDescriptionPanel.sizeDelta.y + textHeight);
-        
     }
 
     public void ShowSynergyDescription(SynergyData synergyData)
@@ -63,7 +61,6 @@ public class SynergyDescriptionUIController : MonoBehaviour
 
             statText.Setup(inventoryManager.synergyActiveCount[synergyData.synergyType],
                 synergyData.levels[i].requiredLines, synergyData);
-            Debug.Log(synergyData.levels[i].bonusStats.moveSpeed);
             synergyStatTextList.Add(statText);
         }
         
