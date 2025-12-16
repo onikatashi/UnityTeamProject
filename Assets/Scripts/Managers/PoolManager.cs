@@ -44,6 +44,7 @@ public class PoolManager : MonoBehaviour
         if (!pools.ContainsKey(key))
         {
             Debug.LogError($"{key}에 대한 풀이 없음");
+            return null;
         }
 
         return ((ObjectPool<T>)pools[key]).Get();
@@ -55,6 +56,8 @@ public class PoolManager : MonoBehaviour
         if (!pools.ContainsKey(key))
         {
             Debug.LogError($"{key}에 대한 풀이 없음");
+            obj.gameObject.SetActive(false);
+            return;
         }
 
         ((ObjectPool<T>)pools[key]).Return(obj);
