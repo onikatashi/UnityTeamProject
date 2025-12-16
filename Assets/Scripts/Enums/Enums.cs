@@ -77,6 +77,13 @@ public class Enums
         Attack,
         Die
     }
+    public enum JumpPhase
+    {
+        None,
+        Windup,
+        Air,
+        LandRecovery
+    }
 
     // 인벤토리 모드
     public enum InventoryMode
@@ -94,6 +101,7 @@ public class Enums
         SynergyEffects,
         SynergyStatText,
         ArrowPool,
-        MonsterProjectile
+        MonsterProjectile,
+        MonsterArcProjectile
     }
 }
