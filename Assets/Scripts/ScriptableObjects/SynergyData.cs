@@ -18,7 +18,7 @@ public class SynergyData : ScriptableObject
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if( levels != null)
+        if (levels != null)
         {
             levels.Sort((a, b) => a.requiredLines.CompareTo(b.requiredLines));
         }

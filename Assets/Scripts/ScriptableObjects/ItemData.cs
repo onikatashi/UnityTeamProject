@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,4 +34,23 @@ public class ItemData : ScriptableObject
     public float iExtraAttackSpeed;             // 강화 보너스 공격 속도
     public float iExtraProjectileSpeed;         // 강화 보너스 투사체 속도
 
+    // 이 함수 호출 시 리스트 자체에서 중복을 없앰
+    public void SanitizeData()
+    {
+        if (iSynergy != null)
+        {
+            // Distinct를 사용하여 중복 제거 후 리스트 재할당
+            iSynergy = iSynergy.Distinct().ToList();
+            
+            // 중복된 시너지가 없는 상황에서 시너지가 2개 이상이고, None이 있다면 None 제거
+            if(iSynergy.Count >= 2)
+            {
+                if (iSynergy.Contains(Enums.ItemSynergy.None))
+                {
+                    iSynergy.Remove(Enums.ItemSynergy.None);
+                }
+            }
+        }
+    }
 }
+

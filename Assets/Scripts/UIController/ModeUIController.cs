@@ -30,6 +30,41 @@ public class ModeUIController : MonoBehaviour
         cancelButton.onClick.AddListener(CancelButtonClick);
     }
 
+    private void Update()
+    {
+        // 조건이 충족되지 않으면 스왑 / 강화 버튼 비활성화
+        switch (modeManager.GetCurrentMode())
+        {
+            // 일반 모드
+            case Enums.InventoryMode.None:
+                return;
+            // 스왑 모드
+            case Enums.InventoryMode.Swap:
+                if(swapModeClickCount < 2)
+                {
+                    okButton.interactable = false;
+                }
+                else
+                {
+                    okButton.interactable = true;
+                }
+                break;
+
+            // 아이템 등급 강화 모드
+            case Enums.InventoryMode.RankUp:
+            case Enums.InventoryMode.RanKUpWithSynergy:
+                if (rankUpModeClickCount < 1)
+                {
+                    okButton.interactable = false;
+                }
+                else
+                {
+                    okButton.interactable = true;
+                }
+                break;
+        }
+    }
+
     public void UpdateModeUI()
     {
         switch (modeManager.GetCurrentMode())
@@ -69,6 +104,11 @@ public class ModeUIController : MonoBehaviour
                 {
                     inventoryManager.SwapItem(swapItemIndex[0], swapItemIndex[1]);
                 }
+                // 만약 모두 선택하지 않았는데 스왑 버튼을 눌렀을 경우 그냥 리턴 (예외처리 추가 작업)
+                else
+                {
+                    return;
+                }
                 ClearSwapMode();
                 uiManager.inventoryUIController.UnCheckAllSlot();
                 modeManager.SetMode(Enums.InventoryMode.None);
@@ -81,6 +121,11 @@ public class ModeUIController : MonoBehaviour
                 {
                     inventoryManager.RankUpItem(rankUpItemIndex);
                 }
+                // 만약 모두 선택하지 않았는데 강화 버튼을 눌렀을 경우 그냥 리턴 (예외처리 추가 작업)
+                else
+                {
+                    return;
+                }
                 ClearRankUpMode();
                 uiManager.inventoryUIController.UnCheckAllSlot();
                 modeManager.SetMode(Enums.InventoryMode.None);
@@ -92,6 +137,10 @@ public class ModeUIController : MonoBehaviour
                 if (rankUpModeClickCount == 1 && rankUpItemIndex <= 8 && rankUpItemIndex >= 0)
                 {
                     inventoryManager.RankUpItemWithSynergy(rankUpItemIndex);
+                }
+                else
+                {
+                    return;
                 }
                 ClearRankUpMode();
                 uiManager.inventoryUIController.UnCheckAllSlot();

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class TempManager : MonoBehaviour
 {
+    public Stats testStat;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -53,6 +54,24 @@ public class TempManager : MonoBehaviour
             UIManager.Instance.ToggleInventory();
             UIManager.Instance.ToggleInventory();
             Debug.Log("시너지 유지 강화모드");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            testStat = InventoryManager.Instance.GetInventoryTotalStats();
+        }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            SoundManager.Instance.PlayBGM("town");
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            SoundManager.Instance.Play("fire");
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            SoundManager.Instance.StopBGM();
         }
     }
 
