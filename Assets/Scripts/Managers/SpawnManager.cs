@@ -63,20 +63,31 @@ public class SpawnManager : MonoBehaviour
     bool spawningFinished = false;
     bool isPhaseActive = false;
 
-
-    /// <summary>
-    /// DungeonManager 에서 현재 방 타입과 함께 호출됩니다.
-    /// </summary>
-    public void StartSpawning(RoomType roomType)
+    void Start()
     {
-        // DungeonManager에서 구독자가 설정될 시간을 주기 위해 지연 시작
-        StartCoroutine(StartSpawningFlow(roomType));
-    }
+        // DungeonManager의 인스턴스를 찾아옵니다.
+        DungeonManager dungeonManager = DungeonManager.Instance;
 
-    // 코루틴 시작을 위한 래퍼 함수
+        if (dungeonManager == null)
+        {
+            Debug.LogError("DungeonManager.Instance를 찾을 수 없습니다. 스폰을 시작할 수 없습니다.");
+            return;
+        }
+
+        // DungeonManager에서 현재 설정된 룸 타입을 가져옵니다.
+        Enums.RoomType currentRoomType = dungeonManager.GetCurrentRoomType();
+
+        // 가져온 룸 타입을 사용하여 스폰 로직 시작
+        Debug.Log($"[SpawnManager] Start()에서 DungeonManager를 통해 룸 타입 ({currentRoomType}) 확인 후 스폰 시작.");
+
+        // 코루틴 시작
+        StartCoroutine(StartSpawningFlow(currentRoomType));
+    }
+
+
     IEnumerator StartSpawningFlow(RoomType roomType)
     {
-        // DungeonManager에서 이벤트 구독을 완료할 때까지 대기 (선택적)
+        // 안정성을 위해 1프레임 대기 시간 추가
         yield return null;
 
         // 실제 스폰 로직 시작
