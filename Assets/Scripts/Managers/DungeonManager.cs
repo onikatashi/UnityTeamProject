@@ -34,11 +34,23 @@ public class DungeonManager : MonoBehaviour
         // 전체 테마 목록 가져와 배열로 저장.
         Enums.DungeonTheme[] themes = (Enums.DungeonTheme[])System.Enum.GetValues(typeof(Enums.DungeonTheme));
 
-        // 배열 중 랜덤으로 하나 선택
-        int randomIndex = Random.Range(0, themes.Length);
-        currentTheme = themes[randomIndex];
+        //List형 사용가능 테마 목록 준비
+        List<Enums.DungeonTheme> filteringTheme = new List<Enums.DungeonTheme>();
+
+        //Enums의 테마들 중 테마 하나씩 필터링.
+        foreach (var theme in themes)
+        {
+            if (theme != Enums.DungeonTheme.None)
+            {
+                filteringTheme.Add(theme);
+            }
+        }
+
+        int randomIndex = Random.Range(0, filteringTheme.Count);
+        currentTheme = filteringTheme[randomIndex];
 
         Debug.Log("[DungeonManager] 초기 테마 선택: " + currentTheme);
+
     }
 
     public void SetNextTheme()
@@ -47,27 +59,28 @@ public class DungeonManager : MonoBehaviour
         Enums.DungeonTheme[] themes = (Enums.DungeonTheme[])System.Enum.GetValues(typeof(Enums.DungeonTheme));
 
         // 테마 리스트 화
-        List<Enums.DungeonTheme> availableThemes = new List<Enums.DungeonTheme>();
+        List<Enums.DungeonTheme> filteringThemes = new List<Enums.DungeonTheme>();
 
-        //현재 테마 제외한 후보 생성
-        for (int i = 0; i < themes.Length; i++)
+        foreach (var theme in themes)
         {
-            if (themes[i] != currentTheme)
-            {
-                availableThemes.Add(themes[i]);
-            }
+            if (theme == Enums.DungeonTheme.None)
+                continue;
+
+            if (theme != currentTheme)
+                filteringThemes.Add(theme);
         }
 
+
         // 예외 방지
-        if (availableThemes.Count == 0)
+        if (filteringThemes.Count == 0)
         {
             Debug.LogWarning("[DungeonManager] 사용 가능한 다른 테마가 없습니다.");
             return;
         }
 
         // 랜덤으로 선택
-        int randomIndex = Random.Range(0, availableThemes.Count);
-        currentTheme = availableThemes[randomIndex];
+        int randomIndex = Random.Range(0, filteringThemes.Count);
+        currentTheme = filteringThemes[randomIndex];
 
         Debug.Log("[DungeonManager] 새로운 테마 선택: " + currentTheme);
     }

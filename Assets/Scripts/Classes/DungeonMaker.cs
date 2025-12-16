@@ -201,7 +201,7 @@ public class DungeonMaker : MonoBehaviour
             dungeonButtons[nodeData.floor, nodeData.col] = node;
         }
 
-        // 다음노도 연결 정보 복원
+        // 다음노드 연결 정보 복원
         foreach (var nodeData in data.nodes)
         {
             NodeButton node = dungeonButtons[nodeData.floor, nodeData.col];
@@ -267,7 +267,6 @@ public class DungeonMaker : MonoBehaviour
         }
         //모든 노드 생성 후 선택한 층 [개수 제한].
         LimitFloorNodeCount(0, startNodeCountLimit);
-
         LimitFloorNodeCount(maxFloor - 3, eliteNodeCountLimit);
         LimitFloorNodeCount(maxFloor - 1, bossNodeCountLimit);
     }
