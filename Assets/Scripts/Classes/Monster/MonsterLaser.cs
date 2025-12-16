@@ -1,63 +1,102 @@
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class MonsterLaser : MonoBehaviour
 {
+    [Header("Visual")]
+    public LineRenderer line;
+    public float width = 0.25f;
+    public float maxLength = 18f;
+    public LayerMask blockMask;
+
     [Header("Hit")]
-    public float width = 0.6f;
-    public float length = 18f;
     public LayerMask playerMask;
+    public float hitHeight = 1.0f;
 
-    bool firing = false;
+    bool firing;
+    Vector3 origin;
+    Vector3 dir;
 
-    public void BeginWindup(float windup)
+    void Awake()
     {
-        // 여기서 레이저 차징 연출을 켜고,
-        // windup 시간 후 BeginFire()가 호출되도록 연결하면 됨
+        if (line == null) line = GetComponent<LineRenderer>();
+
+        line.enabled = false;
+        line.positionCount = 2;
+        line.useWorldSpace = true;
+        line.startWidth = width;
+        line.endWidth = width;
     }
 
-    public void BeginFire() => firing = true;
-    public void EndFire() => firing = false;
+    /* ================== 외부 제어 ================== */
+
+    public void BeginCharge()
+    {
+        firing = false;
+        line.enabled = true;
+        SetWidth(width * 0.3f); // 차지 중 얇게
+    }
+
+    public void BeginFire()
+    {
+        firing = true;
+        SetWidth(width);
+    }
+
+    public void EndFire()
+    {
+        firing = false;
+        line.enabled = false;
+    }
 
     public void UpdateAim(Vector3 origin, Vector3 forward)
     {
-        // 레이저 시작 위치를 약간 위로 보정
-        transform.position = origin + Vector3.up * 1.2f;
-
-        // 유효한 방향 벡터가 있을 때만 회전 적용
-        if (forward.sqrMagnitude > 0.001f)
-            transform.rotation = Quaternion.LookRotation(forward);
+        this.origin = origin;
+        this.dir = forward.normalized;
+        UpdateLine();
     }
 
-    public void TryHit(Player player, float damagePerTick)
+    public void TryHit(float damage)
     {
-        if (!firing || player == null) return;
+        if (!firing) return;
 
-        // 레이저를 박스 오버랩(OverlapBox) 방식으로 판정
-        // 폭과 길이를 가진 레이저 충돌 영역을 사용
-        Vector3 origin = transform.position;
-        Vector3 halfExtents = new Vector3(width * 0.5f, 1.0f, length * 0.5f);
-        Vector3 center = origin + transform.forward * (length * 0.5f);
+        Vector3 center = origin + dir * (maxLength * 0.5f);
+        Vector3 half = new Vector3(width * 0.5f, hitHeight, maxLength * 0.5f);
 
-        Collider[] hits = Physics.OverlapBox(center, halfExtents, transform.rotation, playerMask);
+        Collider[] hits = Physics.OverlapBox(
+            center,
+            half,
+            Quaternion.LookRotation(dir),
+            playerMask
+        );
 
-        for (int i = 0; i < hits.Length; i++)
+        foreach (var h in hits)
         {
-            Player p = hits[i].GetComponent<Player>();
+            Player p = h.GetComponent<Player>();
             if (p != null)
             {
-                // 레이저 틱 데미지 적용
-                p.TakeDamage(damagePerTick);
+                p.TakeDamage(damage);
                 return;
             }
         }
     }
 
-    void OnDrawGizmosSelected()
+    /* ================== 내부 ================== */
+
+    void UpdateLine()
     {
-        // 레이저 판정 범위 시각화
-        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(new Vector3(0, 0, length * 0.5f), new Vector3(width, 2f, length)
-        );
+        Vector3 end = origin + dir * maxLength;
+
+        if (Physics.Raycast(origin, dir, out RaycastHit hit, maxLength, blockMask))
+            end = hit.point;
+
+        line.SetPosition(0, origin);
+        line.SetPosition(1, end);
+    }
+
+    void SetWidth(float w)
+    {
+        line.startWidth = w;
+        line.endWidth = w;
     }
 }

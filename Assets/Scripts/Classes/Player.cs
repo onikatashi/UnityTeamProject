@@ -170,6 +170,7 @@ public class Player : MonoBehaviour
 
     IEnumerator CoStun(float d)
     {
+        //Debug.Log("스턴");
         isStunned = true;
         
         yield return new WaitForSeconds(d);
@@ -184,8 +185,11 @@ public class Player : MonoBehaviour
     }
     IEnumerator CoReverse(float d)
     {
+        //Debug.Log("반전");
         isInputReversed = true;
+
         yield return new WaitForSeconds(d);
+
         isInputReversed = false;
     }
 }
