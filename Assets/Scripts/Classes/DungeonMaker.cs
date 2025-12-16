@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DungeonMaker : MonoBehaviour
 {
     //노드 생성설정
     public int maxFloor = 8;
     public int maxColumn = 6;
-    
+
     private int startNodeCountLimit = 3;
     private int bossNodeCountLimit = 3;
     private int eliteNodeCountLimit = 4;
@@ -14,12 +15,25 @@ public class DungeonMaker : MonoBehaviour
     //Button의 Type에 따른 Sprite연결을 위한 Dictionary
     private Dictionary<Enums.RoomType, Sprite> iconSpriteDictionary;
 
+    [Header("Dungeon Type Sprites")]
     public Sprite normalSprite;
     public Sprite eliteSprite;
     public Sprite shopSprite;
     public Sprite restSprite;
     public Sprite forgeSprite;
     public Sprite bossSprite;
+
+    //Map의 Type에 따른 배경화면 구현을 위한 Sprite연결을 위한 Dictionary
+    private Dictionary<Enums.DungeonTheme, Sprite> themeSpriteDictionary;
+
+    [Header("Dungeon Theme Sprites")]
+    public Sprite desertThemeSprite;
+    public Sprite grassThemeSprite;
+    public Sprite lavaThemeSprite;
+    public Sprite snowThemeSprite;
+
+    [Header("UI")]
+    public Image environmentBackgroundImage;
 
     //라인 처리 스크립트 inspector창에서 연결.
     public LineDrawer lineDrawer;
@@ -39,12 +53,22 @@ public class DungeonMaker : MonoBehaviour
 
 
     //---------------------------------------------------------------------------------------------
-
+    //Start는 Scene이동 후 돌아올 때마다 실행됨.
     void Start()
     {
-        
+        //테마 Sprite Inspector로 설정.
+        themeSpriteDictionary = new Dictionary<Enums.DungeonTheme, Sprite>()
+        {
+            { Enums.DungeonTheme.Desert, desertThemeSprite },
+            { Enums.DungeonTheme.Grass,  grassThemeSprite },
+            { Enums.DungeonTheme.Lava,   lavaThemeSprite },
+            { Enums.DungeonTheme.Snow,   snowThemeSprite }
+        };
+
+        //노드 아이콘 Sprite Inspector로 설정
         iconSpriteDictionary = new Dictionary<Enums.RoomType, Sprite>()
         {
+            { Enums.RoomType.None, null },
             { Enums.RoomType.Normal, normalSprite },
             { Enums.RoomType.Elite, eliteSprite },
             { Enums.RoomType.Shop, shopSprite },
@@ -52,16 +76,150 @@ public class DungeonMaker : MonoBehaviour
             { Enums.RoomType.Forge, forgeSprite },
             { Enums.RoomType.Boss, bossSprite }
         };
+
         //NodeButton타입을 가진 2차원 배열 생성
         dungeonButtons = new NodeButton[maxFloor, maxColumn];
 
-        GenerateDungeon();
-        GenerateNodeConnections();
+        // 기존 던전 유/무 확인
+        if (DungeonManager.Instance != null && DungeonManager.Instance.HasDungeonData())
+        {
+           DungeonMapData dungeonData = DungeonManager.Instance.GetDungeonData();
+            
+            //테마와 데이터 가져오기.
+            ApplyEnvironmentTheme(dungeonData.theme);
+            LoadDungeonFromData(dungeonData);
+           
+            Debug.Log("[DungeonMaker] 기존 던전 데이터 로드 완료");
+        }
+        else
+        {
+            //[[[신규 던전 생성.]]]
+
+            //DungeonManager에서 테마 종류 가져오기.
+            Enums.DungeonTheme dungeonTheme = DungeonManager.Instance.GetCurrentTheme();
+            ApplyEnvironmentTheme(dungeonTheme);
+
+            //던전 노드 생성
+            GenerateDungeon();
+            //던전 선 연결
+            GenerateNodeConnections();
+
+            //생성된 던전 데이터 DungeonManager쪽에 저장.
+            DungeonMapData saveData = ExportDungeonData();
+            saveData.theme = dungeonTheme;
+            DungeonManager.Instance?.SaveDungeonData(saveData);
+            Debug.Log("[DungeonMaker] 신규 던전 생성 및 저장 완료");
+        }
+
+        //모든 노드, 선 정보를 기반으로 선그리기.
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
         PrintDungeonToConsole();
     }
 
-    //---------------------------------------------------------------------------------------------
+    private void ApplyEnvironmentTheme(Enums.DungeonTheme theme)
+    {
+        if (environmentBackgroundImage == null) return;
+
+        if (themeSpriteDictionary.TryGetValue(theme, out var sprite))
+        {
+            environmentBackgroundImage.sprite = sprite;
+            environmentBackgroundImage.color = Color.white;
+        }
+        else
+        {
+            Debug.LogWarning($"[DungeonMaker] 테마 스프라이트 없음: {theme}");
+        }
+    }
+
+
+    //던전 재생성.-------------------------------------------------------------------------------------------
+
+    //저장데이터 가공(DungeonManager에 보낼 정보)
+    private DungeonMapData ExportDungeonData()
+    {
+
+        DungeonMapData saveData = new DungeonMapData();
+
+        //기본정보인 최대 층,열 저장
+        saveData.maxFloor = maxFloor;
+        saveData.maxColumn = maxColumn;
+
+
+        //각 노드 별의 내부 정보 저장.
+        for (int floor = 0; floor < maxFloor; floor++)
+        {
+            for (int colum = 0; colum < maxColumn; colum++)
+            {
+                //현재 노드 체크.
+                NodeButton node = dungeonButtons[floor, colum];
+                if (node == null) continue;
+
+                //데이터 및 위치 저장.
+                DungeonNodeData nodeData = new DungeonNodeData()
+                {
+                    floor = floor,
+                    col = colum,
+                    roomType = node.CurrentRoomType,
+                    isAvailable = node.isAvailable,
+                    uiPosition = node.GetComponent<RectTransform>().anchoredPosition
+                };
+
+                // 다음 연결된 노드의 좌표 저장
+                foreach (var next in node.nextNodes)
+                    nodeData.nextNodes.Add(new Vector2Int(next.floor, next.col));
+
+                saveData.nodes.Add(nodeData);
+            }
+        }
+        return saveData;
+    }
+
+    //던전 데이터 DungeonManager에서 가져오기.
+    private void LoadDungeonFromData(DungeonMapData data)
+    {
+        foreach (var nodeData in data.nodes)
+        {
+            GameObject nodePrefab = Instantiate(roomButtonPrefab, mapParent);
+            NodeButton node = nodePrefab.GetComponent<NodeButton>();
+            if (node == null) continue;
+
+            node.floor = nodeData.floor;
+            node.col = nodeData.col;
+            node.isAvailable = nodeData.isAvailable;
+            if (nodeData.roomType == Enums.RoomType.None)
+            {
+                node.SetRoomType(Enums.RoomType.None, null);
+            }
+            else
+            {
+                node.SetRoomType(nodeData.roomType, iconSpriteDictionary[nodeData.roomType]);
+            }
+
+            RectTransform rect = nodePrefab.GetComponent<RectTransform>();
+            rect.anchoredPosition = nodeData.uiPosition;
+
+            dungeonButtons[nodeData.floor, nodeData.col] = node;
+        }
+
+        // 다음노드 연결 정보 복원
+        foreach (var nodeData in data.nodes)
+        {
+            NodeButton node = dungeonButtons[nodeData.floor, nodeData.col];
+            if (node == null) continue;
+
+            foreach (var next in nodeData.nextNodes)
+            {
+                NodeButton nextNode = dungeonButtons[next.x, next.y];
+                if (nextNode != null && !node.nextNodes.Contains(nextNode))
+                {
+                    node.nextNodes.Add(nextNode);
+                    nextNode.prevNodes.Add(node);
+                }
+            }
+        }
+    }
+
+
 
     //노드 생성부---------------------------------------------------------------------------------------------
     private void GenerateDungeon()
@@ -109,7 +267,6 @@ public class DungeonMaker : MonoBehaviour
         }
         //모든 노드 생성 후 선택한 층 [개수 제한].
         LimitFloorNodeCount(0, startNodeCountLimit);
-        
         LimitFloorNodeCount(maxFloor - 3, eliteNodeCountLimit);
         LimitFloorNodeCount(maxFloor - 1, bossNodeCountLimit);
     }
@@ -157,6 +314,8 @@ public class DungeonMaker : MonoBehaviour
         }
     }
 
+
+
     //-------------------------------------------------------------------------------------------------------
 
     //라인 생성부---------------------------------------------------------------------------------------------
@@ -178,7 +337,7 @@ public class DungeonMaker : MonoBehaviour
             {
                 //다음 층 확인.
                 int nextFloor = floor + 1;
-                
+
                 //다음 층의 연결 가능 노드 찾기(None노드 인가? 체크)
                 NodeButton picked = FindNextAvailableNode(currentNode, nextFloor);
                 if (picked == null) break;
@@ -191,7 +350,7 @@ public class DungeonMaker : MonoBehaviour
                 {
                     //GetSideCandidates를 이용해 다음 층(nextFloor)의 좌우 노드 값 가져오기.
                     var sides = GetSideCandidates(currentNode, nextFloor);
-                    
+
                     //좌우 노드가 한개라도 있으면  둘중하나 연결.
                     if (sides.Count > 0)
                     {
@@ -222,7 +381,7 @@ public class DungeonMaker : MonoBehaviour
     /// <returns></returns>
     private NodeButton FindNextAvailableNode(NodeButton currentNode, int nextFloor)
     {
-        
+
         for (int checkRange = 1; checkRange < maxColumn; checkRange++)
         {
             //Column의 검색 구간 최소, 최대 범위 설정.
@@ -236,7 +395,7 @@ public class DungeonMaker : MonoBehaviour
         return null;
     }
 
-    
+
     private NodeButton FindNodeWithinRange(int targetFloor, int startCol, int endCol, Transform origin, bool useDistance)
     {
         //노드 
@@ -288,7 +447,7 @@ public class DungeonMaker : MonoBehaviour
 
     // sideList를 미리 2개 지정해 놓아서 좌우Node체크용으로 재활용(생성 -> 제거 리소스 아끼기)
     private readonly List<NodeButton> sideList = new List<NodeButton>(2);
-   
+
     private List<NodeButton> GetSideCandidates(NodeButton currentNode, int nextFloor)
     {
         //재활용하기 위해 Clear
@@ -322,7 +481,7 @@ public class DungeonMaker : MonoBehaviour
             {
 
                 NodeButton checkNode = dungeonButtons[floor, colum];
-                
+
                 //현재 노드가 없으면 지나가기.
                 if (checkNode == null || !checkNode.isAvailable) continue;
 
@@ -353,7 +512,7 @@ public class DungeonMaker : MonoBehaviour
     private NodeButton FindNearestNode(int floor, int col, bool isPrev)
     {
         int targetFloor = isPrev ? floor - 1 : floor + 1;
-        
+
         //노드들이 범위를 벗어나면 Null
         if (targetFloor < 0 || targetFloor >= maxFloor) return null;
 
@@ -361,7 +520,7 @@ public class DungeonMaker : MonoBehaviour
         NodeButton origin = dungeonButtons[floor, col];
         if (origin == null) return null;
 
-        return FindNodeWithinRange(targetFloor,0,maxColumn - 1, origin.transform, true );
+        return FindNodeWithinRange(targetFloor, 0, maxColumn - 1, origin.transform, true);
     }
 
     private void ConnectSafe(NodeButton currentNode, NodeButton nextNode)

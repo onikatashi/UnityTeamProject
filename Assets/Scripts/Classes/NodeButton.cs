@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
 /// 마우스 인식 관련 핸들 추가(IPointerEnterHandler, IPointerExitHandler)
+/// 마우스 클릭 관련 핸들 추가(IPointerClickHandler)
 /// </summary>
-public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     //노드 정보----------------------------------------------------------------------
     public int floor; // 층 정보
@@ -77,6 +79,7 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         RefreshVisual();
     }
+   
 
     private void RefreshVisual()
     {
@@ -90,6 +93,7 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
 
     // 마우스가 이미지 범위 위에 있음.
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isAvailable && highlight != null)
@@ -101,6 +105,26 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (highlight != null)
             highlight.SetActive(false);
+    }
+
+    //마우스 클릭 시 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (!isAvailable) return;
+
+        DungeonManager.Instance.SetCurrentRoomType(CurrentRoomType);
+
+        //씬 전환 할거면 무조건 이 아래 해야함.
+        //if(CurrentRoomType == RoomType.Normal || CurrentRoomType == RoomType.Elite || CurrentRoomType == RoomType.Boss)
+        //{
+        //    SceneLoaderManager.Instance.LoadScene(SceneNames.던전씬);
+        //}
+        //else
+        //{
+        //    SceneLoaderManager.Instance.LoadScene(SceneNames.레스트씬);
+        //}
+       
+
     }
 
 }

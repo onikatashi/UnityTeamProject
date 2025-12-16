@@ -1,85 +1,181 @@
-using UnityEngine;
-using static Enums;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DungeonManager : MonoBehaviour
 {
-    // DungeonMaker.cs¿¡¼­ ´ÙÀ½ ¾À ·Îµå Àü ÀÌ Á¤Àû º¯¼ö¿¡ °ªÀ» ¼³Á¤Çß´Ù°í °¡Á¤ÇÕ´Ï´Ù.
-    // PlayerPrefs ´ë½Å »ç¿ëµÇ´Â ÀÓ½Ã µ¥ÀÌÅÍ ÀúÀå¼ÒÀÔ´Ï´Ù.
-    public static RoomType NextRoomType = RoomType.None;
-    public static DungeonTheme NextDungeonTheme = DungeonTheme.None;
+    public static DungeonManager Instance { get; private set; }
 
-    [Header("ÇöÀç ¹æ Å¸ÀÔ (ÀÎ½ºÆåÅÍ ±âº»°ª / DungeonMaker Àü´Ş°ª)")]
-    [Tooltip("DungeonMaker¿¡¼­ °ªÀÌ Àü´ŞµÇÁö ¾ÊÀ¸¸é ÀÎ½ºÆåÅÍ¿¡ ÁöÁ¤µÈ °ªÀÌ ±âº»°ªÀ¸·Î »ç¿ëµË´Ï´Ù.")]
-    public RoomType currentRoomType;
+    [Header("í˜„ì¬ ë˜ì „ ì €ì¥ ë°ì´í„°")]
+    public DungeonMapData currentDungeonData;
 
-    [Header("ÇöÀç ´øÀü Å×¸¶ (ÀÎ½ºÆåÅÍ ±âº»°ª / DungeonMaker Àü´Ş°ª)")]
-    [Tooltip("DungeonMaker¿¡¼­ °ªÀÌ Àü´ŞµÇÁö ¾ÊÀ¸¸é ÀÎ½ºÆåÅÍ¿¡ ÁöÁ¤µÈ °ªÀÌ ±âº»°ªÀ¸·Î »ç¿ëµË´Ï´Ù.")]
-    public DungeonTheme currentDungeonTheme;
+    [Header("í˜„ì¬ í…Œë§ˆ")]
+    public Enums.DungeonTheme currentTheme;
 
-    [Header("¿¬°áµÈ ½ºÆù ¸Å´ÏÀú")]
-    public SpawnManager spawnManager;
+    [Header("í˜„ì¬ ì„ íƒëœ ë£¸ íƒ€ì…")]
+    public Enums.RoomType currentRoomType;
 
-    [Header("¿¬°áµÈ ¸Ê ¸ŞÀÌÄ¿")]
-    public MapMaker mapMaker;
-
-
-    private void Awake()
+    //ì‹±ê¸€í†¤ ë° í…Œë§ˆ ì„¤ì •.
+    void Awake()
     {
-        // ======================= ¿äÃ»ÇÏ½Å Fallback ·ÎÁ÷ Àû¿ë ½ÃÀÛ =======================
-        // 1. NextRoomTypeÀÌ NoneÀÌ ¾Æ´Ï¶ó¸é (DungeonMaker°¡ ¼³Á¤Çß´Ù¸é) ±× °ªÀ» »ç¿ëÇÏ°í,
-        //    NoneÀÌ¶ó¸é ÀÎ½ºÆåÅÍ¿¡ ÁöÁ¤µÈ ÇöÀç °ªÀ» À¯ÁöÇÕ´Ï´Ù.
-        if (NextRoomType != RoomType.None)
+        if (Instance != null && Instance != this)
         {
-            currentRoomType = NextRoomType;
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        SetRandomTheme(); // ì²« ì§„ì… ì‹œ í…Œë§ˆ ì„¤ì •
+    }
+
+    private void SetRandomTheme()
+    {
+        // ì „ì²´ í…Œë§ˆ ëª©ë¡ ê°€ì ¸ì™€ ë°°ì—´ë¡œ ì €ì¥.
+        Enums.DungeonTheme[] themes = (Enums.DungeonTheme[])System.Enum.GetValues(typeof(Enums.DungeonTheme));
+
+        //Listí˜• ì‚¬ìš©ê°€ëŠ¥ í…Œë§ˆ ëª©ë¡ ì¤€ë¹„
+        List<Enums.DungeonTheme> filteringTheme = new List<Enums.DungeonTheme>();
+
+        //Enumsì˜ í…Œë§ˆë“¤ ì¤‘ Noneì„ ì œì™¸í•˜ê³  í•„í„°ë§.
+        foreach (var theme in themes)
+        {
+            if (theme != Enums.DungeonTheme.None)
+            {
+                filteringTheme.Add(theme);
+            }
         }
 
-        // 2. NextDungeonThemeÀÌ NoneÀÌ ¾Æ´Ï¶ó¸é ±× °ªÀ» »ç¿ëÇÏ°í,
-        //    NoneÀÌ¶ó¸é ÀÎ½ºÆåÅÍ¿¡ ÁöÁ¤µÈ ÇöÀç °ªÀ» À¯ÁöÇÕ´Ï´Ù.
-        if (NextDungeonTheme != DungeonTheme.None)
-        {
-            currentDungeonTheme = NextDungeonTheme;
-        }
-        // ======================= ¿äÃ»ÇÏ½Å Fallback ·ÎÁ÷ Àû¿ë ³¡ =========================
+        //ëœë¤ í…Œë§ˆ ì„ ì •.
+        int randomIndex = Random.Range(0, filteringTheme.Count);
+        currentTheme = filteringTheme[randomIndex];
 
-        // »ç¿ë ÈÄ ¹Ù·Î ÃÊ±âÈ­ (´ÙÀ½ ´øÀü ÁøÀÔ ½Ã ²¿ÀÓ ¹æÁö)
-        NextRoomType = RoomType.None;
-        NextDungeonTheme = DungeonTheme.None;
+        Debug.Log("[DungeonManager] ì´ˆê¸° í…Œë§ˆ ì„ íƒ: " + currentTheme);
+
+    }
+
+    public void SetNextTheme()
+    {
+        // ì „ì²´ í…Œë§ˆ ëª©ë¡ ê°€ì ¸ì™€ ë°°ì—´ë¡œ ì €ì¥.
+        Enums.DungeonTheme[] themes = (Enums.DungeonTheme[])System.Enum.GetValues(typeof(Enums.DungeonTheme));
+
+        //Listí˜• ì‚¬ìš©ê°€ëŠ¥ í…Œë§ˆ ëª©ë¡ ì¤€ë¹„
+        List<Enums.DungeonTheme> filteringThemes = new List<Enums.DungeonTheme>();
+
+        //Enumsì˜ í…Œë§ˆë“¤ ì¤‘ Noneê³¼ ì´ë¯¸ ì‚¬ìš©í•œ í…Œë§ˆ í•„í„°ë§.
+        foreach (var theme in themes)
+        {
+            if (theme == Enums.DungeonTheme.None)
+                continue;
+
+            if (theme != currentTheme)
+                filteringThemes.Add(theme);
+        }
+
+
+        // ì˜ˆì™¸ ë°©ì§€
+        if (filteringThemes.Count == 0)
+        {
+            Debug.LogWarning("[DungeonManager] ì‚¬ìš© ê°€ëŠ¥í•œ ë‹¤ë¥¸ í…Œë§ˆê°€ ì—†ìŠµë‹ˆë‹¤.");
+            return;
+        }
+
+        // ëœë¤ìœ¼ë¡œ ì„ íƒ
+        int randomIndex = Random.Range(0, filteringThemes.Count);
+        currentTheme = filteringThemes[randomIndex];
+
+        Debug.Log("[DungeonManager] ìƒˆë¡œìš´ í…Œë§ˆ ì„ íƒ: " + currentTheme);
+    }
+
+    // (ì™¸ë¶€ ì°¸ì¡°ìš©) í˜„ì¬ ì •í•´ì§„ í…Œë§ˆ ê°’ ë°˜í™˜.
+    public Enums.DungeonTheme GetCurrentTheme()
+    {
+        return currentTheme;
     }
 
 
-    private void Start()
+    // (ì™¸ë¶€ ì°¸ì¡°ìš©) í˜„ì¬ ë£¸íƒ€ì…ì— ëŒ€í•˜ì—¬ ë°˜í™˜í•˜ê¸°.
+    public Enums.RoomType GetCurrentRoomType()
     {
-        // 1. MapMaker¿¡ Å×¸¶ Á¤º¸ Àü´Ş ¹× Àû¿ë ¿äÃ»
-        if (mapMaker != null)
+        return currentRoomType;
+    }
+
+    // ë£¸ íƒ€ì… ê°’ ì„¤ì •(í˜„ì¬ ë§ˆìš°ìŠ¤ í´ë¦­ì—ì„œ ì‚¬ìš©ë˜ëŠ” í•¨ìˆ˜.)
+    public void SetCurrentRoomType(Enums.RoomType roomType)
+    {
+        currentRoomType = roomType;
+        Debug.Log("[DungeonManager] í˜„ì¬ ë£¸ íƒ€ì… ì„¤ì •: " + currentRoomType);
+    }
+
+    //ë…¸ë“œ ë°ì´í„° ë³´ìœ -------------------------------------------------------------------------
+
+    // ìƒˆë¡œìš´ ë˜ì „ ë°ì´í„°ë¥¼ ì €ì¥ (Makerì—ì„œ ì „ë‹¬ë°›ìŒ)
+    public void SaveDungeonData(DungeonMapData data)
+    {
+        currentDungeonData = data;
+        Debug.Log("[DungeonManager] ë˜ì „ ë°ì´í„° ì €ì¥ ì™„ë£Œ");
+    }
+
+    // í˜„ì¬ ë˜ì „ ë°ì´í„°ë¥¼ ë°˜í™˜
+    public DungeonMapData GetDungeonData()
+    {
+        return currentDungeonData;
+    }
+
+    // í˜„ì¬ ë˜ì „ ë°ì´í„°ê°€ ì¡´ì¬í•˜ëŠ”ê°€?
+    public bool HasDungeonData()
+    {
+        return currentDungeonData != null && currentDungeonData.nodes.Count > 0;
+    }
+
+    // í´ë¦¬ì–´, í¬ê¸°, ì¢…ë£Œ ì‹œ ì´ˆê¸°í™”
+    public void ClearDungeonData()
+    {
+        currentDungeonData = null;
+        Debug.Log("[DungeonManager] ë˜ì „ ë°ì´í„° ì´ˆê¸°í™” ì™„ë£Œ");
+    }
+
+    void Update()
+    {
+        // ìŠ¤í˜ì´ìŠ¤ë¥¼ ëˆ„ë¥´ë©´ Keypad1 ê¸°ëŠ¥ ì‹¤í–‰
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            mapMaker.ApplyTheme(currentDungeonTheme);
-        }
-        else
-        {
-            Debug.LogError("MapMaker°¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù. ´øÀü Å×¸¶¸¦ Àû¿ëÇÒ ¼ö ¾ø½À´Ï´Ù.");
+            SceneManager.LoadScene("MapDateCheckScene");
         }
 
-        // 2. SpawnManager¿¡ ·ë Å¸ÀÔ Á¤º¸ Àü´Ş ¹× ½ºÆù ½ÃÀÛ
-        if (currentRoomType == RoomType.Normal || currentRoomType == RoomType.Elite || currentRoomType == RoomType.Boss)
+        // ì™¼ìª½ ì‹œí”„íŠ¸ë¥¼ ëˆ„ë¥´ë©´ Keypad2 ê¸°ëŠ¥ ì‹¤í–‰
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            if (spawnManager != null)
-            {
-                // ¼öÁ¤µÈ ºÎºĞ: ÇöÀç ·ë Å¸ÀÔÀ» StartSpawning¿¡ Àü´Ş
-                spawnManager.StartSpawning(currentRoomType);
-            }
-            else
-            {
-                Debug.LogError("SpawnManager°¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù. ¸ó½ºÅÍ ½ºÆùÀ» ½ÃÀÛÇÒ ¼ö ¾ø½À´Ï´Ù.");
-            }
-        }
-        else if (currentRoomType != RoomType.None)
-        {
-            Debug.Log($"·ë Å¸ÀÔ ({currentRoomType})ÀÌ Normal, Elite, Boss°¡ ¾Æ´Ï¹Ç·Î ¸ó½ºÅÍ ½ºÆù ·ÎÁ÷À» °Ç³Ê¶İ´Ï´Ù.");
-        }
-        else
-        {
-            Debug.LogWarning("RoomTypeÀÌ NoneÀÔ´Ï´Ù. ½ºÆù ·ÎÁ÷À» ½ÃÀÛÇÒ ¼ö ¾ø½À´Ï´Ù. ÀÎ½ºÆåÅÍ ¼³Á¤À» È®ÀÎÇÏ¼¼¿ä.");
+            SceneManager.LoadScene("DungeonMap");
         }
     }
+
+
+}
+
+[System.Serializable]
+public class DungeonMapData
+{
+    //ë˜ì „ ê¸°ë³¸ ì •ë³´.
+    public int maxFloor;
+    public int maxColumn;
+    public Enums.DungeonTheme theme;
+
+    //[ê° ë…¸ë“œë³„ ë°ì´í„° ì •ë³´]ë¥¼ ë¦¬ìŠ¤íŠ¸ í˜•ì‹ìœ¼ë¡œ ì €ì¥.
+    public List<DungeonNodeData> nodes = new List<DungeonNodeData>();
+}
+
+[System.Serializable]
+public class DungeonNodeData //ê° ë…¸ë“œë³„ ë°ì´í„° ì •ë³´
+{
+    //ê¸°ë³¸ ë…¸ë“œ ì •ë³´.
+    public int floor;
+    public int col;
+    public Enums.RoomType roomType;
+    public bool isAvailable;
+
+    //ë…¸ë“œì˜ ì¢Œí‘œì •ë³´(Centor)
+    public Vector2 uiPosition;
+    //ë‹¤ìŒ ë…¸ë“œ ì •ë³´ë¥¼ ë¦¬ìŠ¤íŠ¸ í˜•ì‹ìœ¼ë¡œ ì €ì¥.
+    public List<Vector2Int> nextNodes = new List<Vector2Int>();
 }

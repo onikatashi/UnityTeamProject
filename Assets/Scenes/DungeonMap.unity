@@ -844,6 +844,11 @@ MonoBehaviour:
   restSprite: {fileID: 21300000, guid: ac2dd8407de605a4292d1d9518ab8c99, type: 3}
   forgeSprite: {fileID: 21300000, guid: 2bad8d8a766c2894faf6097f008ea017, type: 3}
   bossSprite: {fileID: 21300000, guid: a8af1ce53c4c7524a86273d7adbdf178, type: 3}
+  desertThemeSprite: {fileID: 21300000, guid: 6818a2a267da45344bbd523be9f29a9a, type: 3}
+  grassThemeSprite: {fileID: 21300000, guid: 21ccac150b3155641a52dde347e67165, type: 3}
+  lavaThemeSprite: {fileID: 21300000, guid: 47756a2cfdda9a849bded3443d840ec5, type: 3}
+  snowThemeSprite: {fileID: 21300000, guid: 5ff553d937f14ca4e8f8f44d618618ac, type: 3}
+  environmentBackgroundImage: {fileID: 1196073497}
   lineDrawer: {fileID: 116682523}
   roomTypeData: {fileID: 1474469201}
   roomButtonPrefab: {fileID: 3305977386629014610, guid: 838f008e54f2cf14fbe2017e9ac150e4, type: 3}

@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Dungeon.unity
     guid: a6cbcc4383e211748b9f48bcb2f11905
+  - enabled: 1
+    path: Assets/Scenes/MapDateCheckScene.unity
+    guid: 5ecc9d00f4fd80d4a9c95718ab3e1d21
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
