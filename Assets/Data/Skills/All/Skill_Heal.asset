@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Skill_Heal
   m_EditorClassIdentifier: 
   skillName: Heal
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 8c859ca448b515445a236cc94944f09c, type: 3}
   cooldown: 20
-  level: 1
+  level: 0
   baseHeal: 5

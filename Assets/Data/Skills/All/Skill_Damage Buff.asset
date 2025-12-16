@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: Skill_Damage Buff
   m_EditorClassIdentifier: 
   skillName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 30a623dd3dffd2e40aa9c45e379d01ad, type: 3}
   cooldown: 5
   level: 0
   baseDamage: 2
   duration: 5
-  originalDamage: 0
