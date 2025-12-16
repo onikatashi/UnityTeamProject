@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq; // LINQ 사용을 위해 추가
 using static Enums; // RoomType Enum 접근을 위해 필요. DungeonManager.cs에 이미 'using static Enums;'가 있으므로 가정합니다.
+using Random = UnityEngine.Random; // UnityEngine.Random 명시
 
 public class SpawnManager : MonoBehaviour
 {
@@ -40,6 +41,23 @@ public class SpawnManager : MonoBehaviour
     public List<PhaseData> bossPhases = new List<PhaseData>();
     // -----------------------------------------------------
 
+    // -----------------------------------------------------
+    [Header("방 클리어 보상 설정 (DungeonManager에서 이동)")]
+
+    [Tooltip("모든 리워드 슬롯에 사용될 프리팹")]
+    public GameObject rewardPrefab; // Reward 프리팹 하나만 사용
+
+    [Tooltip("리워드가 스폰될 첫 번째 위치")]
+    public Transform reward1SpawnPoint;
+    [Tooltip("리워드가 스폰될 두 번째 위치")]
+    public Transform reward2SpawnPoint;
+    [Tooltip("리워드가 스폰될 세 번째 위치")]
+    public Transform reward3SpawnPoint;
+
+    public GameObject portalPrefab;
+    public Transform portalSpawnPoint;
+    // -----------------------------------------------------
+
 
     List<GameObject> aliveEnemies = new List<GameObject>();
     bool spawningFinished = false;
@@ -51,6 +69,17 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     public void StartSpawning(RoomType roomType)
     {
+        // DungeonManager에서 구독자가 설정될 시간을 주기 위해 지연 시작
+        StartCoroutine(StartSpawningFlow(roomType));
+    }
+
+    // 코루틴 시작을 위한 래퍼 함수
+    IEnumerator StartSpawningFlow(RoomType roomType)
+    {
+        // DungeonManager에서 이벤트 구독을 완료할 때까지 대기 (선택적)
+        yield return null;
+
+        // 실제 스폰 로직 시작
         StartCoroutine(SpawnFlow(roomType));
     }
 
@@ -170,11 +199,78 @@ public class SpawnManager : MonoBehaviour
             if (spawningFinished && aliveEnemies.Count == 0)
             {
                 Debug.Log("모든 적 제거 → 던전 클리어");
-                OnAllEnemiesCleared?.Invoke();
+                OnAllEnemiesCleared?.Invoke(); // 방 클리어 이벤트 발생
+                HandleRoomCleared(); // 리워드/포탈 생성 로직 호출
                 yield break;
             }
 
             yield return new WaitForSeconds(0.2f);
+        }
+    }
+
+    /// <summary>
+    /// 방 클리어 시 리워드 및 포탈 생성 로직
+    /// </summary>
+    private void HandleRoomCleared()
+    {
+        Debug.Log("== 던전 방 클리어 (리워드/포탈 생성) ==");
+
+        SpawnAllRewards();
+        SpawnPortal();
+    }
+
+    /// <summary>
+    /// 설정된 3개의 리워드 슬롯을 확인하고 각각 스폰합니다. (rewardPrefab 하나 사용)
+    /// </summary>
+    private void SpawnAllRewards()
+    {
+        int rewardsSpawned = 0;
+
+        // 하나의 rewardPrefab과 세 개의 다른 스폰 포인트를 사용
+        if (SpawnSingleReward(rewardPrefab, reward1SpawnPoint, 1))
+            rewardsSpawned++;
+
+        if (SpawnSingleReward(rewardPrefab, reward2SpawnPoint, 2))
+            rewardsSpawned++;
+
+        if (SpawnSingleReward(rewardPrefab, reward3SpawnPoint, 3))
+            rewardsSpawned++;
+
+        Debug.Log($"총 {rewardsSpawned}개의 리워드가 생성되었습니다.");
+    }
+
+    /// <summary>
+    /// 개별 리워드를 스폰합니다.
+    /// </summary>
+    private bool SpawnSingleReward(GameObject prefab, Transform spawnPoint, int slotIndex)
+    {
+        // 프리팹이 설정되지 않았거나 스폰 위치가 설정되지 않은 경우 처리
+        if (prefab == null)
+        {
+            if (spawnPoint != null)
+                Debug.LogWarning($"리워드 {slotIndex}의 프리팹이 설정되지 않았습니다. 스폰을 건너뜁니다.");
+            return false;
+        }
+
+        if (spawnPoint == null)
+        {
+            Debug.LogWarning($"리워드 {slotIndex}의 스폰 위치가 설정되지 않았습니다. 스폰을 건너뜁니다.");
+            return false;
+        }
+
+        // 스폰
+        Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+        Debug.Log($"리워드 {slotIndex} 생성 완료: {prefab.name} @ {spawnPoint.name}");
+        return true;
+    }
+
+
+    private void SpawnPortal()
+    {
+        if (portalPrefab != null && portalSpawnPoint != null)
+        {
+            Instantiate(portalPrefab, portalSpawnPoint.position, portalSpawnPoint.rotation);
+            Debug.Log("포탈 생성 완료");
         }
     }
 }
