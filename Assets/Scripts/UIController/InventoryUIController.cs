@@ -8,6 +8,7 @@ public class InventoryUIController : MonoBehaviour
     public GameObject InventoryPanel;               // 인벤토리 패널 오브젝트
     public GameObject slotPrefab;                   // 슬롯 프리팹
     public List<InventorySlotUI> inventorySlots;    // 인벤토리 슬롯 UI 리스트
+    public Sprite emptyItemIconImage;               // 아이템 슬롯이 비었을 때, 넣을 이미지
 
     InventoryManager inventoryManager;
     UIManager uiManager;
@@ -57,7 +58,7 @@ public class InventoryUIController : MonoBehaviour
             }
             else
             {
-                inventorySlots[i].itemIcon.sprite = null;
+                inventorySlots[i].itemIcon.sprite = emptyItemIconImage;
             }
         }
     }

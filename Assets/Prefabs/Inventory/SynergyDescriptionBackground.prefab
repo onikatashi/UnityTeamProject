@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8591216937334933007}
   - component: {fileID: 594640604591224563}
+  - component: {fileID: 6829798056723607471}
   m_Layer: 5
   m_Name: SynergyStats
   m_TagString: Untagged
@@ -33,9 +34,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -150}
-  m_SizeDelta: {x: 550, y: -350}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -325}
+  m_SizeDelta: {x: 550, y: -400}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &594640604591224563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,6 +63,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &6829798056723607471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804226785691744803}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &1533193365235563676
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +402,6 @@ GameObject:
   - component: {fileID: 8891052695481089998}
   - component: {fileID: 9204955959744274547}
   - component: {fileID: 595708537617869963}
-  - component: {fileID: 3873572975997793130}
   - component: {fileID: 1587395060364192794}
   m_Layer: 5
   m_Name: SynergyDescriptionBackground
@@ -416,8 +430,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 605, y: 0}
-  m_SizeDelta: {x: 600, y: 350}
+  m_AnchoredPosition: {x: 640, y: 0}
+  m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9204955959744274547
 CanvasRenderer:
@@ -440,14 +454,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.82745105, g: 0.5254902, b: 0.37254903, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 125772fa577f22c42971097edbeefae9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cdbbcabb63172074c87ccc1fcc986246, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -457,27 +471,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3873572975997793130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6732709150088540433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 112a052843253ef47abe0432a39c49ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemDescriptionPanel: {fileID: 6732709150088540433}
-  itemNameText: {fileID: 6096362227310703830}
-  itemStatDescriptionText: {fileID: 4950435178412064423}
-  itemDescriptionText: {fileID: 0}
-  itemIcon: {fileID: 7697854673672200386}
-  slotIndex: 0
-  synergyPanel: {fileID: 0}
-  synergyUI: {fileID: -6400456090081010050, guid: 78ad8c0d7435fc84b8f7e659a3726244, type: 3}
-  synergyUIList: []
 --- !u!114 &1587395060364192794
 MonoBehaviour:
   m_ObjectHideFlags: 0

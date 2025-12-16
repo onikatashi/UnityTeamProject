@@ -50,6 +50,14 @@ public class ItemData : ScriptableObject
                     iSynergy.Remove(Enums.ItemSynergy.None);
                 }
             }
+
+            iSynergy.Sort((a, b) =>
+            {
+                int value1 = (int)a;
+                int value2 = (int)b;
+
+                return a.CompareTo(b);
+            });
         }
     }
 }

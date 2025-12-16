@@ -63,7 +63,7 @@ public class SynergyDescriptionUIController : MonoBehaviour
                 synergyData.levels[i].requiredLines, synergyData);
             synergyStatTextList.Add(statText);
         }
-
+        
         UpdateSynergyDescriptionSize(synergyStatTextList.Count);
     }
 
