@@ -20,7 +20,7 @@ public class BossController : MonsterBase
 
     [Header("Boss Core")]
     public Transform topCenterPoint;
-    public float patternIdle = 0.6f;              // fallback
+    public float patternIdle = 0.6f;        
     public float executeChanceIfStunned = 0.8f;
 
     [Header("Laser")]
@@ -31,8 +31,8 @@ public class BossController : MonsterBase
     public float laserTick = 0.12f;
     public float laserReverseDuration = 1.2f;
 
-    public float laserTurnDegPerSec = 120f;       // 플레이어보다 따라가게(회전속도)
-    public float laserSpawnYOffset = 0.5f;        // 레이저 발사 위치 y 보정
+    public float laserTurnDegPerSec = 120f;     
+    public float laserSpawnYOffset = 0.5f;        
     
 
     [Header("Marks")]
@@ -56,6 +56,12 @@ public class BossController : MonsterBase
     public float pullStrength = 14f;
     public float pullExplosionRadius = 2.5f;
     public float pullStun = 0.6f;
+
+    [Header("PullBurst Telegraph")]
+    public GroundTelegraph pullTelegraphPrefab; 
+    public float pullTelegraphYOffset = 0.05f; 
+    public bool telegraphUseBossY = false;    
+
 
     [Header("SlamStun")]
     public float slamRange = 6f;
@@ -95,7 +101,7 @@ public class BossController : MonsterBase
         base.Awake();
         playerLayer = LayerMask.NameToLayer(playerLayerName);
 
-        if (laser != null) laser = GetComponentInChildren<MonsterLaser>(true);
+        if (laser == null) laser = GetComponentInChildren<MonsterLaser>(true);
     }
 
     void Start()
@@ -393,7 +399,7 @@ public class BossController : MonsterBase
     IEnumerator Pattern_PullBurst()
     {
         EnsurePlayer();
-        if (player == null || playerComp == null) yield break;
+        if (player == null || playerComp == null || md == null) yield break;
 
         if (agent != null) agent.isStopped = true;
 
@@ -403,7 +409,10 @@ public class BossController : MonsterBase
             yield break;
         }
 
-        yield return new WaitForSeconds(0.25f);
+        float windup = 0.25f;
+
+        yield return StartCoroutine(CoPullTelegraph(pullExplosionRadius, windup));
+
         yield return StartCoroutine(CoPull(player.transform, pullDuration, pullStrength));
 
         Collider[] hits = Physics.OverlapSphere(transform.position, pullExplosionRadius);
@@ -422,6 +431,7 @@ public class BossController : MonsterBase
 
         if (agent != null) agent.isStopped = false;
     }
+
 
     IEnumerator CoPull(Transform target, float duration, float strength)
     {
@@ -645,4 +655,28 @@ public class BossController : MonsterBase
         float step = fanAngle / (count - 1);
         for (int i = 0; i < count; i++) FireBulletAtAngle(start + step * i);
     }
+
+    IEnumerator CoPullTelegraph(float radius, float chargeTime)
+    {
+        if (pullTelegraphPrefab == null) yield break;
+
+        Vector3 pos = transform.position;
+
+        if (!telegraphUseBossY) pos.y = 0f;
+
+        pos.y += pullTelegraphYOffset;
+
+        GroundTelegraph tg = Instantiate(pullTelegraphPrefab, pos, Quaternion.Euler(90f, 0f, 0f));
+        tg.Setup(radius, chargeTime);
+        tg.StartCharge();
+
+        yield return new WaitForSeconds(chargeTime);
+
+        if (tg != null)
+        {
+            tg.StopAndHide();
+            Destroy(tg.gameObject);
+        }
+    }
+
 }
