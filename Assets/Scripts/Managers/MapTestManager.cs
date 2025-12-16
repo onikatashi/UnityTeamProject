@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class MapTestManager : MonoBehaviour
 {
+
     public static MapTestManager Instance { get; private set; }
 
     [Header("현재 던전 저장 데이터")]
@@ -26,10 +27,10 @@ public class MapTestManager : MonoBehaviour
 
     private void SetRandomTheme()
     {
-        // 전체 테마 목록 가져오기
+        // 전체 테마 목록 가져와 배열로 저장.
         Enums.DungeonTheme[] themes = (Enums.DungeonTheme[])System.Enum.GetValues(typeof(Enums.DungeonTheme));
 
-        // 랜덤으로 하나 선택
+        // 배열 중 랜덤으로 하나 선택
         int randomIndex = Random.Range(0, themes.Length);
         currentTheme = themes[randomIndex];
 
@@ -38,11 +39,13 @@ public class MapTestManager : MonoBehaviour
 
     public void SetNextTheme()
     {
-        // 전체 테마 목록 가져오기
+        // 전체 테마 목록 가져와 배열로 저장.
         Enums.DungeonTheme[] themes = (Enums.DungeonTheme[])System.Enum.GetValues(typeof(Enums.DungeonTheme));
 
-        // 현재 테마 제외한 후보 생성
+        // 테마 리스트 화
         List<Enums.DungeonTheme> availableThemes = new List<Enums.DungeonTheme>();
+        
+        //현재 테마 제외한 후보 생성
         for (int i = 0; i < themes.Length; i++)
         {
             if (themes[i] != currentTheme)
@@ -65,26 +68,14 @@ public class MapTestManager : MonoBehaviour
         Debug.Log("[DungeonManager] 새로운 테마 선택: " + currentTheme);
     }
 
+    // (외부 참조용) 변수 GetCurrentTheme()시 현재 정해진 테마 값 반환.
     public Enums.DungeonTheme GetCurrentTheme()
     {
         return currentTheme;
     }
 
-    void Update()
-    {
-        // 스페이스를 누르면 Keypad1 기능 실행
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SceneManager.LoadScene("MapDateCheckScene");
-        }
 
-        // 왼쪽 시프트를 누르면 Keypad2 기능 실행
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SceneManager.LoadScene("DungeonMap");
-        }
-    }
-
+    //노드 데이터 보유-------------------------------------------------------------------------
 
     // 새로운 던전 데이터를 저장 (Maker에서 전달받음)
     public void SaveDungeonData(DungeonMapData data)
@@ -111,6 +102,23 @@ public class MapTestManager : MonoBehaviour
         currentDungeonData = null;
         Debug.Log("[DungeonManager] 던전 데이터 초기화 완료");
     }
+
+    void Update()
+    {
+        // 스페이스를 누르면 Keypad1 기능 실행
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SceneManager.LoadScene("MapDateCheckScene");
+        }
+
+        // 왼쪽 시프트를 누르면 Keypad2 기능 실행
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SceneManager.LoadScene("DungeonMap");
+        }
+    }
+
+
 }
 
 [System.Serializable]
