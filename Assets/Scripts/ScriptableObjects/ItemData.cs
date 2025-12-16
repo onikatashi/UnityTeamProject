@@ -39,7 +39,7 @@ public class ItemData : ScriptableObject
     {
         if (iSynergy != null)
         {
-            // Distinct를 사용하여 중복 제거 후 리스트 재할당 (LINQ 필요)
+            // Distinct를 사용하여 중복 제거 후 리스트 재할당
             iSynergy = iSynergy.Distinct().ToList();
             
             // 중복된 시너지가 없는 상황에서 시너지가 2개 이상이고, None이 있다면 None 제거
