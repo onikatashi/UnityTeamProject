@@ -81,9 +81,9 @@ public class DungeonMaker : MonoBehaviour
         dungeonButtons = new NodeButton[maxFloor, maxColumn];
 
         // 기존 던전 유/무 확인
-        if (MapTestManager.Instance != null && MapTestManager.Instance.HasDungeonData())
+        if (DungeonManager.Instance != null && DungeonManager.Instance.HasDungeonData())
         {
-           DungeonMapData dungeonData = MapTestManager.Instance.GetDungeonData();
+           DungeonMapData dungeonData = DungeonManager.Instance.GetDungeonData();
             
             //테마와 데이터 가져오기.
             ApplyEnvironmentTheme(dungeonData.theme);
@@ -96,7 +96,7 @@ public class DungeonMaker : MonoBehaviour
             //[[[신규 던전 생성.]]]
 
             //DungeonManager에서 테마 종류 가져오기.
-            Enums.DungeonTheme dungeonTheme = MapTestManager.Instance.GetCurrentTheme();
+            Enums.DungeonTheme dungeonTheme = DungeonManager.Instance.GetCurrentTheme();
             ApplyEnvironmentTheme(dungeonTheme);
 
             //던전 노드 생성
@@ -107,7 +107,7 @@ public class DungeonMaker : MonoBehaviour
             //생성된 던전 데이터 DungeonManager쪽에 저장.
             DungeonMapData saveData = ExportDungeonData();
             saveData.theme = dungeonTheme;
-            MapTestManager.Instance?.SaveDungeonData(saveData);
+            DungeonManager.Instance?.SaveDungeonData(saveData);
             Debug.Log("[DungeonMaker] 신규 던전 생성 및 저장 완료");
         }
 

@@ -1,85 +1,247 @@
-using UnityEngine;
-using static Enums;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DungeonManager : MonoBehaviour
 {
-    // DungeonMaker.cs¿¡¼­ ´ÙÀ½ ¾À ·Îµå Àü ÀÌ Á¤Àû º¯¼ö¿¡ °ªÀ» ¼³Á¤Çß´Ù°í °¡Á¤ÇÕ´Ï´Ù.
-    // PlayerPrefs ´ë½Å »ç¿ëµÇ´Â ÀÓ½Ã µ¥ÀÌÅÍ ÀúÀå¼ÒÀÔ´Ï´Ù.
-    public static RoomType NextRoomType = RoomType.None;
-    public static DungeonTheme NextDungeonTheme = DungeonTheme.None;
+    public static DungeonManager Instance { get; private set; }
 
-    [Header("ÇöÀç ¹æ Å¸ÀÔ (ÀÎ½ºÆåÅÍ ±âº»°ª / DungeonMaker Àü´Ş°ª)")]
-    [Tooltip("DungeonMaker¿¡¼­ °ªÀÌ Àü´ŞµÇÁö ¾ÊÀ¸¸é ÀÎ½ºÆåÅÍ¿¡ ÁöÁ¤µÈ °ªÀÌ ±âº»°ªÀ¸·Î »ç¿ëµË´Ï´Ù.")]
-    public RoomType currentRoomType;
+    [Header("í˜„ì¬ ë˜ì „ ì €ì¥ ë°ì´í„°")]
+    public DungeonMapData currentDungeonData;
 
-    [Header("ÇöÀç ´øÀü Å×¸¶ (ÀÎ½ºÆåÅÍ ±âº»°ª / DungeonMaker Àü´Ş°ª)")]
-    [Tooltip("DungeonMaker¿¡¼­ °ªÀÌ Àü´ŞµÇÁö ¾ÊÀ¸¸é ÀÎ½ºÆåÅÍ¿¡ ÁöÁ¤µÈ °ªÀÌ ±âº»°ªÀ¸·Î »ç¿ëµË´Ï´Ù.")]
-    public DungeonTheme currentDungeonTheme;
+    [Header("í˜„ì¬ í…Œë§ˆ")]
+    public Enums.DungeonTheme currentTheme;
 
-    [Header("¿¬°áµÈ ½ºÆù ¸Å´ÏÀú")]
-    public SpawnManager spawnManager;
+    [Header("í˜„ì¬ ì„ íƒëœ ë£¸ íƒ€ì…")]
+    public Enums.RoomType currentRoomType;
 
-    [Header("¿¬°áµÈ ¸Ê ¸ŞÀÌÄ¿")]
-    public MapMaker mapMaker;
-
-
-    private void Awake()
+    void Awake()
     {
-        // ======================= ¿äÃ»ÇÏ½Å Fallback ·ÎÁ÷ Àû¿ë ½ÃÀÛ =======================
-        // 1. NextRoomTypeÀÌ NoneÀÌ ¾Æ´Ï¶ó¸é (DungeonMaker°¡ ¼³Á¤Çß´Ù¸é) ±× °ªÀ» »ç¿ëÇÏ°í,
-        //    NoneÀÌ¶ó¸é ÀÎ½ºÆåÅÍ¿¡ ÁöÁ¤µÈ ÇöÀç °ªÀ» À¯ÁöÇÕ´Ï´Ù.
-        if (NextRoomType != RoomType.None)
+        if (Instance != null && Instance != this)
         {
-            currentRoomType = NextRoomType;
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        SetRandomTheme(); // ì²« ì§„ì… ì‹œ í…Œë§ˆ ì„¤ì •
+    }
+
+    private void SetRandomTheme()
+    {
+        // ì „ì²´ í…Œë§ˆ ëª©ë¡ ê°€ì ¸ì™€ ë°°ì—´ë¡œ ì €ì¥.
+        Enums.DungeonTheme[] themes = (Enums.DungeonTheme[])System.Enum.GetValues(typeof(Enums.DungeonTheme));
+
+        // ë°°ì—´ ì¤‘ ëœë¤ìœ¼ë¡œ í•˜ë‚˜ ì„ íƒ
+        int randomIndex = Random.Range(0, themes.Length);
+        currentTheme = themes[randomIndex];
+
+        Debug.Log("[DungeonManager] ì´ˆê¸° í…Œë§ˆ ì„ íƒ: " + currentTheme);
+    }
+
+    public void SetNextTheme()
+    {
+        // ì „ì²´ í…Œë§ˆ ëª©ë¡ ê°€ì ¸ì™€ ë°°ì—´ë¡œ ì €ì¥.
+        Enums.DungeonTheme[] themes = (Enums.DungeonTheme[])System.Enum.GetValues(typeof(Enums.DungeonTheme));
+
+        // í…Œë§ˆ ë¦¬ìŠ¤íŠ¸ í™”
+        List<Enums.DungeonTheme> availableThemes = new List<Enums.DungeonTheme>();
+
+        //í˜„ì¬ í…Œë§ˆ ì œì™¸í•œ í›„ë³´ ìƒì„±
+        for (int i = 0; i < themes.Length; i++)
+        {
+            if (themes[i] != currentTheme)
+            {
+                availableThemes.Add(themes[i]);
+            }
         }
 
-        // 2. NextDungeonThemeÀÌ NoneÀÌ ¾Æ´Ï¶ó¸é ±× °ªÀ» »ç¿ëÇÏ°í,
-        //    NoneÀÌ¶ó¸é ÀÎ½ºÆåÅÍ¿¡ ÁöÁ¤µÈ ÇöÀç °ªÀ» À¯ÁöÇÕ´Ï´Ù.
-        if (NextDungeonTheme != DungeonTheme.None)
+        // ì˜ˆì™¸ ë°©ì§€
+        if (availableThemes.Count == 0)
         {
-            currentDungeonTheme = NextDungeonTheme;
+            Debug.LogWarning("[DungeonManager] ì‚¬ìš© ê°€ëŠ¥í•œ ë‹¤ë¥¸ í…Œë§ˆê°€ ì—†ìŠµë‹ˆë‹¤.");
+            return;
         }
-        // ======================= ¿äÃ»ÇÏ½Å Fallback ·ÎÁ÷ Àû¿ë ³¡ =========================
 
-        // »ç¿ë ÈÄ ¹Ù·Î ÃÊ±âÈ­ (´ÙÀ½ ´øÀü ÁøÀÔ ½Ã ²¿ÀÓ ¹æÁö)
-        NextRoomType = RoomType.None;
-        NextDungeonTheme = DungeonTheme.None;
+        // ëœë¤ìœ¼ë¡œ ì„ íƒ
+        int randomIndex = Random.Range(0, availableThemes.Count);
+        currentTheme = availableThemes[randomIndex];
+
+        Debug.Log("[DungeonManager] ìƒˆë¡œìš´ í…Œë§ˆ ì„ íƒ: " + currentTheme);
+    }
+
+    // (ì™¸ë¶€ ì°¸ì¡°ìš©) ë³€ìˆ˜ GetCurrentTheme()ì‹œ í˜„ì¬ ì •í•´ì§„ í…Œë§ˆ ê°’ ë°˜í™˜.
+    public Enums.DungeonTheme GetCurrentTheme()
+    {
+        return currentTheme;
     }
 
 
-    private void Start()
+    // (ì™¸ë¶€ ì°¸ì¡°ìš©) í˜„ì¬ ë£¸íƒ€ì…ì— ëŒ€í•˜ì—¬ ë°˜í™˜í•˜ê¸°.
+    public Enums.RoomType GetCurrentRoomType()
     {
-        // 1. MapMaker¿¡ Å×¸¶ Á¤º¸ Àü´Ş ¹× Àû¿ë ¿äÃ»
-        if (mapMaker != null)
+        return currentRoomType;
+    }
+
+    // ë…¸ë“œ í´ë¦­ì‹œ ë£¸ íƒ€ì… ê°’ ì„¤ì •
+    public void SetCurrentRoomType(Enums.RoomType roomType)
+    {
+        currentRoomType = roomType;
+        Debug.Log("[DungeonManager] í˜„ì¬ ë£¸ íƒ€ì… ì„¤ì •: " + currentRoomType);
+    }
+
+    //ë…¸ë“œ ë°ì´í„° ë³´ìœ -------------------------------------------------------------------------
+
+    // ìƒˆë¡œìš´ ë˜ì „ ë°ì´í„°ë¥¼ ì €ì¥ (Makerì—ì„œ ì „ë‹¬ë°›ìŒ)
+    public void SaveDungeonData(DungeonMapData data)
+    {
+        currentDungeonData = data;
+        Debug.Log("[DungeonManager] ë˜ì „ ë°ì´í„° ì €ì¥ ì™„ë£Œ");
+    }
+
+    // í˜„ì¬ ë˜ì „ ë°ì´í„°ë¥¼ ë°˜í™˜
+    public DungeonMapData GetDungeonData()
+    {
+        return currentDungeonData;
+    }
+
+    // í˜„ì¬ ë˜ì „ ë°ì´í„°ê°€ ì¡´ì¬í•˜ëŠ”ê°€?
+    public bool HasDungeonData()
+    {
+        return currentDungeonData != null && currentDungeonData.nodes.Count > 0;
+    }
+
+    // í´ë¦¬ì–´, í¬ê¸°, ì¢…ë£Œ ì‹œ ì´ˆê¸°í™”
+    public void ClearDungeonData()
+    {
+        currentDungeonData = null;
+        Debug.Log("[DungeonManager] ë˜ì „ ë°ì´í„° ì´ˆê¸°í™” ì™„ë£Œ");
+    }
+
+    void Update()
+    {
+        // ìŠ¤í˜ì´ìŠ¤ë¥¼ ëˆ„ë¥´ë©´ Keypad1 ê¸°ëŠ¥ ì‹¤í–‰
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            mapMaker.ApplyTheme(currentDungeonTheme);
-        }
-        else
-        {
-            Debug.LogError("MapMaker°¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù. ´øÀü Å×¸¶¸¦ Àû¿ëÇÒ ¼ö ¾ø½À´Ï´Ù.");
+            SceneManager.LoadScene("MapDateCheckScene");
         }
 
-        // 2. SpawnManager¿¡ ·ë Å¸ÀÔ Á¤º¸ Àü´Ş ¹× ½ºÆù ½ÃÀÛ
-        if (currentRoomType == RoomType.Normal || currentRoomType == RoomType.Elite || currentRoomType == RoomType.Boss)
+        // ì™¼ìª½ ì‹œí”„íŠ¸ë¥¼ ëˆ„ë¥´ë©´ Keypad2 ê¸°ëŠ¥ ì‹¤í–‰
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            if (spawnManager != null)
-            {
-                // ¼öÁ¤µÈ ºÎºĞ: ÇöÀç ·ë Å¸ÀÔÀ» StartSpawning¿¡ Àü´Ş
-                spawnManager.StartSpawning(currentRoomType);
-            }
-            else
-            {
-                Debug.LogError("SpawnManager°¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù. ¸ó½ºÅÍ ½ºÆùÀ» ½ÃÀÛÇÒ ¼ö ¾ø½À´Ï´Ù.");
-            }
-        }
-        else if (currentRoomType != RoomType.None)
-        {
-            Debug.Log($"·ë Å¸ÀÔ ({currentRoomType})ÀÌ Normal, Elite, Boss°¡ ¾Æ´Ï¹Ç·Î ¸ó½ºÅÍ ½ºÆù ·ÎÁ÷À» °Ç³Ê¶İ´Ï´Ù.");
-        }
-        else
-        {
-            Debug.LogWarning("RoomTypeÀÌ NoneÀÔ´Ï´Ù. ½ºÆù ·ÎÁ÷À» ½ÃÀÛÇÒ ¼ö ¾ø½À´Ï´Ù. ÀÎ½ºÆåÅÍ ¼³Á¤À» È®ÀÎÇÏ¼¼¿ä.");
+            SceneManager.LoadScene("DungeonMap");
         }
     }
+
+
 }
+
+[System.Serializable]
+public class DungeonMapData
+{
+    //ë˜ì „ ê¸°ë³¸ ì •ë³´.
+    public int maxFloor;
+    public int maxColumn;
+    public Enums.DungeonTheme theme;
+
+    //[ê° ë…¸ë“œë³„ ë°ì´í„° ì •ë³´]ë¥¼ ë¦¬ìŠ¤íŠ¸ í˜•ì‹ìœ¼ë¡œ ì €ì¥.
+    public List<DungeonNodeData> nodes = new List<DungeonNodeData>();
+}
+
+[System.Serializable]
+public class DungeonNodeData //ê° ë…¸ë“œë³„ ë°ì´í„° ì •ë³´
+{
+    //ê¸°ë³¸ ë…¸ë“œ ì •ë³´.
+    public int floor;
+    public int col;
+    public Enums.RoomType roomType;
+    public bool isAvailable;
+
+    //ë…¸ë“œì˜ ì¢Œí‘œì •ë³´(Centor)
+    public Vector2 uiPosition;
+    //ë‹¤ìŒ ë…¸ë“œ ì •ë³´ë¥¼ ë¦¬ìŠ¤íŠ¸ í˜•ì‹ìœ¼ë¡œ ì €ì¥.
+    public List<Vector2Int> nextNodes = new List<Vector2Int>();
+}
+
+//public class DungeonManager : MonoBehaviour
+//{
+//    // DungeonMaker.csì—ì„œ ë‹¤ìŒ ì”¬ ë¡œë“œ ì „ ì´ ì •ì  ë³€ìˆ˜ì— ê°’ì„ ì„¤ì •í–ˆë‹¤ê³  ê°€ì •í•©ë‹ˆë‹¤.
+//    // PlayerPrefs ëŒ€ì‹  ì‚¬ìš©ë˜ëŠ” ì„ì‹œ ë°ì´í„° ì €ì¥ì†Œì…ë‹ˆë‹¤.
+//    public static RoomType NextRoomType = RoomType.None;
+//    public static DungeonTheme NextDungeonTheme = DungeonTheme.None;
+
+//    [Header("í˜„ì¬ ë°© íƒ€ì… (ì¸ìŠ¤í™í„° ê¸°ë³¸ê°’ / DungeonMaker ì „ë‹¬ê°’)")]
+//    [Tooltip("DungeonMakerì—ì„œ ê°’ì´ ì „ë‹¬ë˜ì§€ ì•Šìœ¼ë©´ ì¸ìŠ¤í™í„°ì— ì§€ì •ëœ ê°’ì´ ê¸°ë³¸ê°’ìœ¼ë¡œ ì‚¬ìš©ë©ë‹ˆë‹¤.")]
+//    public RoomType currentRoomType;
+
+//    [Header("í˜„ì¬ ë˜ì „ í…Œë§ˆ (ì¸ìŠ¤í™í„° ê¸°ë³¸ê°’ / DungeonMaker ì „ë‹¬ê°’)")]
+//    [Tooltip("DungeonMakerì—ì„œ ê°’ì´ ì „ë‹¬ë˜ì§€ ì•Šìœ¼ë©´ ì¸ìŠ¤í™í„°ì— ì§€ì •ëœ ê°’ì´ ê¸°ë³¸ê°’ìœ¼ë¡œ ì‚¬ìš©ë©ë‹ˆë‹¤.")]
+//    public DungeonTheme currentDungeonTheme;
+
+//    [Header("ì—°ê²°ëœ ìŠ¤í° ë§¤ë‹ˆì €")]
+//    public SpawnManager spawnManager;
+
+//    [Header("ì—°ê²°ëœ ë§µ ë©”ì´ì»¤")]
+//    public MapMaker mapMaker;
+
+
+//    private void Awake()
+//    {
+//        // ======================= ìš”ì²­í•˜ì‹  Fallback ë¡œì§ ì ìš© ì‹œì‘ =======================
+//        // 1. NextRoomTypeì´ Noneì´ ì•„ë‹ˆë¼ë©´ (DungeonMakerê°€ ì„¤ì •í–ˆë‹¤ë©´) ê·¸ ê°’ì„ ì‚¬ìš©í•˜ê³ ,
+//        //    Noneì´ë¼ë©´ ì¸ìŠ¤í™í„°ì— ì§€ì •ëœ í˜„ì¬ ê°’ì„ ìœ ì§€í•©ë‹ˆë‹¤.
+//        if (NextRoomType != RoomType.None)
+//        {
+//            currentRoomType = NextRoomType;
+//        }
+
+//        // 2. NextDungeonThemeì´ Noneì´ ì•„ë‹ˆë¼ë©´ ê·¸ ê°’ì„ ì‚¬ìš©í•˜ê³ ,
+//        //    Noneì´ë¼ë©´ ì¸ìŠ¤í™í„°ì— ì§€ì •ëœ í˜„ì¬ ê°’ì„ ìœ ì§€í•©ë‹ˆë‹¤.
+//        if (NextDungeonTheme != DungeonTheme.None)
+//        {
+//            currentDungeonTheme = NextDungeonTheme;
+//        }
+//        // ======================= ìš”ì²­í•˜ì‹  Fallback ë¡œì§ ì ìš© ë =========================
+
+//        // ì‚¬ìš© í›„ ë°”ë¡œ ì´ˆê¸°í™” (ë‹¤ìŒ ë˜ì „ ì§„ì… ì‹œ ê¼¬ì„ ë°©ì§€)
+//        NextRoomType = RoomType.None;
+//        NextDungeonTheme = DungeonTheme.None;
+//    }
+
+
+//    private void Start()
+//    {
+//        // 1. MapMakerì— í…Œë§ˆ ì •ë³´ ì „ë‹¬ ë° ì ìš© ìš”ì²­
+//        if (mapMaker != null)
+//        {
+//            mapMaker.ApplyTheme(currentDungeonTheme);
+//        }
+//        else
+//        {
+//            Debug.LogError("MapMakerê°€ ì—°ê²°ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤. ë˜ì „ í…Œë§ˆë¥¼ ì ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+//        }
+
+//        // 2. SpawnManagerì— ë£¸ íƒ€ì… ì •ë³´ ì „ë‹¬ ë° ìŠ¤í° ì‹œì‘
+//        if (currentRoomType == RoomType.Normal || currentRoomType == RoomType.Elite || currentRoomType == RoomType.Boss)
+//        {
+//            if (spawnManager != null)
+//            {
+//                // ìˆ˜ì •ëœ ë¶€ë¶„: í˜„ì¬ ë£¸ íƒ€ì…ì„ StartSpawningì— ì „ë‹¬
+//                spawnManager.StartSpawning(currentRoomType);
+//            }
+//            else
+//            {
+//                Debug.LogError("SpawnManagerê°€ ì—°ê²°ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤. ëª¬ìŠ¤í„° ìŠ¤í°ì„ ì‹œì‘í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+//            }
+//        }
+//        else if (currentRoomType != RoomType.None)
+//        {
+//            Debug.Log($"ë£¸ íƒ€ì… ({currentRoomType})ì´ Normal, Elite, Bossê°€ ì•„ë‹ˆë¯€ë¡œ ëª¬ìŠ¤í„° ìŠ¤í° ë¡œì§ì„ ê±´ë„ˆëœë‹ˆë‹¤.");
+//        }
+//        else
+//        {
+//            Debug.LogWarning("RoomTypeì´ Noneì…ë‹ˆë‹¤. ìŠ¤í° ë¡œì§ì„ ì‹œì‘í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤. ì¸ìŠ¤í™í„° ì„¤ì •ì„ í™•ì¸í•˜ì„¸ìš”.");
+//        }
+//    }
+//}
