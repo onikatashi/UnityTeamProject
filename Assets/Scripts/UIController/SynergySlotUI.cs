@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class SynergySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    [Header("시너지 UI 정보")]
     public SynergyData synergyData;                 // 시너지 데이터
     public Image synergyIcon;                       // 시너지 아이콘
     public TextMeshProUGUI synergyName;             // 시너지 이름

@@ -10,20 +10,34 @@ public class UIManager : MonoBehaviour
     private RectTransform canvas;                                   // 캔버스 참조
 
     [SerializeField]
+    [Header("인벤토리 UI")]
     private GameObject inventoryPanelPrefab;                        // 인벤토리 패널 프리팹
     public InventoryUIController inventoryUIController;             // 인벤토리 UI 컨트롤러
+
     [SerializeField]
+    [Header("아이템 설명 UI")]
     private GameObject itemDescriptionPanelPrefab;                  // 아이템 설명 패널 프리팹
     public ItemDescriptionUIController itemDescriptionUIController; // 아이템 설명 UI 컨트롤러
+
     [SerializeField]
+    [Header("시너지 효과 패널 UI")]
     private GameObject synergyEffectPanelPrefab;                    // 시너지 효과 활성화 패널 프리팹
     public SynergyEffectUIController synergyEffectUIController;     // 시너지 효과 UI 컨트롤러
+
     [SerializeField]
+    [Header("시너지 설명 UI")]
     private GameObject synergyDescriptionPanelPrefab;               // 시너지 설명 패널 프리팹
     public SynergyDescriptionUIController synergyDescriptionUIController;   // 시너지 설명 패널 UI 컨트롤러
+
     [SerializeField]
+    [Header("스왑, 강화 모드 UI")]
     private GameObject modeUIPrefab;                                // 강화, 스왑 모드 UI 프리팹
     public ModeUIController modeUIController;                       // 강화, 스왑 모드 UI 컨트롤러
+
+    [SerializeField]
+    [Header("세팅 UI")]
+    private GameObject settingUIPrefab;                             // 세팅 UI 프리팹
+    public SettingUIController settingUIController;                 // 세팅 UI 컨트롤러
 
 
     private void Awake()
@@ -56,6 +70,7 @@ public class UIManager : MonoBehaviour
         InstantiateSynergyEffectPanel(canvas);
         InstantiateSynergyDescriptionPanel(canvas);
         InstantiateModeUI(canvas);
+        InstantiateSettingUI(canvas);
     }
 
     // Canvas 등록 해제
@@ -144,6 +159,15 @@ public class UIManager : MonoBehaviour
         modeUIController = ui.GetComponent<ModeUIController>();
 
         ui.SetActive(false);
+    }
+
+    // SettingUI 생성
+    void InstantiateSettingUI(RectTransform canvas)
+    {
+        GameObject ui = Instantiate(settingUIPrefab, canvas);
+        settingUIController = ui.GetComponent<SettingUIController>();
+
+        ui.SetActive(true);
     }
 
     public Transform GetCanvas()
