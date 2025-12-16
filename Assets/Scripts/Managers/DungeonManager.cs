@@ -37,7 +37,7 @@ public class DungeonManager : MonoBehaviour
         //List형 사용가능 테마 목록 준비
         List<Enums.DungeonTheme> filteringTheme = new List<Enums.DungeonTheme>();
 
-        //Enums의 테마들 중 테마 하나씩 필터링.
+        //Enums의 테마들 중 None을 제외하고 필터링.
         foreach (var theme in themes)
         {
             if (theme != Enums.DungeonTheme.None)
@@ -46,6 +46,7 @@ public class DungeonManager : MonoBehaviour
             }
         }
 
+        //랜덤 테마 선정.
         int randomIndex = Random.Range(0, filteringTheme.Count);
         currentTheme = filteringTheme[randomIndex];
 
@@ -58,9 +59,10 @@ public class DungeonManager : MonoBehaviour
         // 전체 테마 목록 가져와 배열로 저장.
         Enums.DungeonTheme[] themes = (Enums.DungeonTheme[])System.Enum.GetValues(typeof(Enums.DungeonTheme));
 
-        // 테마 리스트 화
+        //List형 사용가능 테마 목록 준비
         List<Enums.DungeonTheme> filteringThemes = new List<Enums.DungeonTheme>();
 
+        //Enums의 테마들 중 None과 이미 사용한 테마 필터링.
         foreach (var theme in themes)
         {
             if (theme == Enums.DungeonTheme.None)
