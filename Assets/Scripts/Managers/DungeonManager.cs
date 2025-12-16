@@ -1,121 +1,85 @@
 using UnityEngine;
 using static Enums;
+using System.Collections.Generic;
 
 public class DungeonManager : MonoBehaviour
 {
-    [Header("현재 방 타입 (외부에서 설정됨)")]
-    public RoomType roomType;
+    // DungeonMaker.cs에서 다음 씬 로드 전 이 정적 변수에 값을 설정했다고 가정합니다.
+    // PlayerPrefs 대신 사용되는 임시 데이터 저장소입니다.
+    public static RoomType NextRoomType = RoomType.None;
+    public static DungeonTheme NextDungeonTheme = DungeonTheme.None;
+
+    [Header("현재 방 타입 (인스펙터 기본값 / DungeonMaker 전달값)")]
+    [Tooltip("DungeonMaker에서 값이 전달되지 않으면 인스펙터에 지정된 값이 기본값으로 사용됩니다.")]
+    public RoomType currentRoomType;
+
+    [Header("현재 던전 테마 (인스펙터 기본값 / DungeonMaker 전달값)")]
+    [Tooltip("DungeonMaker에서 값이 전달되지 않으면 인스펙터에 지정된 값이 기본값으로 사용됩니다.")]
+    public DungeonTheme currentDungeonTheme;
 
     [Header("연결된 스폰 매니저")]
     public SpawnManager spawnManager;
 
-    [Header("보물상자 프리팹 및 스폰 위치")]
-    public GameObject chestPrefab;
-    public Transform chestSpawnPoint;
+    [Header("연결된 맵 메이커")]
+    public MapMaker mapMaker;
 
-    [Header("포탈 프리팹 및 스폰 위치")]
-    public GameObject portalPrefab;
-    public Transform portalSpawnPoint;
 
-    [Header("현재 던전 테마")]
-    public DungeonTheme currentTheme;
+    private void Awake()
+    {
+        // ======================= 요청하신 Fallback 로직 적용 시작 =======================
+        // 1. NextRoomType이 None이 아니라면 (DungeonMaker가 설정했다면) 그 값을 사용하고,
+        //    None이라면 인스펙터에 지정된 현재 값을 유지합니다.
+        if (NextRoomType != RoomType.None)
+        {
+            currentRoomType = NextRoomType;
+        }
 
-    [Header("테마 그룹들 (씬에서 직접 드래그)")]
-    public GameObject grassGroup;
-    public GameObject snowGroup;
-    public GameObject desertGroup;
-    public GameObject lavaGroup;
+        // 2. NextDungeonTheme이 None이 아니라면 그 값을 사용하고,
+        //    None이라면 인스펙터에 지정된 현재 값을 유지합니다.
+        if (NextDungeonTheme != DungeonTheme.None)
+        {
+            currentDungeonTheme = NextDungeonTheme;
+        }
+        // ======================= 요청하신 Fallback 로직 적용 끝 =========================
 
+        // 사용 후 바로 초기화 (다음 던전 진입 시 꼬임 방지)
+        NextRoomType = RoomType.None;
+        NextDungeonTheme = DungeonTheme.None;
+    }
 
 
     private void Start()
     {
-        Debug.Log("선택된 테마: " + currentTheme);
-
-        ApplyTheme(currentTheme);
-
-        // Normal 또는 Elite 일 때만 스폰 시작
-        if (roomType == RoomType.Normal || roomType == RoomType.Elite)
+        // 1. MapMaker에 테마 정보 전달 및 적용 요청
+        if (mapMaker != null)
         {
-            spawnManager.OnAllEnemiesCleared += HandleRoomCleared;
-            spawnManager.StartSpawning();
+            mapMaker.ApplyTheme(currentDungeonTheme);
         }
-    }
-
-
-
-
-    /// <summary>
-    /// 테마 그룹을 활성/비활성 한다.
-    /// </summary>
-    private void ApplyTheme(DungeonTheme theme)
-    {
-        // 먼저 전부 비활성화
-        DisableAllThemes();
-
-        // 현재 테마만 활성화
-        switch (theme)
+        else
         {
-            case DungeonTheme.Grass:
-                if (grassGroup) grassGroup.SetActive(true);
-                break;
-
-            case DungeonTheme.Snow:
-                if (snowGroup) snowGroup.SetActive(true);
-                break;
-
-            case DungeonTheme.Desert:
-                if (desertGroup) desertGroup.SetActive(true);
-                break;
-
-            case DungeonTheme.Lava:
-                if (lavaGroup) lavaGroup.SetActive(true);
-                break;
+            Debug.LogError("MapMaker가 연결되지 않았습니다. 던전 테마를 적용할 수 없습니다.");
         }
 
-        Debug.Log("테마 적용 완료: " + theme);
-    }
-
-
-
-    /// <summary>
-    /// 모든 테마 그룹 비활성화
-    /// </summary>
-    private void DisableAllThemes()
-    {
-        if (grassGroup) grassGroup.SetActive(false);
-        if (snowGroup) snowGroup.SetActive(false);
-        if (desertGroup) desertGroup.SetActive(false);
-        if (lavaGroup) lavaGroup.SetActive(false);
-    }
-
-
-
-
-    private void HandleRoomCleared()
-    {
-        Debug.Log("== 던전 방 클리어 ==");
-
-        SpawnChest();
-        SpawnPortal();
-    }
-
-
-    private void SpawnChest()
-    {
-        if (chestPrefab != null && chestSpawnPoint != null)
+        // 2. SpawnManager에 룸 타입 정보 전달 및 스폰 시작
+        if (currentRoomType == RoomType.Normal || currentRoomType == RoomType.Elite || currentRoomType == RoomType.Boss)
         {
-            Instantiate(chestPrefab, chestSpawnPoint.position, chestSpawnPoint.rotation);
-            Debug.Log("보물상자 생성 완료");
+            if (spawnManager != null)
+            {
+                // 수정된 부분: 현재 룸 타입을 StartSpawning에 전달
+                spawnManager.StartSpawning(currentRoomType);
+            }
+            else
+            {
+                Debug.LogError("SpawnManager가 연결되지 않았습니다. 몬스터 스폰을 시작할 수 없습니다.");
+            }
         }
-    }
-
-    private void SpawnPortal()
-    {
-        if (portalPrefab != null && portalSpawnPoint != null)
+        else if (currentRoomType != RoomType.None)
         {
-            Instantiate(portalPrefab, portalSpawnPoint.position, portalSpawnPoint.rotation);
-            Debug.Log("포탈 생성 완료");
+            Debug.Log($"룸 타입 ({currentRoomType})이 Normal, Elite, Boss가 아니므로 몬스터 스폰 로직을 건너뜁니다.");
+        }
+        else
+        {
+            Debug.LogWarning("RoomType이 None입니다. 스폰 로직을 시작할 수 없습니다. 인스펙터 설정을 확인하세요.");
         }
     }
 }
