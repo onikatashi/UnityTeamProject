@@ -241,10 +241,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e615c202da76949a867a0102517369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentDungeonData:
+    maxFloor: 0
+    maxColumn: 0
+    theme: 0
+    nodes: []
+  currentTheme: 2
   currentRoomType: 1
-  currentDungeonTheme: 1
-  spawnManager: {fileID: 671412118}
-  mapMaker: {fileID: 1700761750}
 --- !u!1001 &30062028
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3085,6 +3088,7 @@ MonoBehaviour:
   snowGroup: {fileID: 1893410460}
   desertGroup: {fileID: 1393153738}
   lavaGroup: {fileID: 129092521}
+  defaultThemeOnFailure: 1
 --- !u!4 &1700761751
 Transform:
   m_ObjectHideFlags: 0
