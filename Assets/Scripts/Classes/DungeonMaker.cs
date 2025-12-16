@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class DungeonMaker : MonoBehaviour
 {
+
+
     //노드 생성설정
     public int maxFloor = 8;
     public int maxColumn = 6;
@@ -42,7 +44,10 @@ public class DungeonMaker : MonoBehaviour
 
     void Start()
     {
-        
+        Enums.DungeonTheme theme = MapTestManager.Instance.GetCurrentTheme();
+
+        print($"[DungeonMaker] 현재 적용된 테마: {theme}");
+
         iconSpriteDictionary = new Dictionary<Enums.RoomType, Sprite>()
         {
             { Enums.RoomType.None, null },
