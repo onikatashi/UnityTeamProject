@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Class/Warrior")]

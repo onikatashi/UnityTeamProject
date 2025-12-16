@@ -15,7 +15,7 @@ MonoBehaviour:
   skillName: 
   icon: {fileID: 0}
   cooldown: 3
-  level: 1
+  level: 0
   maxRange: 6
   areaRadius: 2
   fallTime: 0.5

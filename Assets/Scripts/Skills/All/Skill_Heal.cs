@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -34,7 +33,7 @@ public class Skill_Heal : SkillBase
     {
         base.LevelUp();
 
-        //baseHeal 감소, 체력량 증가
+        //baseHeal 분모값 감소, 체력량 증가
         baseHeal -= 0.5f;
     }
 }
