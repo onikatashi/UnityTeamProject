@@ -43,6 +43,7 @@ public class PlayerAttack : MonoBehaviour
         //몬스터가 없으면 공격 안함
         if (m.Length == 0) return false;
 
+
         // 쿨타임 체크 (쿨타임 안돌면 공격 안함
         if (Time.time < nextAtkTime)
         {
@@ -63,6 +64,9 @@ public class PlayerAttack : MonoBehaviour
 
         //직업의 기본 공격 실행
         c.BasicAttack(player, monsterLayer);
+
+        Player.Instance.animCtrl.ChangeState(PlayerAnimState.Attack);
+        Debug.Log("Attack상태");
 
         Debug.Log("TryAttack 실행");
         return true;

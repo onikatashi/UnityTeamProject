@@ -9,11 +9,15 @@ public class PlayerMove : MonoBehaviour
 
     public bool canMove = true;         //외부에서 사용해야해서 public 생성
 
+    //Player 캐싱
+    Player player;
+
     void Start()
     {
         cc = GetComponent<CharacterController>();
         cam = Camera.main.transform;
-        player = GetComponent<Player>();
+
+        player = Player.Instance;
     }
 
     void Update()
@@ -23,9 +27,14 @@ public class PlayerMove : MonoBehaviour
 
     void Move()
     {
-        if (!canMove) return;       //canMove상태가 아니면 못움직임
+        if (!canMove)
+        {
+            player.animCtrl.ChangeState(PlayerAnimState.Idle);
+            return;       //canMove상태가 아니면 못움직임
+        }
 
-        float mvSpd = Player.Instance.finalStats.moveSpeed;
+
+        float mvSpd = player.finalStats.moveSpeed;
 
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
@@ -47,7 +56,7 @@ public class PlayerMove : MonoBehaviour
         Vector3 camRight = cam.right;
 
         //위 / 아래 각도 무시
-        camForward.y = 0f;  
+        camForward.y = 0f;
         camRight.y = 0f;
 
         //노멀라이즈
@@ -58,5 +67,16 @@ public class PlayerMove : MonoBehaviour
         Vector3 dir = camForward * z + camRight * x;
 
         cc.Move(dir * mvSpd * Time.deltaTime);
+
+
+        //움직일 경우 Move로 바뀌기
+        if (x != 0 || z != 0)
+        {
+            player.animCtrl.ChangeState(PlayerAnimState.Move);
+        }
+        else
+        {
+            player.animCtrl.ChangeState(PlayerAnimState.Idle);
+        }
     }
 }
