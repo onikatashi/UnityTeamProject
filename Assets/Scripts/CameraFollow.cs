@@ -14,7 +14,7 @@ public class CameraFollow : MonoBehaviour
 
         if (playerLayer == -1)
         {
-            Debug.LogError("CameraFollow: 'Player' ·¹ÀÌ¾î ¾øÀ½.");
+            Debug.LogError("CameraFollow: 'Player' ë ˆì´ì–´ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
             return;
         }
 

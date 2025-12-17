@@ -11,7 +11,7 @@ public class SceneLoadManager : MonoBehaviour
     {
         if (Player.Instance == null)
         {
-            Debug.LogWarning("SceneLoadManager: Player.Instance ����.");
+            Debug.LogWarning("SceneLoadManager: Player.Instance가 존재하지 않습니다.");
             return;
         }
 
@@ -19,7 +19,7 @@ public class SceneLoadManager : MonoBehaviour
 
         if (spawn == null)
         {
-            Debug.LogError("SceneLoadManager: SpawnPoint ����.");
+            Debug.LogError("SceneLoadManager: SpawnPoint를 찾을 수 없습니다.");
             return;
         }
 
