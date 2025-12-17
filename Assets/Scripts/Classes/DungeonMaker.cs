@@ -101,7 +101,7 @@ public class DungeonMaker : MonoBehaviour
 
             //던전 노드 생성
             GenerateDungeon();
-            //던전 선 연결6
+            //던전 선 연결
             GenerateNodeConnections();
 
             //생성된 던전 데이터 DungeonManager쪽에 저장.
