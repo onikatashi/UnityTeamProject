@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Enums;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -62,14 +63,47 @@ public class PlayerAttack : MonoBehaviour
 
         Debug.Log($"[TryAttack] using class logic = {c.name}");
 
-        //직업의 기본 공격 실행
-        c.BasicAttack(player, monsterLayer);
-
         Player.Instance.animCtrl.ChangeState(PlayerAnimState.Attack);
         Debug.Log("Attack상태");
 
+        // 가까운 몬스터 Collider 찾아주고
+        Collider target = FindNearestMonster(atkRng);
+        if (target == null) return false;
+        // 여기서 방향 확정 해주고
+        Vector3 totarget = target.transform.position - player.transform.position;
+        player.SetFacing(totarget.x);
+        //애니메이션 넣어주기
+        player.animCtrl.ChangeState(PlayerAnimState.Attack);
+
+        //직업의 기본 공격 실행
+        c.BasicAttack(player, monsterLayer);
+
         Debug.Log("TryAttack 실행");
         return true;
+    }
+
+    Collider FindNearestMonster(float range)
+    {
+        Collider[] monsters = Physics.OverlapSphere(
+            transform.position,
+            range,
+            monsterLayer
+        );
+
+        float minDist = Mathf.Infinity;
+        Collider nearest = null;
+
+        foreach (var m in monsters)
+        {
+            float d = (m.transform.position - transform.position).sqrMagnitude;
+            if (d < minDist)
+            {
+                minDist = d;
+                nearest = m;
+            }
+        }
+
+        return nearest;
     }
 
     /// <summary>
