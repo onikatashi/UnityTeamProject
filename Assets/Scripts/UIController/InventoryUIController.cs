@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class InventoryUIController : MonoBehaviour
 {
+    [Header("인벤토리 UI 정보")]
     public GameObject InventoryPanel;               // 인벤토리 패널 오브젝트
     public GameObject slotPrefab;                   // 슬롯 프리팹
     public List<InventorySlotUI> inventorySlots;    // 인벤토리 슬롯 UI 리스트

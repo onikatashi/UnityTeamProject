@@ -5,11 +5,13 @@ using UnityEngine.UI;
 
 public class ModeUIController : MonoBehaviour
 {
+    [Header("Mode 관련 UI 정보")]
     public TextMeshProUGUI modeName;                    // 아이템 승급, 스왑 어떤 모드인지 출력
     public Button okButton;                             // 아이템 승급 또는 스왑 버튼
     public TextMeshProUGUI okButtonText;                // 아이템 승급 또는 스왑 텍스트
     public Button cancelButton;                         // 취소 버튼
 
+    [Header("Mode 함수 적용을 위한 정보")]
     public int swapModeClickCount = 0;                  // 스왑 모드 클릭 횟수 (최대 2개)
     public int rankUpModeClickCount = 0;                // 아이템 승급 모드 클릭 횟수 (최대 1개)
 
