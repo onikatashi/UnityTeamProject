@@ -6,11 +6,13 @@ using UnityEngine.UI;
 
 public class SynergyDescriptionUIController : MonoBehaviour
 {
+    [Header("시너지 설명 패널 UI 정보")]
     public RectTransform synergyDescriptionPanel;       // 시너지 설명 패널 오브젝트
     public TextMeshProUGUI synergyNameText;             // 시너지 이름 텍스트
     public TextMeshProUGUI synergyDescriptionText;      // 시너지 설명 텍스트
     public Image synergyIcon;                           // 시너지 아이콘 이미지
 
+    [Header("시너지 스탯 설명을 위한 UI 정보")]
     public SynergyData selectedSynergy;                 // 현재 선택된 시너지 데이터
 
     public Transform synergyStatTextPanel;              // 시너지 스탯 설명 텍스트 프리팹의 부모 패널

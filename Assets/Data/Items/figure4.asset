@@ -12,25 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
   m_Name: figure4
   m_EditorClassIdentifier: 
-  iId: 0
-  iIcon: {fileID: 0}
-  iName: 
+  iId: 16
+  iIcon: {fileID: 21300000, guid: e680706c3b696fd4b98f71874e34e70f, type: 3}
+  iName: "\uC9C4\uC9DC \uC778\uD615"
   iStatDescription: 
-  iDescription: 
-  iRank: 0
-  iSynergy: 
+  iDescription: "4\uC778"
+  iRank: 3
+  iSynergy: 00000000
   iEffect: 0
   iPrice: 0
   iBaseStat:
-    maxHp: 0
+    maxHp: 50
     maxMp: 0
     mpRegen: 0
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0
-    attackDamage: 0
-    attackRange: 0
-    attackSpeed: 0
+    attackDamage: 30
+    attackRange: 5
+    attackSpeed: 10
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0

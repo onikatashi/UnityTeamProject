@@ -16,7 +16,7 @@ MonoBehaviour:
   iIcon: {fileID: 21300000, guid: 9715f66e78a72b54dbd65f1ab4558987, type: 3}
   iName: "\uBC14\uB098\uB098 \uC778\uD615"
   iStatDescription: 
-  iDescription: 
+  iDescription: "1\uC778\uD615"
   iRank: 0
   iSynergy: 00000000
   iEffect: 0
@@ -28,9 +28,9 @@ MonoBehaviour:
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0
-    attackDamage: 0
+    attackDamage: 5
     attackRange: 0
-    attackSpeed: 0
+    attackSpeed: 3
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    [Header("인벤토리 슬롯 UI 정보")]
     public int slotIndex;                       // 슬롯 인덱스
     public Image itemIcon;                      // 아이템 아이콘 이미지
     public Image rarityFrame;                   // 아이템 희귀도 프레임 이미지 -> 추후 추가

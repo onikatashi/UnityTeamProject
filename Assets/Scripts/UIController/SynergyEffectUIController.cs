@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SynergyEffectUIController : MonoBehaviour
 {
+    [Header("시너지 보유 UI 정보")]
     public GameObject synergyEffectUIPanel;             // 시너지 효과 설명 패널
 
     public Transform synergyEffectScroll;               // 시너지 효과 슬롯 프리팹의 부모

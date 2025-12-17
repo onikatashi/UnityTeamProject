@@ -39,11 +39,13 @@ public class SoundManager : MonoBehaviour
 
     [Header("볼륨 설정")]
     [Range(0f, 1f)]
-    public float masterVolume = 0.5f;
+    public float masterVolume;
     [Range(0f, 1f)]
-    public float bgmVolume = 0.5f;
+    public float bgmVolume;
     [Range(0f, 1f)]
-    public float sfxVolume = 0.7f;
+    public float sfxVolume;
+
+    SaveLoadManager saveLoadManager;
 
     private void Awake()
     {
@@ -81,6 +83,15 @@ public class SoundManager : MonoBehaviour
         {
             StartCoroutine(PreloadBGMs());
         }
+    }
+
+    private void Start()
+    {
+        saveLoadManager = SaveLoadManager.Instance;
+
+        masterVolume = saveLoadManager.settingData.masterVolume;
+        bgmVolume = saveLoadManager.settingData.bgmVolume;
+        sfxVolume = saveLoadManager.settingData.sfxVolume;
     }
 
     // 딕셔너리에 사운드를 등록하는 헬퍼 함수

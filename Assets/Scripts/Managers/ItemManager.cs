@@ -72,4 +72,10 @@ public class ItemManager : MonoBehaviour
         }
         return data;
     }
+
+    // 모든 아이템 정보 리턴
+    public List<ItemData> GetAllItem()
+    {
+        return allItemDatas.allItems;
+    }
 }
