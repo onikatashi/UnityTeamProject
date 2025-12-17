@@ -60,7 +60,6 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        saveLoadManager =SaveLoadManager.Instance;
         soundDictionary = new Dictionary<string, Sound>();
 
         // BGM 재생 전용 AudioSource 생성
@@ -88,6 +87,8 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
+        saveLoadManager = SaveLoadManager.Instance;
+
         masterVolume = saveLoadManager.settingData.masterVolume;
         bgmVolume = saveLoadManager.settingData.bgmVolume;
         sfxVolume = saveLoadManager.settingData.sfxVolume;
