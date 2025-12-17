@@ -7,7 +7,7 @@ using UnityEngine.InputSystem.Layouts;
 /// </summary>
 public class PlayerSkill : MonoBehaviour
 {
-    public Skill_Meteor meteor;
+    public Skill_MultiSlash multiSlash;
 
     private void Update()
     {
@@ -18,6 +18,6 @@ public class PlayerSkill : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
             SkillSlotManager.Instance.UseSkill(2);
 
-        if (Input.GetKeyDown(KeyCode.Space)) SkillSlotManager.Instance.AddSkill(meteor);
+        if (Input.GetKeyDown(KeyCode.Space)) SkillSlotManager.Instance.AddSkill(multiSlash);
     }
 }

@@ -168,7 +168,8 @@ public class Player : MonoBehaviour
     /// </summary>
     void LookAtPCam()
     {
-        pSprite.transform.LookAt(pCam.transform.position);
+        Vector3 lookDir = pCam.transform.forward;
+        pSprite.rotation = Quaternion.LookRotation(lookDir);
     }
 
     public void Stun(float duration)
