@@ -1,69 +1,75 @@
 using UnityEngine;
 using static Enums;
 
-// DungeonManagerÀÇ Å×¸¶ Àû¿ë ·ÎÁ÷À» ºĞ¸®ÇÑ ½ºÅ©¸³Æ®
+// DungeonManagerì˜ í…Œë§ˆ ì„¤ì •ì— ë”°ë¼ ë§µì„ êµ¬ì„±í•˜ëŠ” ìŠ¤í¬ë¦½íŠ¸
 public class MapMaker : MonoBehaviour
 {
-    [Header("Å×¸¶ ±×·ìµé (¾À¿¡¼­ Á÷Á¢ µå·¡±×)")]
+    [Header("í…Œë§ˆ ê·¸ë£¹ë“¤ (ì”¬ì—ì„œ í• ë‹¹í•  í”„ë¦¬íŒ¹)")]
     public GameObject grassGroup;
     public GameObject snowGroup;
     public GameObject desertGroup;
     public GameObject lavaGroup;
 
-    [Header("DungeonManager ÂüÁ¶ ½ÇÆĞ ½Ã ±âº» Å×¸¶")]
-    // ÀÎ½ºÆåÅÍ¿¡¼­ ±âº» Å×¸¶¸¦ ¼³Á¤ÇÒ ¼ö ÀÖ°Ô ÇÕ´Ï´Ù.
+    [Header("DungeonManager ì°¸ì¡° ì‹¤íŒ¨ ì‹œ ê¸°ë³¸ í…Œë§ˆ")]
+    // ì¸ìŠ¤í™í„°ì—ì„œ ê¸°ë³¸ í…Œë§ˆë¥¼ ì„¤ì •í•  ìˆ˜ ìˆë„ë¡ í•©ë‹ˆë‹¤.
     public DungeonTheme defaultThemeOnFailure = DungeonTheme.Grass;
 
     private void Start()
     {
-        // DungeonManagerÀÇ ½Ì±ÛÅæ ÀÎ½ºÅÏ½º¸¦ »ç¿ëÇÏ¿© Å×¸¶¸¦ °¡Á®¿É´Ï´Ù.
+        // DungeonManagerì˜ ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì°¸ì¡°í•˜ì—¬ í…Œë§ˆë¥¼ ì ìš©í•©ë‹ˆë‹¤.
         ApplyThemeFromManagerOrDefault();
     }
 
     /// <summary>
-    /// DungeonManager¿¡¼­ ÇöÀç Å×¸¶¸¦ ¹Ş¾Æ¿Í Àû¿ëÇÏ°Å³ª, ½ÇÆĞ ½Ã ±âº» Å×¸¶¸¦ Àû¿ëÇÕ´Ï´Ù.
+    /// DungeonManagerì—ì„œ í˜„ì¬ í…Œë§ˆë¥¼ ë°›ì•„ì™€ ì ìš©í•˜ê±°ë‚˜, ì‹¤íŒ¨ ì‹œ ê¸°ë³¸ í…Œë§ˆë¥¼ ì ìš©í•©ë‹ˆë‹¤.
     /// </summary>
     public void ApplyThemeFromManagerOrDefault()
     {
         DungeonTheme themeToApply = DungeonTheme.None;
 
-        // DungeonManager´Â ½Ì±ÛÅæ ÆĞÅÏÀÌ¹Ç·Î Instance¸¦ ÅëÇØ Á÷Á¢ Á¢±ÙÇÕ´Ï´Ù.
+        // DungeonManagerëŠ” ì‹±ê¸€í†¤ì´ë¯€ë¡œ Instanceë¥¼ í†µí•´ ì ‘ê·¼í•©ë‹ˆë‹¤.
         DungeonManager manager = DungeonManager.Instance;
 
-        // 1. DungeonManager.Instance°¡ À¯È¿ÇÑÁö È®ÀÎ
+        // 1. DungeonManager.Instanceê°€ ìœ íš¨í•œì§€ í™•ì¸
         if (manager != null)
         {
-            // GetCurrentTheme() ¸Ş¼­µå È£Ãâ
+            // GetCurrentTheme() ë©”ì„œë“œ í˜¸ì¶œ
             themeToApply = manager.GetCurrentTheme();
 
             if (themeToApply != DungeonTheme.None)
             {
-                Debug.Log($"MapMaker: DungeonManager¿¡¼­ Å×¸¶ **{themeToApply}**¸¦ ¼º°øÀûÀ¸·Î °¡Á®¿Ô½À´Ï´Ù.");
+                Debug.Log($"MapMaker: DungeonManagerì—ì„œ í…Œë§ˆ **{themeToApply}**ë¥¼ ì •ìƒì ìœ¼ë¡œ ë°›ì•„ì™”ìŠµë‹ˆë‹¤.");
             }
             else
             {
-                Debug.LogWarning("MapMaker: DungeonManager´Â Á¸ÀçÇÏÁö¸¸, currentThemeÀÌ NoneÀÔ´Ï´Ù. (Å×¸¶ ÃÊ±âÈ­ ¿À·ù °¡´É¼º). ±âº» Å×¸¶·Î ´ëÃ¼ÇÕ´Ï´Ù.");
+                Debug.LogWarning(
+                    "MapMaker: DungeonManagerëŠ” ì¡´ì¬í•˜ì§€ë§Œ, currentThemeê°€ Noneì…ë‹ˆë‹¤. " +
+                    "(í…Œë§ˆ ì´ˆê¸°í™” ì‹¤íŒ¨ ê°€ëŠ¥ì„±). ê¸°ë³¸ í…Œë§ˆë¡œ ëŒ€ì²´í•©ë‹ˆë‹¤."
+                );
             }
         }
         else
         {
-            // 2. DungeonManager ÂüÁ¶ ½ÇÆĞ (Instance°¡ nullÀÎ °æ¿ì)
-            Debug.LogError("MapMaker: DungeonManager.Instance¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù. ÀÎ½ºÆåÅÍ¿¡¼­ ÁöÁ¤µÈ ±âº» Å×¸¶·Î ´ëÃ¼ÇÕ´Ï´Ù.");
+            // 2. DungeonManager ì°¸ì¡° ì‹¤íŒ¨ (Instanceê°€ nullì¸ ê²½ìš°)
+            Debug.LogError(
+                "MapMaker: DungeonManager.Instanceë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤. " +
+                "ì¸ìŠ¤í™í„°ì—ì„œ ì„¤ì •í•œ ê¸°ë³¸ í…Œë§ˆë¡œ ëŒ€ì²´í•©ë‹ˆë‹¤."
+            );
         }
 
-        // 3. DungeonManager¿¡¼­ À¯È¿ÇÑ Å×¸¶¸¦ ¾òÁö ¸øÇÑ °æ¿ì ±âº» Å×¸¶ »ç¿ë
+        // 3. DungeonManagerì—ì„œ ìœ íš¨í•œ í…Œë§ˆë¥¼ ë°›ì§€ ëª»í•œ ê²½ìš° ê¸°ë³¸ í…Œë§ˆ ì‚¬ìš©
         if (themeToApply == DungeonTheme.None)
         {
             themeToApply = defaultThemeOnFailure;
-            Debug.Log($"MapMaker: ±âº» Å×¸¶ **{themeToApply}**¸¦ Àû¿ëÇÕ´Ï´Ù.");
+            Debug.Log($"MapMaker: ê¸°ë³¸ í…Œë§ˆ **{themeToApply}**ë¥¼ ì ìš©í•©ë‹ˆë‹¤.");
         }
 
-        // 4. ÃÖÁ¾ÀûÀ¸·Î Å×¸¶ Àû¿ë
+        // 4. ìµœì¢…ì ìœ¼ë¡œ í…Œë§ˆ ì ìš©
         ApplyTheme(themeToApply);
     }
 
     /// <summary>
-    /// ½ÇÁ¦ Å×¸¶ Àû¿ë ·ÎÁ÷
+    /// ì„ íƒëœ í…Œë§ˆ ì ìš© ì²˜ë¦¬
     /// </summary>
     private void ApplyTheme(DungeonTheme theme)
     {
@@ -88,16 +94,16 @@ public class MapMaker : MonoBehaviour
                 break;
 
             case DungeonTheme.None:
-                // ÀÌ °æ°í´Â °ÅÀÇ ¹ß»ıÇÏÁö ¾Ê¾Æ¾ß ÇÕ´Ï´Ù.
-                Debug.LogWarning("Theme.NoneÀÌ Àü´ŞµÇ¾ú½À´Ï´Ù. ¾î¶² Å×¸¶µµ Àû¿ëµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+                // ì´ ê²½ìš°ëŠ” ë°œìƒí•˜ì§€ ì•Šì•„ì•¼ í•©ë‹ˆë‹¤.
+                Debug.LogWarning("Theme.Noneì´ ì „ë‹¬ë˜ì—ˆìŠµë‹ˆë‹¤. ì–´ë–¤ í…Œë§ˆë„ í™œì„±í™”ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
                 break;
         }
 
-        Debug.Log("MapMaker Å×¸¶ Àû¿ë ¿Ï·á: " + theme);
+        Debug.Log("MapMaker í…Œë§ˆ ì ìš© ì™„ë£Œ: " + theme);
     }
 
     /// <summary>
-    /// ¸ğµç Å×¸¶ ±×·ì ºñÈ°¼ºÈ­
+    /// ëª¨ë“  í…Œë§ˆ ê·¸ë£¹ ë¹„í™œì„±í™”
     /// </summary>
     private void DisableAllThemes()
     {
