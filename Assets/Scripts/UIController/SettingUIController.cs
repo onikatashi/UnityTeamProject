@@ -5,25 +5,25 @@ using UnityEngine.UI;
 
 public class SettingUIController : MonoBehaviour
 {
-    [Header("¹öÆ° °ü·Ã UI")]
-    public Button settingButton;                        // ¼¼ÆÃ ¹öÆ°
-    public GameObject settingPanel;                     // ¼¼ÆÃ ÆĞ³Î (¿Â¿ÀÇÁ)
-    public Button quitButton;                           // ¼³Á¤Ã¢ ´İ±â ¹öÆ°
-    
-    // ¾ÆÁ÷ È°¿ë ¾ÈÇÔ
-    public Button exitButton;                           // °ÔÀÓ ÁßµµÆ÷±â, °ÔÀÓ Á¾·á µî ÀÌ¿ëÇÒ ¹öÆ°
-    public TextMeshProUGUI exitButtonText;              // °ÔÀÓ ÁßµµÆ÷±â, °ÔÀÓ Á¾·á ¹öÆ° ÅØ½º
+    [Header("ë²„íŠ¼ ê´€ë ¨ UI")]
+    public Button settingButton;                        // ì„¸íŒ… ë²„íŠ¼
+    public GameObject settingPanel;                     // ì„¸íŒ… íŒ¨ë„ (ì˜¨ì˜¤í”„)
+    public Button quitButton;                           // ì„¤ì •ì°½ ë‹«ê¸° ë²„íŠ¼
 
-    [Header("»ç¿îµå °ü·Ã UI")]
-    public Slider masterVolumeSlider;                   // ¸¶½ºÅÍ º¼·ı ½½¶óÀÌ´õ
-    public Slider bgmVolumeSlider;                      // bgm º¼·ı ½½¶óÀÌ´õ
-    public Slider sfxVolumeSlider;                      // sfx º¼·ı ½½¶óÀÌ´õ
-    public TextMeshProUGUI masterValueText;             // ¸¶½ºÅÍ º¼·ı ÆÛ¼¾Æ®
-    public TextMeshProUGUI bgmValueText;                // bgm º¼·ı ÆÛ¼¾Æ®
-    public TextMeshProUGUI sfxValueText;                // sfx º¼·ı ÆÛ¼¾Æ®
+    // ì•„ì§ í™œìš© ì•ˆí•¨
+    public Button exitButton;                           // ê²Œì„ ì¤‘ë„í¬ê¸°, ê²Œì„ ì¢…ë£Œ ë“± ì´ìš©í•  ë²„íŠ¼
+    public TextMeshProUGUI exitButtonText;              // ê²Œì„ ì¤‘ë„í¬ê¸°, ê²Œì„ ì¢…ë£Œ ë²„íŠ¼ í…ìŠ¤
 
-    private const float DEBOUNCE_DELAY = 0.5f;          // µğ¹Ù¿î½Ì Áö¿¬ ½Ã°£ (º¼·ı ÀúÀå Áö¿¬½Ã°£)
-    private Coroutine currentCoroutine;                 // ÇöÀç ÁøÇà ÁßÀÎ ÀúÀå ÄÚ·çÆ¾
+    [Header("ì‚¬ìš´ë“œ ê´€ë ¨ UI")]
+    public Slider masterVolumeSlider;                   // ë§ˆìŠ¤í„° ë³¼ë¥¨ ìŠ¬ë¼ì´ë”
+    public Slider bgmVolumeSlider;                      // bgm ë³¼ë¥¨ ìŠ¬ë¼ì´ë”
+    public Slider sfxVolumeSlider;                      // sfx ë³¼ë¥¨ ìŠ¬ë¼ì´ë”
+    public TextMeshProUGUI masterValueText;             // ë§ˆìŠ¤í„° ë³¼ë¥¨ í¼ì„¼íŠ¸
+    public TextMeshProUGUI bgmValueText;                // bgm ë³¼ë¥¨ í¼ì„¼íŠ¸
+    public TextMeshProUGUI sfxValueText;                // sfx ë³¼ë¥¨ í¼ì„¼íŠ¸
+
+    private const float DEBOUNCE_DELAY = 0.5f;          // ë””ë°”ìš´ì‹± ì§€ì—° ì‹œê°„ (ë³¼ë¥¨ ì €ì¥ ì§€ì—°ì‹œê°„)
+    private Coroutine currentCoroutine;                 // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ì €ì¥ ì½”ë£¨í‹´
 
     SoundManager soundManager;
     SaveLoadManager saveLoadManager;
@@ -33,16 +33,16 @@ public class SettingUIController : MonoBehaviour
         soundManager = SoundManager.Instance;
         saveLoadManager = SaveLoadManager.Instance;
 
-        // ¹öÆ° ¿¬°á
+        // ë²„íŠ¼ ì—°ê²°
         settingButton.onClick.AddListener(ShowSettingPanel);
         quitButton.onClick.AddListener(HideSettingPanel);
 
-        // ½½¶óÀÌ´õ ÃÊ±âÈ­
+        // ìŠ¬ë¼ì´ë” ì´ˆê¸°í™”
         masterVolumeSlider.value = soundManager.masterVolume;
         bgmVolumeSlider.value = soundManager.bgmVolume;
         sfxVolumeSlider.value = soundManager.sfxVolume;
 
-        // ½½¶óÀÌ´õ ¿¬°á
+        // ìŠ¬ë¼ì´ë” ì—°ê²°
         masterVolumeSlider.onValueChanged.AddListener(OnMasterChanged);
         bgmVolumeSlider.onValueChanged.AddListener(OnBGMChanged);
         sfxVolumeSlider.onValueChanged.AddListener(OnSFXChanged);
@@ -60,7 +60,7 @@ public class SettingUIController : MonoBehaviour
             StopCoroutine(currentCoroutine);
         }
 
-        // ÄÚ·çÆ¾ ½ÃÀÛ
+        // ì½”ë£¨í‹´ ì‹œì‘
         currentCoroutine = StartCoroutine(DebounceSaveCoroutine());
     }
 
@@ -75,7 +75,7 @@ public class SettingUIController : MonoBehaviour
             StopCoroutine(currentCoroutine);
         }
 
-        // ÄÚ·çÆ¾ ½ÃÀÛ
+        // ì½”ë£¨í‹´ ì‹œì‘
         currentCoroutine = StartCoroutine(DebounceSaveCoroutine());
     }
 
@@ -90,7 +90,7 @@ public class SettingUIController : MonoBehaviour
             StopCoroutine(currentCoroutine);
         }
 
-        // ÄÚ·çÆ¾ ½ÃÀÛ
+        // ì½”ë£¨í‹´ ì‹œì‘
         currentCoroutine = StartCoroutine(DebounceSaveCoroutine());
     }
 
@@ -103,10 +103,10 @@ public class SettingUIController : MonoBehaviour
 
     IEnumerator DebounceSaveCoroutine()
     {
-        // Áö¿¬ ½Ã°£ µ¿¾È ´ë±â
+        // ì§€ì—° ì‹œê°„ ë™ì•ˆ ëŒ€ê¸°
         yield return new WaitForSeconds(DEBOUNCE_DELAY);
 
-        // ´ë±â ½Ã°£ µ¿¾È Ãë¼ÒµÇÁö ¾Ê¾ÒÀ¸¸é ÀúÀå
+        // ëŒ€ê¸° ì‹œê°„ ë™ì•ˆ ì·¨ì†Œë˜ì§€ ì•Šì•˜ìœ¼ë©´ ì €ì¥
         saveLoadManager.SaveSettingData();
 
         currentCoroutine = null;

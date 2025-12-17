@@ -1,13 +1,13 @@
 using UnityEngine;
 
 [System.Serializable]
-// º¼·ı µ¥ÀÌÅÍ
+// ì„¤ì • ë°ì´í„°
 public class SettingData
 {
-    // º¼·ı ¼öÄ¡
-    public float masterVolume;
-    public float bgmVolume;
-    public float sfxVolume;
+    // ë³¼ë¥¨ ì„¤ì •
+    public float masterVolume;              // ë§ˆìŠ¤í„° ë³¼ë¥¨
+    public float bgmVolume;                 // BGM ë³¼ë¥¨
+    public float sfxVolume;                 // SFX ë³¼ë¥¨
 
     public SettingData()
     {

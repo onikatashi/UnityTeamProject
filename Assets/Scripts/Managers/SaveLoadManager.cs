@@ -6,14 +6,14 @@ public class SaveLoadManager : MonoBehaviour
 {
     public static SaveLoadManager Instance;
 
-    public UserData userData;                                       // ÀúÀåÇÒ À¯Àú µ¥ÀÌÅÍ Å¬·¡½º
-    public SettingData settingData;                                 // ÀúÀåÇÒ ¼¼ÆÃ µ¥ÀÌÅÍ Å¬·¡½º (º¼·ı)
+    public UserData userData;                                       // ìœ ì € ë°ì´í„° ì €ì¥ìš© í´ë˜ìŠ¤
+    public SettingData settingData;                                 // ì„¤ì • ë°ì´í„° ì €ì¥ìš© í´ë˜ìŠ¤ (ë³¼ë¥¨)
 
-    private readonly string userDataFile = "userData.json";         // À¯Àú µ¥ÀÌÅÍ ÆÄÀÏ¸í
-    private readonly string settingDataFile = "settingData.json";   // ¼¼ÆÃ µ¥ÀÌÅÍ ÆÄÀÏ¸í
+    private readonly string userDataFile = "userData.json";         // ìœ ì € ë°ì´í„° íŒŒì¼ëª…
+    private readonly string settingDataFile = "settingData.json";   // ì„¤ì • ë°ì´í„° íŒŒì¼ëª…
 
-    private string userDataPath;                                    // À¯Àú µ¥ÀÌÅÍ ÆÄÀÏ ÀúÀå °æ·Î
-    private string settingDataPath;                                 // ¼¼ÆÃ µ¥ÀÌÅÍ ÆÄÀÏ ÀúÀå °æ·Î
+    private string userDataPath;                                    // ìœ ì € ë°ì´í„° ì €ì¥ íŒŒì¼ ê²½ë¡œ
+    private string settingDataPath;                                 // ì„¤ì • ë°ì´í„° ì €ì¥ íŒŒì¼ ê²½ë¡œ
 
     private void Awake()
     {
@@ -27,59 +27,59 @@ public class SaveLoadManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // ÀúÀå °æ·Î ¼³Á¤
+        // íŒŒì¼ ê²½ë¡œ ì„¤ì •
         userDataPath = Path.Combine(Application.persistentDataPath, userDataFile);
         settingDataPath = Path.Combine(Application.persistentDataPath, settingDataFile);
 
-        // ÀúÀåÇÑ µ¥ÀÌÅÍ ·Îµå
+        // ì €ì¥ëœ ë°ì´í„° ë¡œë“œ
         LoadUserData();
         LoadSettingData();
     }
 
-    // À¯Àú µ¥ÀÌÅÍ ÀúÀå
+    // ìœ ì € ë°ì´í„° ì €ì¥
     public void SaveUserData()
     {
         try
         {
-            // C# Å¬·¡½º -> Json ¹®ÀÚ¿­·Î º¯È­
+            // C# í´ë˜ìŠ¤ -> Json ë¬¸ìì—´ë¡œ ë³€í™˜
             string json = JsonUtility.ToJson(userData, true);
 
-            // Json ¹®ÀÚ¿­ => ÆÄÀÏ·Î ÀúÀå
+            // Json ë¬¸ìì—´ => íŒŒì¼ë¡œ ì €ì¥
             File.WriteAllText(userDataPath, json);
         }
         catch (Exception e)
         {
-            Debug.LogError($"ÀúÀå ½ÇÆĞ: {e.Message}");  
+            Debug.LogError($"ì €ì¥ ì‹¤íŒ¨: {e.Message}");  
         }
     }
 
-    // À¯Àú µ¥ÀÌÅÍ ºÒ·¯¿À±â
+    // ìœ ì € ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
     public bool LoadUserData()
     {
-        // ÆÄÀÏÀÌ ÀÖ´ÂÁö È®ÀÎ
+        // íŒŒì¼ì´ ìˆëŠ”ì§€ í™•ì¸
         if (!File.Exists(userDataPath))
         {
-            Debug.Log("À¯Àú µ¥ÀÌÅÍ ¾øÀ½");
+            Debug.Log("ì €ì¥ íŒŒì¼ ì—†ìŒ");
             return false;
         }
 
         try
         {
-            // ÆÄÀÏ¿¡¼­ Json ¹®ÀÚ¿­ ÀĞ±â
+            // íŒŒì¼ì—ì„œ Json ë¬¸ìì—´ ì½ê¸°
             string json = File.ReadAllText(userDataPath);
 
-            // Json ¹®ÀÚ¿­ => Å¬·¡½º·Î º¯È¯
+            // Json ë¬¸ìì—´ => í´ë˜ìŠ¤ë¡œ ë³€í™˜
             userData = JsonUtility.FromJson<UserData>(json);
             return true;
         }
         catch (Exception e)
         {
-            Debug.LogError($"ºÒ·¯¿À±â ½ÇÆĞ: {e.Message}");
+            Debug.LogError($"ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨: {e.Message}");
             return false;
         }
     }
 
-    // ¼¼ÆÃ µ¥ÀÌÅÍ ÀúÀå
+    // ì„¤ì • ë°ì´í„° ì €ì¥
     public void SaveSettingData()
     {
         try
@@ -90,11 +90,11 @@ public class SaveLoadManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"ÀúÀå ½ÇÆĞ: {e.Message}");
+            Debug.LogError($"ì €ì¥ ì‹¤íŒ¨: {e.Message}");
         }
     }
 
-    // ¼¼ÆÃ µ¥ÀÌÅÍ ·Îµå
+    // ì„¤ì • ë°ì´í„° ë¡œë“œ
     public bool LoadSettingData()
     {
         if (!File.Exists(settingDataPath))
@@ -111,24 +111,48 @@ public class SaveLoadManager : MonoBehaviour
         }
         catch (Exception e)
         {
+            Debug.LogError($"ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨: {e.Message}");
             return false;
         }
     }
 
-
-    // ÀúÀå ÆÄÀÏ »èÁ¦
-    public void DeleteAllSaveData()
+    // ìœ ì € ì €ì¥ ë°ì´í„°ë§Œ ì‚­ì œ
+    public void DeletUserData()
     {
-        if(File.Exists(userDataPath) && File.Exists(settingDataPath))
+        if (File.Exists(userDataPath))
         {
             File.Delete(userDataPath);
+        }
+        userData = new UserData();
+    }
+
+    // ì„¤ì • ì €ì¥ ë°ì´í„°ë§Œ ì‚­ì œ
+    public void DeleteSettingData()
+    {
+        if (File.Exists(settingDataPath))
+        {
+            File.Delete(settingDataPath);
+        }
+        settingData = new SettingData();
+    }
+
+    // ì €ì¥ íŒŒì¼ ëª¨ë‘ ì‚­ì œ
+    public void DeleteAllSaveData()
+    {
+        if (File.Exists(userDataPath))
+        {
+            File.Delete(userDataPath);
+        }
+
+        if (File.Exists(settingDataPath))
+        {
             File.Delete(settingDataPath);
         }
 
         InitSaveData();
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ Å¬·¡½º ÃÊ±âÈ­
+    // ì €ì¥ ë°ì´í„° í´ë˜ìŠ¤ ì´ˆê¸°í™”
     public void InitSaveData()
     {
         userData = new UserData();
