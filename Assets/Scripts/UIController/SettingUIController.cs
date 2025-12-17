@@ -114,8 +114,15 @@ public class SettingUIController : MonoBehaviour
 
     public void ShowSettingPanel()
     {
-        UpdateVolumeText();
-        settingPanel.SetActive(true);
+        if (settingPanel.activeSelf == false)
+        {
+            UpdateVolumeText();
+            settingPanel.SetActive(true);
+        }
+        else
+        {
+            HideSettingPanel();
+        }
     }
 
     public void HideSettingPanel()
