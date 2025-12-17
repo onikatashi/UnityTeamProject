@@ -44,6 +44,9 @@ public class Player : MonoBehaviour
     public CinemachineCamera pCam;
     Transform pSprite;
 
+    // 플레이어 animationCotroller 캐싱
+    public PlayerAnimController animCtrl;
+
     private void Awake()
     {
         if (Instance == null)
@@ -58,6 +61,8 @@ public class Player : MonoBehaviour
         pSprite = transform.Find("Sprite");
 
         poolManager = PoolManager.Instance;
+
+        animCtrl = GetComponentInChildren<PlayerAnimController>();
     }
     private void Start()
     {
