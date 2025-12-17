@@ -18,11 +18,11 @@ MonoBehaviour:
   iStatDescription: "\uC774\uB3D9\uC18D\uB3C4 + 5"
   iDescription: "\uC7A5\uD6542"
   iRank: 1
-  iSynergy: 0000000001000000
+  iSynergy: 01000000
   iEffect: 0
   iPrice: 0
   iBaseStat:
-    maxHp: 0
+    maxHp: 10
     maxMp: 0
     mpRegen: 0
     maxDashCount: 0
@@ -33,7 +33,7 @@ MonoBehaviour:
     attackSpeed: 0
     projectileCount: 0
     projectileSpeed: 0
-    moveSpeed: 0
+    moveSpeed: 10
     criticalRate: 0
     criticalDamage: 0
     shield: 0

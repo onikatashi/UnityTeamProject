@@ -6,16 +6,22 @@ using UnityEngine.UI;
 
 public class ItemDescriptionUIController : MonoBehaviour
 {
+    [Header("아이템 설명 패널 UI 정보")]
     public GameObject itemDescriptionPanel;             // 아이템 설명 패널 오브젝트
     public RectTransform itemDescriptionSize;           // 아이템 설명 패널 크기
-    public TextMeshProUGUI itemNameText;                // 아이템 이름 텍스트
-    public TextMeshProUGUI itemStatDescriptionText;     // 아이템 스탯 설명 텍스트
-    public float statTextHeight;                        // 스탯 설명 텍스트 높이
-    public TextMeshProUGUI itemDescriptionText;         // 아이템 설명 텍스트
-    public float descriptionTextHeight;                 // 아이템 설명 텍스트 높이
+    public TextMeshProUGUI itemNameText;                // 아이템 이름 텍스트
     public Image itemIcon;                              // 아이템 아이콘 이미지
+    public TextMeshProUGUI itemStatDescriptionText;     // 아이템 스탯 설명 텍스트
+    public TextMeshProUGUI itemDescriptionText;         // 아이템 설명 텍스트
+
+    [Header("패널의 높이 조절을 위한 텍스트 높이")]
+    public float statTextHeight;                        // 스탯 설명 텍스트 높이
+    public float descriptionTextHeight;                 // 아이템 설명 텍스트 높이
+
+    [Header("현재 아이템 정보를 가져오기 위한 인덱스")]
     public int slotIndex;                               // 현재 선택된 슬롯 인덱스
 
+    [Header("아이템 시너지 정보를 띄우기 위한 정보")]
     public Transform synergyPanel;                      // 시너지 아이콘 텍스트 프리팹의 부모 패널
     public DescriptionSynergyUI synergyUI;              // 시너지 아이콘과 텍스트 프리팹
     public List<DescriptionSynergyUI> synergyUIList;    // 활성화 되어있는 시너지UI를 저장하는 리스트
