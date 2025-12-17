@@ -1,11 +1,5 @@
 using UnityEngine;
-
-public enum PlayerAnimState
-{
-    Idle,
-    Move,
-    Attack
-}
+using static Enums;
 
 public class PlayerAnimController : MonoBehaviour
 {

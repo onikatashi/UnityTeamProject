@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Enums;
 
 public class PlayerMove : MonoBehaviour
 {
