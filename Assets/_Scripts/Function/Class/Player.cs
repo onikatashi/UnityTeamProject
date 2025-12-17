@@ -168,7 +168,20 @@ public class Player : MonoBehaviour
     /// </summary>
     void LookAtPCam()
     {
-        pSprite.transform.LookAt(pCam.transform.position);
+        //pSprite.transform.LookAt(pCam.transform.position);
+        Vector3 camPos = pCam.transform.position;
+        camPos.y = pSprite.position.y;
+        pSprite.LookAt(camPos);
+
+    }
+
+    public void SetFacing(float dirX)
+    {
+        if (dirX == 0) return;
+
+        Vector3 scale = pSprite.localScale;
+        scale.x = dirX > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        pSprite.localScale = scale;
     }
 
     public void Stun(float duration)
