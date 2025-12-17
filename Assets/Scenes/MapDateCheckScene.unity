@@ -160,7 +160,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 536627025}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a7360b6712d4414d94283601a2c5165, type: 3}
+  m_Script: {fileID: 11500000, guid: 35e615c202da76949a867a0102517369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   currentDungeonData:
@@ -169,6 +169,7 @@ MonoBehaviour:
     theme: 0
     nodes: []
   currentTheme: 0
+  currentRoomType: 0
 --- !u!1 &1460723318
 GameObject:
   m_ObjectHideFlags: 0

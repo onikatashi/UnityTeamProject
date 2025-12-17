@@ -15,6 +15,12 @@ public class DungeonManager : MonoBehaviour
     [Header("현재 선택된 룸 타입")]
     public Enums.RoomType currentRoomType;
 
+    //현재 전투중인 노드 위치.
+    public int currentBattleNodeFloor;
+    public int currentBattleNodeColum;
+
+
+
     //싱글톤 및 테마 설정.
     void Awake()
     {
@@ -135,6 +141,32 @@ public class DungeonManager : MonoBehaviour
         Debug.Log("[DungeonManager] 던전 데이터 초기화 완료");
     }
 
+    //현재 전투하는 노드 위치 기록.
+    public void SetCurrentNode(int floor, int colum)
+    {
+        currentBattleNodeFloor = floor;
+        currentBattleNodeColum = colum;
+    }
+
+    public void ClearCurrentNode()
+    {
+        if (currentDungeonData == null) return;
+
+        //현재 저장된 던전의 전체 노드의 데이터들 검색.
+        foreach (var node in currentDungeonData.nodes)
+        {
+            //현재 클릭해서 들어 갔던 노드인지 확인.
+            if (node.floor == currentBattleNodeFloor && node.col == currentBattleNodeColum)
+            {
+                //클리어한 노드 true를 통한 클리 처리.
+                node.isCleared = true;
+                Debug.Log($"[DungeonManager] 노드 클리어: {node.floor},{node.col}");
+                return;
+            }
+        }
+    }
+
+
     void Update()
     {
         // 스페이스를 누르면 Keypad1 기능 실행
@@ -173,6 +205,9 @@ public class DungeonNodeData //각 노드별 데이터 정보
     public int col;
     public Enums.RoomType roomType;
     public bool isAvailable;
+
+    //해당 노드 클리어 여부.
+    public bool isCleared;
 
     //노드의 좌표정보(Centor)
     public Vector2 uiPosition;
