@@ -103,6 +103,7 @@ public class Enums
         SynergyStatText,
         ArrowPool,
         MonsterProjectile,
-        MonsterArcProjectile
+        MonsterArcProjectile,
+        BossBullet
     }
 }

@@ -36,9 +36,11 @@ public abstract class MonsterBase : MonoBehaviour
         anim = GetComponent<Animator>();
         state = Enums.MonsterState.Idle;
 
-        agent.isStopped = false;
-        agent.updateRotation = true;
-        
+        if(agent != null)
+        {
+            agent.isStopped = false;
+            agent.updateRotation = true;
+        }
     }
 
     private void Start()
@@ -106,5 +108,10 @@ public abstract class MonsterBase : MonoBehaviour
     public virtual void ReturnMonsterProjectile(MonsterProjectile mp)
     {
         poolManager.Return(Enums.PoolType.MonsterProjectile, mp);
+    }
+
+    protected virtual void OnEnable()
+    {
+        if(agent != null) agent.isStopped = false;
     }
 }
