@@ -77,5 +77,11 @@ public class PlayerMove : MonoBehaviour
         {
             player.animCtrl.ChangeState(PlayerAnimState.Idle);
         }
+
+        //공격 방향으로 sprite돌리기
+        if( dir.x != 0)
+        {
+            player.SetFacing(dir.x);
+        }
     }
 }

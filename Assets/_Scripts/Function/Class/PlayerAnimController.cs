@@ -47,9 +47,4 @@ public class PlayerAnimController : MonoBehaviour
                 break;
         }
     }
-
-    public void OnAttackEnd()
-    {
-        ChangeState(PlayerAnimState.Idle);
-    }
 }
