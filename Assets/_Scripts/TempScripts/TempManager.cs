@@ -8,12 +8,12 @@ public class TempManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            List<ItemData> temp = ItemManager.Instance.GetAllItem();
-            int randomIndex = UnityEngine.Random.Range(0, temp.Count);
-            InventoryManager.Instance.AddItemToInventory(temp[randomIndex]);
-        }
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    List<ItemData> temp = ItemManager.Instance.GetAllItem();
+        //    int randomIndex = UnityEngine.Random.Range(0, temp.Count);
+        //    InventoryManager.Instance.AddItemToInventory(temp[randomIndex]);
+        //}
 
         if (Input.GetKeyDown(KeyCode.S))
         {
@@ -21,10 +21,10 @@ public class TempManager : MonoBehaviour
             SaveLoadManager.Instance.SaveUserData();  
         }
 
-        if(Input.GetKeyDown(KeyCode.I))
-        {
-            UIManager.Instance.ToggleInventory();
-        }
+        //if(Input.GetKeyDown(KeyCode.I))
+        //{
+        //    UIManager.Instance.ToggleInventory();
+        //}
 
         if (Input.GetKeyDown(KeyCode.R))
         {

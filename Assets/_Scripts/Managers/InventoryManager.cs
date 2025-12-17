@@ -154,7 +154,10 @@ public class InventoryManager : MonoBehaviour
         // 아이템 시너지 카운트 업데이트
         CheckActiveSynergy();
 
-        Player.Instance.SetFinalStat();
+        if (Player.Instance != null)
+        {
+            Player.Instance.SetFinalStat();
+        }
 
         // 아이템 획득 시 시너지 효과 업데이트
         uiManager.synergyEffectUIController.ReturnSynergySlot();
@@ -207,7 +210,11 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        Player.Instance.SetFinalStat();
+        if (Player.Instance != null)
+        {
+            Player.Instance.SetFinalStat();
+        }
+
 
         // 아이템 시너지 카운트 업데이트
         CheckActiveSynergy();
@@ -303,7 +310,11 @@ public class InventoryManager : MonoBehaviour
         indexByItemId.Remove(Inventory[slotIndex].iId);
         Inventory[slotIndex] = null;
 
-        Player.Instance.SetFinalStat();
+        if(Player.Instance != null)
+        {
+            Player.Instance.SetFinalStat();
+        }
+        
 
         // 아이템 시너지 카운트 업데이트
         CheckActiveSynergy();
