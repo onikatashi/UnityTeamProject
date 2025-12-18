@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
+using static DungeonManager;
 
 public class DungeonMaker : MonoBehaviour
 {
@@ -32,6 +34,7 @@ public class DungeonMaker : MonoBehaviour
     public Sprite lavaThemeSprite;
     public Sprite snowThemeSprite;
 
+    //지도 맵의 배경화면 연결을 위한 객체선언.
     [Header("UI")]
     public Image environmentBackgroundImage;
 
@@ -83,12 +86,14 @@ public class DungeonMaker : MonoBehaviour
         // 기존 던전 유/무 확인
         if (DungeonManager.Instance != null && DungeonManager.Instance.HasDungeonData())
         {
-           DungeonMapData dungeonData = DungeonManager.Instance.GetDungeonData();
-            
-            //테마와 데이터 가져오기.
+            DungeonMapData dungeonData = DungeonManager.Instance.GetDungeonData();
+
+            //테마와 가져오기.
             ApplyEnvironmentTheme(dungeonData.theme);
+            //기존 던전 데이터 가져오기
             LoadDungeonFromData(dungeonData);
-            ApplyClearStateFromData();
+            //클리어한 노드 상태 변경.
+            applyClearNodeState();
 
             Debug.Log("[DungeonMaker] 기존 던전 데이터 로드 완료");
         }
@@ -116,29 +121,56 @@ public class DungeonMaker : MonoBehaviour
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
         PrintDungeonToConsole();
 
+
         //던전 알파값 조정
-        ResetAllNextNodeFlags();
         SetAllNodesAlpha(0.3f);
 
-        // 2. 클리어된 노드 기준으로 다음 노드 열기
-        ApplyClearStateFromData();
+        //클리어 후 다음 갈 던전 노드 OFF 작업.(이 작업 안하면 클리어 클리어한 노드 계속 켜져있을 거임.)
+        ResetAllNextNodeFlags();
+        // 클리어된 노드 기준으로 다음 노드 열기
+        applyClearNodeState();
 
         // 3. 클리어가 하나도 없으면 시작층 열기
         if (!HasAnyClearedNode())
         {
-            for (int c = 0; c < maxColumn; c++)
+            OpenStartFloor();
+        }
+    }
+
+
+    //클리어 관련 작동 코드----------------------------------------------------------------------------------
+
+
+    //알파값 전체 작업 코드
+    private void SetAllNodesAlpha(float alpha)
+    {
+        for (int floor = 0; floor < maxFloor; floor++)
+        {
+            for (int column = 0; column < maxColumn; column++)
             {
-                NodeButton node = dungeonButtons[0, c];
-                if (node != null && node.isAvailable)
-                {
-                    node.isGoingNextNode = true;
-                    node.SetAlpha(1f);
-                }
+                NodeButton node = dungeonButtons[floor, column];
+                if (node == null || !node.isAvailable) continue;
+
+                node.SetAlpha(alpha);
             }
         }
-
-
     }
+
+    //해당 다음 갈 길 체크하는 변수(isGoingNextNode) 최초 OFF시켜놓기.
+    private void ResetAllNextNodeFlags()
+    {
+        for (int floor = 0; floor < maxFloor; floor++)
+        {
+            for (int column = 0; column < maxColumn; column++)
+            {
+                NodeButton node = dungeonButtons[floor, column];
+                if (node == null) continue;
+
+                node.isGoingNextNode = false;
+            }
+        }
+    }
+    //던전의 모든 노드의 (isCleared)클리어 여부 확인.
     private bool HasAnyClearedNode()
     {
         var data = DungeonManager.Instance.GetDungeonData();
@@ -152,35 +184,38 @@ public class DungeonMaker : MonoBehaviour
         return false;
     }
 
+    //(HasAnyClearedNode 연계)클리어 노드가 없음으로 시작행의 모든 노드 Open
     private void OpenStartFloor()
     {
-        for (int c = 0; c < maxColumn; c++)
+        for (int column = 0; column < maxColumn; column++)
         {
-            NodeButton node = dungeonButtons[0, c];
+            NodeButton node = dungeonButtons[0, column];
             if (node == null || !node.isAvailable) continue;
 
             node.isGoingNextNode = true;
             node.SetAlpha(1f);
         }
     }
-    private void SetAllNodesAlpha(float alpha)
-    {
-        for (int f = 0; f < maxFloor; f++)
-        {
-            for (int c = 0; c < maxColumn; c++)
-            {
-                NodeButton node = dungeonButtons[f, c];
-                if (node == null || !node.isAvailable) continue;
 
-                node.SetAlpha(alpha);
-            }
-        }
+    //이제 진행해야 하는 노드 열어놓기(알파값 100%, 하이라이트 및 클릭 ON)
+    private void OpenNode(NodeButton node)
+    {
+        if (node == null || !node.isAvailable) return;
+
+        node.isGoingNextNode = true;
+        node.SetAlpha(1f);
     }
 
-   
+    //노드 닫기(알파값 30%, 하이라이트 및 클릭 OFF)
+    private void LockNode(NodeButton node)
+    {
+        if (node == null || !node.isAvailable) return;
 
+        node.isGoingNextNode = false;
+        node.SetAlpha(0.3f);
+    }
 
-
+    //매니저에서 테마값 가져와 스프라이트에 적용.
     private void ApplyEnvironmentTheme(Enums.DungeonTheme theme)
     {
         if (environmentBackgroundImage == null) return;
@@ -193,6 +228,22 @@ public class DungeonMaker : MonoBehaviour
         else
         {
             Debug.LogWarning($"[DungeonMaker] 테마 스프라이트 없음: {theme}");
+        }
+    }
+
+ 
+
+    //시작노드의 정보만 가져옴.
+    private void CollectStartNodes()
+    {
+        startNodes.Clear();
+        for (int column = 0; column < maxColumn; column++)
+        {
+            NodeButton node = dungeonButtons[0, column];
+            if (node != null && node.isAvailable)
+            {
+                startNodes.Add(node);
+            }
         }
     }
 
@@ -231,7 +282,15 @@ public class DungeonMaker : MonoBehaviour
 
                 // 다음 연결된 노드의 좌표 저장
                 foreach (var next in node.nextNodes)
-                    nodeData.nextNodes.Add(new Vector2Int(next.floor, next.col));
+                {
+                    nodeData.nextNodesLink.Add
+                       (new NextNodeLinkData
+                       {
+                        floor = next.floor,
+                        column = next.col
+                    }
+                    );
+                }
 
                 saveData.nodes.Add(nodeData);
             }
@@ -242,6 +301,7 @@ public class DungeonMaker : MonoBehaviour
     //던전 데이터 DungeonManager에서 가져오기.
     private void LoadDungeonFromData(DungeonMapData data)
     {
+        //던전 매니저에 저장되어있는 노드별 데이터 다시 불러오기.
         foreach (var nodeData in data.nodes)
         {
             GameObject nodePrefab = Instantiate(roomButtonPrefab, mapParent);
@@ -269,65 +329,65 @@ public class DungeonMaker : MonoBehaviour
         // 다음노드 연결 정보 복원
         foreach (var nodeData in data.nodes)
         {
-            NodeButton node = dungeonButtons[nodeData.floor, nodeData.col];
-            if (node == null) continue;
+            NodeButton currentNode = dungeonButtons[nodeData.floor, nodeData.col];
+            if (currentNode == null) continue;
 
-            foreach (var next in nodeData.nextNodes)
+            foreach (var next in nodeData.nextNodesLink)
             {
-                NodeButton nextNode = dungeonButtons[next.x, next.y];
-                if (nextNode != null && !node.nextNodes.Contains(nextNode))
+                NodeButton nextNode =
+                    dungeonButtons[next.floor, next.column];
+
+                if (nextNode == null) continue;
+
+                if (!currentNode.nextNodes.Contains(nextNode))
                 {
-                    node.nextNodes.Add(nextNode);
-                    nextNode.prevNodes.Add(node);
+                    currentNode.nextNodes.Add(nextNode);
+                    nextNode.prevNodes.Add(currentNode);
                 }
             }
         }
-        startNodes.Clear();
-        for (int c = 0; c < maxColumn; c++)
-        {
-            NodeButton node = dungeonButtons[0, c];
-            if (node != null && node.isAvailable)
-            {
-                startNodes.Add(node);
-            }
-        }
-
+        CollectStartNodes();
     }
 
-    //클리어 구분
-    private void ApplyClearStateFromData()
+    //클리어 관련
+    private void applyClearNodeState()
     {
+        //매니저에서 전체 데이터 가져오기.
         var data = DungeonManager.Instance.GetDungeonData();
         if (data == null) return;
 
+        //공간 선언
         HashSet<int> clearedFloors = new HashSet<int>();
 
-        // 1. 클리어된 층 수집
+        //클리어한 노드 수집.
         foreach (var nodeData in data.nodes)
         {
+            //클리어 상태 표시된 노드만 추가.
             if (nodeData.isCleared)
                 clearedFloors.Add(nodeData.floor);
         }
 
-        // 2. 클리어된 노드 처리 + 다음 노드 열기
+        //
         foreach (var nodeData in data.nodes)
         {
+            //미클리어 노드 continue
             if (!nodeData.isCleared) continue;
 
+            //공간 선언.
             NodeButton cleared = dungeonButtons[nodeData.floor, nodeData.col];
             if (cleared == null) continue;
 
-            // 클리어 표시
-            ApplyClearVisual(cleared);
+            // 지도에 X표시(노드 프리팹의 X 스프라이트 SetActive(True))
+            ApplyClearPrint_X(cleared);
 
             // 다음 노드 열기
-            foreach (var next in nodeData.nextNodes)
+            foreach (var next in nodeData.nextNodesLink)
             {
-                NodeButton nextNode = dungeonButtons[next.x, next.y];
+                // NextNodeData 기반 접근
+                NodeButton nextNode = dungeonButtons[next.floor, next.column];
                 if (nextNode == null || !nextNode.isAvailable) continue;
 
-                nextNode.isGoingNextNode = true;
-                nextNode.SetAlpha(1f);
+                OpenNode(nextNode);
             }
         }
 
@@ -339,34 +399,24 @@ public class DungeonMaker : MonoBehaviour
                 NodeButton node = dungeonButtons[floor, c];
                 if (node == null || !node.isAvailable) continue;
 
-                node.isGoingNextNode = false;
-                node.SetAlpha(0.3f);
+                LockNode(node);
             }
         }
     }
-    private void ApplyClearVisual(NodeButton node)
+
+    //클리어한 노드 X표기하고 잠궈놓기.
+    private void ApplyClearPrint_X(NodeButton node)
     {
+        //노드 프리펩에 꺼놓은 X표시 스프라이트 켜기
         var clear = node.transform.Find("ClearMarkX");
         if (clear != null)
             clear.gameObject.SetActive(true);
 
-        node.isGoingNextNode = false;
-        node.SetAlpha(0.3f);
+        //노드 잠궈서 사용불가 처리
+        LockNode(node);
     }
 
-    private void ResetAllNextNodeFlags()
-    {
-        for (int f = 0; f < maxFloor; f++)
-        {
-            for (int c = 0; c < maxColumn; c++)
-            {
-                NodeButton node = dungeonButtons[f, c];
-                if (node == null) continue;
-
-                node.isGoingNextNode = false;
-            }
-        }
-    }
+   
 
 
     //노드 생성부---------------------------------------------------------------------------------------------
@@ -419,15 +469,7 @@ public class DungeonMaker : MonoBehaviour
         LimitFloorNodeCount(maxFloor - 1, bossNodeCountLimit);
 
 
-        startNodes.Clear();
-for (int c = 0; c < maxColumn; c++)
-{
-    NodeButton node = dungeonButtons[0, c];
-    if (node != null && node.isAvailable)
-    {
-        startNodes.Add(node);
-    }
-}
+        CollectStartNodes();
     }
 
     /// <summary>
@@ -475,7 +517,7 @@ for (int c = 0; c < maxColumn; c++)
 
 
 
-   
+
     //-------------------------------------------------------------------------------------------------------
 
     //라인 생성부---------------------------------------------------------------------------------------------

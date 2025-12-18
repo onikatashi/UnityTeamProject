@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static DungeonManager;
 
 public class DungeonManager : MonoBehaviour
 {
@@ -19,7 +20,12 @@ public class DungeonManager : MonoBehaviour
     public int currentBattleNodeFloor;
     public int currentBattleNodeColum;
 
-
+    [System.Serializable]
+    public struct NextNodeLinkData
+    {
+        public int floor;      // 다음 노드 층
+        public int column;     // 다음 노드 열
+    }
 
     //싱글톤 및 테마 설정.
     void Awake()
@@ -212,5 +218,5 @@ public class DungeonNodeData //각 노드별 데이터 정보
     //노드의 좌표정보(Centor)
     public Vector2 uiPosition;
     //다음 노드 정보를 리스트 형식으로 저장.
-    public List<Vector2Int> nextNodes = new List<Vector2Int>();
+    public List<NextNodeLinkData> nextNodesLink = new List<NextNodeLinkData>();
 }
