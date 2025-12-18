@@ -106,4 +106,12 @@ public class Enums
         MonsterArcProjectile,
         BossBullet
     }
+
+    // 플레이어 애니메이션
+    public enum PlayerAnimState
+    {
+        Idle,
+        Move,
+        Attack
+    }
 }
