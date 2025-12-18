@@ -50,6 +50,12 @@ public class SceneLoaderManager : MonoBehaviour
         return data;
     }
 
+    // 현재 씬 이름 리턴
+    public string GetCurrentSceneName()
+    {
+        return SceneManager.GetActiveScene().name;
+    }
+
     // 씬 리로드는 사용할 일이 없을 것 같음
     //public void ReoladCurrentScene()
     //{

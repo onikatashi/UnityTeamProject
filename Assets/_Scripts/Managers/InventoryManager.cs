@@ -22,6 +22,7 @@ public class InventoryManager : MonoBehaviour
     UIManager uiManager;
     ItemManager itemManager;
     SynergyManager synergyManager;
+    Player player;
 
     private void Awake()
     {
@@ -52,6 +53,7 @@ public class InventoryManager : MonoBehaviour
         uiManager = UIManager.Instance;
         itemManager = ItemManager.Instance;
         synergyManager = SynergyManager.Instance;
+        player = Player.Instance;
     }
 
     // 강화슬롯 초기화
@@ -154,9 +156,9 @@ public class InventoryManager : MonoBehaviour
         // 아이템 시너지 카운트 업데이트
         CheckActiveSynergy();
 
-        if (Player.Instance != null)
+        if (player != null)
         {
-            Player.Instance.SetFinalStat();
+            player.SetFinalStat();
         }
 
         // 아이템 획득 시 시너지 효과 업데이트
@@ -210,9 +212,9 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        if (Player.Instance != null)
+        if (player != null)
         {
-            Player.Instance.SetFinalStat();
+            player.SetFinalStat();
         }
 
 
@@ -310,9 +312,9 @@ public class InventoryManager : MonoBehaviour
         indexByItemId.Remove(Inventory[slotIndex].iId);
         Inventory[slotIndex] = null;
 
-        if(Player.Instance != null)
+        if(player != null)
         {
-            Player.Instance.SetFinalStat();
+            player.SetFinalStat();
         }
         
 
