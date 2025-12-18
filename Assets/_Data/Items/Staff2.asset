@@ -49,7 +49,7 @@ MonoBehaviour:
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0
-    attackDamage: 0
+    attackDamage: 5
     attackRange: 0
     attackSpeed: 0
     projectileCount: 0

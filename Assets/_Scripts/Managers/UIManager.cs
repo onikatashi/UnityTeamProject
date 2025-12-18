@@ -122,6 +122,11 @@ public class UIManager : MonoBehaviour
             itemDescriptionUIController.HideItemDescription();
         }
 
+        if (!inventoryUIController.gameObject.activeSelf && synergyDescriptionUIController.gameObject.activeSelf)
+        {
+            synergyDescriptionUIController.HideSynergyDescription();
+        }
+
         // 시너지 효과는 오브젝트 풀을 쓰기 때문에 프리팹을 돌려주기 위해서 이렇게 경우를 나눔
         // ModeUI도 이 때 같이 켜져야 하기 때문에 추가적인 조건 없이 여기에 추가
 

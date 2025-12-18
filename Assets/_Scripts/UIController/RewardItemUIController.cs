@@ -33,7 +33,6 @@ public class RewardItemUIController : MonoBehaviour
         randItem = itemManager.GetRandomItemDataByRank(randRank);
 
         itemDescriptionUIController.ShowItemDescription(randItem);
-        itemDescriptionUIController.IncreaseItemDescriptionSize();
         itemImage.sprite = randItem.iIcon;
     }
 

@@ -32,7 +32,6 @@ public class SynergyData : ScriptableObject
     {
         if(statsByLevel != null)
         {
-            Debug.Log("이미 초기화됨");
             return;
         }
 
