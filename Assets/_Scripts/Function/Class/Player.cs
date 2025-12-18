@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     //public float iRate;
 
     public Stats finalStats;
+    PlayerAttack pa;
     bool isStunned = false;
     public bool IsStunned => isStunned;
     bool isInputReversed = false;
@@ -63,6 +64,8 @@ public class Player : MonoBehaviour
         poolManager = PoolManager.Instance;
 
         animCtrl = GetComponentInChildren<PlayerAnimController>();
+
+        pa = GetComponent<PlayerAttack>();
     }
     private void Start()
     {
@@ -205,10 +208,14 @@ public class Player : MonoBehaviour
     {
         //Debug.Log("스턴");
         isStunned = true;
-        
+        pa.canAtt = false;
+        move.canMove = false;
+
         yield return new WaitForSeconds(d);
 
         isStunned = false;
+        pa.canAtt = true;
+        move.canMove = true;
     }
     public void ReverseInput(float duration)
     {
