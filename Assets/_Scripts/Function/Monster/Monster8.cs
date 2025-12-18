@@ -103,7 +103,7 @@ public class Monster8 : MonsterBase
 
     void HandleWindup()
     {
-        agent.isStopped = true;
+        //agent.isStopped = true;
         agent.enabled = false;
 
         // anim.SetTrigger("Jump");
