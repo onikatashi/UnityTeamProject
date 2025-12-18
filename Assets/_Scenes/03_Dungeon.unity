@@ -400,7 +400,7 @@ Transform:
   m_GameObject: {fileID: 244356963}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.5, y: 0, z: 0}
+  m_LocalPosition: {x: 8, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1084,7 +1084,7 @@ MonoBehaviour:
       spawnPoint: {fileID: 795851296}
       count: 1
       spawnOffset: 0
-  rewardPrefab: {fileID: 1248635555794198560, guid: 315c6f1be560266428ecccb60dcd6379, type: 3}
+  rewardPrefab: {fileID: 2263483894746026911, guid: ae009cd848af9204cb099696c7b6ec13, type: 3}
   reward1SpawnPoint: {fileID: 466008906}
   reward2SpawnPoint: {fileID: 2017871215}
   reward3SpawnPoint: {fileID: 244356964}
@@ -3766,7 +3766,7 @@ Transform:
   m_GameObject: {fileID: 2017871214}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.15, y: 0, z: 0}
+  m_LocalPosition: {x: -8, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

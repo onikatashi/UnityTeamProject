@@ -22,7 +22,6 @@ public class InventoryManager : MonoBehaviour
     UIManager uiManager;
     ItemManager itemManager;
     SynergyManager synergyManager;
-    Player player;
 
     private void Awake()
     {
@@ -53,7 +52,6 @@ public class InventoryManager : MonoBehaviour
         uiManager = UIManager.Instance;
         itemManager = ItemManager.Instance;
         synergyManager = SynergyManager.Instance;
-        player = Player.Instance;
     }
 
     // 강화슬롯 초기화
@@ -125,7 +123,7 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리에 아이템 추가
     public void AddItemToInventory(ItemData newItem)
     {
-        if (itemCount >= Inventory.Length)
+        if (CheckInventoryIsFull())
         {
             Debug.Log("인벤토리 가득 참");
             return;
@@ -156,9 +154,10 @@ public class InventoryManager : MonoBehaviour
         // 아이템 시너지 카운트 업데이트
         CheckActiveSynergy();
 
-        if (player != null)
+        if (Player.Instance != null)
         {
-            player.SetFinalStat();
+
+            Player.Instance.SetFinalStat();
         }
 
         // 아이템 획득 시 시너지 효과 업데이트
@@ -187,7 +186,7 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리에 아이템 추가 인덱스 기반 (스왑할 때 사용)
     public void AddItemToInventoryByIndex(int index, ItemData newItem)
     {
-        if (itemCount >= Inventory.Length)
+        if (CheckInventoryIsFull())
         {
             Debug.Log("인벤토리 가득 참");
             return;
@@ -212,9 +211,9 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        if (player != null)
+        if (Player.Instance != null)
         {
-            player.SetFinalStat();
+            Player.Instance.SetFinalStat();
         }
 
 
@@ -312,9 +311,9 @@ public class InventoryManager : MonoBehaviour
         indexByItemId.Remove(Inventory[slotIndex].iId);
         Inventory[slotIndex] = null;
 
-        if(player != null)
+        if(Player.Instance != null)
         {
-            player.SetFinalStat();
+            Player.Instance.SetFinalStat();
         }
         
 
@@ -578,5 +577,14 @@ public class InventoryManager : MonoBehaviour
                 uiManager.inventoryUIController.UpdateItemIcon();
             }
         }
+    }
+
+    public bool CheckInventoryIsFull()
+    {
+        if ( itemCount < Inventory.Length)
+        {
+            return false;
+        }
+        return true;
     }
 }

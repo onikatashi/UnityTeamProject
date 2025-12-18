@@ -16,17 +16,17 @@ MonoBehaviour:
   iIcon: {fileID: 21300000, guid: b30bbdea7cb1c2149b869249a8949e77, type: 3}
   iName: "\uAC11\uC6371"
   iStatDescription: "\uCCB4\uB825 + 100"
-  iDescription: "\uAE30\uCD08\uC801\uC778 \uAC11"
+  iDescription: 1\n2\n3\n4\n5
   iRank: 0
   iSynergy: 01000000
   iEffect: 0
   iPrice: 100
   iBaseStat:
     maxHp: 100
-    maxMp: 0
-    mpRegen: 0
-    maxDashCount: 0
-    dashRegen: 0
+    maxMp: 1
+    mpRegen: 1
+    maxDashCount: 1
+    dashRegen: 1
     dashDistance: 0
     attackDamage: 0
     attackRange: 0

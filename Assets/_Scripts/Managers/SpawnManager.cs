@@ -7,6 +7,8 @@ using Random = UnityEngine.Random; // UnityEngine.Random 명시
 
 public class SpawnManager : MonoBehaviour
 {
+    public static SpawnManager Instance;
+
     public event System.Action OnAllEnemiesCleared;
 
     [System.Serializable]
@@ -62,6 +64,19 @@ public class SpawnManager : MonoBehaviour
     List<GameObject> aliveEnemies = new List<GameObject>();
     bool spawningFinished = false;
     bool isPhaseActive = false;
+
+    public List<RewardItemUIController> rewards = new List<RewardItemUIController>();
+
+    private void Awake()
+    {
+        // 씬 내에 오직 하나만 존재하도록 보장
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
 
     void Start()
     {
@@ -270,9 +285,20 @@ public class SpawnManager : MonoBehaviour
         }
 
         // 스폰
-        Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+        GameObject go = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
+        RewardItemUIController spawnedReward = go.GetComponent<RewardItemUIController>();
+        rewards.Add(spawnedReward);
         Debug.Log($"리워드 {slotIndex} 생성 완료: {prefab.name} @ {spawnPoint.name}");
         return true;
+    }
+
+    public void DestroyAllRewards()
+    {
+        for (int i = 0; i < rewards.Count; i++)
+        {
+            Destroy(rewards[i].gameObject);
+        }
+        rewards.Clear();
     }
 
 
@@ -282,6 +308,15 @@ public class SpawnManager : MonoBehaviour
         {
             Instantiate(portalPrefab, portalSpawnPoint.position, portalSpawnPoint.rotation);
             Debug.Log("포탈 생성 완료");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // 씬이 파괴될 때 정적 참조를 비워주어 메모리 누수 방지
+        if (Instance == this)
+        {
+            Instance = null;
         }
     }
 }
