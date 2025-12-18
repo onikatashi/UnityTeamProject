@@ -8,7 +8,7 @@ public class LRFlip : MonoBehaviour
 
     [Header("Sprite")]
     public SpriteRenderer spriteRenderer; 
-    public bool invertFlip = false;      
+    public bool invertFlip = false;     
 
     int playerLayer;
     int playerMask;
@@ -36,6 +36,7 @@ public class LRFlip : MonoBehaviour
 
         if (hits == null || hits.Length == 0) return null;
 
+        
         float best = float.PositiveInfinity;
         Transform bestTr = null;
 
@@ -54,14 +55,14 @@ public class LRFlip : MonoBehaviour
 
     void FlipToward(Vector3 targetPos)
     {
+        
         bool targetIsLeft = targetPos.x < transform.position.x;
 
         bool flip = targetIsLeft;
 
         if (invertFlip) flip = !flip;
 
-        if (spriteRenderer != null)
-            spriteRenderer.flipX = flip;
+        if (spriteRenderer != null) spriteRenderer.flipX = flip;
     }
 
     void OnDrawGizmosSelected()
