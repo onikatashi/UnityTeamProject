@@ -16,6 +16,9 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public int col;   // 컬럼 정보
 
     public bool isAvailable = true; //현재 Room사용 가능 유무(RoomType == None 또는 Null체크시 사용)
+    public bool isGoingNextNode;
+
+
     public Enums.RoomType CurrentRoomType { get; private set; }  // 현재 방 타입
 
     //이미지 스프라이트와 하이라이트 UI연동
@@ -44,11 +47,6 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
 
 
-    void Start()
-    {
-        RefreshVisual();
-    }
-   
 
     /// <summary>
     /// DungeonMaker.cs - GenerateDungeon()에서 생성된 기준대로 룸타입과 이미지 재위치.
@@ -78,17 +76,15 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             icon.color = Color.white;
         }
 
-        RefreshVisual();
     }
-   
 
-    private void RefreshVisual()
+
+    public void SetAlpha(float alpha)
     {
         if (icon == null) return;
 
-        // 노드 활성화 여부(isAvailable) 에 따라서 알파값 변경
-        var color = icon.color;
-        color.a = isAvailable ? 1f : 0.3f; 
+        Color color = icon.color;
+        color.a = alpha;
         icon.color = color;
     }
 
@@ -97,8 +93,14 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (isAvailable && highlight != null)
+
+        if (!isAvailable) return;
+        if (!isGoingNextNode) return;   
+
+        if (highlight != null)
             highlight.SetActive(true);
+
+
     }
 
     // 마우스가 이미지 범위 밖으로 나감.
@@ -111,21 +113,23 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     //마우스 클릭 시 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!isAvailable) return;
+        if (!isAvailable || !isGoingNextNode) return;
 
+        DungeonManager.Instance.SetCurrentNode(floor, col);
         DungeonManager.Instance.SetCurrentRoomType(CurrentRoomType);
 
-        //씬 전환 할거면 무조건 이 아래 해야함.
+        ////씬 전환 할거면 무조건 이 아래 해야함.//실제 사용 코드
         if (CurrentRoomType == RoomType.Normal || CurrentRoomType == RoomType.Elite || CurrentRoomType == RoomType.Boss)
         {
             SceneLoaderManager.Instance.LoadScene(SceneNames.Dungeon);
+
+           // SceneManager.LoadScene("MapDateCheckScene");//테스트용 코드
         }
         else
         {
             SceneLoaderManager.Instance.LoadScene(SceneNames.Restroom);
+            //SceneManager.LoadScene("MapDateCheckScene");//테스트용코드.
         }
-
-
     }
 
 }

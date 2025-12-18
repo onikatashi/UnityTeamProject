@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static DungeonManager;
 
 public class DungeonManager : MonoBehaviour
 {
@@ -19,7 +20,12 @@ public class DungeonManager : MonoBehaviour
     public int currentBattleNodeFloor;
     public int currentBattleNodeColum;
 
-
+    [System.Serializable]
+    public struct NextNodeLinkData
+    {
+        public int floor;      // 다음 노드 층
+        public int column;     // 다음 노드 열
+    }
 
     //싱글톤 및 테마 설정.
     void Awake()
@@ -148,7 +154,7 @@ public class DungeonManager : MonoBehaviour
         currentBattleNodeColum = colum;
     }
 
-    public void ClearCurrentNode()
+    public void dungeonClearSignal()
     {
         if (currentDungeonData == null) return;
 
@@ -158,7 +164,7 @@ public class DungeonManager : MonoBehaviour
             //현재 클릭해서 들어 갔던 노드인지 확인.
             if (node.floor == currentBattleNodeFloor && node.col == currentBattleNodeColum)
             {
-                //클리어한 노드 true를 통한 클리 처리.
+                //클리어한 노드 true를 통한 클리어 처리.
                 node.isCleared = true;
                 Debug.Log($"[DungeonManager] 노드 클리어: {node.floor},{node.col}");
                 return;
@@ -166,22 +172,22 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-
+    //해당 부분은 실사용시 삭제---------------------------------------------
     void Update()
     {
-        //// 스페이스를 누르면 Keypad1 기능 실행
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    SceneManager.LoadScene("MapDateCheckScene");
-        //}
+        //체크용 씬 으로 넘어가기
+        if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            SceneManager.LoadScene("MapDateCheckScene");
+        }
 
-        //// 왼쪽 시프트를 누르면 Keypad2 기능 실행
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //    SceneManager.LoadScene("DungeonMap");
-        //}
+        //맵씬으로 이동.
+        if (Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            SceneManager.LoadScene("02_DungeonMap");
+        }
     }
-
+    //해당 부분은 실사용시 삭제---------------------------------------------
 
 }
 
@@ -212,5 +218,5 @@ public class DungeonNodeData //각 노드별 데이터 정보
     //노드의 좌표정보(Centor)
     public Vector2 uiPosition;
     //다음 노드 정보를 리스트 형식으로 저장.
-    public List<Vector2Int> nextNodes = new List<Vector2Int>();
+    public List<NextNodeLinkData> nextNodesLink = new List<NextNodeLinkData>();
 }
