@@ -1,11 +1,5 @@
 using UnityEngine;
-
-public enum PlayerAnimState
-{
-    Idle,
-    Move,
-    Attack
-}
+using static Enums;
 
 public class PlayerAnimController : MonoBehaviour
 {
@@ -46,10 +40,5 @@ public class PlayerAnimController : MonoBehaviour
                 Debug.Log("Attack상태");
                 break;
         }
-    }
-
-    public void OnAttackEnd()
-    {
-        ChangeState(PlayerAnimState.Idle);
     }
 }
