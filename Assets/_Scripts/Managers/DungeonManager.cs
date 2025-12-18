@@ -148,7 +148,7 @@ public class DungeonManager : MonoBehaviour
         currentBattleNodeColum = colum;
     }
 
-    public void ClearCurrentNode()
+    public void dungeonClearSignal()
     {
         if (currentDungeonData == null) return;
 
@@ -158,7 +158,7 @@ public class DungeonManager : MonoBehaviour
             //현재 클릭해서 들어 갔던 노드인지 확인.
             if (node.floor == currentBattleNodeFloor && node.col == currentBattleNodeColum)
             {
-                //클리어한 노드 true를 통한 클리 처리.
+                //클리어한 노드 true를 통한 클리어 처리.
                 node.isCleared = true;
                 Debug.Log($"[DungeonManager] 노드 클리어: {node.floor},{node.col}");
                 return;
@@ -169,17 +169,17 @@ public class DungeonManager : MonoBehaviour
 
     void Update()
     {
-        //// 스페이스를 누르면 Keypad1 기능 실행
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    SceneManager.LoadScene("MapDateCheckScene");
-        //}
+        //체크용 씬 으로 넘어가기
+        if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            SceneManager.LoadScene("MapDateCheckScene");
+        }
 
-        //// 왼쪽 시프트를 누르면 Keypad2 기능 실행
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //    SceneManager.LoadScene("DungeonMap");
-        //}
+        //맵씬으로 이동.
+        if (Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            SceneManager.LoadScene("02_DungeonMap");
+        }
     }
 
 
