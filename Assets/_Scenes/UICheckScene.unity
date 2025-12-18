@@ -548,6 +548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allItemDatas: {fileID: 11400000, guid: d28e600ee1f6fbd48995da78f61590b0, type: 2}
+  itemRankProbability: {fileID: 11400000, guid: 582ebb0469b667042add19d13b64efe5, type: 2}
 --- !u!4 &625999392
 Transform:
   m_ObjectHideFlags: 0

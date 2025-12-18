@@ -14,6 +14,10 @@ public class ItemManager : MonoBehaviour
     [SerializeField]
     AllItemsData allItemDatas;
 
+    // 아이템 등급 확률을 가지고 있는 SO 이용
+    [SerializeField]
+    ItemRankProbability itemRankProbability;
+
     // 아이템 데이터를 ID로 편하게 찾기위한 Dictionary
     Dictionary<int, ItemData> itemDictionary = new Dictionary<int, ItemData>();
 
@@ -77,5 +81,52 @@ public class ItemManager : MonoBehaviour
     public List<ItemData> GetAllItem()
     {
         return allItemDatas.allItems;
+    }
+
+    // 확률에 의한 등급 랜덤 반환
+    public Enums.ItemRank GetRandomItemRank()
+    {
+        // 아이템 등급 확률이 없거나 아이템 Rank enum의 길이와 등록되 등급 확률 길이가 다를 때,
+        if (itemRankProbability == null || itemRankProbability.GetSortedWeight().Count 
+            != System.Enum.GetValues(typeof(Enums.ItemRank)).Length)
+        {
+            Debug.Log("테이블 수정 부탁");
+            return Enums.ItemRank.Common;
+        }
+
+        var sortedWeights = itemRankProbability.GetSortedWeight();
+
+        // 전체 가중치 합
+        int totalWeight = 0;
+        foreach (var rankWeight in sortedWeights)
+        {
+            totalWeight += rankWeight.weight;
+        }
+
+        // 0 ~ 전체 가중치 합 사이 랜덤한 숫자
+        int randNum = UnityEngine.Random.Range(0, totalWeight);
+        Debug.Log(randNum);
+        int currentWeight = 0;
+        foreach (var rankWeight in sortedWeights)
+        {
+            currentWeight += rankWeight.weight;
+            if (randNum < currentWeight)
+            {
+                return rankWeight.rank;
+            }
+            
+        }
+        return Enums.ItemRank.Common;
+    }
+
+    // 해당 랭크에서 랜덤 아이템 반환
+    public ItemData GetRandomItemDataByRank(Enums.ItemRank rank)
+    {
+        // 깊은 복사를 통해서 rank 리스트를 생성
+        List<ItemData> rankItemList = new List<ItemData>(itemDictionaryForRank[rank]);
+
+        // 해당 리스트 중 랜덤한 아이템 반환
+        int randomIndex = UnityEngine.Random.Range(0, rankItemList.Count);
+        return rankItemList[randomIndex];
     }
 }

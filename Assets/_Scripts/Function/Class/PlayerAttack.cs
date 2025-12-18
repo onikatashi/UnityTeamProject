@@ -12,6 +12,9 @@ public class PlayerAttack : MonoBehaviour
     //Player불러오기
     Player player;
 
+    // 외부참조용
+    public bool canAtt = true; 
+
     private void Start()
     {
         player = Player.Instance;
@@ -19,7 +22,8 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if (!GameStateManager.Instance.CanPlayerControl()) return;          //게임 플레이 상태가 아니면 공격 멈추기
+        if (!canAtt) return;
+
         TryAttack();
     }
 

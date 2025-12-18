@@ -27,6 +27,7 @@ public class ItemDescriptionUIController : MonoBehaviour
     public List<DescriptionSynergyUI> synergyUIList;    // 활성화 되어있는 시너지UI를 저장하는 리스트
 
     bool isDescripting = false;                         // 아이템 설명창이 켜져있는지 확인
+    public bool isMouseOver = false;                    // 아이템 슬롯위에 마우스가 올라가 있는지
 
     InventoryManager inventoryManager;
     SynergyManager synergyManager;
@@ -46,7 +47,7 @@ public class ItemDescriptionUIController : MonoBehaviour
     private void Update()
     {
         // 아이템 설명창이 활성화 중일 때,
-        if (isDescripting)
+        if (isDescripting && isMouseOver)
         {
             // F키를 누르면
             if (Input.GetKeyDown(KeyCode.F))
@@ -95,6 +96,9 @@ public class ItemDescriptionUIController : MonoBehaviour
         {
             DescriptionSynergyUI icon = poolManager.Get<DescriptionSynergyUI>(Enums.PoolType.DescriptionSynergy);
 
+            // 오브젝트 풀에서 꺼내온 오브젝트의 부모를 강제로 설정
+            icon.transform.SetParent(synergyPanel, false);
+
             // 오브젝트의 자식 인덱스를 정해줌 (위부터 차례대로 나오게 하기 위함)
             icon.transform.SetSiblingIndex(i);
 
@@ -106,6 +110,11 @@ public class ItemDescriptionUIController : MonoBehaviour
         //itemStatDescriptionText.text = itemData.iStatDescription;
         itemStatDescriptionText.text = ItemDataHelper.GetItemStatsDescription
             (itemData, inventoryManager.reinforcedSlots[slotIndex]);
+        if(gameObject.layer == LayerMask.NameToLayer("RewardUI"))
+        {
+            itemStatDescriptionText.text = ItemDataHelper.GetItemStatsDescription(itemData, 1);
+        }
+
         itemDescriptionText.text = itemData.iDescription;
         itemIcon.sprite = itemData.iIcon;
     }
