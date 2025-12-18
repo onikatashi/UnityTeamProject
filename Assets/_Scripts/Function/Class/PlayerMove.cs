@@ -6,6 +6,7 @@ public class PlayerMove : MonoBehaviour
 
     CharacterController cc;
     Transform cam;
+    PlayerAttack pa;
 
     public bool canMove = true;         //외부에서 사용해야해서 public 생성
 
@@ -16,6 +17,7 @@ public class PlayerMove : MonoBehaviour
     {
         cc = GetComponent<CharacterController>();
         cam = Camera.main.transform;
+        pa = GetComponent<PlayerAttack>();
 
         player = Player.Instance;
     }
@@ -43,12 +45,6 @@ public class PlayerMove : MonoBehaviour
         {
             x *= -1;
             z *= -1;
-        }
-
-        if(player != null && player.IsStunned)
-        {
-            x *= 0;
-            z *= 0;
         }
 
         //카메라 기준 방향 계산

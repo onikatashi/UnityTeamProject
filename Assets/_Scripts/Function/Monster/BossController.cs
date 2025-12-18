@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -96,13 +97,23 @@ public class BossController : MonsterBase
     float lastUltimate = -999f;
     public float ultimateCd = 18f;
 
+    Renderer rend;
+    MaterialPropertyBlock mpb;
+    int dissolveID;
+    Vector3 targetPos;
+    Vector3 startPos;
+
     protected override void Awake()
     {
         base.Awake();
         playerLayer = LayerMask.NameToLayer(playerLayerName);
+        rend = GetComponent<Renderer>();
+        mpb = new MaterialPropertyBlock();
+        dissolveID = Shader.PropertyToID(dissolveProp);
 
         if (laser == null) laser = GetComponentInChildren<MonsterLaser>(true);
     }
+    
 
     void Start()
     {
@@ -559,21 +570,76 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_JumpTop()
     {
-        if (topCenterPoint == null) yield break;
+        if (player == null) yield break;
 
-        if (agent != null) agent.isStopped = true;
-        transform.position = topCenterPoint.position;
-        yield return new WaitForSeconds(0.35f);
+        startPos = transform.position;
+        targetPos = player.transform.position;
+
+        Vector3 pos = targetPos;
+
+        StartCoroutine(Dissolve(1f, 0f, 1f));
+        yield return new WaitForSeconds(1f);
+
+        if (agent != null)
+        {
+            agent.isStopped = true;
+
+            if (agent.enabled && NavMesh.SamplePosition(pos, out NavMeshHit hit, 2.0f, NavMesh.AllAreas)) agent.Warp(hit.position);
+            else
+            {
+                transform.position = pos;
+            }
+                
+        }
+        else
+        {
+            transform.position = pos;
+        }
+        StartCoroutine(Dissolve(0f, 1f, 1f));
+        yield return new WaitForSeconds(1f);
+
         if (agent != null) agent.isStopped = false;
     }
 
+    IEnumerator Dissolve(float start, float end, float duration)
+    {
+        SetDissolve(start);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float v = Mathf.Lerp(start, end, t);
+            SetDissolve(v);
+            yield return null;
+        }
+
+        SetDissolve(end);
+    }
+
+    void SetDissolve(float v)
+    {
+        if (rend == null) return;
+        rend.GetPropertyBlock(mpb);
+        mpb.SetFloat(dissolveID, v);
+        rend.SetPropertyBlock(mpb);
+    }
+
+
     IEnumerator Pattern_BulletHell()
     {
+        StartCoroutine(Dissolve(1f, 0f, 1f));
+        yield return new WaitForSeconds(1f);
+
         if (topCenterPoint != null)
         {
             if (agent != null) agent.isStopped = true;
             transform.position = topCenterPoint.position;
         }
+
+        StartCoroutine(Dissolve(0f, 1f, 1f));
+        yield return new WaitForSeconds(1f);
 
         float t = 0f;
         float fire = 0f;
