@@ -22,6 +22,9 @@ public class SettingUIController : MonoBehaviour
     public TextMeshProUGUI bgmValueText;                // bgm 볼륨 퍼센트
     public TextMeshProUGUI sfxValueText;                // sfx 볼륨 퍼센트
 
+    [Header("다른 버튼 클릭 방지 Blocker")]
+    public GameObject blocker;                          // 설정창 켜졌을 떄, 다른 버튼 방지 블로커
+
     private const float DEBOUNCE_DELAY = 0.5f;          // 디바운싱 지연 시간 (볼륨 저장 지연시간)
     private Coroutine currentCoroutine;                 // 현재 진행 중인 저장 코루틴
 
@@ -46,6 +49,9 @@ public class SettingUIController : MonoBehaviour
         masterVolumeSlider.onValueChanged.AddListener(OnMasterChanged);
         bgmVolumeSlider.onValueChanged.AddListener(OnBGMChanged);
         sfxVolumeSlider.onValueChanged.AddListener(OnSFXChanged);
+
+        // 블로커 비활성화
+        blocker.SetActive(false);
     }
 
 
@@ -118,6 +124,7 @@ public class SettingUIController : MonoBehaviour
         {
             UpdateVolumeText();
             settingPanel.SetActive(true);
+            blocker.SetActive(true);
         }
         else
         {
@@ -128,5 +135,6 @@ public class SettingUIController : MonoBehaviour
     public void HideSettingPanel()
     {
         settingPanel.SetActive(false);
+        blocker.SetActive(false);
     }
 }

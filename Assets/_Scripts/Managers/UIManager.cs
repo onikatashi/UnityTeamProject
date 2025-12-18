@@ -40,6 +40,7 @@ public class UIManager : MonoBehaviour
     private GameObject settingUIPrefab;                             // 세팅 UI 프리팹
     public SettingUIController settingUIController;                 // 세팅 UI 컨트롤러
 
+    SceneLoaderManager sceneLoaderManager;
 
     private void Awake()
     {
@@ -53,10 +54,18 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    private void Start()
+    {
+        sceneLoaderManager = SceneLoaderManager.Instance;
+    }
 
     private void Update()
     {
+        if(sceneLoaderManager.GetCurrentSceneName() == SceneNames.Title)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.I))
         {
             ToggleInventory();
@@ -64,9 +73,11 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            List<ItemData> temp = ItemManager.Instance.GetAllItem();
-            int randomIndex = UnityEngine.Random.Range(0, temp.Count);
-            InventoryManager.Instance.AddItemToInventory(temp[randomIndex]);
+            InventoryManager.Instance.AddItemToInventory(
+                ItemManager.Instance.GetRandomItemDataByRank(ItemManager.Instance.GetRandomItemRank()));
+            //List<ItemData> temp = ItemManager.Instance.GetAllItem();
+            //int randomIndex = UnityEngine.Random.Range(0, temp.Count);
+            //InventoryManager.Instance.AddItemToInventory(temp[randomIndex]);
         }
     }
 
