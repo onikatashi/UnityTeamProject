@@ -22,12 +22,13 @@ public class Player : MonoBehaviour
     public float currentHp;
     public float currentMp;
 
-    ////스킬(버프) 곱연산용 변수
-    //public float sRate;
-    ////아이템(버프) 곱연산용 변수
-    //public float iRate;
+    //버프 전용 스탯
+    private Stats addBuffStats = new Stats();                           //합연산 버프
+    private Stats multiBuffStats = Stats.CreateMultiplierDefault();     //곱연산 버프
 
-    public Stats finalStats;
+    public Stats finalStats;                                            //최종 스탯
+
+
     bool isStunned = false;
     public bool IsStunned => isStunned;
     bool isInputReversed = false;
@@ -55,6 +56,8 @@ public class Player : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         else Destroy(gameObject);
+
+        multiBuffStats = Stats.CreateMultiplierDefault();
 
         move = GetComponent<PlayerMove>();
 
@@ -93,7 +96,34 @@ public class Player : MonoBehaviour
 
     public void SetFinalStat()
     {
-        finalStats = InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
+        Stats baseStats = InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
+        Stats added = baseStats + addBuffStats;
+        finalStats = added * multiBuffStats;
+    }
+
+    /// <summary>
+    /// 곱연산 버프 스킬 실행 함수
+    /// </summary>
+    /// <param name="mulStats"></param>
+    /// <param name="duration"></param>
+    /// <returns></returns>
+    public Coroutine ApplyMultiplicativeBuff(Stats mulStats, float duration)
+    {
+        return StartCoroutine(CoApplyMultiplicativeBuff(mulStats, duration));
+    }
+
+    private IEnumerator CoApplyMultiplicativeBuff(Stats mulStats, float duration)
+    {
+        // 1. 곱연산 버프 적용
+        multiBuffStats *= mulStats;
+        SetFinalStat();
+
+        // 2. 시간 대기 (레벨업 UI / 일시정지 대응)
+        yield return new WaitForSecondsRealtime(duration);
+
+        // 3. 곱연산 버프 해제
+        multiBuffStats /= mulStats;
+        SetFinalStat();
     }
 
     /// <summary>

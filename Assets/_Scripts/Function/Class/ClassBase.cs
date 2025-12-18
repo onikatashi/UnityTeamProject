@@ -5,7 +5,7 @@ public abstract class ClassBase : ScriptableObject
     [Header("직업 이름")]
     public string className;
 
-    [Header("해당 직업이 가지고 있는 스킬 목록")]
+    [Header("해당 직업이 사용 가능한 스킬 목록")]
     public SkillBase[] classSkills;
 
     /// <summary>

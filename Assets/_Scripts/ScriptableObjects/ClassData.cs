@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -17,6 +18,8 @@ public class ClassData : ScriptableObject
     public Stats cBaseStat;                     // 직업 능력치
 
     public Stats cTraitStat;                    // 직업 특성 포인트로 올라가는 능력치
+
+    public List<SkillBase> classSkills = new List<SkillBase>();     //직업 스킬 리스트
 
     // 레벨에 따라 올라가는 수치들
     // 이건 변수명 안정해서 얘기해 봐야함.

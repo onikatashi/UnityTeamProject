@@ -1,0 +1,64 @@
+using UnityEngine;
+using System.Collections;
+
+/// <summary>
+/// 전방향 기본 공격범위 * 2 
+/// 연속 3번 공격
+/// </summary>
+[CreateAssetMenu(menuName = "Skills/MultiSlash")]
+public class Skill_MultiSlash : SkillBase
+{
+    [Header("Damage")]
+    [Tooltip("레벨 1 기준 스킬 계수 (공격력에 곱해짐)")]
+    public float baseDamageMultiplier = 1.5f;
+
+    [Tooltip("레벨당 증가하는 계수")]
+    public float damageMultiplierPerLevel = 0.2f;
+
+    [Header("Attack Settings")]
+    public float range = 4f;
+    public float hitInterval = 0.4f;
+    public int baseHitCount = 3;
+
+    public LayerMask monsterLayer;
+
+    public override void Execute(Player player, int skillLevel)
+    {
+        player.StartCoroutine(DoSlash(player, skillLevel));
+    }
+
+    private IEnumerator DoSlash(Player player, int skillLevel)
+    {
+        int hitCount = baseHitCount + (skillLevel - 1);
+        float damageMultiplier = GetDamageMultiplier(skillLevel);
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            Collider[] monsters = Physics.OverlapSphere(
+                player.transform.position,
+                range*2,
+                monsterLayer
+            );
+
+            foreach (var c in monsters)
+            {
+                MonsterBase m = c.GetComponent<MonsterBase>();
+                if (m == null) continue;
+
+                // ⭐ 타격 순간의 최종 공격력 기준
+                float damage =
+                    player.finalStats.attackDamage * damageMultiplier;
+
+                m.TakeDamage(damage);
+            }
+
+            yield return new WaitForSeconds(hitInterval);
+        }
+    }
+
+    private float GetDamageMultiplier(int level)
+    {
+        return baseDamageMultiplier
+             + damageMultiplierPerLevel * (level - 1);
+    }
+}

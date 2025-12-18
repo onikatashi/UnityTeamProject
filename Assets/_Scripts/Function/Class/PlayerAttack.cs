@@ -19,6 +19,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
+        if (!GameStateManager.Instance.CanPlayerControl()) return;          //게임 플레이 상태가 아니면 공격 멈추기
         TryAttack();
     }
 
