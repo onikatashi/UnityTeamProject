@@ -168,9 +168,32 @@ public class Player : MonoBehaviour
     /// </summary>
     void LookAtPCam()
     {
-        pSprite.transform.LookAt(pCam.transform.position);
+        // 카메라가 바라보는 방향의 반대 = 캐릭터가 향해야 할 방향
+        Vector3 lookDir = pCam.transform.forward;
+
+        // 카메라를 정면으로 마주보게 회전
+        pSprite.rotation = Quaternion.LookRotation(lookDir);
+
     }
 
+    /// <summary>
+    /// 몬스터를 바라보기 + 좌 우 바라보기
+    /// </summary>
+    /// <param name="dirX"></param>
+    public void SetFacing(float dirX)
+    {
+        if (dirX == 0) return;
+
+        //Scale 조절로 좌우 반전하기
+        Vector3 scale = pSprite.localScale;
+        scale.x = dirX > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        pSprite.localScale = scale;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="duration"></param>
     public void Stun(float duration)
     {
         if (!gameObject.activeInHierarchy) return;

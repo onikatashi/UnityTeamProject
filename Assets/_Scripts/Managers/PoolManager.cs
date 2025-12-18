@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 1. 오브젝트 풀링을 관리하는 매니저
@@ -13,15 +14,13 @@ public class PoolManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        // 씬 내에 오직 하나만 존재하도록 보장
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+        Instance = this;
     }
 
     // 오브젝트 풀링이 필요한 곳에서 풀 생성
@@ -61,5 +60,14 @@ public class PoolManager : MonoBehaviour
         }
 
         ((ObjectPool<T>)pools[key]).Return(obj);
+    }
+
+    private void OnDestroy()
+    {
+        // 씬이 파괴될 때 정적 참조를 비워주어 메모리 누수 방지
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Enums;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -76,6 +77,12 @@ public class PlayerMove : MonoBehaviour
         else
         {
             player.animCtrl.ChangeState(PlayerAnimState.Idle);
+        }
+
+        //공격 방향으로 sprite돌리기
+        if( dir.x != 0)
+        {
+            player.SetFacing(dir.x);
         }
     }
 }
