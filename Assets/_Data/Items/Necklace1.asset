@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
-  m_Name: Armor1
+  m_Name: Necklace1
   m_EditorClassIdentifier: 
-  iId: 1
-  iIcon: {fileID: 21300000, guid: b30bbdea7cb1c2149b869249a8949e77, type: 3}
-  iName: "\uAC11\uC6371"
-  iStatDescription: "\uCCB4\uB825 + 100"
-  iDescription: 1\n2\n3\n4\n5
+  iId: 21
+  iIcon: {fileID: 21300000, guid: c1587030e506b7a449216816734cff5c, type: 3}
+  iName: "\uBAA9\uAC78\uC774 1"
+  iStatDescription: 
+  iDescription: "\uBAA9\uC5D0\uAC78\uBA74 \uBAA9\uAC78\uC774"
   iRank: 0
-  iSynergy: 01000000
+  iSynergy: 00000000
   iEffect: 0
-  iPrice: 100
+  iPrice: 0
   iBaseStat:
-    maxHp: 100
-    maxMp: 1
-    mpRegen: 1
-    maxDashCount: 1
-    dashRegen: 1
+    maxHp: 25
+    maxMp: 0
+    mpRegen: 0
+    maxDashCount: 0
+    dashRegen: 0
     dashDistance: 0
     attackDamage: 0
     attackRange: 0
@@ -43,7 +43,7 @@ MonoBehaviour:
     cooldownReduction: 0
     reviveCount: 0
   iBonusStat:
-    maxHp: 10
+    maxHp: 5
     maxMp: 0
     mpRegen: 0
     maxDashCount: 0

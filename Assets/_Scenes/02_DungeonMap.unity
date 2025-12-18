@@ -894,6 +894,63 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dungeonMaker: {fileID: 1474469199}
+--- !u!1001 &1580171942
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1059.0299
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 537.9871
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.166645
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637638830866697122, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4034841102043417850, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
+      propertyPath: m_Name
+      value: PoolManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8f1f5b04f666fd24885744d8b364e086, type: 3}
 --- !u!1 &1603663284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,6 +1085,7 @@ MonoBehaviour:
   floor: 0
   col: 0
   isAvailable: 1
+  isGoingNextNode: 0
   nextNodes: []
   prevNodes: []
 --- !u!114 &1881779185
@@ -1389,6 +1447,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1580171942}
   - {fileID: 22577719}
   - {fileID: 1185340806}
   - {fileID: 1452919758}

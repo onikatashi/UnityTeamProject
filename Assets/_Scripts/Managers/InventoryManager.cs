@@ -123,7 +123,7 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리에 아이템 추가
     public void AddItemToInventory(ItemData newItem)
     {
-        if (itemCount >= Inventory.Length)
+        if (CheckInventoryIsFull())
         {
             Debug.Log("인벤토리 가득 참");
             return;
@@ -156,6 +156,7 @@ public class InventoryManager : MonoBehaviour
 
         if (Player.Instance != null)
         {
+
             Player.Instance.SetFinalStat();
         }
 
@@ -185,7 +186,7 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리에 아이템 추가 인덱스 기반 (스왑할 때 사용)
     public void AddItemToInventoryByIndex(int index, ItemData newItem)
     {
-        if (itemCount >= Inventory.Length)
+        if (CheckInventoryIsFull())
         {
             Debug.Log("인벤토리 가득 참");
             return;
@@ -576,5 +577,14 @@ public class InventoryManager : MonoBehaviour
                 uiManager.inventoryUIController.UpdateItemIcon();
             }
         }
+    }
+
+    public bool CheckInventoryIsFull()
+    {
+        if ( itemCount < Inventory.Length)
+        {
+            return false;
+        }
+        return true;
     }
 }
