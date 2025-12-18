@@ -96,6 +96,9 @@ public class ItemDescriptionUIController : MonoBehaviour
         {
             DescriptionSynergyUI icon = poolManager.Get<DescriptionSynergyUI>(Enums.PoolType.DescriptionSynergy);
 
+            // 오브젝트 풀에서 꺼내온 오브젝트의 부모를 강제로 설정
+            icon.transform.SetParent(synergyPanel, false);
+
             // 오브젝트의 자식 인덱스를 정해줌 (위부터 차례대로 나오게 하기 위함)
             icon.transform.SetSiblingIndex(i);
 
