@@ -73,9 +73,11 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            List<ItemData> temp = ItemManager.Instance.GetAllItem();
-            int randomIndex = UnityEngine.Random.Range(0, temp.Count);
-            InventoryManager.Instance.AddItemToInventory(temp[randomIndex]);
+            InventoryManager.Instance.AddItemToInventory(
+                ItemManager.Instance.GetRandomItemDataByRank(ItemManager.Instance.GetRandomItemRank()));
+            //List<ItemData> temp = ItemManager.Instance.GetAllItem();
+            //int randomIndex = UnityEngine.Random.Range(0, temp.Count);
+            //InventoryManager.Instance.AddItemToInventory(temp[randomIndex]);
         }
     }
 
