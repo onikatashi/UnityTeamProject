@@ -11,6 +11,6 @@ public class ClearTest : MonoBehaviour
         DungeonManager.Instance.dungeonClearSignal();
 
         // 2. 맵 씬으로 복귀
-        SceneManager.LoadScene("DungeonMap");
+        SceneManager.LoadScene("02_DungeonMap");
     }
 }

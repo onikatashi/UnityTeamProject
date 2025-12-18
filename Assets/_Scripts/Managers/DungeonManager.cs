@@ -166,7 +166,7 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-
+    //해당 부분은 실사용시 삭제---------------------------------------------
     void Update()
     {
         //체크용 씬 으로 넘어가기
@@ -181,7 +181,7 @@ public class DungeonManager : MonoBehaviour
             SceneManager.LoadScene("02_DungeonMap");
         }
     }
-
+    //해당 부분은 실사용시 삭제---------------------------------------------
 
 }
 

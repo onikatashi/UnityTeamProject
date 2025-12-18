@@ -88,7 +88,8 @@ public class DungeonMaker : MonoBehaviour
             //테마와 데이터 가져오기.
             ApplyEnvironmentTheme(dungeonData.theme);
             LoadDungeonFromData(dungeonData);
-           
+            ApplyClearStateFromData();
+
             Debug.Log("[DungeonMaker] 기존 던전 데이터 로드 완료");
         }
         else
@@ -114,7 +115,71 @@ public class DungeonMaker : MonoBehaviour
         //모든 노드, 선 정보를 기반으로 선그리기.
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
         PrintDungeonToConsole();
+
+        //던전 알파값 조정
+        ResetAllNextNodeFlags();
+        SetAllNodesAlpha(0.3f);
+
+        // 2. 클리어된 노드 기준으로 다음 노드 열기
+        ApplyClearStateFromData();
+
+        // 3. 클리어가 하나도 없으면 시작층 열기
+        if (!HasAnyClearedNode())
+        {
+            for (int c = 0; c < maxColumn; c++)
+            {
+                NodeButton node = dungeonButtons[0, c];
+                if (node != null && node.isAvailable)
+                {
+                    node.isGoingNextNode = true;
+                    node.SetAlpha(1f);
+                }
+            }
+        }
+
+
     }
+    private bool HasAnyClearedNode()
+    {
+        var data = DungeonManager.Instance.GetDungeonData();
+        if (data == null) return false;
+
+        foreach (var node in data.nodes)
+        {
+            if (node.isCleared)
+                return true;
+        }
+        return false;
+    }
+
+    private void OpenStartFloor()
+    {
+        for (int c = 0; c < maxColumn; c++)
+        {
+            NodeButton node = dungeonButtons[0, c];
+            if (node == null || !node.isAvailable) continue;
+
+            node.isGoingNextNode = true;
+            node.SetAlpha(1f);
+        }
+    }
+    private void SetAllNodesAlpha(float alpha)
+    {
+        for (int f = 0; f < maxFloor; f++)
+        {
+            for (int c = 0; c < maxColumn; c++)
+            {
+                NodeButton node = dungeonButtons[f, c];
+                if (node == null || !node.isAvailable) continue;
+
+                node.SetAlpha(alpha);
+            }
+        }
+    }
+
+   
+
+
 
     private void ApplyEnvironmentTheme(Enums.DungeonTheme theme)
     {
@@ -217,8 +282,91 @@ public class DungeonMaker : MonoBehaviour
                 }
             }
         }
+        startNodes.Clear();
+        for (int c = 0; c < maxColumn; c++)
+        {
+            NodeButton node = dungeonButtons[0, c];
+            if (node != null && node.isAvailable)
+            {
+                startNodes.Add(node);
+            }
+        }
+
     }
 
+    //클리어 구분
+    private void ApplyClearStateFromData()
+    {
+        var data = DungeonManager.Instance.GetDungeonData();
+        if (data == null) return;
+
+        HashSet<int> clearedFloors = new HashSet<int>();
+
+        // 1. 클리어된 층 수집
+        foreach (var nodeData in data.nodes)
+        {
+            if (nodeData.isCleared)
+                clearedFloors.Add(nodeData.floor);
+        }
+
+        // 2. 클리어된 노드 처리 + 다음 노드 열기
+        foreach (var nodeData in data.nodes)
+        {
+            if (!nodeData.isCleared) continue;
+
+            NodeButton cleared = dungeonButtons[nodeData.floor, nodeData.col];
+            if (cleared == null) continue;
+
+            // 클리어 표시
+            ApplyClearVisual(cleared);
+
+            // 다음 노드 열기
+            foreach (var next in nodeData.nextNodes)
+            {
+                NodeButton nextNode = dungeonButtons[next.x, next.y];
+                if (nextNode == null || !nextNode.isAvailable) continue;
+
+                nextNode.isGoingNextNode = true;
+                nextNode.SetAlpha(1f);
+            }
+        }
+
+        // 3. 같은 층의 다른 노드 전부 잠금
+        foreach (int floor in clearedFloors)
+        {
+            for (int c = 0; c < maxColumn; c++)
+            {
+                NodeButton node = dungeonButtons[floor, c];
+                if (node == null || !node.isAvailable) continue;
+
+                node.isGoingNextNode = false;
+                node.SetAlpha(0.3f);
+            }
+        }
+    }
+    private void ApplyClearVisual(NodeButton node)
+    {
+        var clear = node.transform.Find("ClearMarkX");
+        if (clear != null)
+            clear.gameObject.SetActive(true);
+
+        node.isGoingNextNode = false;
+        node.SetAlpha(0.3f);
+    }
+
+    private void ResetAllNextNodeFlags()
+    {
+        for (int f = 0; f < maxFloor; f++)
+        {
+            for (int c = 0; c < maxColumn; c++)
+            {
+                NodeButton node = dungeonButtons[f, c];
+                if (node == null) continue;
+
+                node.isGoingNextNode = false;
+            }
+        }
+    }
 
 
     //노드 생성부---------------------------------------------------------------------------------------------
@@ -269,6 +417,17 @@ public class DungeonMaker : MonoBehaviour
         LimitFloorNodeCount(0, startNodeCountLimit);
         LimitFloorNodeCount(maxFloor - 3, eliteNodeCountLimit);
         LimitFloorNodeCount(maxFloor - 1, bossNodeCountLimit);
+
+
+        startNodes.Clear();
+for (int c = 0; c < maxColumn; c++)
+{
+    NodeButton node = dungeonButtons[0, c];
+    if (node != null && node.isAvailable)
+    {
+        startNodes.Add(node);
+    }
+}
     }
 
     /// <summary>
@@ -316,6 +475,7 @@ public class DungeonMaker : MonoBehaviour
 
 
 
+   
     //-------------------------------------------------------------------------------------------------------
 
     //라인 생성부---------------------------------------------------------------------------------------------

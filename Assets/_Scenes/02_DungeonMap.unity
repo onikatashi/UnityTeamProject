@@ -1085,6 +1085,7 @@ MonoBehaviour:
   floor: 0
   col: 0
   isAvailable: 1
+  isGoingNextNode: 0
   nextNodes: []
   prevNodes: []
 --- !u!114 &1881779185
