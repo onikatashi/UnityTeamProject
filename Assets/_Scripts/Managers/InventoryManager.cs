@@ -8,7 +8,7 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
 
-    public ItemData[] Inventory;                            // 인벤토리 아이템 배열
+    public ItemData[] inventory;                            // 인벤토리 아이템 배열
     int itemCount = 0;                                      // 인벤토리 아이템 수
 
     int currentIndex = 0;                                   // 다음 아이템이 들어갈 위치 인덱스
@@ -35,7 +35,7 @@ public class InventoryManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        Inventory = new ItemData[9];
+        inventory = new ItemData[9];
         synergyCount = new SortedDictionary<Enums.ItemSynergy, int>();
         synergyActiveCount = new SortedDictionary<Enums.ItemSynergy, int>();
 
@@ -43,8 +43,6 @@ public class InventoryManager : MonoBehaviour
         GenerateLineCheck();
         InitReinforceSlots();
         InitSynergyActiveCount();
-
-        reinforcedSlots[0] = 2;
     }
 
     void Start()
@@ -58,7 +56,7 @@ public class InventoryManager : MonoBehaviour
     void InitReinforceSlots()
     {
         reinforcedSlots = new Dictionary<int, int>();
-        for (int i = 0; i< Inventory.Length; i++)
+        for (int i = 0; i < inventory.Length; i++)
         {
             reinforcedSlots[i] = 0;
         }
@@ -129,13 +127,13 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        if(CheckDuplicateItems(newItem.iId))
+        if (CheckDuplicateItems(newItem.iId))
         {
             Debug.Log("이미 인벤토리에 있는 아이템");
             return;
         }
 
-        Inventory[currentIndex] = newItem;
+        inventory[currentIndex] = newItem;
         indexByItemId[newItem.iId] = currentIndex;
 
         // 아이템 추가할 때, 해당 아이템의 시너지를 저장
@@ -165,9 +163,9 @@ public class InventoryManager : MonoBehaviour
         uiManager.synergyEffectUIController.ShowSynergyEffect();
 
         // currentIndex 다시 설정
-        for (int i = 0; i < Inventory.Length; i++)
+        for (int i = 0; i < inventory.Length; i++)
         {
-            if (Inventory[i] == null)
+            if (inventory[i] == null)
             {
                 currentIndex = i;
                 break;
@@ -176,7 +174,7 @@ public class InventoryManager : MonoBehaviour
         // 아이템 개수 증가
         itemCount++;
 
-        if (currentIndex >= Inventory.Length)
+        if (currentIndex >= inventory.Length)
         {
             currentIndex--;
         }
@@ -192,7 +190,7 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        Inventory[index] = newItem;
+        inventory[index] = newItem;
         if (newItem != null)
         {
             indexByItemId[newItem.iId] = index;
@@ -227,9 +225,9 @@ public class InventoryManager : MonoBehaviour
         // 아이템 개수 증가
         itemCount++;
 
-        for (int i = 0; i < Inventory.Length; i++)
+        for (int i = 0; i < inventory.Length; i++)
         {
-            if (Inventory[i] == null)
+            if (inventory[i] == null)
             {
                 currentIndex = i;
                 break;
@@ -242,12 +240,12 @@ public class InventoryManager : MonoBehaviour
     public Stats GetInventoryTotalStats()
     {
         Stats totalStats = new Stats();
-        for(int i = 0; i< Inventory.Length; i++)
+        for (int i = 0; i < inventory.Length; i++)
         {
-            var itemData = Inventory[i];
-            if(itemData != null)
+            var itemData = inventory[i];
+            if (itemData != null)
             {
-                if (reinforcedSlots.ContainsKey(i) && Inventory[i] != null)
+                if (reinforcedSlots.ContainsKey(i) && inventory[i] != null)
                 {
                     totalStats += itemData.iBaseStat + itemData.iBonusStat * reinforcedSlots[i];
                 }
@@ -267,7 +265,7 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리 슬롯 강화
     public void ReinforceInventorySlot(int slotIndex)
     {
-        if (slotIndex < 0 || slotIndex >= Inventory.Length)
+        if (slotIndex < 0 || slotIndex >= inventory.Length)
         {
             Debug.LogError("인벤토리 슬롯 범위를 벗어남");
             return;
@@ -281,41 +279,41 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리 아이템 제거 (버리기 버튼을 통해 호출)
     public void RemoveItemFromInventory(int slotIndex)
     {
-        if (slotIndex < 0 || slotIndex >= Inventory.Length)
+        if (slotIndex < 0 || slotIndex >= inventory.Length)
         {
             Debug.LogError("인벤토리 슬롯 범위를 벗어남");
             return;
         }
-        if (Inventory[slotIndex] == null)
+        if (inventory[slotIndex] == null)
         {
             Debug.LogWarning("해당 슬롯에 아이템이 없음");
             return;
         }
 
         // 시너지 개수 카운트 줄여주고 0이면 제거
-        for (int i = 0; i < Inventory[slotIndex].iSynergy.Count; i++)
+        for (int i = 0; i < inventory[slotIndex].iSynergy.Count; i++)
         {
-            if (Inventory[slotIndex].iSynergy[i] != Enums.ItemSynergy.None)
+            if (inventory[slotIndex].iSynergy[i] != Enums.ItemSynergy.None)
             {
-                if (synergyCount.ContainsKey(Inventory[slotIndex].iSynergy[i]))
+                if (synergyCount.ContainsKey(inventory[slotIndex].iSynergy[i]))
                 {
-                    synergyCount[Inventory[slotIndex].iSynergy[i]]--;
+                    synergyCount[inventory[slotIndex].iSynergy[i]]--;
                 }
-                if (synergyCount[Inventory[slotIndex].iSynergy[i]] == 0)
+                if (synergyCount[inventory[slotIndex].iSynergy[i]] == 0)
                 {
-                    synergyCount.Remove(Inventory[slotIndex].iSynergy[i]);
+                    synergyCount.Remove(inventory[slotIndex].iSynergy[i]);
                 }
             }
         }
 
-        indexByItemId.Remove(Inventory[slotIndex].iId);
-        Inventory[slotIndex] = null;
+        indexByItemId.Remove(inventory[slotIndex].iId);
+        inventory[slotIndex] = null;
 
-        if(Player.Instance != null)
+        if (Player.Instance != null)
         {
             Player.Instance.SetFinalStat();
         }
-        
+
 
         // 아이템 시너지 카운트 업데이트
         CheckActiveSynergy();
@@ -326,7 +324,7 @@ public class InventoryManager : MonoBehaviour
 
         itemCount--;
 
-        if(currentIndex >= slotIndex)
+        if (currentIndex >= slotIndex)
         {
             currentIndex = slotIndex;
         }
@@ -336,7 +334,7 @@ public class InventoryManager : MonoBehaviour
     // 아이템 중복 체크
     public bool CheckDuplicateItems(int itemId)
     {
-        if (indexByItemId.ContainsKey(itemId)){
+        if (indexByItemId.ContainsKey(itemId)) {
             return true;
         }
         else
@@ -355,18 +353,18 @@ public class InventoryManager : MonoBehaviour
             synergyActiveCount[type] = 0;
         }
 
-        foreach(int[] line in lineCheck)
+        foreach (int[] line in lineCheck)
         {
             // 첫 번째 슬롯에 아이템이 없거나, 첫 번째 아이템에 시너지가 없으면 다음 라인 확인
-            if (Inventory[line[0]] == null 
-                || Inventory[line[0]].iSynergy == null 
-                || Inventory[line[0]].iSynergy.Count == 0)
+            if (inventory[line[0]] == null
+                || inventory[line[0]].iSynergy == null
+                || inventory[line[0]].iSynergy.Count == 0)
             {
                 continue;
             }
 
             // 첫 번째 슬롯에 있는 아이템의 모든 시너지를 HashSet으로 설정
-            HashSet<Enums.ItemSynergy> checkSynergy = Inventory[line[0]].iSynergy
+            HashSet<Enums.ItemSynergy> checkSynergy = inventory[line[0]].iSynergy
                 .Where(x => x != Enums.ItemSynergy.None)
                 .ToHashSet();
 
@@ -383,16 +381,16 @@ public class InventoryManager : MonoBehaviour
                 int index = line[i];
 
                 // 아이템이 비어있거나 시너지가 비어있으면 실패
-                if (Inventory[index] == null
-                || Inventory[index].iSynergy == null
-                || Inventory[index].iSynergy.Count == 0)
+                if (inventory[index] == null
+                || inventory[index].iSynergy == null
+                || inventory[index].iSynergy.Count == 0)
                 {
                     isLineEmpty = true;
                     break;
                 }
 
                 // 현재 슬롯에 있는 아이템의 모든 시너지를 HashSet을 생성
-                HashSet<Enums.ItemSynergy> currentItemSynergy = Inventory[index].iSynergy
+                HashSet<Enums.ItemSynergy> currentItemSynergy = inventory[index].iSynergy
                     .Where(x => x != Enums.ItemSynergy.None)
                     .ToHashSet();
 
@@ -421,8 +419,8 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리 아이템 위치 변환
     public void SwapItem(int index1, int index2)
     {
-        ItemData temp = Inventory[index1];
-        ItemData temp2 = Inventory[index2];
+        ItemData temp = inventory[index1];
+        ItemData temp2 = inventory[index2];
 
         RemoveItemFromInventory(index1);
         RemoveItemFromInventory(index2);
@@ -440,18 +438,18 @@ public class InventoryManager : MonoBehaviour
     // 아이템 등급 업 => 랜덤 아이템으로
     public void RankUpItem(int index)
     {
-        if (Inventory[index] == null)
+        if (inventory[index] == null)
         {
             Debug.Log("아무것도 없다");
             return;
         }
-        if (Inventory[index].iRank == Enums.ItemRank.Legendary)
+        if (inventory[index].iRank == Enums.ItemRank.Legendary)
         {
             Debug.Log("이미 최고 등급");
             return;
         }
 
-        int currentRankValue = (int)Inventory[index].iRank;
+        int currentRankValue = (int)inventory[index].iRank;
         int nextRankValue = currentRankValue + 1;
         Type rankEnumType = typeof(Enums.ItemRank);
 
@@ -472,9 +470,9 @@ public class InventoryManager : MonoBehaviour
                 {
                     // 만약 중복 아이템이 나오면 그 아이템을 리스트에서 제거
                     nextRankItemList.RemoveAt(randomIndex);
-                   
+
                     // 다음 랭크 아이템을 모두 가지고 있을 때, 강제종료
-                    if(nextRankItemList.Count == 0)
+                    if (nextRankItemList.Count == 0)
                     {
                         Debug.Log("남은 아이템이 없음");
                         return;
@@ -499,18 +497,18 @@ public class InventoryManager : MonoBehaviour
     // 아이템 등급 업 => 시너지 효과 유지한 채로 (시너지가 2개 이상이면 둘 중 하나라도 유지)
     public void RankUpItemWithSynergy(int index)
     {
-        if (Inventory[index] == null)
+        if (inventory[index] == null)
         {
             Debug.Log("아무것도 없다");
             return;
         }
-        if (Inventory[index].iRank == Enums.ItemRank.Legendary)
+        if (inventory[index].iRank == Enums.ItemRank.Legendary)
         {
             Debug.Log("이미 최고 등급");
             return;
         }
 
-        int currentRankValue = (int)Inventory[index].iRank;
+        int currentRankValue = (int)inventory[index].iRank;
         int nextRankValue = currentRankValue + 1;
         Type rankEnumType = typeof(Enums.ItemRank);
 
@@ -526,7 +524,7 @@ public class InventoryManager : MonoBehaviour
                 List<HashSet<ItemData>> synergyItemList = new List<HashSet<ItemData>>();
 
                 // 현재 인덱스의 있는 시너지를 가진 아이템 리스트를 HashSet으로 가져옴
-                foreach (Enums.ItemSynergy synergy in Inventory[index].iSynergy)
+                foreach (Enums.ItemSynergy synergy in inventory[index].iSynergy)
                 {
                     synergyItemList.Add(itemManager.itemDictionaryForSynergy[synergy].ToHashSet());
                 }
@@ -581,10 +579,28 @@ public class InventoryManager : MonoBehaviour
 
     public bool CheckInventoryIsFull()
     {
-        if ( itemCount < Inventory.Length)
+        if (itemCount < inventory.Length)
         {
             return false;
         }
         return true;
+    }
+
+    public void ClearInventory()
+    {
+        inventory = new ItemData[9];
+        itemCount = 0;
+        currentIndex = 0;
+        synergyCount = new SortedDictionary<Enums.ItemSynergy, int>();
+        synergyActiveCount = new SortedDictionary<Enums.ItemSynergy, int>();
+        reinforcedSlots = new Dictionary<int, int>();
+        indexByItemId = new Dictionary<int, int>();
+
+        InitReinforceSlots();
+        InitSynergyActiveCount();
+
+        uiManager.synergyEffectUIController.ReturnSynergySlot();
+        uiManager.synergyDescriptionUIController.HideSynergyDescription();
+        uiManager.inventoryUIController.UpdateItemIcon();
     }
 }

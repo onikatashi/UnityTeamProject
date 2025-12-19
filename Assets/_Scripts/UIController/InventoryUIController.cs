@@ -34,7 +34,7 @@ public class InventoryUIController : MonoBehaviour
         inventorySlots.Clear();
 
         // 슬롯 생성
-        for (int i = 0; i < inventoryManager.Inventory.Length; i++)
+        for (int i = 0; i < inventoryManager.inventory.Length; i++)
         {
             GameObject newSlot = Instantiate(slotPrefab, InventoryPanel.transform);
             newSlot.name = $"Slot_{i}";
@@ -49,13 +49,13 @@ public class InventoryUIController : MonoBehaviour
     // 인벤토리 슬롯 아이콘 업데이트
     public void UpdateItemIcon()
     {
-        for (int i = 0; i < inventoryManager.Inventory.Length; i++)
+        for (int i = 0; i < inventoryManager.inventory.Length; i++)
         {
             // 나중에 reinforcedSlots을 얻는 함수로 바꿔도 될듯
             inventorySlots[i].reinforceLevel.text = "+" + inventoryManager.reinforcedSlots[i].ToString();
-            if (inventoryManager.Inventory[i] != null)
+            if (inventoryManager.inventory[i] != null)
             {
-                inventorySlots[i].itemIcon.sprite = inventoryManager.Inventory[i].iIcon;
+                inventorySlots[i].itemIcon.sprite = inventoryManager.inventory[i].iIcon;
             }
             else
             {

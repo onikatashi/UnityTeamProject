@@ -51,7 +51,7 @@ MonoBehaviour:
     dashDistance: 0
     attackDamage: 30
     attackRange: 0
-    attackSpeed: 0
+    attackSpeed: 6
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0

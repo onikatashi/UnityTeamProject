@@ -26,9 +26,14 @@ public class TempManager : MonoBehaviour
         //    UIManager.Instance.ToggleInventory();
         //}
 
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            InventoryManager.Instance.ClearInventory();
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
-            int randIndex = UnityEngine.Random.Range(0, InventoryManager.Instance.Inventory.Length);
+            int randIndex = UnityEngine.Random.Range(0, InventoryManager.Instance.inventory.Length);
             InventoryManager.Instance.ReinforceInventorySlot(randIndex);
         }
 

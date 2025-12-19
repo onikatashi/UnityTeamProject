@@ -19,6 +19,8 @@ public class SynergyDescriptionUIController : MonoBehaviour
     public SynergyStatText synergyStatText;             // 시너지 스탯 설명 텍스트 프리팹
     public List<SynergyStatText> synergyStatTextList;   // 시너지 스탯 설명 텍스트 프리팹 리스트 
 
+    Vector2 firstSynergyDescriptionSize;                // 시너지 설명 패널 처음 크기
+
     float textHeight;
 
     PoolManager poolManager;
@@ -31,14 +33,21 @@ public class SynergyDescriptionUIController : MonoBehaviour
 
         poolManager.CreatePool<SynergyStatText>(Enums.PoolType.SynergyStatText,
             synergyStatText, 4, synergyStatTextPanel);
+
+       firstSynergyDescriptionSize = synergyDescriptionPanel.sizeDelta;
     }
 
-    public void UpdateSynergyDescriptionSize(int count)
+    public void IncreaseSynergyDescriptionSize(int count)
     {
         textHeight = synergyStatText.statText.rectTransform.sizeDelta.y * count;
 
         synergyDescriptionPanel.sizeDelta = new Vector2(
             synergyDescriptionPanel.sizeDelta.x, synergyDescriptionPanel.sizeDelta.y + textHeight);
+    }
+
+    public void InitializeSynergyDescriptionSize()
+    {
+        synergyDescriptionPanel.sizeDelta = firstSynergyDescriptionSize;
     }
 
     public void ShowSynergyDescription(SynergyData synergyData)
@@ -66,13 +75,13 @@ public class SynergyDescriptionUIController : MonoBehaviour
             synergyStatTextList.Add(statText);
         }
         
-        UpdateSynergyDescriptionSize(synergyStatTextList.Count);
+        IncreaseSynergyDescriptionSize(synergyStatTextList.Count);
     }
 
     // 아이템 설명 패널 비활성화
     public void HideSynergyDescription()
     {
-        UpdateSynergyDescriptionSize(-synergyStatTextList.Count);
+        InitializeSynergyDescriptionSize();
         ReturnSynergyStatText();
         synergyDescriptionPanel.gameObject.SetActive(false);
     }

@@ -28,6 +28,7 @@ public class ItemDescriptionUIController : MonoBehaviour
 
     bool isDescripting = false;                         // 아이템 설명창이 켜져있는지 확인
     public bool isMouseOver = false;                    // 아이템 슬롯위에 마우스가 올라가 있는지
+    private Vector2 firstItemDescriptionSize;           // 아이템 설명창 처음 크기
 
     InventoryManager inventoryManager;
     SynergyManager synergyManager;
@@ -42,6 +43,8 @@ public class ItemDescriptionUIController : MonoBehaviour
         // 설명창의 시너지 설명 오브젝트 풀 생성
         poolManager.CreatePool(Enums.PoolType.DescriptionSynergy, synergyUI, 2, synergyPanel);
         synergyUIList = new List<DescriptionSynergyUI>();
+
+        firstItemDescriptionSize = itemDescriptionSize.sizeDelta;
     }
 
     private void Update()
@@ -107,7 +110,6 @@ public class ItemDescriptionUIController : MonoBehaviour
             synergyUIList.Add(icon);
         }
 
-        //itemStatDescriptionText.text = itemData.iStatDescription;
         itemStatDescriptionText.text = ItemDataHelper.GetItemStatsDescription
             (itemData, inventoryManager.reinforcedSlots[slotIndex]);
         if(gameObject.layer == LayerMask.NameToLayer("RewardUI"))
@@ -117,6 +119,7 @@ public class ItemDescriptionUIController : MonoBehaviour
 
         itemDescriptionText.text = itemData.iDescription;
         itemIcon.sprite = itemData.iIcon;
+        IncreaseItemDescriptionSize();
     }
 
     // 설명 텍스트 크기에 따른 패널 크기 조절
@@ -128,17 +131,19 @@ public class ItemDescriptionUIController : MonoBehaviour
             itemDescriptionSize.sizeDelta.x, itemDescriptionSize.sizeDelta.y + statTextHeight + descriptionTextHeight);
     }
 
-    public void DecreaseItemDescriptionSize()
+    public void InitializeItemDescriptionSize()
     {
         //statTextHeight = itemStatDescriptionText.preferredHeight;
         //descriptionTextHeight = itemDescriptionText.preferredHeight;
-        itemDescriptionSize.sizeDelta = new Vector2(
-            itemDescriptionSize.sizeDelta.x, itemDescriptionSize.sizeDelta.y - statTextHeight - descriptionTextHeight);
+        //itemDescriptionSize.sizeDelta = new Vector2(
+        //    itemDescriptionSize.sizeDelta.x, itemDescriptionSize.sizeDelta.y - statTextHeight - descriptionTextHeight);
+        itemDescriptionSize.sizeDelta = firstItemDescriptionSize;
     }
 
     // 아이템 설명 패널 비활성화
     public void HideItemDescription()
     {
+        InitializeItemDescriptionSize();
         ReturnSynergyUI();
         itemDescriptionPanel.SetActive(false);
         isDescripting = false;
