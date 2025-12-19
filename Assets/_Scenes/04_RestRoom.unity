@@ -1510,7 +1510,7 @@ MonoBehaviour:
   shopGroup: {fileID: 1470482559}
   restGroup: {fileID: 104628659}
   forgeGroup: {fileID: 1035360980}
-  defaultTypeOnFailure: 3
+  defaultTypeOnFailure: 5
 --- !u!4 &1615041277
 Transform:
   m_ObjectHideFlags: 0

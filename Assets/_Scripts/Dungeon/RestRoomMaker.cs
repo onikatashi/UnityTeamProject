@@ -15,6 +15,12 @@ public class RestRoomMaker : MonoBehaviour
 
     private void Start()
     {
+        // 던전 입장 상태임을 DungeonManager에 알림
+        if (DungeonManager.Instance != null)
+        {
+            DungeonManager.Instance.EnterDungeon();
+        }
+
         // 씬이 로드되면 DungeonManager로부터 현재 룸 타입을 받아와 적용합니다.
         ApplyRoomTypeFromManager();
     }
