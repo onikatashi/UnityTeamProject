@@ -23,7 +23,7 @@ MonoBehaviour:
   projectileSpeed: 0
   moveSpeed: 4
   dropGold: 0
-  dropExp: 0
+  dropExp: 10
   shield: 0
   mosterPrefab: {fileID: 450540459708274284, guid: f74d423eb36dfe64880d6babdecb24f9, type: 3}
   stunGage: 999

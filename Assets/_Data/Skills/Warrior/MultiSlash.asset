@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MultiSlash
   m_EditorClassIdentifier: 
   skillName: MultiSlash
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 7b28ebf7f49d1cf4bb19aab9bfa36e54, type: 3}
   cooldown: 1
   baseDamageMultiplier: 1.5
   damageMultiplierPerLevel: 0.2

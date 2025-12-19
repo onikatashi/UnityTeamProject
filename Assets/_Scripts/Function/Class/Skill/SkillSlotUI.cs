@@ -9,30 +9,35 @@ public class SkillSlotUI : MonoBehaviour
 
     private PlayerSkillController skillController;
 
-    private void Awake()
+
+    private void Start()
     {
         skillController = PlayerSkillController.Instance;
+        if (skillController != null)
         skillController.OnSkillChanged += Refresh;
-    }
 
-    private void OnEnable()
-    {
         Refresh();
     }
+
 
     /// <summary>
     /// 슬롯 UI 전체 갱신
     /// </summary>
     public void Refresh()
     {
+        if(skillController == null)
+        {
+            Debug.LogError("스킬컨트롤러 없음");
+        }
         for (int i = 0; i < slotIcons.Length; i++)
         {
             var skillRuntime = skillController.GetSkillAtSlot(i);
 
-            if (skillRuntime == null)
+            if (skillRuntime == null || skillRuntime.skillBaseData == null)
             {
                 slotIcons[i].enabled = false;
                 slotLevelTexts[i].gameObject.SetActive(false);
+                continue;
             }
             else
             {
@@ -47,6 +52,7 @@ public class SkillSlotUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        if(skillController != null )
         skillController.OnSkillChanged -= Refresh;
     }
 }

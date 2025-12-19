@@ -12,7 +12,7 @@ public class SettingUIController : MonoBehaviour
 
     // 아직 활용 안함
     public Button exitButton;                           // 게임 중도포기, 게임 종료 등 이용할 버튼
-    public TextMeshProUGUI exitButtonText;              // 게임 중도포기, 게임 종료 버튼 텍스
+    public TextMeshProUGUI exitButtonText;              // 게임 중도포기, 게임 종료 버튼 텍스트
 
     [Header("사운드 관련 UI")]
     public Slider masterVolumeSlider;                   // 마스터 볼륨 슬라이더
@@ -30,11 +30,15 @@ public class SettingUIController : MonoBehaviour
 
     SoundManager soundManager;
     SaveLoadManager saveLoadManager;
+    DungeonManager dungeonManager;
+    SceneLoaderManager sceneLoaderManager;
 
     void Start()
     {
         soundManager = SoundManager.Instance;
         saveLoadManager = SaveLoadManager.Instance;
+        dungeonManager = DungeonManager.Instance;
+        sceneLoaderManager = SceneLoaderManager.Instance;
 
         // 버튼 연결
         settingButton.onClick.AddListener(ShowSettingPanel);
@@ -50,8 +54,15 @@ public class SettingUIController : MonoBehaviour
         bgmVolumeSlider.onValueChanged.AddListener(OnBGMChanged);
         sfxVolumeSlider.onValueChanged.AddListener(OnSFXChanged);
 
+        // 중도포기 버튼 연결
+        exitButton.onClick.AddListener(ClickExitButton);
+
         // 블로커 비활성화
         blocker.SetActive(false);
+        exitButton.gameObject.SetActive(false);
+
+        // 던전 안, 밖 체크
+        SetActiveExitButton();
     }
 
 
@@ -136,5 +147,25 @@ public class SettingUIController : MonoBehaviour
     {
         settingPanel.SetActive(false);
         blocker.SetActive(false);
+    }
+
+    //던전 Scene에 따라 패널 On/Off
+    public void SetActiveExitButton()
+    {
+        if (dungeonManager.GetCurrentPlayerPlace() == Enums.currentPlayerPlace.dungeonIn)
+        {
+            exitButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            exitButton.gameObject.SetActive(false);
+        }
+    }
+
+    //중도포기 클릭시 리셋 및 Town씬로드로 복귀
+    public void ClickExitButton()
+    {
+        dungeonManager.ResetDungeonData();
+        sceneLoaderManager.LoadScene(SceneNames.Town);
     }
 }

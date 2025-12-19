@@ -18,19 +18,18 @@ public class PlayerLevelSystem : MonoBehaviour
     int pendingLevelUps = 0;
 
     public SkillSelectionUI skillSelectionUI;
-    public ClassData playerClassData;
     public LevelUpSkillSelector selector;
 
     public System.Action<float, float> OnExpChanged;
 
 
-    private void Awake()
-    {
-        selector = new LevelUpSkillSelector(playerClassData, PlayerSkillController.Instance);
-    }
 
     private void Start()
     {
+        selector = new LevelUpSkillSelector(Player.Instance.classStat, PlayerSkillController.Instance);
+        skillSelectionUI.gameObject.SetActive(false);
+
+        OnLevelUp -= HandleLevelUp;         //씬 전환 시 여러번 불릴 수 있으니 보험
         OnLevelUp += HandleLevelUp;
     }
 
@@ -39,6 +38,7 @@ public class PlayerLevelSystem : MonoBehaviour
     /// </summary>
     private void HandleLevelUp(int count)
     {
+        Debug.Log($"HandleLevelUp 호출됨. count = {count}");
         remainingLevelUps = count;
 
         GameStateManager.Instance.SetState(Enums.GamePlayState.LevelUpUI);
@@ -94,6 +94,7 @@ public class PlayerLevelSystem : MonoBehaviour
     /// </summary>
     private void CheckLevelUp()
     {
+        pendingLevelUps = 0;
 
         while (currentExp >= GetRequiredExp(currentLevel))
         {
@@ -113,6 +114,7 @@ public class PlayerLevelSystem : MonoBehaviour
         currentLevel = 1;
         currentExp = 0f;
         pendingLevelUps = 0;
+        Player.Instance.SetFinalStat();
 
         OnExpChanged?.Invoke(currentExp, GetRequiredExp(currentLevel));
     }

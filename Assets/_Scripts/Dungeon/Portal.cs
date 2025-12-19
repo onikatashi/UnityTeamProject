@@ -1,42 +1,101 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
+using static Enums; // RoomType Enum 접근
 
 public class Portal : MonoBehaviour
 {
-    // 이동할 대상 씬 이름
-    public string targetSceneName;
+    [Serializable]
+    public struct RoomSettings
+    {
+        public Enums.RoomType roomType;
+        [Tooltip("SceneNames 클래스에 정의된 변수명을 입력하세요.")]
+        public string sceneFieldName;
+
+        [Header("옵션 설정")]
+        [Tooltip("체크 시 해당 노드를 클리어 처리합니다.")]
+        public bool isClear;
+        [Tooltip("체크 시 던전 데이터를 초기화하고 플레이어/인벤토리를 리셋합니다.")]
+        public bool isReset;
+    }
+
+    [Header("방 타입별 상세 설정")]
+    public RoomSettings[] roomSettingsList;
 
     private int playerLayer;
 
     private void Start()
     {
-        // Player 레이어 번호 캐싱
         playerLayer = LayerMask.NameToLayer("Player");
         if (playerLayer == -1)
         {
             Debug.LogError("Portal: 'Player' 레이어가 존재하지 않습니다.");
         }
-
-        targetSceneName = SceneNames.DungeonMap;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // 충돌한 오브젝트의 최상위 루트 확인
-        Transform root = other.transform.root;
-
-        // 루트 오브젝트가 Player 레이어인 경우만 처리
-        if (root.gameObject.layer == playerLayer)
+        // 충돌한 오브젝트의 최상위 루트가 Player 레이어인지 확인
+        if (other.transform.root.gameObject.layer == playerLayer)
         {
-            if (!string.IsNullOrEmpty(targetSceneName))
-            {
-                // 지정된 씬으로 이동
-                SceneManager.LoadScene(targetSceneName);
-            }
-            else
-            {
-                Debug.LogError("Portal: targetSceneName이 설정되지 않았습니다.");
-            }
+            HandlePortalLogic();
+        }
+    }
+
+    private void HandlePortalLogic()
+    {
+        DungeonManager dungeonManager = DungeonManager.Instance;
+        if (dungeonManager == null) return;
+
+        // 1. 현재 룸 타입 획득
+        Enums.RoomType currentType = dungeonManager.GetCurrentRoomType();
+
+        // 2. 인스펙터 설정값 찾아오기
+        RoomSettings settings = GetSettingsForType(currentType);
+
+        // 3. 조건별 로직 실행
+        if (settings.isClear)
+        {
+            dungeonManager.dungeonClearSignal(); //
+            Debug.Log($"Portal: {currentType} 노드 클리어 처리 완료.");
+        }
+
+        if (settings.isReset)
+        {
+            // DungeonManager에 정의된 리셋 함수 호출
+            dungeonManager.ResetDungeonData(); //
+        }
+
+        // 4. 씬 이동 실행
+        if (!string.IsNullOrEmpty(settings.sceneFieldName))
+        {
+            MoveToScene(settings.sceneFieldName);
+        }
+    }
+
+    private RoomSettings GetSettingsForType(Enums.RoomType type)
+    {
+        foreach (var setting in roomSettingsList)
+        {
+            if (setting.roomType == type) return setting;
+        }
+
+        // 매핑 정보가 없을 경우 기본값 반환
+        return new RoomSettings { sceneFieldName = "DungeonMap", isClear = false, isReset = false };
+    }
+
+    private void MoveToScene(string targetField)
+    {
+        var field = typeof(SceneNames).GetField(targetField);
+        string actualSceneName = (field != null) ? field.GetValue(null).ToString() : targetField;
+
+        if (SceneLoaderManager.Instance != null)
+        {
+            SceneLoaderManager.Instance.LoadScene(actualSceneName); //
+        }
+        else
+        {
+            SceneManager.LoadScene(actualSceneName);
         }
     }
 }

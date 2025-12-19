@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using Unity.Android.Types;
 using UnityEditor;
 using UnityEngine;
 
 public static class ItemDataHelper
 {
     // 스탯의 한글 명칭 맵핑
-    private static Dictionary<string, string> statName = new Dictionary<string, string>()
+    public static Dictionary<string, string> statName = new Dictionary<string, string>()
     {
         {"maxHp", "최대 체력" },
         {"maxMp", "최대 마나" },
@@ -30,6 +31,25 @@ public static class ItemDataHelper
         {"cooldownReduction", "스킬 가속" },
         {"reviveCount", "부활 횟수" }
     };
+
+    public static List<(string, float)> GetPlayerStatInfo(Stats playerStats)
+    {
+        // 튜플을 이용해 스탯 이름, 기본 스탯을 한 번에 묶어서 관리
+        List<(string name, float baseStat)> playerStatInfo = new List<(string, float)>();
+
+        FieldInfo[] fields = typeof(Stats).GetFields(BindingFlags.Instance | BindingFlags.Public);
+
+        foreach (FieldInfo field in fields)
+        {
+            float value = GetFieldValue(playerStats, field);
+
+            if(statName.TryGetValue(field.Name, out string koreanName))
+            {
+                playerStatInfo.Add((koreanName, value));
+            }
+        }
+        return playerStatInfo;
+    }
 
     // 아이템의 상승 스탯 목록을 문자열로 반환
     public static string GetItemStatsDescription(ItemData itemData, int reinforce)
@@ -97,7 +117,7 @@ public static class ItemDataHelper
 
         StringBuilder statStringBuilder = new StringBuilder();
 
-        // 튜플을 이용해 스탯 이름, 기본 스탯, 추가 스탯을 한 번에 묶어서 관리
+        // 튜플을 이용해 스탯 이름, 기본 스탯을 한 번에 묶어서 관리
         List<(string name, float baseStat)> synergyStatInfo = new List<(string, float)>();
 
         // Stats 필드 정보 가져오기
