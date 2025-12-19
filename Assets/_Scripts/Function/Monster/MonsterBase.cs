@@ -148,6 +148,7 @@ public abstract class MonsterBase : MonoBehaviour
 
         // 플레이어에게 경험치 주기
         GiveExpToPlayer();
+        Debug.Log($"플레이어에게 경험치 주기 성공{md.dropExp}");
         if (dissolve != null) StopCoroutine(dissolve);
 
         dissolve = StartCoroutine(DissolveRoutine(1f, 0f, dissolveDuration));

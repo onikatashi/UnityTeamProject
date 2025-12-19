@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DamageBuff
   m_EditorClassIdentifier: 
   skillName: Damage Buff
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 30a623dd3dffd2e40aa9c45e379d01ad, type: 3}
   cooldown: 5
   baseMultiplier: 1.2
   multiplierPerLevel: 0.1

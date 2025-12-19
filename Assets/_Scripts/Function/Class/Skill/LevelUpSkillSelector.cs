@@ -17,6 +17,13 @@ public class LevelUpSkillSelector
 
     public List<SkillCardData> Create3Cards()
     {
+        Debug.Log($"skillSlots length: {skillController.skillSlots.Length}");
+        Debug.Log($"ownedSkills ref: {skillController.ownedSkills}");
+        Debug.Log("Create3Cards 호출됨");
+        Debug.Log($"classData null? {classData == null}");
+        Debug.Log($"ownedSkills Count: {skillController.ownedSkills.Count}");
+        Debug.Log($"classSkills Count: {classData.classSkills.Count}");
+
         List<SkillCardData> cards = new List<SkillCardData>();
 
         bool hasEmptySlot = skillController.HasEmptySlot();
@@ -78,7 +85,6 @@ public class LevelUpSkillSelector
                 levelUpCandidates.Remove(r);
             }
         }
-
         return cards;
     }
 

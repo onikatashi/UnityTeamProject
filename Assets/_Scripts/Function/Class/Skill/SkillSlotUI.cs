@@ -12,13 +12,15 @@ public class SkillSlotUI : MonoBehaviour
     private void Awake()
     {
         skillController = PlayerSkillController.Instance;
-        skillController.OnSkillChanged += Refresh;
     }
-
     private void OnEnable()
     {
+        if(skillController != null)
+        skillController.OnSkillChanged += Refresh;
+
         Refresh();
     }
+
 
     /// <summary>
     /// 슬롯 UI 전체 갱신
@@ -29,10 +31,11 @@ public class SkillSlotUI : MonoBehaviour
         {
             var skillRuntime = skillController.GetSkillAtSlot(i);
 
-            if (skillRuntime == null)
+            if (skillRuntime == null || skillRuntime.skillBaseData == null)
             {
                 slotIcons[i].enabled = false;
                 slotLevelTexts[i].gameObject.SetActive(false);
+                continue;
             }
             else
             {
@@ -47,6 +50,7 @@ public class SkillSlotUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        if(skillController != null )
         skillController.OnSkillChanged -= Refresh;
     }
 }

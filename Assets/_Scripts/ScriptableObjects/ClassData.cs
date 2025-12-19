@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 1. 직업 데이터를 저장하는 SO
@@ -9,6 +10,7 @@ using UnityEngine;
 public class ClassData : ScriptableObject
 {
     public Enums.ClassType classType;           // 직업 타입
+    public Image classImage;                    // 각 직업별 초상화
     
     public int cLevel;                          // 직업 레벨
     public float currentExp;                    // 직업 현재 경험치
