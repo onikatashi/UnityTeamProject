@@ -85,6 +85,7 @@ public class Player : MonoBehaviour
             Debug.LogError("ArrowPrefab이 비어있음!");
             return; // 또는 예외 처리하고 진행 중단
         }
+        if(classStat.classType == Enums.ClassType.Archer)
         poolManager.CreatePool<ArcherProjectile>(Enums.PoolType.ArrowPool, arrowPrefab, arrowPoolSize, transform);
     }
 

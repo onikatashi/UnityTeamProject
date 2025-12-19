@@ -26,4 +26,4 @@ MonoBehaviour:
   dropExp: 0
   shield: 0
   mosterPrefab: {fileID: 3611501301504084308, guid: 594b9b63d37101e40aaf5fd2e7b46e62, type: 3}
-  stunGage: 0
+  stunGage: 999
