@@ -93,4 +93,86 @@ public class Stats
         };
         return result;
     }
+    public static Stats operator *(Stats a, Stats b)
+    {
+        if (a == null || b == null) return null;
+
+        return new Stats
+        {
+            maxHp = a.maxHp * b.maxHp,
+            maxMp = a.maxMp * b.maxMp,
+            mpRegen = a.mpRegen * b.mpRegen,
+            maxDashCount = a.maxDashCount * b.maxDashCount,
+            dashRegen = a.dashRegen * b.dashRegen,
+            dashDistance = a.dashDistance * b.dashDistance,
+            attackDamage = a.attackDamage * b.attackDamage,
+            attackRange = a.attackRange * b.attackRange,
+            attackSpeed = a.attackSpeed * b.attackSpeed,
+            projectileCount = a.projectileCount * b.projectileCount,
+            projectileSpeed = a.projectileSpeed * b.projectileSpeed,
+            moveSpeed = a.moveSpeed * b.moveSpeed,
+            criticalRate = a.criticalRate * b.criticalRate,
+            criticalDamage = a.criticalDamage * b.criticalDamage,
+            shield = a.shield * b.shield,
+            bonusExpRate = a.bonusExpRate * b.bonusExpRate,
+            bonusGoldRate = a.bonusGoldRate * b.bonusGoldRate,
+            luck = a.luck * b.luck,
+            cooldownReduction = a.cooldownReduction * b.cooldownReduction,
+            reviveCount = (int)(a.reviveCount * b.reviveCount)
+        };
+    }
+
+    public static Stats CreateMultiplierDefault()
+    {
+        return new Stats
+        {
+            maxHp = 1f,
+            maxMp = 1f,
+            mpRegen = 1f,
+            maxDashCount = 1f,
+            dashRegen = 1f,
+            dashDistance = 1f,
+            attackDamage = 1f,
+            attackRange = 1f,
+            attackSpeed = 1f,
+            projectileCount = 1f,
+            projectileSpeed = 1f,
+            moveSpeed = 1f,
+            criticalRate = 1f,
+            criticalDamage = 1f,
+            shield = 1f,
+            bonusExpRate = 1f,
+            bonusGoldRate = 1f,
+            luck = 1f,
+            cooldownReduction = 1f,
+            reviveCount = 1
+        };
+    }
+
+    public static Stats operator /(Stats a, Stats b)
+    {
+        return new Stats
+        {
+            maxHp = a.maxHp / b.maxHp,
+            maxMp = a.maxMp / b.maxMp,
+            mpRegen = a.mpRegen / b.mpRegen,
+            maxDashCount = a.maxDashCount / b.maxDashCount,
+            dashRegen = a.dashRegen / b.dashRegen,
+            dashDistance = a.dashDistance / b.dashDistance,
+            attackDamage = a.attackDamage / b.attackDamage,
+            attackRange = a.attackRange / b.attackRange,
+            attackSpeed = a.attackSpeed / b.attackSpeed,
+            projectileCount = a.projectileCount / b.projectileCount,
+            projectileSpeed = a.projectileSpeed / b.projectileSpeed,
+            moveSpeed = a.moveSpeed / b.moveSpeed,
+            criticalRate = a.criticalRate / b.criticalRate,
+            criticalDamage = a.criticalDamage / b.criticalDamage,
+            shield = a.shield / b.shield,
+            bonusExpRate = a.bonusExpRate / b.bonusExpRate,
+            bonusGoldRate = a.bonusGoldRate / b.bonusGoldRate,
+            luck = a.luck / b.luck,
+            cooldownReduction = a.cooldownReduction / b.cooldownReduction,
+            reviveCount = a.reviveCount / b.reviveCount
+        };
+    }
 }

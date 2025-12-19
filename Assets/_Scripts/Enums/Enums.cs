@@ -114,4 +114,19 @@ public class Enums
         Move,
         Attack
     }
+
+    //스킬 카드 타입
+    public enum SkillCardType
+    {
+        NewSkill,
+        LevelUpSkill
+    }
+
+    //게임 상태
+    public enum GamePlayState
+    {
+        Playing,                    //정상 플레이
+        LevelUpUI,                  //레벨업 UI 중 정지 
+        Paused                      //일시 정지 (환경설정 같은거 누를때 용)
+    }
 }
