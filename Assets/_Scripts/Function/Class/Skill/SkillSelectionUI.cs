@@ -10,6 +10,8 @@ public class SkillSelectionUI : MonoBehaviour
     private List<GameObject> spawnedCards = new List<GameObject>();
     private Action onCardSelectedCallback;
 
+    SkillSlotUI slotUI;
+
     private void Awake()
     {
         gameObject.SetActive(false);
@@ -45,6 +47,7 @@ public class SkillSelectionUI : MonoBehaviour
 
         //콜백 호출
         onCardSelectedCallback?.Invoke();
+
     }
 
     private void ClearCards()

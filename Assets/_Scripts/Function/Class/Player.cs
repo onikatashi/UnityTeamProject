@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// 1. 플레이어 스탯 (체력, 마나, 공격력, 방어력 등)
@@ -14,7 +15,7 @@ public class Player : MonoBehaviour
     // Player는 Prefab으로 DungeonManager에서 만들어서 진행
     public static Player Instance;
 
-    PlayerLevelSystem levelSystem;
+    public PlayerLevelSystem levelSystem;
     PlayerSkillController skillController;
     SkillSlotUI skillSlotUI;
 
@@ -50,8 +51,13 @@ public class Player : MonoBehaviour
     public CinemachineCamera pCam;
     Transform pSprite;
 
-    // 플레이어 animationCotroller 캐싱
+    // 플레이어 애니메이션
     public PlayerAnimController animCtrl;
+
+
+    //Hp,Mp,Exp 바 연동용 이벤트 추가
+    public System.Action<float, float> OnHpChanged;     //current, max
+    public System.Action<float, float> OnMpChanged;
 
     private void Awake()
     {
@@ -79,6 +85,9 @@ public class Player : MonoBehaviour
         finalStats = GetBaseStat();
         currentHp = finalStats.maxHp;
         currentMp = finalStats.maxMp;
+        OnHpChanged?.Invoke(currentHp, finalStats.maxHp);
+        OnMpChanged?.Invoke(currentMp, finalStats.maxMp);
+
         if (arrowPrefab == null)
         {
             Debug.LogError("ArrowPrefab이 비어있음!");
@@ -93,6 +102,14 @@ public class Player : MonoBehaviour
     {
         LookAtPCam();
     }
+
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    //public void GetLevelSystem()
+    //{
+
+    //}
 
     /// <summary>
     /// 최종 데미지 스탯 갱신해주기
@@ -150,6 +167,8 @@ public class Player : MonoBehaviour
 
         Debug.Log("Player took " + finalDamage + " damage. Current HP: " + currentHp);
 
+        OnHpChanged?.Invoke(currentHp, finalStats.maxHp);
+
         // 애니메이션 넣을거면 넣고, 피격효과 넣을거면 여기 넣어줘야함.
         if (currentHp <= 0)
         {
@@ -163,13 +182,10 @@ public class Player : MonoBehaviour
     /// <param name="amount"></param>
     public void Heal(float amount)
     {
-        //Heal 수치만큼 현재 체력 회복
-        currentHp += amount;
-        //최대체력을 넘어가면, 
-        if (currentHp >= finalStats.maxHp)
-        {
-            currentHp = finalStats.maxHp;
-        }
+        //Heal 수치만큼 현재 체력 회복, 최대체력 안넘음
+        currentHp = Mathf.Min(currentHp + amount, finalStats.maxHp);
+        OnHpChanged?.Invoke(currentHp, finalStats.maxHp);
+
         Debug.Log("힐");
     }
 
@@ -275,5 +291,7 @@ public class Player : MonoBehaviour
         levelSystem.ResetLevelAndExp();
         //보유스킬, 스킬레벨, 스킬슬롯 초기화
         skillController.ResetAllSkills();
+        currentHp = finalStats.maxHp;
+        currentMp = finalStats.maxMp;
     }
 }

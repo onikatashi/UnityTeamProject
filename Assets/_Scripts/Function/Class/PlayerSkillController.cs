@@ -103,6 +103,8 @@ public class PlayerSkillController : MonoBehaviour
         if (owned != null)
         {
             owned.LevelUp();
+
+            OnSkillChanged?.Invoke();
             return;
         }
 
