@@ -2,6 +2,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
 /// 1. 몬스터 스탯 (체력, 공격력, 방어력 등)
@@ -24,11 +25,22 @@ public abstract class MonsterBase : MonoBehaviour
     public float currentHp = 100f;
     public float detectRange = 10f;
 
+    [Header("Dissolve")]
+    public string dissolveProp = "_SplitValue";
+    public float dissolveDuration = 1f;
+    public float destroyDelay = 1f;
+
+    Renderer rend;
+    MaterialPropertyBlock mpb;
+    int dissolveID;
+    Coroutine dissolve;
+    
+
     public MonsterProjectile bulletPrefab;
     public Transform firepoint;
-
     PoolManager poolManager;
     public bool isDef = false;
+    bool isDie;
 
     protected virtual void Awake()
     {
@@ -36,13 +48,20 @@ public abstract class MonsterBase : MonoBehaviour
         anim = GetComponent<Animator>();
         state = Enums.MonsterState.Idle;
 
-        if(agent != null)
+        rend = GetComponentInChildren<Renderer>(true);
+        mpb = new MaterialPropertyBlock();
+        dissolveID = Shader.PropertyToID(dissolveProp);
+
+        SetDissolve(1f);
+
+
+        if (agent != null)
         {
             agent.isStopped = false;
             agent.updateRotation = true;
         }
 
-        player = Player.Instance.gameObject;
+        if (Player.Instance != null) player = Player.Instance.gameObject;
     }
 
     private void Start()
@@ -82,8 +101,7 @@ public abstract class MonsterBase : MonoBehaviour
     protected virtual void Die()
     {
         //agent.isStopped = true;
-        agent.enabled = false;
-        Destroy(gameObject, 4f);
+        SetDie(1f);
         //anim.SetTrigger("Die");
     }
 
@@ -114,6 +132,47 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        isDie = false;
+
         if(agent != null) agent.isStopped = false;
+
+        SetDissolve(1f);
+    }
+    void SetDie(float duration)
+    {
+        if (isDie) return;
+        isDie = true;
+        agent.enabled = false;
+        if(dissolve != null) StopCoroutine(dissolve);
+
+        dissolve = StartCoroutine(DissolveRoutine(1f, 0f, dissolveDuration));
+
+        Destroy(gameObject, destroyDelay);
+        
+        
+    }
+    IEnumerator DissolveRoutine(float start, float end, float duration)
+    {
+        SetDissolve(start);
+        float elapsed = 0f;
+        
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float v = Mathf.Lerp(start, end, t);
+            SetDissolve(v);
+            yield return null;
+        }
+
+        SetDissolve(end);
+    }
+
+    void SetDissolve(float v)
+    {
+        if (rend == null) return;
+        rend.GetPropertyBlock(mpb);
+        mpb.SetFloat(dissolveID, v);
+        rend.SetPropertyBlock(mpb);
     }
 }
