@@ -1183,8 +1183,8 @@ MonoBehaviour:
   inventoryUIController: {fileID: 0}
   itemDescriptionPanelPrefab: {fileID: 3719466339955442347, guid: ae03a871d88ed7948810f7f1b2360245, type: 3}
   itemDescriptionUIController: {fileID: 0}
-  synergyEffectPanelPrefab: {fileID: 3191535583934080593, guid: ad2e710a67fed8f4ba578f06a56f4769, type: 3}
-  synergyEffectUIController: {fileID: 0}
+  playerStatPanelPrefab: {fileID: 7967492485156797789, guid: 521306efe37360b4ab91ab894a626b9e, type: 3}
+  playerStatUIController: {fileID: 0}
   synergyDescriptionPanelPrefab: {fileID: 6732709150088540433, guid: d33e972fa71689f439b4b7db84accc0a, type: 3}
   synergyDescriptionUIController: {fileID: 0}
   modeUIPrefab: {fileID: 4423247363692658833, guid: c8d75bfa8cad74143a817b93d70b427c, type: 3}
@@ -1247,6 +1247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   userData:
     level: 1
+    nickName: "\uC784\uC2DC \uB2C9\uB124\uC784"
     currentExp: 0
     maxExp: 100
   settingData:

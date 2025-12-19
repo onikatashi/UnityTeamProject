@@ -49,18 +49,21 @@ public class PlayerStatUIController : MonoBehaviour
     // 플레이어 스탯창 초기화
     public void InitPlayerStatUIController()
     {
-        statText = GetComponentInChildren<GridLayoutGroup>().GetComponentsInChildren<TextMeshProUGUI>();
+        if (player != null)
+        {
+            statText = GetComponentInChildren<GridLayoutGroup>().GetComponentsInChildren<TextMeshProUGUI>();
 
-        playerStats = ItemDataHelper.GetPlayerStatInfo(player.finalStats);
-        rowCount = 8;
-        statCount = playerStats.Count;
-        maxPage = statCount / rowCount;
+            playerStats = ItemDataHelper.GetPlayerStatInfo(player.finalStats);
+            rowCount = 8;
+            statCount = playerStats.Count;
+            maxPage = statCount / rowCount;
 
-        previousPageButton.onClick.AddListener(ClickPreviousPageButton);
-        nextPageButton.onClick.AddListener(ClickNextPageButton);
+            previousPageButton.onClick.AddListener(ClickPreviousPageButton);
+            nextPageButton.onClick.AddListener(ClickNextPageButton);
 
-        UpdatePlayerStatUI();
-        UpdatePageText();
+            UpdatePlayerStatUI();
+            UpdatePageText();
+        }
     }
 
     // 플레이어 스탯창 활성화
