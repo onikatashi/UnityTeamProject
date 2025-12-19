@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterRank: 0
   mId: 11
-  monsterName: 
+  monsterName: "\uC774\uC720\uC815"
   maxHp: 30
   attackDamage: 0
   attackRange: 5
@@ -26,4 +26,4 @@ MonoBehaviour:
   dropExp: 10
   shield: 0
   mosterPrefab: {fileID: 6766457303251118766, guid: a920fa750d1a4d842943eafd7c01ec09, type: 3}
-  stunGage: 0
+  stunGage: 999

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using Unity.Android.Types;
-using UnityEditor;
 using UnityEngine;
 
 public static class ItemDataHelper

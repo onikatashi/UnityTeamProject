@@ -64,7 +64,7 @@ public abstract class MonsterBase : MonoBehaviour
         if (Player.Instance != null) player = Player.Instance.gameObject;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         poolManager = PoolManager.Instance;
         if (bulletPrefab != null && firepoint != null)

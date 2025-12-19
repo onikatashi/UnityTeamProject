@@ -7,27 +7,41 @@ public class LRFlip : MonoBehaviour
     public float detectRange = 10f;
 
     [Header("Sprite")]
-    public SpriteRenderer spriteRenderer; 
-    public bool invertFlip = false;     
+    public SpriteRenderer spriteRenderer;
+    public bool invertFlip = false;
 
     int playerLayer;
     int playerMask;
-    Transform playerTr;
+
+    Player player;
 
     void Awake()
     {
-        playerLayer = LayerMask.NameToLayer(playerLayerName);
-        
+        playerLayer = LayerMask.NameToLayer("Player");
         playerMask = 1 << playerLayer;
 
         if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
+    void Start()
+    {
+        player = Player.Instance;
+    }
+
     void Update()
     {
-        playerTr = FindPlayerInRange();
+        LookAtPCam();
 
+        Transform playerTr = FindPlayerInRange();
         if (playerTr != null) FlipToward(playerTr.position);
+    }
+
+    void LookAtPCam()
+    {
+        if (player == null || player.pCam == null) return;
+
+        Vector3 lookDir = player.pCam.transform.forward;
+        spriteRenderer.transform.rotation = Quaternion.LookRotation(lookDir);
     }
 
     Transform FindPlayerInRange()
@@ -36,13 +50,14 @@ public class LRFlip : MonoBehaviour
 
         if (hits == null || hits.Length == 0) return null;
 
-        
         float best = float.PositiveInfinity;
         Transform bestTr = null;
 
         for (int i = 0; i < hits.Length; i++)
         {
-            float d = (hits[i].transform.position - transform.position).sqrMagnitude;
+            float d =
+                (hits[i].transform.position - transform.position).sqrMagnitude;
+
             if (d < best)
             {
                 best = d;
@@ -55,19 +70,10 @@ public class LRFlip : MonoBehaviour
 
     void FlipToward(Vector3 targetPos)
     {
-        
         bool targetIsLeft = targetPos.x < transform.position.x;
+        bool flip = invertFlip ? !targetIsLeft : targetIsLeft;
 
-        bool flip = targetIsLeft;
-
-        if (invertFlip) flip = !flip;
-
-        if (spriteRenderer != null) spriteRenderer.flipX = flip;
+        spriteRenderer.flipX = flip;
     }
 
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectRange);
-    }
 }

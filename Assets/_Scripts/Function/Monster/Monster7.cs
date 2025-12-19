@@ -14,8 +14,30 @@ public class Monster7 : MonsterBase
     public bool includeSelf = false;
     public LayerMask monster;
 
+    [Header("Heal Range Visual")]
+    public GameObject buffRangePrefab;
+    public float buffVisualYOffset = 0.05f;
+
+    GameObject buffRangeInstance;
+
     float buffTimer = 0f;
 
+    protected override void Start()
+    {
+        base.Start();
+
+        if (buffRangePrefab != null)
+        {
+            buffRangeInstance = Instantiate(buffRangePrefab, transform.position, Quaternion.identity, transform);
+
+            buffRangeInstance.SetActive(false);
+        }
+
+    }
+    void LateUpdate()
+    {
+        if (buffRangeInstance != null && buffRangeInstance.activeSelf) UpdateHealRangeVisual();
+    }
     protected override void Idle()
     {
         agent.isStopped = true;
@@ -59,10 +81,11 @@ public class Monster7 : MonsterBase
         if (player == null || md == null) return;
 
         agent.isStopped = true;
-        agent.updateRotation = false;
+        bool isBuff = HasBuffTargetInRange();
+        
+        if(buffRangeInstance != null) buffRangeInstance.SetActive(isBuff);
 
-        // 버프 우선
-        if (HasBuffTargetInRange())
+        if (isBuff)
         {
             buffTimer += Time.deltaTime;
             if (buffTimer >= buffTickInterval)
@@ -77,7 +100,7 @@ public class Monster7 : MonsterBase
             //Debug.Log("공격");
             return;
         }
-
+        
         // 공격
         float dis = Vector3.Distance(transform.position, player.transform.position);
         if (dis > md.attackRange + tolerance)
@@ -132,6 +155,19 @@ public class Monster7 : MonsterBase
             r.ApplyDefenseBuff(this, damageTakenMultiplier, buffDuration); // 소스별 중첩
             //Debug.Log("방어버프");
         }
+    }
+    void UpdateHealRangeVisual()
+    {
+        if (buffRangeInstance == null) return;
+
+        // 위치
+        Vector3 pos = transform.position;
+        pos.y += buffVisualYOffset;
+        buffRangeInstance.transform.position = pos;
+
+        // 지름 = healRange * 2
+        float diameter = buffRange * 2f;
+        buffRangeInstance.transform.localScale = new Vector3(diameter, 1f, diameter);
     }
 
     private void OnDrawGizmosSelected()

@@ -19,7 +19,31 @@ public class Monster5 : MonsterBase
     public bool includeSelf = false;
     public LayerMask monster;
 
+    [Header("Heal Range Visual")]
+    public GameObject healRangePrefab;
+    public float healVisualYOffset = 0.05f;
+
+    GameObject healRangeInstance;
+
     float healTimer = 0f;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        if(healRangePrefab != null)
+        {
+            healRangeInstance = Instantiate(healRangePrefab, transform.position, Quaternion.identity, transform);
+
+            healRangeInstance.SetActive(false);
+        }
+
+    }
+
+    void LateUpdate()
+    {
+        if(healRangeInstance != null && healRangeInstance.activeSelf) UpdateHealRangeVisual();
+    }
 
     protected override void Idle()
     {
@@ -75,11 +99,15 @@ public class Monster5 : MonsterBase
         if (player == null || md == null) return;
 
         agent.isStopped = true;
-        agent.updateRotation = false;
 
-        // 힐 우선: 주변에 체력이 감소한 아군이 있으면 힐만 수행
-        if (HasInjuredAllyInHealRange())
+        bool healing = HasInjuredAllyInHealRange();
+
+        if (healRangeInstance != null) healRangeInstance.SetActive(healing);
+
+        if(healing)
         {
+            // 힐 우선: 주변에 체력이 감소한 아군이 있으면 힐만 수행
+
             healTimer += Time.deltaTime;
             if (healTimer >= healTickInterval)
             {
@@ -94,7 +122,6 @@ public class Monster5 : MonsterBase
             if (disToPlayer > md.attackRange + tolerance)
             {
                 state = Enums.MonsterState.Move;
-                agent.updateRotation = true;
             }
             //Debug.Log("공격");
             return; // 힐 중일 때는 공격 로직을 수행하지 않음
@@ -148,7 +175,7 @@ public class Monster5 : MonsterBase
             float maxHp = GetMaxHp(ally);
             if (maxHp <= 0f) continue;
 
-            if (ally.currentHp < maxHp - 0.001f) return true;
+            if (ally.currentHp < maxHp) return true;
         }
 
         return false;
@@ -176,6 +203,20 @@ public class Monster5 : MonsterBase
         }
     }
 
+    void UpdateHealRangeVisual()
+    {
+        if (healRangeInstance == null) return;
+
+        // 위치
+        Vector3 pos = transform.position;
+        pos.y += healVisualYOffset;
+        healRangeInstance.transform.position = pos;
+
+        // 지름 = healRange * 2
+        float diameter = healRange * 2f;
+        healRangeInstance.transform.localScale = new Vector3(diameter, 1f, diameter);
+    }
+
 
     float GetMaxHp(MonsterBase m)
     {
@@ -186,7 +227,7 @@ public class Monster5 : MonsterBase
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.blue; 
         Gizmos.DrawWireSphere(transform.position, detectRange);
 
         Gizmos.color = Color.green;
