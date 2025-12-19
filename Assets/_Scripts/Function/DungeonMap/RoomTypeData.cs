@@ -61,6 +61,12 @@ public class RoomTypeData : MonoBehaviour
         forcedFloors.Add(dungeonMaker.maxFloor - 3, Enums.RoomType.Elite);//휴식직전 엘리트던전
         forcedFloors.Add(0, Enums.RoomType.Normal);//시작 노드 노말
 
+
+
+        //테스트용 치트코드
+        //forcedRooms.Add((1, 0), Enums.RoomType.Boss);
+
+
         //2종류 번갈아 출현시키기.
         //// [보스 직전층(maxFloor - 2)] → 번갈아 Shop / Rest 생성
         //int restFloor = dungeonMaker.maxFloor - 2;

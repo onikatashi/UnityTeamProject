@@ -114,6 +114,7 @@ public class PlayerLevelSystem : MonoBehaviour
         currentLevel = 1;
         currentExp = 0f;
         pendingLevelUps = 0;
+        Player.Instance.SetFinalStat();
 
         OnExpChanged?.Invoke(currentExp, GetRequiredExp(currentLevel));
     }
