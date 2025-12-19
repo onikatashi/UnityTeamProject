@@ -114,4 +114,13 @@ public class Enums
         Move,
         Attack
     }
+
+    //플레이어 현재 장소
+    public enum currentPlayerPlace
+    {
+        dungeonOut,
+        dungeonIn
+    }
+
+
 }
