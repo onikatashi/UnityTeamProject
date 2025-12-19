@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08bd4ad4ec8022e429577107dd1e2dd9, type: 3}
-  m_Name: "10_\uB9C8\uBC95\uBAAC\uC2A4\uD130"
+  m_Name: "6_\uACF5\uC99D\uBC84\uD504 \uBAAC\uC2A4\uD130"
   m_EditorClassIdentifier: 
   monsterRank: 0
-  mId: 10
-  monsterName: 
-  maxHp: 0
-  attackDamage: 0
-  attackRange: 10
-  attackSpeed: 1
+  mId: 6
+  monsterName: "\uAE40\uC9C4\uC601"
+  maxHp: 30
+  attackDamage: 1
+  attackRange: 7
+  attackSpeed: 4
   projectileCount: 0
   projectileSpeed: 0
   moveSpeed: 0
   dropGold: 0
   dropExp: 0
   shield: 0
-  mosterPrefab: {fileID: 0}
+  mosterPrefab: {fileID: 6433461898110017411, guid: 4be4e2a431a37734ca2b6513ff68593f, type: 3}
   stunGage: 0

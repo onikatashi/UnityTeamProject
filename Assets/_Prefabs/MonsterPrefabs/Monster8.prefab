@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8876972428696720366}
   - component: {fileID: 7488383103321593321}
   - component: {fileID: 3386340826828221912}
+  - component: {fileID: 7405916564809127870}
   m_Layer: 6
   m_Name: Monster8
   m_TagString: Untagged
@@ -160,9 +161,9 @@ MonoBehaviour:
   jumpMinDistance: 0
   jumpMaxDistance: 10
   windupTime: 0.25
-  airTime: 0.45
+  airTime: 1
   landingRecovery: 0.25
-  landingHitRadius: 1.8
+  landingHitRadius: 1.5
   jumpArcHeight: 10
 --- !u!114 &3386340826828221912
 MonoBehaviour:
@@ -176,3 +177,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1795edc2ce6032c459cc3b4b12908afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7405916564809127870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305738969686351384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff31ef7c5dd42f247b8085bfc023f142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayerName: Player
+  detectRange: 10
+  spriteRenderer: {fileID: 0}
+  invertFlip: 0
