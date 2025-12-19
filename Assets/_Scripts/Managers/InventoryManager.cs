@@ -154,13 +154,14 @@ public class InventoryManager : MonoBehaviour
 
         if (Player.Instance != null)
         {
-
             Player.Instance.SetFinalStat();
+            Player.Instance.Heal(newItem.iBaseStat.maxHp +
+                (newItem.iBaseStat * reinforcedSlots[currentIndex]).maxHp);
         }
 
         // 아이템 획득 시 시너지 효과 업데이트
-        uiManager.synergyEffectUIController.ReturnSynergySlot();
-        uiManager.synergyEffectUIController.ShowSynergyEffect();
+        uiManager.playerStatUIController.synergyEffectUIController.ReturnSynergySlot();
+        uiManager.playerStatUIController.synergyEffectUIController.ShowSynergyEffect();
 
         // currentIndex 다시 설정
         for (int i = 0; i < inventory.Length; i++)
@@ -178,7 +179,9 @@ public class InventoryManager : MonoBehaviour
         {
             currentIndex--;
         }
+
         uiManager.inventoryUIController.UpdateItemIcon();
+        uiManager.playerStatUIController.UpdatePlayerStatUI();
     }
 
     // 인벤토리에 아이템 추가 인덱스 기반 (스왑할 때 사용)
@@ -212,6 +215,8 @@ public class InventoryManager : MonoBehaviour
         if (Player.Instance != null)
         {
             Player.Instance.SetFinalStat();
+            Player.Instance.Heal(newItem.iBaseStat.maxHp +
+                (newItem.iBaseStat * reinforcedSlots[currentIndex]).maxHp);
         }
 
 
@@ -219,8 +224,8 @@ public class InventoryManager : MonoBehaviour
         CheckActiveSynergy();
 
         // 아이템 획득 시 시너지 효과 업데이트
-        uiManager.synergyEffectUIController.ReturnSynergySlot();
-        uiManager.synergyEffectUIController.ShowSynergyEffect();
+        uiManager.playerStatUIController.synergyEffectUIController.ReturnSynergySlot();
+        uiManager.playerStatUIController.synergyEffectUIController.ShowSynergyEffect();
 
         // 아이템 개수 증가
         itemCount++;
@@ -234,6 +239,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
         uiManager.inventoryUIController.UpdateItemIcon();
+        uiManager.playerStatUIController.UpdatePlayerStatUI();
     }
 
     // 인벤토리 아이템 최종 스탯 반환
@@ -274,6 +280,7 @@ public class InventoryManager : MonoBehaviour
         // 강화 수치도 랜덤하게 올라가고 싶으면 여기 수정
         reinforcedSlots[slotIndex]++;
         uiManager.inventoryUIController.UpdateItemIcon();
+        uiManager.playerStatUIController.UpdatePlayerStatUI();
     }
 
     // 인벤토리 아이템 제거 (버리기 버튼을 통해 호출)
@@ -312,6 +319,7 @@ public class InventoryManager : MonoBehaviour
         if (Player.Instance != null)
         {
             Player.Instance.SetFinalStat();
+            Player.Instance.Heal(0f);
         }
 
 
@@ -319,8 +327,8 @@ public class InventoryManager : MonoBehaviour
         CheckActiveSynergy();
 
         // 아이템 제거 시, 시너지 효과 패널 업데이트
-        uiManager.synergyEffectUIController.ReturnSynergySlot();
-        uiManager.synergyEffectUIController.ShowSynergyEffect();
+        uiManager.playerStatUIController.synergyEffectUIController.ReturnSynergySlot();
+        uiManager.playerStatUIController.synergyEffectUIController.ShowSynergyEffect();
 
         itemCount--;
 
@@ -329,6 +337,7 @@ public class InventoryManager : MonoBehaviour
             currentIndex = slotIndex;
         }
         uiManager.inventoryUIController.UpdateItemIcon();
+        uiManager.playerStatUIController.UpdatePlayerStatUI();
     }
 
     // 아이템 중복 체크
@@ -433,6 +442,7 @@ public class InventoryManager : MonoBehaviour
 
         // 인벤토리 슬롯 이미지 업데이트
         uiManager.inventoryUIController.UpdateItemIcon();
+        uiManager.playerStatUIController.UpdatePlayerStatUI();
     }
 
     // 아이템 등급 업 => 랜덤 아이템으로
@@ -490,6 +500,7 @@ public class InventoryManager : MonoBehaviour
 
                 // 인벤토리 슬롯 이미지 업데이트
                 uiManager.inventoryUIController.UpdateItemIcon();
+                uiManager.playerStatUIController.UpdatePlayerStatUI();
             }
         }
     }
@@ -573,6 +584,7 @@ public class InventoryManager : MonoBehaviour
 
                 // 인벤토리 슬롯 이미지 업데이트
                 uiManager.inventoryUIController.UpdateItemIcon();
+                uiManager.playerStatUIController.UpdatePlayerStatUI();
             }
         }
     }
@@ -599,7 +611,7 @@ public class InventoryManager : MonoBehaviour
         InitReinforceSlots();
         InitSynergyActiveCount();
 
-        uiManager.synergyEffectUIController.ReturnSynergySlot();
+        uiManager.playerStatUIController.synergyEffectUIController.ReturnSynergySlot();
         uiManager.synergyDescriptionUIController.HideSynergyDescription();
         uiManager.inventoryUIController.UpdateItemIcon();
     }

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class ClassData : ScriptableObject
 {
     public Enums.ClassType classType;           // 직업 타입
-    public Image classImage;                    // 각 직업별 초상화
+    public Sprite classImage;                   // 각 직업별 초상화
     
     public int cLevel;                          // 직업 레벨
     public float currentExp;                    // 직업 현재 경험치
