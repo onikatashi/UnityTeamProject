@@ -9,13 +9,11 @@ public class SkillSlotUI : MonoBehaviour
 
     private PlayerSkillController skillController;
 
-    private void Awake()
+
+    private void Start()
     {
         skillController = PlayerSkillController.Instance;
-    }
-    private void OnEnable()
-    {
-        if(skillController != null)
+        if (skillController != null)
         skillController.OnSkillChanged += Refresh;
 
         Refresh();
@@ -27,6 +25,10 @@ public class SkillSlotUI : MonoBehaviour
     /// </summary>
     public void Refresh()
     {
+        if(skillController == null)
+        {
+            Debug.LogError("스킬컨트롤러 없음");
+        }
         for (int i = 0; i < slotIcons.Length; i++)
         {
             var skillRuntime = skillController.GetSkillAtSlot(i);
