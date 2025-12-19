@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Warrior
   m_EditorClassIdentifier: 
   classType: 0
-  classImage: {fileID: 0}
+  classImage: {fileID: -1072942524, guid: c05aba42aa54c0f4ea2599442eb8abee, type: 3}
   cLevel: 0
   currentExp: 0
   maxExp: 0

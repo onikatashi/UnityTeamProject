@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TreeEditor;
 using UnityEngine;
 
 public class SynergyEffectUIController : MonoBehaviour
@@ -31,15 +30,10 @@ public class SynergyEffectUIController : MonoBehaviour
     // 시너지 효과 UI 풀에서 가져오기 및 패널 활성화
     public void ShowSynergyEffect()
     {
-        // 인벤토리가 활성화 되었을 때만 활성화 되도록
-        if (uiManager.inventoryUIController.gameObject.activeSelf)
+        // 만약 활성화 되기 전에 미리 시너지 슬롯을 만들어놨다면 다시 Pool로 되돌림
+        if (synergySlotUIList.Count > 0)
         {
-            // 만약 활성화 되기 전에 미리 시너지 슬롯을 만들어놨다면 다시 Pool로 되돌림
-            if(synergySlotUIList. Count > 0)
-            {
-                ReturnSynergySlot();
-            }
-            synergyEffectUIPanel.SetActive(true);
+            ReturnSynergySlot();
         }
 
         int i = 0;
@@ -57,13 +51,6 @@ public class SynergyEffectUIController : MonoBehaviour
 
             synergySlotUIList.Add(slot);
         }
-    }
-
-    // 시너지 효과 UI 풀에 돌려놓기 및 패널 숨기기
-    public void HideSynergyEffectUI()
-    {
-        ReturnSynergySlot();
-        synergyEffectUIPanel.SetActive(false);
     }
 
     // 시너지 효과 Slot을 다시 오브젝트 풀에 되돌림

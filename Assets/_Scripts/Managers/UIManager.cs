@@ -20,10 +20,14 @@ public class UIManager : MonoBehaviour
     private GameObject itemDescriptionPanelPrefab;                  // 아이템 설명 패널 프리팹
     public ItemDescriptionUIController itemDescriptionUIController; // 아이템 설명 UI 컨트롤러
 
+    //[SerializeField]
+    //[Header("시너지 효과 패널 UI")]
+    //private GameObject synergyEffectPanelPrefab;                    // 시너지 효과 활성화 패널 프리팹
+    //public SynergyEffectUIController synergyEffectUIController;     // 시너지 효과 UI 컨트롤러
     [SerializeField]
-    [Header("시너지 효과 패널 UI")]
-    private GameObject synergyEffectPanelPrefab;                    // 시너지 효과 활성화 패널 프리팹
-    public SynergyEffectUIController synergyEffectUIController;     // 시너지 효과 UI 컨트롤러
+    [Header("플레이어 스탯 패널 UI")]
+    private GameObject playerStatPanelPrefab;                       // 플레이어 스탯창 프리팹
+    public PlayerStatUIController playerStatUIController;           // 플레이어 스탯창 UI 컨트롤러
 
     [SerializeField]
     [Header("시너지 설명 UI")]
@@ -75,9 +79,6 @@ public class UIManager : MonoBehaviour
         {
             InventoryManager.Instance.AddItemToInventory(
                 ItemManager.Instance.GetRandomItemDataByRank(ItemManager.Instance.GetRandomItemRank()));
-            //List<ItemData> temp = ItemManager.Instance.GetAllItem();
-            //int randomIndex = UnityEngine.Random.Range(0, temp.Count);
-            //InventoryManager.Instance.AddItemToInventory(temp[randomIndex]);
         }
     }
 
@@ -95,7 +96,7 @@ public class UIManager : MonoBehaviour
 
         InstantiateInventoryPanel(canvas);
         InstantiateItemDescriptionPanel(canvas);
-        InstantiateSynergyEffectPanel(canvas);
+        InstantiatePlayerStatPanel(canvas);
         InstantiateSynergyDescriptionPanel(canvas);
         InstantiateModeUI(canvas);
         InstantiateSettingUI(canvas);
@@ -115,6 +116,7 @@ public class UIManager : MonoBehaviour
     {
         // 인벤토리 UI 토글
         inventoryUIController.gameObject.SetActive(!inventoryUIController.gameObject.activeSelf);
+        playerStatUIController.gameObject.SetActive(!playerStatUIController.gameObject.activeSelf);
 
         // 인벤토리가 비활성화 되어있는데 아이템 설명창이 남아있는 경우 아이템 설명창도 hide
         if (!inventoryUIController.gameObject.activeSelf && itemDescriptionUIController.gameObject.activeSelf)
@@ -127,20 +129,18 @@ public class UIManager : MonoBehaviour
             synergyDescriptionUIController.HideSynergyDescription();
         }
 
-        // 시너지 효과는 오브젝트 풀을 쓰기 때문에 프리팹을 돌려주기 위해서 이렇게 경우를 나눔
-        // ModeUI도 이 때 같이 켜져야 하기 때문에 추가적인 조건 없이 여기에 추가
-
+        // ModeUI도 이 때 같이 켜져야 함
         modeUIController.UpdateModeUI();
-        if (synergyEffectUIController.gameObject.activeSelf)
+        if (inventoryUIController.gameObject.activeSelf)
         {
-            synergyEffectUIController.HideSynergyEffectUI();
             modeUIController.HideModeUI();
         }
         else
         {
-            synergyEffectUIController.ShowSynergyEffect();
             modeUIController.ShowModeUI();
         }
+
+        playerStatUIController.UpdatePlayerStatUI();
     }
 
     // InventoryPanel 생성
@@ -153,7 +153,6 @@ public class UIManager : MonoBehaviour
         inventoryUIController.InitInventoryUIController();
 
         panel.SetActive(false);
-        inventoryUIController.UpdateItemIcon();
     }
 
     // ItemDescriptionPanel 생성
@@ -165,12 +164,13 @@ public class UIManager : MonoBehaviour
         panel.SetActive(false);
     }
 
-    // SynergyEffectPanel 생성
-    void InstantiateSynergyEffectPanel(RectTransform canvas)
+    void InstantiatePlayerStatPanel(RectTransform canvas)
     {
-        // 시너지 활성화 패널 생성 및 초기화
-        GameObject panel = Instantiate(synergyEffectPanelPrefab, canvas);
-        synergyEffectUIController = panel.GetComponent<SynergyEffectUIController>();
+        // 플레이어 스탯 패널 생성 및 초기화
+        GameObject panel = Instantiate(playerStatPanelPrefab, canvas);
+        playerStatUIController = panel.GetComponent<PlayerStatUIController>();
+
+        playerStatUIController.InitPlayerStatUIController();
 
         panel.SetActive(false);
     }

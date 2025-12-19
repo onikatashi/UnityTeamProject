@@ -293,5 +293,8 @@ public class Player : MonoBehaviour
         skillController.ResetAllSkills();
         currentHp = finalStats.maxHp;
         currentMp = finalStats.maxMp;
+
+        // 플레이어 스탯창 업데이트
+        UIManager.Instance.playerStatUIController.UpdatePlayerStatUI();
     }
 }

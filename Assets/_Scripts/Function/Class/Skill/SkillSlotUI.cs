@@ -9,18 +9,15 @@ public class SkillSlotUI : MonoBehaviour
 
     private PlayerSkillController skillController;
 
-    private void Awake()
+    private void Start()
     {
         skillController = PlayerSkillController.Instance;
-    }
-    private void OnEnable()
-    {
-        if(skillController != null)
-        skillController.OnSkillChanged += Refresh;
+
+        if (skillController != null)
+            skillController.OnSkillChanged += Refresh;
 
         Refresh();
     }
-
 
     /// <summary>
     /// 슬롯 UI 전체 갱신
