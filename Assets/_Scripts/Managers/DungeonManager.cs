@@ -126,15 +126,19 @@ public class DungeonManager : MonoBehaviour
     {
         return currentPlayerPlace;
     }
+    
+
     //(외부 참조용) 던전 내부
     public void EnterDungeon()
-    {
+    {   
         currentPlayerPlace = Enums.currentPlayerPlace.dungeonIn;
         Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonIn");
+
+  
     }
     //(외부 참조용) 던전 외부
     public void ExitDungeon()
-    {
+    { 
         currentPlayerPlace = Enums.currentPlayerPlace.dungeonOut;
         Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonOut");
     }
