@@ -169,9 +169,13 @@ public class DungeonManager : MonoBehaviour
     }
 
     // 클리어, 포기, 종료 시 초기화 (모든 것을 끝내고 Town으로 돌아올 때.)
-    public void ClearDungeonData()
+    public void ResetDungeonData()
     {
         currentDungeonData = null;
+     
+        InventoryManager.Instance.ClearInventory();
+        Player.Instance.ResetPlayer();
+
         Debug.Log("[DungeonManager] 던전 데이터 초기화 완료");
     }
 
@@ -189,7 +193,7 @@ public class DungeonManager : MonoBehaviour
         //현재 저장된 던전의 전체 노드의 데이터들 검색.
         foreach (var node in currentDungeonData.nodes)
         {
-            //현재 클릭해서 들어 갔던 노드인지 확인.
+            //클릭해서 들어 갔던 노드인지 확인.
             if (node.floor == currentBattleNodeFloor && node.col == currentBattleNodeColum)
             {
                 //클리어한 노드 true를 통한 클리어 처리.
