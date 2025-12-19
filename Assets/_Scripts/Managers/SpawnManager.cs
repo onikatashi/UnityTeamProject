@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq; // LINQ 사용을 위해 추가
-using static Enums; // RoomType Enum 접근을 위해 필요. DungeonManager.cs에 이미 'using static Enums;'가 있으므로 가정합니다.
+using static Enums; // RoomType Enum 접근을 위해 필요
 using Random = UnityEngine.Random; // UnityEngine.Random 명시
 
 public class SpawnManager : MonoBehaviour
@@ -44,7 +44,7 @@ public class SpawnManager : MonoBehaviour
     // -----------------------------------------------------
 
     // -----------------------------------------------------
-    [Header("방 클리어 보상 설정 (DungeonManager에서 이동)")]
+    [Header("방 클리어 보상 및 포탈 설정")]
 
     [Tooltip("모든 리워드 슬롯에 사용될 프리팹")]
     public GameObject rewardPrefab; // Reward 프리팹 하나만 사용
@@ -56,10 +56,9 @@ public class SpawnManager : MonoBehaviour
     [Tooltip("리워드가 스폰될 세 번째 위치")]
     public Transform reward3SpawnPoint;
 
-    public GameObject portalPrefab;
-    public Transform portalSpawnPoint;
+    [Tooltip("씬에 미리 배치되어 비활성화된 포탈 오브젝트를 연결하세요.")]
+    public GameObject portalObject;
     // -----------------------------------------------------
-
 
     List<GameObject> aliveEnemies = new List<GameObject>();
     bool spawningFinished = false;
@@ -76,12 +75,19 @@ public class SpawnManager : MonoBehaviour
             return;
         }
         Instance = this;
+
+        // 게임 시작 시 포탈을 자동으로 비활성화합니다.
+        if (portalObject != null)
+        {
+            portalObject.SetActive(false);
+            Debug.Log("[SpawnManager] 포탈을 초기 비활성화 상태로 설정했습니다.");
+        }
     }
 
     void Start()
     {
-        // DungeonManager의 인스턴스를 찾아옵니다.
-        DungeonManager dungeonManager = DungeonManager.Instance;
+        // DungeonManager의 인스턴스를 찾아옵니다.
+        DungeonManager dungeonManager = DungeonManager.Instance;
 
         if (dungeonManager == null)
         {
@@ -89,16 +95,15 @@ public class SpawnManager : MonoBehaviour
             return;
         }
 
-        // DungeonManager에서 현재 설정된 룸 타입을 가져옵니다.
-        Enums.RoomType currentRoomType = dungeonManager.GetCurrentRoomType();
+        // DungeonManager에서 현재 설정된 룸 타입을 가져옵니다.
+        Enums.RoomType currentRoomType = dungeonManager.GetCurrentRoomType();
 
         // 가져온 룸 타입을 사용하여 스폰 로직 시작
         Debug.Log($"[SpawnManager] Start()에서 DungeonManager를 통해 룸 타입 ({currentRoomType}) 확인 후 스폰 시작.");
 
         // 코루틴 시작
-        StartCoroutine(StartSpawningFlow(currentRoomType));
-    }
-
+        StartCoroutine(StartSpawningFlow(currentRoomType));
+    }
 
     IEnumerator StartSpawningFlow(RoomType roomType)
     {
@@ -108,7 +113,6 @@ public class SpawnManager : MonoBehaviour
         // 실제 스폰 로직 시작
         StartCoroutine(SpawnFlow(roomType));
     }
-
 
     IEnumerator SpawnFlow(RoomType currentRoomType)
     {
@@ -166,7 +170,6 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(CheckClearState());
     }
 
-
     /// <summary>
     /// 현재 룸 타입에 맞는 페이즈 리스트를 반환합니다.
     /// </summary>
@@ -186,10 +189,8 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-
     void SpawnEnemies(SpawnInfo info)
     {
-        // (기존 SpawnEnemies 함수 내용은 동일)
         for (int i = 0; i < info.count; i++)
         {
             float offsetX = Random.Range(-info.spawnOffset, info.spawnOffset);
@@ -209,24 +210,21 @@ public class SpawnManager : MonoBehaviour
         Debug.Log($"{info.spawnPoint.name}에서 {info.count}마리 소환");
     }
 
-
-    // Enemy 가 사망 시 호출될 함수 (기존과 동일)
+    // Enemy 가 사망 시 호출될 함수
     public void NotifyEnemyDeath(GameObject enemy)
     {
         aliveEnemies.Remove(enemy);
     }
 
-
     IEnumerator CheckClearState()
     {
-        // (기존 CheckClearState 코루틴 내용은 동일)
         while (true)
         {
             if (spawningFinished && aliveEnemies.Count == 0)
             {
                 Debug.Log("모든 적 제거 → 던전 클리어");
                 OnAllEnemiesCleared?.Invoke(); // 방 클리어 이벤트 발생
-                HandleRoomCleared(); // 리워드/포탈 생성 로직 호출
+                HandleRoomCleared(); // 리워드 생성/포탈 활성화 로직 호출
                 yield break;
             }
 
@@ -235,24 +233,23 @@ public class SpawnManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 방 클리어 시 리워드 및 포탈 생성 로직
+    /// 방 클리어 시 리워드 생성 및 포탈 활성화 로직
     /// </summary>
     private void HandleRoomCleared()
     {
-        Debug.Log("== 던전 방 클리어 (리워드/포탈 생성) ==");
+        Debug.Log("== 던전 방 클리어 (리워드 생성 / 포탈 활성화) ==");
 
         SpawnAllRewards();
-        SpawnPortal();
+        ActivatePortal();
     }
 
     /// <summary>
-    /// 설정된 3개의 리워드 슬롯을 확인하고 각각 스폰합니다. (rewardPrefab 하나 사용)
+    /// 설정된 3개의 리워드 슬롯을 확인하고 각각 스폰합니다.
     /// </summary>
     private void SpawnAllRewards()
     {
         int rewardsSpawned = 0;
 
-        // 하나의 rewardPrefab과 세 개의 다른 스폰 포인트를 사용
         if (SpawnSingleReward(rewardPrefab, reward1SpawnPoint, 1))
             rewardsSpawned++;
 
@@ -265,12 +262,8 @@ public class SpawnManager : MonoBehaviour
         Debug.Log($"총 {rewardsSpawned}개의 리워드가 생성되었습니다.");
     }
 
-    /// <summary>
-    /// 개별 리워드를 스폰합니다.
-    /// </summary>
     private bool SpawnSingleReward(GameObject prefab, Transform spawnPoint, int slotIndex)
     {
-        // 프리팹이 설정되지 않았거나 스폰 위치가 설정되지 않은 경우 처리
         if (prefab == null)
         {
             if (spawnPoint != null)
@@ -284,7 +277,6 @@ public class SpawnManager : MonoBehaviour
             return false;
         }
 
-        // 스폰
         GameObject go = Instantiate(prefab, spawnPoint.position, spawnPoint.rotation);
         RewardItemUIController spawnedReward = go.GetComponent<RewardItemUIController>();
         rewards.Add(spawnedReward);
@@ -296,24 +288,30 @@ public class SpawnManager : MonoBehaviour
     {
         for (int i = 0; i < rewards.Count; i++)
         {
-            Destroy(rewards[i].gameObject);
+            if (rewards[i] != null)
+                Destroy(rewards[i].gameObject);
         }
         rewards.Clear();
     }
 
-
-    private void SpawnPortal()
+    /// <summary>
+    /// 씬 내에 배치된 포탈 오브젝트를 활성화합니다.
+    /// </summary>
+    private void ActivatePortal()
     {
-        if (portalPrefab != null && portalSpawnPoint != null)
+        if (portalObject != null)
         {
-            Instantiate(portalPrefab, portalSpawnPoint.position, portalSpawnPoint.rotation);
-            Debug.Log("포탈 생성 완료");
+            portalObject.SetActive(true);
+            Debug.Log("포탈 활성화 완료");
+        }
+        else
+        {
+            Debug.LogWarning("활성화할 포탈 오브젝트(portalObject)가 연결되지 않았습니다.");
         }
     }
 
     private void OnDestroy()
     {
-        // 씬이 파괴될 때 정적 참조를 비워주어 메모리 누수 방지
         if (Instance == this)
         {
             Instance = null;
@@ -321,7 +319,6 @@ public class SpawnManager : MonoBehaviour
     }
 }
 
-// 적이 죽었을 때 SpawnManager에 알리기 위한 간단한 바인더 (기존과 동일)
 public class EnemyLifeBinder : MonoBehaviour
 {
     public SpawnManager manager;

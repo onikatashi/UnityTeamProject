@@ -16,6 +16,12 @@ public class MapMaker : MonoBehaviour
 
     private void Start()
     {
+        // 던전 입장 상태임을 DungeonManager에 알림
+        if (DungeonManager.Instance != null)
+        {
+            DungeonManager.Instance.EnterDungeon();
+        }
+
         // DungeonManager의 싱글톤 인스턴스를 참조하여 테마를 적용합니다.
         ApplyThemeFromManagerOrDefault();
     }
