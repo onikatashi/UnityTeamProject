@@ -1,0 +1,115 @@
+using UnityEngine;
+
+/// <summary>
+/// 현재 레벨 관리
+/// 레벨업 필요 경험치 계산
+/// 레벨업 이벤트 실행
+/// </summary>
+public class PlayerLevelSystem : MonoBehaviour
+{
+    public int currentLevel = 1;
+    public float currentExp;
+
+
+    public System.Action<int> OnLevelUp;            //int = 몇 레벨 올랐는지
+    int remainingLevelUps;                          //남은 레벨업 갯수
+
+
+
+    public SkillSelectionUI skillSelectionUI;
+    public ClassData playerClassData;
+    public LevelUpSkillSelector selector;
+
+    //이번 프레임에서 몇 번 레벨업 했는지 (한번에 많은 경험치로 2이상 레벨업 했을 경우를 대비)
+    private int pendingLevelUps = 0;
+
+    private void Awake()
+    {
+        selector = new LevelUpSkillSelector(playerClassData, PlayerSkillController.Instance);
+    }
+
+    private void Start()
+    {
+        OnLevelUp += HandleLevelUp;
+    }
+
+    /// <summary>
+    /// 레벨업 할 때 스킬 선택창 보이기(시간 멈춤)
+    /// </summary>
+    private void HandleLevelUp(int count)
+    {
+        remainingLevelUps = count;
+
+        GameStateManager.Instance.SetState(Enums.GamePlayState.LevelUpUI);
+        Time.timeScale = 0f;
+
+        ShowNextLevelUpUI();
+    }
+
+    private void ShowNextLevelUpUI()
+    {
+        if (remainingLevelUps <= 0)
+        {
+            Time.timeScale = 1f;
+            GameStateManager.Instance.SetState(Enums.GamePlayState.Playing);        //게임 상태 돌려놓기
+            return;
+        }
+
+        remainingLevelUps--;
+
+        var cards = selector.Create3Cards();
+        skillSelectionUI.ShowCards(cards, OnCardSelected);
+    }
+
+    private void OnCardSelected()
+    {
+        ShowNextLevelUpUI();
+    }
+
+    /// <summary>
+    /// 최대 경험치량 관리
+    /// </summary>
+    /// <param name="level"></param>
+    /// <returns></returns>
+    public float GetRequiredExp(int level)
+    {
+        return 10f + level * 5f;
+    }
+
+    /// <summary>
+    /// 경험치 획득 함수 / PlayerExperience에서 호출할 예정
+    /// </summary>
+    /// <param name="amount"></param>
+    public void AddExp(float amount)
+    {
+        currentExp += amount;
+        CheckLevelUp();
+    }
+
+    /// <summary>
+    /// 레벨업 체크 함수
+    /// </summary>
+    private void CheckLevelUp()
+    {
+        //이번 프레임에서 몇 번 레벨업 했는지 (한번에 많은 경험치로 2이상 레벨업 했을 경우를 대비)
+        int pendingLevelUps = 0;
+
+        while (currentExp >= GetRequiredExp(currentLevel))
+        {
+            currentExp -= GetRequiredExp(currentLevel);
+            currentLevel++;
+            pendingLevelUps++;
+        }
+
+        if (pendingLevelUps > 0)
+        {
+            OnLevelUp?.Invoke(pendingLevelUps);
+        }
+    }
+
+    public void ResetExp()
+    {
+        currentExp = 0f;
+    }
+
+}

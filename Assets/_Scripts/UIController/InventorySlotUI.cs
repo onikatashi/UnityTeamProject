@@ -56,8 +56,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
             uiManager.itemDescriptionUIController.isMouseOver = true;
             uiManager.itemDescriptionUIController.slotIndex = slotIndex;
             uiManager.itemDescriptionUIController.
-                ShowItemDescription(inventoryManager.Inventory[slotIndex]);
-            uiManager.itemDescriptionUIController.IncreaseItemDescriptionSize();
+                ShowItemDescription(inventoryManager.inventory[slotIndex]);
         }
     }
 
@@ -70,7 +69,6 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
             uiManager.itemDescriptionUIController.isMouseOver = false;
             // 프리팹을 아이템 풀에 다시 돌려주는 작업
             uiManager.itemDescriptionUIController.HideItemDescription();
-            uiManager.itemDescriptionUIController.DecreaseItemDescriptionSize();
         }
     }
 

@@ -24,6 +24,7 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        if (!GameStateManager.Instance.CanPlayerControl()) return;  // 게임 플레이 상태가 아니면(일시정지나 레벨업 도중이면 움직이지 못함)
         Move();
     }
 
