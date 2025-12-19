@@ -44,4 +44,9 @@ public class SkillSlotUI : MonoBehaviour
             }
         }
     }
+
+    private void OnDestroy()
+    {
+        skillController.OnSkillChanged -= Refresh;
+    }
 }

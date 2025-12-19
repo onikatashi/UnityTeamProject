@@ -10,8 +10,14 @@ using System.Collections;
 public class Player : MonoBehaviour
 {    // 아이템 + 클래스의 최종 스탯들을 합쳐야함.
     // 스탯들 다 정리해주고, 여기있는 이동속도를 PlayerMove에 넣어주기 / 공격력, 공격속도 등을 PlayerAttack에 넣어주기
+
     // Player는 Prefab으로 DungeonManager에서 만들어서 진행
     public static Player Instance;
+
+    [Header("Reset용")]
+    public PlayerLevelSystem levelSystem;
+    public PlayerSkillController skillController;
+    public SkillSlotUI skillSlotUI;
 
     //스킬에 player로 들고올수 있게 캐싱
     public PlayerMove move;
@@ -28,8 +34,6 @@ public class Player : MonoBehaviour
 
     public Stats finalStats;                                            //최종 스탯
 
-
-    public Stats finalStats;
     PlayerAttack pa;
     bool isStunned = false;
     public bool IsStunned => isStunned;
@@ -59,17 +63,17 @@ public class Player : MonoBehaviour
         }
         else Destroy(gameObject);
 
-        multiBuffStats = Stats.CreateMultiplierDefault();
-
-        move = GetComponent<PlayerMove>();
+        poolManager = PoolManager.Instance;
 
         pSprite = transform.Find("Sprite");
 
-        poolManager = PoolManager.Instance;
+        multiBuffStats = Stats.CreateMultiplierDefault();
 
+        move = GetComponent<PlayerMove>();
         animCtrl = GetComponentInChildren<PlayerAnimController>();
-
         pa = GetComponent<PlayerAttack>();
+        levelSystem = GetComponent<PlayerLevelSystem>();
+        skillController = GetComponent<PlayerSkillController>();
     }
     private void Start()
     {
@@ -95,12 +99,12 @@ public class Player : MonoBehaviour
     /// <returns></returns>
     public Stats GetFinalStat()
     {
-        return InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;     
+        return InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
     }
 
     public void SetFinalStat()
     {
-        Stats baseStats = InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
+        Stats baseStats = GetFinalStat();
         Stats added = baseStats + addBuffStats;
         finalStats = added * multiBuffStats;
     }
@@ -175,7 +179,7 @@ public class Player : MonoBehaviour
     {
         // 플레이어 사망 처리 (게임 오버, 재시작 등)
         Debug.Log("Player has died.");
-        // Time.timeScale = 0; // 예시
+        // Time.timeScale = 0;
     }
 
     /// <summary>
@@ -262,5 +266,13 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(d);
 
         isInputReversed = false;
+    }
+
+    public void ResetPlayer()
+    {
+        //플레이어 레벨, 경험치 초기화
+        levelSystem.ResetLevelAndExp();
+        //보유스킬, 스킬레벨, 스킬슬롯 초기화
+        skillController.ResetAllSkills();
     }
 }

@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 2128313924127194637}
   - component: {fileID: 8521844563051251343}
   - component: {fileID: 7839891058254878435}
+  - component: {fileID: -3142935705137225272}
   m_Layer: 6
   m_Name: Monster5
   m_TagString: Untagged
@@ -192,7 +193,7 @@ MonoBehaviour:
   tolerance: 2
   healRange: 10
   healPerSecond: 8
-  healTickInterval: 0.25
+  healTickInterval: 5
   includeSelf: 0
   monster:
     serializedVersion: 2
@@ -209,3 +210,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1795edc2ce6032c459cc3b4b12908afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-3142935705137225272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9034364352154575966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff31ef7c5dd42f247b8085bfc023f142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayerName: Player
+  detectRange: 10
+  spriteRenderer: {fileID: 0}
+  invertFlip: 0

@@ -14,14 +14,15 @@ public class PlayerLevelSystem : MonoBehaviour
     public System.Action<int> OnLevelUp;            //int = 몇 레벨 올랐는지
     int remainingLevelUps;                          //남은 레벨업 갯수
 
-
+    //이번 프레임에서 몇 번 레벨업 했는지 (한번에 많은 경험치로 2이상 레벨업 했을 경우를 대비)
+    int pendingLevelUps = 0;
 
     public SkillSelectionUI skillSelectionUI;
     public ClassData playerClassData;
     public LevelUpSkillSelector selector;
 
-    //이번 프레임에서 몇 번 레벨업 했는지 (한번에 많은 경험치로 2이상 레벨업 했을 경우를 대비)
-    private int pendingLevelUps = 0;
+    public System.Action<float, float> OnExpChanged;
+
 
     private void Awake()
     {
@@ -83,6 +84,8 @@ public class PlayerLevelSystem : MonoBehaviour
     public void AddExp(float amount)
     {
         currentExp += amount;
+        OnExpChanged?.Invoke(currentExp, GetRequiredExp(currentLevel));
+
         CheckLevelUp();
     }
 
@@ -91,8 +94,6 @@ public class PlayerLevelSystem : MonoBehaviour
     /// </summary>
     private void CheckLevelUp()
     {
-        //이번 프레임에서 몇 번 레벨업 했는지 (한번에 많은 경험치로 2이상 레벨업 했을 경우를 대비)
-        int pendingLevelUps = 0;
 
         while (currentExp >= GetRequiredExp(currentLevel))
         {
@@ -107,9 +108,12 @@ public class PlayerLevelSystem : MonoBehaviour
         }
     }
 
-    public void ResetExp()
+    public void ResetLevelAndExp()
     {
+        currentLevel = 1;
         currentExp = 0f;
-    }
+        pendingLevelUps = 0;
 
+        OnExpChanged?.Invoke(currentExp, GetRequiredExp(currentLevel));
+    }
 }
