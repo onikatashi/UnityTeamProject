@@ -411,6 +411,7 @@ GameObject:
   m_Component:
   - component: {fileID: 536627026}
   - component: {fileID: 536627027}
+  - component: {fileID: 536627028}
   m_Layer: 0
   m_Name: TestDataSave
   m_TagString: Untagged
@@ -452,8 +453,21 @@ MonoBehaviour:
     nodes: []
   currentTheme: 0
   currentRoomType: 0
+  currentPlayerPlace: 0
   currentBattleNodeFloor: 0
   currentBattleNodeColum: 0
+--- !u!114 &536627028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536627025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034dedd863b05dd43a6d688412f86d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1013997421
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,6 +682,7 @@ GameObject:
   - component: {fileID: 1777862870}
   - component: {fileID: 1777862869}
   - component: {fileID: 1777862868}
+  - component: {fileID: 1777862872}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -758,6 +773,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1777862872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1777862867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc085166cc0af0c46a18abc212ac1433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2119401398
 GameObject:
   m_ObjectHideFlags: 0

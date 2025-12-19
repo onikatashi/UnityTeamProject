@@ -115,6 +115,14 @@ public class Enums
         Attack
     }
 
+    //플레이어 현재 장소
+    public enum currentPlayerPlace
+    {
+        dungeonOut,
+        dungeonIn
+    }
+
+
     //스킬 카드 타입
     public enum SkillCardType
     {

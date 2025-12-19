@@ -59,6 +59,8 @@ public class DungeonMaker : MonoBehaviour
     //Start는 Scene이동 후 돌아올 때마다 실행됨.
     void Start()
     {
+        DungeonManager.Instance.EnterDungeon();
+
         //테마 Sprite Inspector로 설정.
         themeSpriteDictionary = new Dictionary<Enums.DungeonTheme, Sprite>()
         {

@@ -16,6 +16,11 @@ public class DungeonManager : MonoBehaviour
     [Header("현재 선택된 룸 타입")]
     public Enums.RoomType currentRoomType;
 
+
+    [Header("플레이어 현재 장소")]
+    public Enums.currentPlayerPlace currentPlayerPlace;
+
+
     //현재 전투중인 노드 위치.
     public int currentBattleNodeFloor;
     public int currentBattleNodeColum;
@@ -39,6 +44,8 @@ public class DungeonManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         SetRandomTheme(); // 첫 진입 시 테마 설정
+
+        
     }
 
     private void SetRandomTheme()
@@ -112,6 +119,27 @@ public class DungeonManager : MonoBehaviour
         return currentRoomType;
     }
 
+    //[플레이어의 던전 위치 체크]
+
+    // (외부 참조용) 현재 플레이어 위치 반환
+    public Enums.currentPlayerPlace GetCurrentPlayerPlace()
+    {
+        return currentPlayerPlace;
+    }
+    //(외부 참조용) 던전 내부
+    public void EnterDungeon()
+    {
+        currentPlayerPlace = Enums.currentPlayerPlace.dungeonIn;
+        Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonIn");
+    }
+    //(외부 참조용) 던전 외부
+    public void ExitDungeon()
+    {
+        currentPlayerPlace = Enums.currentPlayerPlace.dungeonOut;
+        Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonOut");
+    }
+
+
     // 룸 타입 값 설정(현재 마우스 클릭에서 사용되는 함수.)
     public void SetCurrentRoomType(Enums.RoomType roomType)
     {
@@ -140,10 +168,14 @@ public class DungeonManager : MonoBehaviour
         return currentDungeonData != null && currentDungeonData.nodes.Count > 0;
     }
 
-    // 클리어, 포기, 종료 시 초기화
-    public void ClearDungeonData()
+    // 클리어, 포기, 종료 시 초기화 (모든 것을 끝내고 Town으로 돌아올 때.)
+    public void ResetDungeonData()
     {
         currentDungeonData = null;
+     
+        InventoryManager.Instance.ClearInventory();
+        Player.Instance.ResetPlayer();
+
         Debug.Log("[DungeonManager] 던전 데이터 초기화 완료");
     }
 
@@ -161,7 +193,7 @@ public class DungeonManager : MonoBehaviour
         //현재 저장된 던전의 전체 노드의 데이터들 검색.
         foreach (var node in currentDungeonData.nodes)
         {
-            //현재 클릭해서 들어 갔던 노드인지 확인.
+            //클릭해서 들어 갔던 노드인지 확인.
             if (node.floor == currentBattleNodeFloor && node.col == currentBattleNodeColum)
             {
                 //클리어한 노드 true를 통한 클리어 처리.

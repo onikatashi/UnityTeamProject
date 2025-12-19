@@ -1156,7 +1156,7 @@ GameObject:
   - component: {fileID: 1527243394}
   - component: {fileID: 1527243391}
   - component: {fileID: 1527243389}
-  - component: {fileID: 1527243388}
+  - component: {fileID: 1527243397}
   - component: {fileID: 1527243387}
   - component: {fileID: 1527243385}
   - component: {fileID: 1527243396}
@@ -1221,22 +1221,6 @@ MonoBehaviour:
   masterVolume: 0
   bgmVolume: 0
   sfxVolume: 0
---- !u!114 &1527243388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1527243384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d027f3bb83f28a04691807bb0e1d0d67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &1527243389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1307,7 +1291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8369de81736b141922bca2ce2bb6ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Inventory: []
+  inventory: []
 --- !u!4 &1527243395
 Transform:
   m_ObjectHideFlags: 0
@@ -1342,8 +1326,21 @@ MonoBehaviour:
     nodes: []
   currentTheme: 0
   currentRoomType: 0
+  currentPlayerPlace: 0
   currentBattleNodeFloor: 0
   currentBattleNodeColum: 0
+--- !u!114 &1527243397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527243384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5492c1c663ed0a449b45e30aa764053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1744150696
 GameObject:
   m_ObjectHideFlags: 0

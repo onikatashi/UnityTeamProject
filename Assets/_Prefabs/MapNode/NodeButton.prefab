@@ -215,6 +215,7 @@ MonoBehaviour:
   col: 0
   isAvailable: 1
   isGoingNextNode: 0
+  clearedMark: {fileID: 2341842037969882112}
   nextNodes: []
   prevNodes: []
 --- !u!1 &7313944022078619512
