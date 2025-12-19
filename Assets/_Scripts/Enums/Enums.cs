@@ -51,6 +51,15 @@ public class Enums
         Boss
     }
 
+    //던전 클리어 형태
+    public enum DungeonClearResult
+    {
+        NormalClear,        // 일반 방 클리어
+        StageBossClear,     // 중간 스테이지 보스 클리어
+        FinalBossClear      // 마지막 스테이지 보스 클리어
+    }
+
+
     // 던전 테마
     public enum DungeonTheme
     {
