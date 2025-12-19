@@ -30,10 +30,14 @@ public class PlayerSkillController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    private void Start()
+    {
         skillSlots = new SkillRuntime[3];
         ownedSkills.Clear();
     }
-    
+
     /// <summary>
     /// 스킬 슬롯 비었는지 확인용 bool
     /// </summary>
