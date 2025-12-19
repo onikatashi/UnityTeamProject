@@ -55,4 +55,10 @@ public class SkillRuntime
         float endTime = lastUseTime + skillBaseData.cooldown;
         return Mathf.Max(0f, endTime - Time.time);
     }
+
+    public void ResetSkillLevel()
+    {
+        currentLevel = 1;
+        lastUseTime = -999f;
+    }
 }

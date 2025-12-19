@@ -145,7 +145,10 @@ public abstract class MonsterBase : MonoBehaviour
         if (isDie) return;
         isDie = true;
         agent.enabled = false;
-        if(dissolve != null) StopCoroutine(dissolve);
+
+        // 플레이어에게 경험치 주기
+        GiveExpToPlayer();
+        if (dissolve != null) StopCoroutine(dissolve);
 
         dissolve = StartCoroutine(DissolveRoutine(1f, 0f, dissolveDuration));
 
@@ -178,4 +181,22 @@ public abstract class MonsterBase : MonoBehaviour
         rend.SetPropertyBlock(mpb);
     }
 
+    /// <summary>
+    /// 몬스터 사망 시 플레이어에게 경험치 지급해주는 함수
+    /// 몬스터는 raw exp만 전달하고
+    /// 실제 계산은 PlayerExperience에서 처리해서 적용할 예정
+    /// </summary>
+    protected virtual void GiveExpToPlayer()
+    {
+        if(Player.Instance == null) return;
+
+        PlayerExperience exp = Player.Instance.GetComponent<PlayerExperience>();
+        if(exp == null)
+        {
+            Debug.LogWarning("PlayerExperience 컴포넌트 없음, 추가 바랍니다");
+            return;
+        }
+
+        exp.ReceiveRawExp(md.dropExp);
+    }
 }
