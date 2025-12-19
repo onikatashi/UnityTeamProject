@@ -93,6 +93,7 @@ public abstract class MonsterBase : MonoBehaviour
                 Die();
                 break;
         }
+
     }
 
     protected abstract void Idle();
@@ -118,6 +119,7 @@ public abstract class MonsterBase : MonoBehaviour
             state = Enums.MonsterState.Die;
             Die();
         }
+
     }
 
     public virtual MonsterProjectile GetMonsterProjectile()

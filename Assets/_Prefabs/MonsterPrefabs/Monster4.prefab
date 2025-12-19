@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3319770739242018618}
   - component: {fileID: 9174002554471681804}
   - component: {fileID: -2898563371838002812}
+  - component: {fileID: -3552569351290234242}
   m_Layer: 6
   m_Name: Monster4
   m_TagString: Untagged
@@ -169,3 +170,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1795edc2ce6032c459cc3b4b12908afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-3552569351290234242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450540459708274284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff31ef7c5dd42f247b8085bfc023f142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayerName: Player
+  detectRange: 10
+  spriteRenderer: {fileID: 0}
+  invertFlip: 0

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2835764133203179483}
   - component: {fileID: 6861976251014777727}
   - component: {fileID: -8712946463688060826}
+  - component: {fileID: -2352298893726045418}
   m_Layer: 6
   m_Name: Monster11
   m_TagString: Untagged
@@ -157,10 +158,10 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   firepoint: {fileID: 0}
   isDef: 0
-  pullRange: 20
-  pullCooldown: 4
+  pullRange: 5
+  pullCooldown: 5
   pullDuration: 1
-  pullStrength: 100
+  pullStrength: 50
   pullEffectPrefab: {fileID: 2183146480622160771, guid: 131ad0e894ecda14eac32155d82d6c3d, type: 3}
   effectHeight: 0.05
 --- !u!114 &-8712946463688060826
@@ -175,3 +176,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1795edc2ce6032c459cc3b4b12908afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-2352298893726045418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6766457303251118766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff31ef7c5dd42f247b8085bfc023f142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayerName: Player
+  detectRange: 10
+  spriteRenderer: {fileID: 0}
+  invertFlip: 0
