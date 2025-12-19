@@ -103,6 +103,9 @@ public class BossController : MonsterBase
     Vector3 targetPos;
     Vector3 startPos;
 
+    int hitCount = 0;
+    bool isStunned = false;
+
     protected override void Awake()
     {
         base.Awake();
@@ -127,6 +130,7 @@ public class BossController : MonsterBase
         laser.EndFire();
     }
 
+    
     void EnsurePlayer()
     {
         if (player != null && playerComp != null) return;
@@ -169,6 +173,8 @@ public class BossController : MonsterBase
 
     protected override void Move()
     {
+        if (isStunned) return;
+
         EnsurePlayer();
         if (player == null || md == null) return;
 
@@ -193,6 +199,7 @@ public class BossController : MonsterBase
 
     IEnumerator CoPatternLoop()
     {
+        if (isStunned) yield break;
         runningPattern = true;
 
         while (state != Enums.MonsterState.Die)
@@ -252,9 +259,33 @@ public class BossController : MonsterBase
         runningPattern = false;
         state = Enums.MonsterState.Move;
     }
+    public override void TakeDamage(float dmg)
+    {
+        base.TakeDamage(dmg);
 
+        if (state == Enums.MonsterState.Die) return;
+        if (isStunned) return;
+
+        hitCount++;
+        if (hitCount >= md.stunGage)
+        {
+            hitCount = 0;
+            StartCoroutine(BossStun(5f));
+        }
+    }
+
+    IEnumerator BossStun(float duration)
+    {
+        isStunned = true;
+
+        yield return new WaitForSeconds(duration);
+
+        isStunned = false;
+    }
     IEnumerator RunPattern(BossPattern p)
     {
+        if (isStunned) yield break;
+
         switch (p)
         {
             case BossPattern.Laser: yield return StartCoroutine(Pattern_Laser()); break;
@@ -272,6 +303,8 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_Laser()
     {
+        if (isStunned) yield break;
+
         EnsurePlayer();
         if (player == null || playerComp == null || md == null || laser == null)
             yield break;
@@ -289,6 +322,7 @@ public class BossController : MonsterBase
 
         while (t < laserDuration)
         {
+            if (isStunned) yield break;
             t += Time.deltaTime;
             tick += Time.deltaTime;
 
@@ -332,6 +366,8 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_Marks()
     {
+        if (isStunned) yield break;
+
         EnsurePlayer();
         if (player == null || md == null || markPrefab == null) yield break;
 
@@ -357,6 +393,7 @@ public class BossController : MonsterBase
 
     IEnumerator CoMarkExplode(Vector3 pos, float radius, float delay, float stun, GroundTelegraph tg)
     {
+        if (isStunned) yield break;
         yield return new WaitForSeconds(delay);
 
         Collider[] hits = Physics.OverlapSphere(pos, radius);
@@ -378,6 +415,8 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_SplitShot()
     {
+        if (isStunned) yield break;
+
         EnsurePlayer();
         if (player == null || bossBulletPrefab == null) yield break;
 
@@ -409,6 +448,8 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_PullBurst()
     {
+        if (isStunned) yield break;
+
         EnsurePlayer();
         if (player == null || playerComp == null || md == null) yield break;
 
@@ -446,11 +487,14 @@ public class BossController : MonsterBase
 
     IEnumerator CoPull(Transform target, float duration, float strength)
     {
+        if (isStunned) yield break;
+
         CharacterController cc = target != null ? target.GetComponent<CharacterController>() : null;
 
         float t = 0f;
         while (t < duration && target != null)
         {
+            if (isStunned) yield break;
             t += Time.deltaTime;
 
             Vector3 dir = (transform.position - target.position);
@@ -469,6 +513,8 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_SlamStun()
     {
+        if (isStunned) yield break;
+
         EnsurePlayer();
         if (player == null || playerComp == null || markPrefab == null) yield break;
 
@@ -501,6 +547,8 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_ExecuteCharge()
     {
+        if (isStunned) yield break;
+
         EnsurePlayer();
         if (player == null || playerComp == null || markPrefab == null) yield break;
 
@@ -526,6 +574,7 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_SummonAdds()
     {
+        if (isStunned) yield break;
         if (randomMonsterPrefabs == null || randomMonsterPrefabs.Length == 0) yield break;
 
         if (agent != null) agent.isStopped = true;
@@ -570,6 +619,7 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_JumpTop()
     {
+        if (isStunned) yield break;
         if (player == null) yield break;
 
         startPos = transform.position;
@@ -629,6 +679,7 @@ public class BossController : MonsterBase
 
     IEnumerator Pattern_BulletHell()
     {
+        if (isStunned) yield break;
         StartCoroutine(Dissolve(1f, 0f, 1f));
         yield return new WaitForSeconds(1f);
 
@@ -647,6 +698,7 @@ public class BossController : MonsterBase
 
         while (t < hellDuration * 0.34f)
         {
+            if (isStunned) yield break;
             t += Time.deltaTime;
             fire += Time.deltaTime;
 
@@ -724,6 +776,7 @@ public class BossController : MonsterBase
 
     IEnumerator CoPullTelegraph(float radius, float chargeTime)
     {
+        if (isStunned) yield break;
         if (pullTelegraphPrefab == null) yield break;
 
         Vector3 pos = transform.position;

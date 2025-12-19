@@ -319,7 +319,7 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!1001 &211833991
+--- !u!1001 &381346957
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -327,14 +327,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1390496861338300824, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 9.43
-      objectReference: {fileID: 0}
-    - target: {fileID: 1390496861338300824, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 16.96
-      objectReference: {fileID: 0}
     - target: {fileID: 2332340069674956634, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.31
@@ -383,30 +375,6 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: c4cb68b3758bab64a90d921d7a7481f8, type: 2}
-    - target: {fileID: 6063999333527455629, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 6063999333527455629, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
-      value: 0.40564343
-      objectReference: {fileID: 0}
-    - target: {fileID: 6063999333527455629, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6677366838652789224, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
-      propertyPath: markStun
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6677366838652789224, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
-      propertyPath: markCount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6677366838652789224, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
-      propertyPath: markDelay
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -742,5 +710,5 @@ SceneRoots:
   - {fileID: 943210735}
   - {fileID: 4318796}
   - {fileID: 912935754}
-  - {fileID: 211833991}
   - {fileID: 1824096026}
+  - {fileID: 381346957}

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4790052515000873308}
   - component: {fileID: 4037845605630217922}
   - component: {fileID: -783479236459293353}
+  - component: {fileID: -6057830828406063990}
   m_Layer: 6
   m_Name: monster3
   m_TagString: Untagged
@@ -135,10 +136,10 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   firepoint: {fileID: 0}
   isDef: 0
-  explosionRanege: 3
+  explosionRanege: 5
   Player:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!114 &4037845605630217922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,3 +174,19 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-6057830828406063990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4476216507470832447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff31ef7c5dd42f247b8085bfc023f142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayerName: Player
+  detectRange: 10
+  spriteRenderer: {fileID: 0}
+  invertFlip: 0

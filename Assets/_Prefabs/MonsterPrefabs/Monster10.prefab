@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2428339246965533947}
   - component: {fileID: 8370206971602903549}
   - component: {fileID: 1636462579380852621}
+  - component: {fileID: 3422954329582258450}
   m_Layer: 6
   m_Name: Monster10
   m_TagString: Untagged
@@ -160,7 +161,7 @@ MonoBehaviour:
   tolerance: 2
   telegraphPrefab: {fileID: 759530874363395614, guid: 7036e539d96d58c47b81b4af17054a0c, type: 3}
   markDelay: 1.2
-  explodeRadius: 3.5
+  explodeRadius: 3
   stunDuration: 1
   groundMask:
     serializedVersion: 2
@@ -178,3 +179,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1795edc2ce6032c459cc3b4b12908afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3422954329582258450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3122567897031105555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff31ef7c5dd42f247b8085bfc023f142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayerName: Player
+  detectRange: 10
+  spriteRenderer: {fileID: 0}
+  invertFlip: 0
