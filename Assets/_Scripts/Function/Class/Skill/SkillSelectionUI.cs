@@ -10,9 +10,14 @@ public class SkillSelectionUI : MonoBehaviour
     private List<GameObject> spawnedCards = new List<GameObject>();
     private Action onCardSelectedCallback;
 
+    private void Awake()
+    {
+        gameObject.SetActive(false);
+    }
 
     public void ShowCards(List<SkillCardData> cards, Action onCardSelected)
     {
+
         onCardSelectedCallback = onCardSelected;
 
         ClearCards();
@@ -29,7 +34,7 @@ public class SkillSelectionUI : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    private void OnCardClicked(SkillCardData data)
+    public void OnCardClicked(SkillCardData data)
     {
         //선택 결과 적용
         PlayerSkillController.Instance.AddSkillOrLevelUp(data.skillBaseData);

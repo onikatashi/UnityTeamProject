@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Warrior
   m_EditorClassIdentifier: 
   classType: 0
+  classImage: {fileID: 0}
   cLevel: 0
   currentExp: 0
   maxExp: 0
@@ -24,7 +25,7 @@ MonoBehaviour:
     maxDashCount: 1
     dashRegen: 1
     dashDistance: 3
-    attackDamage: 2
+    attackDamage: 100
     attackRange: 2
     attackSpeed: 1
     projectileCount: 0
@@ -59,6 +60,10 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+  classSkills:
+  - {fileID: 11400000, guid: f6270264dc109c74985953688b2dbfca, type: 2}
+  - {fileID: 11400000, guid: f0197f2df188dbf468a8df3f88466b37, type: 2}
+  - {fileID: 11400000, guid: 6f7e40ab51c0d1c499007f2452790790, type: 2}
   hpPerLevel: 0
   mpPerLevel: 0
   attackDamagePerLevel: 0

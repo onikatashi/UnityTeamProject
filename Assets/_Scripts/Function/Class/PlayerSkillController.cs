@@ -20,7 +20,18 @@ public class PlayerSkillController : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+        skillSlots = new SkillRuntime[3];
+        ownedSkills.Clear();
     }
     
     /// <summary>
@@ -31,7 +42,7 @@ public class PlayerSkillController : MonoBehaviour
     {
         for (int i = 0; i < skillSlots.Length; i++)
         {
-            if (skillSlots[i] == null) return true;
+            if (skillSlots[i] == null || skillSlots[i].skillBaseData == null) return true;
         }
 
         return false;
@@ -74,8 +85,6 @@ public class PlayerSkillController : MonoBehaviour
         if (index < 0 || index >= skillSlots.Length)
             return null;
 
-        OnSkillChanged?.Invoke();
-
         return skillSlots[index];
     }
 
@@ -86,6 +95,9 @@ public class PlayerSkillController : MonoBehaviour
     /// <param name="selectedSkill"></param>
     public void AddSkillOrLevelUp(SkillBase selectedSkill)
     {
+        if (selectedSkill == null) return;
+            
+
         //이미 스킬이 있으면 레벨업
         SkillRuntime owned = FindOwnedSkill(selectedSkill);
         if (owned != null)
@@ -102,6 +114,8 @@ public class PlayerSkillController : MonoBehaviour
         SkillRuntime newRuntime = new SkillRuntime(selectedSkill);
         skillSlots[emptyIndex] = newRuntime;
         ownedSkills.Add(newRuntime);
+
+        OnSkillChanged?.Invoke();
     }
 
     /// <summary>

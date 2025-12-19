@@ -14,13 +14,12 @@ public class Player : MonoBehaviour
     // Player는 Prefab으로 DungeonManager에서 만들어서 진행
     public static Player Instance;
 
-    [Header("Reset용")]
-    public PlayerLevelSystem levelSystem;
-    public PlayerSkillController skillController;
-    public SkillSlotUI skillSlotUI;
+    PlayerLevelSystem levelSystem;
+    PlayerSkillController skillController;
+    SkillSlotUI skillSlotUI;
 
     //스킬에 player로 들고올수 있게 캐싱
-    public PlayerMove move;
+    PlayerMove move;
 
     //직업 데이터 넣는곳, 처음은 Warrior고정, 직업 변경시 바꿔줘야함.
     public ClassData classStat;
@@ -77,7 +76,7 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        finalStats = GetFinalStat();
+        finalStats = GetBaseStat();
         currentHp = finalStats.maxHp;
         currentMp = finalStats.maxMp;
         if (arrowPrefab == null)
@@ -85,6 +84,8 @@ public class Player : MonoBehaviour
             Debug.LogError("ArrowPrefab이 비어있음!");
             return; // 또는 예외 처리하고 진행 중단
         }
+        //아처일때만 화살 오브젝트 풀링 실행
+        if(classStat.classType == Enums.ClassType.Archer)
         poolManager.CreatePool<ArcherProjectile>(Enums.PoolType.ArrowPool, arrowPrefab, arrowPoolSize, transform);
     }
 
@@ -97,14 +98,14 @@ public class Player : MonoBehaviour
     /// 최종 데미지 스탯 갱신해주기
     /// </summary>
     /// <returns></returns>
-    public Stats GetFinalStat()
+    public Stats GetBaseStat()
     {
         return InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
     }
 
     public void SetFinalStat()
     {
-        Stats baseStats = GetFinalStat();
+        Stats baseStats = GetBaseStat();
         Stats added = baseStats + addBuffStats;
         finalStats = added * multiBuffStats;
     }
