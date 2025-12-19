@@ -125,10 +125,21 @@ public class PlayerSkillController : MonoBehaviour
     /// </summary>
     public void ResetAllSkills()
     {
+        //Runtime의 스킬레벨 초기화
+        foreach (var runtime in ownedSkills)
+        {
+            runtime.ResetSkillLevel();
+        }
+        //리스트 비우기
         ownedSkills.Clear();
+
+        //런타임 스킬 슬롯 초기화
         for(int i = 0; i < skillSlots.Length; i++)
         {
             skillSlots[i] = null;
         }
+
+        //여기에 SkillSlotUI.cs 의 Refresh가 들어가 있음
+        OnSkillChanged?.Invoke();
     }
 }
