@@ -111,18 +111,18 @@ public class Player : MonoBehaviour
 
     //}
 
-    /// <summary>
+    public Stats GetBaseStat()
+    {
+        return TraitManager.Instance.GetTraitsStats() + classStat.cBaseStat;
+    }
+
+    // <summary>
     /// 최종 데미지 스탯 갱신해주기
     /// </summary>
     /// <returns></returns>
-    public Stats GetBaseStat()
-    {
-        return InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
-    }
-
     public void SetFinalStat()
     {
-        Stats baseStats = GetBaseStat();
+        Stats baseStats = GetBaseStat() + InventoryManager.Instance.GetInventoryTotalStats();
         Stats added = baseStats + addBuffStats;
         finalStats = added * multiBuffStats;
     }

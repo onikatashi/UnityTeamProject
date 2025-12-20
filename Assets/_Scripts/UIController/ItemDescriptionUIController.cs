@@ -133,10 +133,6 @@ public class ItemDescriptionUIController : MonoBehaviour
 
     public void InitializeItemDescriptionSize()
     {
-        //statTextHeight = itemStatDescriptionText.preferredHeight;
-        //descriptionTextHeight = itemDescriptionText.preferredHeight;
-        //itemDescriptionSize.sizeDelta = new Vector2(
-        //    itemDescriptionSize.sizeDelta.x, itemDescriptionSize.sizeDelta.y - statTextHeight - descriptionTextHeight);
         itemDescriptionSize.sizeDelta = firstItemDescriptionSize;
     }
 

@@ -10,7 +10,7 @@ public class TempManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.S))
         {
-            SaveLoadManager.Instance.userData.level++;
+            UserDataManager.Instance.userData.level++;
             UIManager.Instance.playerStatUIController.UpdatePlayerStatUI();
             SaveLoadManager.Instance.SaveUserData();  
         }
@@ -18,6 +18,11 @@ public class TempManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))
         {
             DungeonManager.Instance.ResetDungeonData();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            UserDataManager.Instance.AddUserExp(100);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
