@@ -16,8 +16,8 @@ public class Player : MonoBehaviour
     public static Player Instance;
 
     public PlayerLevelSystem levelSystem;
+    public PlayerGoldSystem goldSystem;
     PlayerSkillController skillController;
-    SkillSlotUI skillSlotUI;
 
     //스킬에 player로 들고올수 있게 캐싱
     PlayerMove move;
@@ -93,6 +93,7 @@ public class Player : MonoBehaviour
         animCtrl = GetComponentInChildren<PlayerAnimController>();
         pa = GetComponent<PlayerAttack>();
         levelSystem = GetComponent<PlayerLevelSystem>();
+        goldSystem = GetComponent<PlayerGoldSystem>();
         skillController = GetComponent<PlayerSkillController>();
     }
     private void Start()
@@ -322,7 +323,7 @@ public class Player : MonoBehaviour
         skillController.ResetAllSkills();
 
         //골드 초기화
-        GetComponent<PlayerGoldSystem>().ResetGold();
+        goldSystem.ResetGold();
 
         //체력, 마나 초기화
         currentHp = finalStats.maxHp;
