@@ -270,7 +270,7 @@ public class Player : MonoBehaviour
 
         //Scale 조절로 좌우 반전하기
         Vector3 scale = pSprite.localScale;
-        scale.x = dirX > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        scale.x = dirX > 0 ? -Mathf.Abs(scale.x) : Mathf.Abs(scale.x);
         pSprite.localScale = scale;
     }
 

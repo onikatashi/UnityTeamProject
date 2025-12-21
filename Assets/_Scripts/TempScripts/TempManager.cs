@@ -8,14 +8,14 @@ public class TempManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             UserDataManager.Instance.userData.level++;
             UIManager.Instance.playerStatUIController.UpdatePlayerStatUI();
             SaveLoadManager.Instance.SaveUserData();  
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.Delete))
         {
             DungeonManager.Instance.ResetDungeonData();
         }
