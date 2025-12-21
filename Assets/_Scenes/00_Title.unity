@@ -955,6 +955,89 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516402540}
   m_CullTransparentMesh: 1
+--- !u!1 &786302202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 786302205}
+  - component: {fileID: 786302204}
+  - component: {fileID: 786302203}
+  m_Layer: 0
+  m_Name: BGMSelector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &786302203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786302202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be2f60e0f4e00a48bba23f0d8ff93ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testStat:
+    maxHp: 0
+    maxMp: 0
+    mpRegen: 0
+    maxDashCount: 0
+    dashRegen: 0
+    dashDistance: 0
+    attackDamage: 0
+    attackRange: 0
+    attackSpeed: 0
+    projectileCount: 0
+    projectileSpeed: 0
+    moveSpeed: 0
+    criticalRate: 0
+    criticalDamage: 0
+    shield: 0
+    bonusExpRate: 0
+    bonusGoldRate: 0
+    luck: 0
+    cooldownReduction: 0
+    reviveCount: 0
+    startItemCount: 0
+--- !u!114 &786302204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786302202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e7d8e16934ba1746935d8dba8892515, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomMappings:
+  - type: 0
+    soundData:
+    - {fileID: 11400000, guid: 0d0dda2668618cf45af3b328c53aee8f, type: 2}
+--- !u!4 &786302205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786302202}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.1497912, y: 0.8405843, z: 1.6554039}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &951822551
 GameObject:
   m_ObjectHideFlags: 0
@@ -1162,6 +1245,7 @@ GameObject:
   - component: {fileID: 1527243396}
   - component: {fileID: 1527243398}
   - component: {fileID: 1527243399}
+  - component: {fileID: 1527243400}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1381,6 +1465,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectDatas:
   - {fileID: 11400000, guid: 887db18285d1f7849bd22217cc64b008, type: 2}
+--- !u!114 &1527243400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527243384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be2f60e0f4e00a48bba23f0d8ff93ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testStat:
+    maxHp: 0
+    maxMp: 0
+    mpRegen: 0
+    maxDashCount: 0
+    dashRegen: 0
+    dashDistance: 0
+    attackDamage: 0
+    attackRange: 0
+    attackSpeed: 0
+    projectileCount: 0
+    projectileSpeed: 0
+    moveSpeed: 0
+    criticalRate: 0
+    criticalDamage: 0
+    shield: 0
+    bonusExpRate: 0
+    bonusGoldRate: 0
+    luck: 0
+    cooldownReduction: 0
+    reviveCount: 0
+    startItemCount: 0
 --- !u!1 &1744150696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1694,6 +1812,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 2795759774699604154}
+  - {fileID: 786302205}
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 1527243395}

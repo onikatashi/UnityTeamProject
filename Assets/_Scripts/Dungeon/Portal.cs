@@ -89,6 +89,9 @@ public class Portal : MonoBehaviour
         var field = typeof(SceneNames).GetField(targetField);
         string actualSceneName = (field != null) ? field.GetValue(null).ToString() : targetField;
 
+        // 포탈로 넘어가는 곳은 DungeonMap 밖에 없음 => 넘어갈 때, 룸타입 변경해줌으로써 BGM 재생
+        DungeonManager.Instance.currentRoomType = RoomType.None;
+
         if (SceneLoaderManager.Instance != null)
         {
             SceneLoaderManager.Instance.LoadScene(actualSceneName); //

@@ -20,12 +20,14 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
     InventoryManager inventoryManager;
     UIManager uiManager;
     ModeManager modeManager;
+    SoundManager soundManager;
 
     private void Start()
     {
         inventoryManager = InventoryManager.Instance;
         uiManager = UIManager.Instance;
         modeManager = ModeManager.Instance;
+        soundManager = SoundManager.Instance;
     }
 
     private void OnEnable()
@@ -74,6 +76,8 @@ public class InventorySlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        soundManager.PlaySFX("slotClick");
+
         switch (modeManager.GetCurrentMode())
         {
             // 일반 모드

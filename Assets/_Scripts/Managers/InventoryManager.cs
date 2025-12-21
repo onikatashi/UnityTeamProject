@@ -121,6 +121,11 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리에 아이템 추가
     public void AddItemToInventory(ItemData newItem)
     {
+        if (newItem == null)
+        {
+            return;
+        }
+
         if (CheckInventoryIsFull())
         {
             Debug.Log("인벤토리 가득 참");
@@ -187,9 +192,20 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리에 아이템 추가 인덱스 기반 (스왑할 때 사용)
     public void AddItemToInventoryByIndex(int index, ItemData newItem)
     {
+        if(newItem == null)
+        {
+            return;
+        }
+
         if (CheckInventoryIsFull())
         {
             Debug.Log("인벤토리 가득 참");
+            return;
+        }
+
+        if (CheckDuplicateItems(newItem.iId))
+        {
+            Debug.Log("이미 인벤토리에 있는 아이템");
             return;
         }
 
@@ -431,6 +447,11 @@ public class InventoryManager : MonoBehaviour
         ItemData temp = inventory[index1];
         ItemData temp2 = inventory[index2];
 
+        if (temp == null && temp2 == null)
+        {
+            return;
+        }
+
         RemoveItemFromInventory(index1);
         RemoveItemFromInventory(index2);
 
@@ -439,6 +460,13 @@ public class InventoryManager : MonoBehaviour
 
         // 스왑 후 시너지 빙고 확인
         CheckActiveSynergy();
+
+        if (Player.Instance != null)
+        {
+            float tempHp = Player.Instance.finalStats.maxHp;
+            Player.Instance.SetFinalStat();
+            Player.Instance.Heal(Player.Instance.finalStats.maxHp - tempHp);
+        }
 
         // 인벤토리 슬롯 이미지 업데이트
         uiManager.inventoryUIController.UpdateItemIcon();
