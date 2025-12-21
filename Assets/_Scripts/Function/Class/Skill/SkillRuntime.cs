@@ -22,8 +22,8 @@ public class SkillRuntime
 
     public bool CanUse()
     {
-        //Time.time 을 사용하면 레벨업 시 게임 멈추기 가능
-        return Time.time >= lastUseTime + skillBaseData.cooldown;
+        //쿨타임이 0 이하일 경우
+        return GetCooldownRemaining() <= 0;
     }
 
     /// <summary>
