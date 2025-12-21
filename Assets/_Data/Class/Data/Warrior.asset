@@ -34,11 +34,12 @@ MonoBehaviour:
     criticalRate: 0
     criticalDamage: 0
     shield: 0
-    bonusExpRate: 0
-    bonusGoldRate: 0
+    bonusExpRate: 1
+    bonusGoldRate: 1
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
   cTraitStat:
     maxHp: 0
     maxMp: 0
@@ -60,6 +61,7 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
   classSkills:
   - {fileID: 11400000, guid: f6270264dc109c74985953688b2dbfca, type: 2}
   - {fileID: 11400000, guid: f0197f2df188dbf468a8df3f88466b37, type: 2}

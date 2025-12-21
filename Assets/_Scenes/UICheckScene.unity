@@ -4627,6 +4627,8 @@ GameObject:
   - component: {fileID: 1826085613026812418}
   - component: {fileID: 4865327644929319772}
   - component: {fileID: 8855624650401741057}
+  - component: {fileID: 8855624650401741059}
+  - component: {fileID: 8855624650401741058}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -4649,6 +4651,33 @@ MonoBehaviour:
   totalFinalExpGained: 0
   baseExpMultiplier: 1
   bonusExpMultiplier: 1
+--- !u!114 &8855624650401741058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8828106940524682264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5d03a3972b45f48a26c4db74da3799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentGold: 0
+--- !u!114 &8855624650401741059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8828106940524682264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6327f27ee4a967a488d7a8bccca5bba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseGoldMultiplier: 1
+  bonusGoldMultiplier: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
