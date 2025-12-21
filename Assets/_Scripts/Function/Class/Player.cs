@@ -320,6 +320,11 @@ public class Player : MonoBehaviour
         levelSystem.ResetLevelAndExp();
         //보유스킬, 스킬레벨, 스킬슬롯 초기화
         skillController.ResetAllSkills();
+
+        //골드 초기화
+        GetComponent<PlayerGoldSystem>().ResetGold();
+
+        //체력, 마나 초기화
         currentHp = finalStats.maxHp;
         currentMp = finalStats.maxMp;
 
@@ -336,4 +341,5 @@ public class Player : MonoBehaviour
     {
         invincibleReasons.Remove(reason);
     }
+
 }
