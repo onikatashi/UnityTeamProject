@@ -47,12 +47,21 @@ public class SkillRuntime
     }
 
     /// <summary>
-    /// 스킬 쿨타임 적용
+    /// 스킬 쿨타임 적용 (쿨타임 감소 적용)
+    /// cooldownReduction = 0.1f => 쿨타임 10% 감소
+    /// 1 => 100% 감소
     /// </summary>
     /// <returns></returns>
     public float GetCooldownRemaining()
     {
-        float endTime = lastUseTime + skillBaseData.cooldown;
+        float baseCooldown = skillBaseData.cooldown;
+
+        float cdr = Player.Instance.finalStats.cooldownReduction;
+        cdr = Mathf.Clamp01(cdr);       //안전장치 0 ~ 1
+
+        float finalCooldown = baseCooldown * (1f - cdr);
+
+        float endTime = lastUseTime + finalCooldown;
         return Mathf.Max(0f, endTime - Time.time);
     }
 
