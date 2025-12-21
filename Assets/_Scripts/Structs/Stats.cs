@@ -23,9 +23,10 @@ public class Stats
     public float shield;                // 보호막
     public float bonusExpRate;          // 추가 경험치량
     public float bonusGoldRate;         // 추가 획득 골드량
-    public float luck;                  // 행운
+    public int luck;                    // 행운
     public float cooldownReduction;     // 쿨타임 감소
     public int reviveCount;             // 부활 횟수
+    public int startItemCount;          // 처음 시작 아이템 개수
 
     public static Stats operator +(Stats a, Stats b)
     {
@@ -58,7 +59,8 @@ public class Stats
             bonusGoldRate = a.bonusGoldRate + b.bonusGoldRate,
             luck = a.luck + b.luck,
             cooldownReduction = a.cooldownReduction + b.cooldownReduction,
-            reviveCount = a.reviveCount + b.reviveCount
+            reviveCount = a.reviveCount + b.reviveCount,
+            startItemCount = a.startItemCount + b.startItemCount
         };
 
         return result;
@@ -87,9 +89,10 @@ public class Stats
             shield = a.shield * multiplier,
             bonusExpRate = a.bonusExpRate * multiplier,
             bonusGoldRate = a.bonusGoldRate * multiplier,
-            luck = a.luck * multiplier,
+            luck = (int)(a.luck * multiplier),
             cooldownReduction = a.cooldownReduction * multiplier,
-            reviveCount = (int)(a.reviveCount * multiplier)
+            reviveCount = (int)(a.reviveCount * multiplier),
+            startItemCount = (int)(a.startItemCount * multiplier)
         };
         return result;
     }
@@ -118,7 +121,8 @@ public class Stats
             bonusGoldRate = a.bonusGoldRate * b.bonusGoldRate,
             luck = a.luck * b.luck,
             cooldownReduction = a.cooldownReduction * b.cooldownReduction,
-            reviveCount = (int)(a.reviveCount * b.reviveCount)
+            reviveCount = (int)(a.reviveCount * b.reviveCount),
+            startItemCount = (int)(a.startItemCount * b.startItemCount) 
         };
     }
 
@@ -143,9 +147,10 @@ public class Stats
             shield = 1f,
             bonusExpRate = 1f,
             bonusGoldRate = 1f,
-            luck = 1f,
+            luck = 1,
             cooldownReduction = 1f,
-            reviveCount = 1
+            reviveCount = 1,
+            startItemCount = 1
         };
     }
 
@@ -172,7 +177,8 @@ public class Stats
             bonusGoldRate = a.bonusGoldRate / b.bonusGoldRate,
             luck = a.luck / b.luck,
             cooldownReduction = a.cooldownReduction / b.cooldownReduction,
-            reviveCount = a.reviveCount / b.reviveCount
+            reviveCount = a.reviveCount / b.reviveCount,
+            startItemCount = a.startItemCount / b.startItemCount
         };
     }
 }

@@ -13,14 +13,12 @@ public class SynergyEffectUIController : MonoBehaviour
     PoolManager poolManager;
     InventoryManager inventoryManager;
     SynergyManager synergyManager;
-    UIManager uiManager;
 
     private void Awake()
     {
         poolManager = PoolManager.Instance;
         inventoryManager = InventoryManager.Instance;
         synergyManager = SynergyManager.Instance;
-        uiManager = UIManager.Instance;
 
         poolManager.CreatePool<SynergySlotUI>(Enums.PoolType.SynergyEffects,
             synergySlot, 1, synergyEffectScroll);

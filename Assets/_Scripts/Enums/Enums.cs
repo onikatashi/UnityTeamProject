@@ -146,4 +146,14 @@ public class Enums
         LevelUpUI,                  //레벨업 UI 중 정지 
         Paused                      //일시 정지 (환경설정 같은거 누를때 용)
     }
+
+    // 특성 종류
+    public enum TraitType
+    {
+        Attack,
+        Health,
+        Luck,
+        Intelligence,
+        speed
+    }
 }
