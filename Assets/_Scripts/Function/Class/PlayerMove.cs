@@ -16,8 +16,8 @@ public class PlayerMove : MonoBehaviour
 
     //대쉬 거리, 대쉬 시간
     public float dashCooldown = 1f;
-    public float dashDuration = 0.25f;
-    public float dashSpeed = 15f;
+    public float dashDuration = 0.125f;
+    public float dashSpeed = 30f;
     float lastDashTime = -999f;
     bool isDashing;
 
@@ -121,7 +121,7 @@ public class PlayerMove : MonoBehaviour
         while(timer < dashDuration)
         {
             timer += Time.deltaTime;
-            transform.position += dir * dashSpeed * Time.deltaTime;
+            cc.Move(dir * dashSpeed * Time.deltaTime);
             yield return null;
         }
 
