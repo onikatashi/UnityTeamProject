@@ -131,6 +131,8 @@ public class SettingUIController : MonoBehaviour
 
     public void ShowSettingPanel()
     {
+        soundManager.PlaySFX("buttonClick");
+
         if (settingPanel.activeSelf == false)
         {
             UpdateVolumeText();
@@ -145,6 +147,8 @@ public class SettingUIController : MonoBehaviour
 
     public void HideSettingPanel()
     {
+        soundManager.PlaySFX("buttonClick");
+
         settingPanel.SetActive(false);
         blocker.SetActive(false);
     }
@@ -165,6 +169,7 @@ public class SettingUIController : MonoBehaviour
     //중도포기 클릭시 리셋 및 Town씬로드로 복귀
     public void ClickExitButton()
     {
+        soundManager.PlaySFX("buttonClick");
         dungeonManager.ResetDungeonData();
         sceneLoaderManager.LoadScene(SceneNames.Town);
     }

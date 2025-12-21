@@ -38,11 +38,13 @@ public class PlayerStatUIController : MonoBehaviour
     int maxPage = 0;                                    // 최대 페이지
 
     SaveLoadManager saveLoadManager;
+    SoundManager soundManager;
     Player player;
 
     private void Awake()
     {
         saveLoadManager = SaveLoadManager.Instance;
+        soundManager = SoundManager.Instance;
         player = Player.Instance;
     }
 
@@ -122,6 +124,8 @@ public class PlayerStatUIController : MonoBehaviour
     // 스탯창 이전버튼 클릭 했을 때
     public void ClickPreviousPageButton()
     {
+        soundManager.PlaySFX("buttonClick");
+
         currentPage--;
         UpdatePageText();
 
@@ -136,6 +140,8 @@ public class PlayerStatUIController : MonoBehaviour
     // 스탯창 다음 버튼 클릭 했을 때
     public void ClickNextPageButton()
     {
+        soundManager.PlaySFX("buttonClick");
+
         currentPage++;
         UpdatePageText();
 
