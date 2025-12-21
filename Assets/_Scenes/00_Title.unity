@@ -1161,6 +1161,7 @@ GameObject:
   - component: {fileID: 1527243385}
   - component: {fileID: 1527243396}
   - component: {fileID: 1527243398}
+  - component: {fileID: 1527243399}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1194,6 +1195,9 @@ MonoBehaviour:
   traitUIController: {fileID: 0}
   settingUIPrefab: {fileID: 774137122931734991, guid: f9e424de5cc5e464a974d2e3578bbef6, type: 3}
   settingUIController: {fileID: 0}
+  playerStatePanelPrefab: {fileID: 0}
+  skillSlotPanelPrefab: {fileID: 0}
+  skillSelectPrefab: {fileID: 0}
 --- !u!114 &1527243386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1363,6 +1367,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allTraits: {fileID: 11400000, guid: 528ecff227e729a44b385689d37f499c, type: 2}
+--- !u!114 &1527243399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527243384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d349a103fbb7ecb4bb80bb927c8e87ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectDatas:
+  - {fileID: 11400000, guid: 887db18285d1f7849bd22217cc64b008, type: 2}
 --- !u!1 &1744150696
 GameObject:
   m_ObjectHideFlags: 0
