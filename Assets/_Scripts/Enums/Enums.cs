@@ -163,4 +163,16 @@ public class Enums
         Hit,
         Dash
     }
+
+    //이펙트 타입(이름)
+    public enum EffectType
+    {
+        BaseAttack,
+        Skill_MultiSlash,
+        Skill_Heal,
+        Skill_DamageBuff,
+        Dash,
+        LevelUp
+    }
+    
 }

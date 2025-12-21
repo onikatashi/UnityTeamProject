@@ -41,6 +41,7 @@ public class SkillSlotUI : MonoBehaviour
         if(skillController == null)
         {
             Debug.LogError("스킬컨트롤러 없음");
+            skillController = PlayerSkillController.Instance;
         }
         for (int i = 0; i < slotIcons.Length; i++)
         {
