@@ -111,15 +111,4 @@ public class PlayerAttack : MonoBehaviour
         return nearest;
     }
 
-    /// <summary>
-    /// 범위 파악용 
-    /// </summary>
-    void OnDrawGizmosSelected()
-    {
-        //공격 범위
-        float atkRng = player.finalStats.attackRange;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, atkRng);
-    }
 }

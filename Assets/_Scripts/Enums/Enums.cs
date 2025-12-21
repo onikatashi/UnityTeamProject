@@ -51,6 +51,15 @@ public class Enums
         Boss
     }
 
+    //던전 클리어 형태
+    public enum DungeonClearResult
+    {
+        NormalClear,        // 일반 방 클리어
+        StageBossClear,     // 중간 스테이지 보스 클리어
+        FinalBossClear      // 마지막 스테이지 보스 클리어
+    }
+
+
     // 던전 테마
     public enum DungeonTheme
     {
@@ -136,5 +145,22 @@ public class Enums
         Playing,                    //정상 플레이
         LevelUpUI,                  //레벨업 UI 중 정지 
         Paused                      //일시 정지 (환경설정 같은거 누를때 용)
+    }
+
+    // 특성 종류
+    public enum TraitType
+    {
+        Attack,
+        Health,
+        Luck,
+        Intelligence,
+        speed
+    }
+
+    // 무적 이유
+    public enum InvincibleReason
+    {
+        Hit,
+        Dash
     }
 }

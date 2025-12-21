@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using static Enums;
 
@@ -12,6 +13,13 @@ public class PlayerMove : MonoBehaviour
 
     //Player 캐싱
     Player player;
+
+    //대쉬 거리, 대쉬 시간
+    public float dashCooldown = 1f;
+    public float dashDuration = 0.125f;
+    public float dashSpeed = 30f;
+    float lastDashTime = -999f;
+    bool isDashing;
 
     void Start()
     {
@@ -81,5 +89,49 @@ public class PlayerMove : MonoBehaviour
         {
             player.SetFacing(dir.x);
         }
+
+        //대쉬기능 = 스페이스바
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            //이동키를 안누르면 대쉬 안됨
+            if(dir.sqrMagnitude > 0.01f)
+            {
+                //방향만 전달해주고, Dash()에서 크기 알아서 적용함
+                Dash(dir.normalized);
+            }
+        }
+    }
+
+    public void Dash(Vector3 dir)
+    {
+        //대쉬중, 쿨타임중이면 return
+        if (isDashing || GetDashCooldownRemaining() > 0f) return;
+
+        lastDashTime = Time.time;
+        StartCoroutine(CoDash(dir));
+    }
+
+    IEnumerator CoDash(Vector3 dir)
+    {
+        isDashing = true;
+
+        player.AddInvincible(InvincibleReason.Dash);
+
+        float timer = 0f;
+        while(timer < dashDuration)
+        {
+            timer += Time.deltaTime;
+            cc.Move(dir * dashSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        player.RemoveInvincible(InvincibleReason.Dash);
+        isDashing = false;
+    }
+
+    public float GetDashCooldownRemaining()
+    {
+        float endTime = lastDashTime + dashCooldown;
+        return Mathf.Max(0f, endTime - Time.time);
     }
 }

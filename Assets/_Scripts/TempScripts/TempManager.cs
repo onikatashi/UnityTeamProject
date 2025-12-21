@@ -8,16 +8,21 @@ public class TempManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            SaveLoadManager.Instance.userData.level++;
+            UserDataManager.Instance.userData.level++;
             UIManager.Instance.playerStatUIController.UpdatePlayerStatUI();
             SaveLoadManager.Instance.SaveUserData();  
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.Delete))
         {
             DungeonManager.Instance.ResetDungeonData();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            UserDataManager.Instance.AddUserExp(100);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -67,7 +72,7 @@ public class TempManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            SoundManager.Instance.Play("fire");
+            SoundManager.Instance.PlaySFX("fire");
         }
         if (Input.GetKeyDown(KeyCode.L))
         {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections;
-using UnityEngine.Rendering;
+using System.Collections.Generic;
 
 /// <summary>
 /// 1. 플레이어 스탯 (체력, 마나, 공격력, 방어력 등)
@@ -16,8 +16,8 @@ public class Player : MonoBehaviour
     public static Player Instance;
 
     public PlayerLevelSystem levelSystem;
+    public PlayerGoldSystem goldSystem;
     PlayerSkillController skillController;
-    SkillSlotUI skillSlotUI;
 
     //스킬에 player로 들고올수 있게 캐싱
     PlayerMove move;
@@ -59,6 +59,21 @@ public class Player : MonoBehaviour
     public System.Action<float, float> OnHpChanged;     //current, max
     public System.Action<float, float> OnMpChanged;
 
+    /*피격, 대쉬시 무적 판정용 / 
+     * AddInvincible, RemoveInvincible 사용
+     * Enums - InvincibleReason에 무적하고 싶은 이유를 넣기
+     * 적용하고 싶은 곳에 AddInvincible(무적 이유) 넣어주면 
+     * Invincible.Count가 0 초과가 되므로
+     * TakeDamage에서 걸러줍니다.
+     * 무적 해제를 해야될 타이밍에
+     * RemoveInvincible(아까무적적용한이유); 넣어주면
+     * 자동으로 무적 풀림
+    */
+    HashSet<Enums.InvincibleReason> invincibleReasons = new HashSet<Enums.InvincibleReason>();
+    public bool isInvincible => invincibleReasons.Count > 0;
+    public float hitInvincibleDuration = 0.5f;
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -78,6 +93,7 @@ public class Player : MonoBehaviour
         animCtrl = GetComponentInChildren<PlayerAnimController>();
         pa = GetComponent<PlayerAttack>();
         levelSystem = GetComponent<PlayerLevelSystem>();
+        goldSystem = GetComponent<PlayerGoldSystem>();
         skillController = GetComponent<PlayerSkillController>();
     }
     private void Start()
@@ -111,18 +127,18 @@ public class Player : MonoBehaviour
 
     //}
 
-    /// <summary>
+    public Stats GetBaseStat()
+    {
+        return TraitManager.Instance.GetTraitsStats() + classStat.cBaseStat;
+    }
+
+    // <summary>
     /// 최종 데미지 스탯 갱신해주기
     /// </summary>
     /// <returns></returns>
-    public Stats GetBaseStat()
-    {
-        return InventoryManager.Instance.GetInventoryTotalStats() + classStat.cBaseStat;
-    }
-
     public void SetFinalStat()
     {
-        Stats baseStats = GetBaseStat();
+        Stats baseStats = GetBaseStat() + InventoryManager.Instance.GetInventoryTotalStats();
         Stats added = baseStats + addBuffStats;
         finalStats = added * multiBuffStats;
     }
@@ -158,6 +174,10 @@ public class Player : MonoBehaviour
     /// <param name="value"></param>
     public void TakeDamage(float value)
     {
+        //무적 상태면 return
+        if (isInvincible) return;
+
+
         // 방어력(defense)이 있다면 데미지 감소 로직 추가 가능
         // float finalDamage = Mathf.Max(0, value - GetFinalStat().defense); 
         float finalDamage = value;
@@ -174,6 +194,16 @@ public class Player : MonoBehaviour
         {
             Die(); // 사망 처리 함수 (구현 필요)
         }
+        //피격시 무적 적용
+        StartCoroutine(CoHitInvincible());
+    }
+
+    IEnumerator CoHitInvincible()
+    {
+        //무적 이유 추가해주고 무적 시간동안 피격x, 끝나면 이유 없애기
+        AddInvincible(Enums.InvincibleReason.Hit);
+        yield return new WaitForSeconds(hitInvincibleDuration);
+        RemoveInvincible(Enums.InvincibleReason.Hit);
     }
 
     /// <summary>
@@ -241,7 +271,7 @@ public class Player : MonoBehaviour
 
         //Scale 조절로 좌우 반전하기
         Vector3 scale = pSprite.localScale;
-        scale.x = dirX > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        scale.x = dirX > 0 ? -Mathf.Abs(scale.x) : Mathf.Abs(scale.x);
         pSprite.localScale = scale;
     }
 
@@ -291,10 +321,26 @@ public class Player : MonoBehaviour
         levelSystem.ResetLevelAndExp();
         //보유스킬, 스킬레벨, 스킬슬롯 초기화
         skillController.ResetAllSkills();
+
+        //골드 초기화
+        goldSystem.ResetGold();
+
+        //체력, 마나 초기화
         currentHp = finalStats.maxHp;
         currentMp = finalStats.maxMp;
 
         // 플레이어 스탯창 업데이트
         UIManager.Instance.playerStatUIController.UpdatePlayerStatUI();
     }
+
+    public void AddInvincible(Enums.InvincibleReason reason)
+    {
+        invincibleReasons.Add(reason);
+    }
+
+    public void RemoveInvincible(Enums.InvincibleReason reason)
+    {
+        invincibleReasons.Remove(reason);
+    }
+
 }

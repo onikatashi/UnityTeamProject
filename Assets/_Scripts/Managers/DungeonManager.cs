@@ -32,6 +32,13 @@ public class DungeonManager : MonoBehaviour
         public int column;     // 다음 노드 열
     }
 
+    [Header("Stage Info")]
+    public int currentStage = 1;   // 1부터
+    public int maxStage = 3;       // 1~3 가변
+
+    //스테이지 변경시 이용할 연출용 변수.
+    private bool isStageTransitionPending = false;
+
     //싱글톤 및 테마 설정.
     void Awake()
     {
@@ -48,6 +55,7 @@ public class DungeonManager : MonoBehaviour
         
     }
 
+    //테마 관련--------------------------------------------------------------------------------------------------------
     private void SetRandomTheme()
     {
         // 전체 테마 목록 가져와 배열로 저장.
@@ -72,6 +80,13 @@ public class DungeonManager : MonoBehaviour
         Debug.Log("[DungeonManager] 초기 테마 선택: " + currentTheme);
 
     }
+
+    // (외부 참조용) 현재 정해진 테마 값 반환.
+    public Enums.DungeonTheme GetCurrentTheme()
+    {
+        return currentTheme;
+    }
+
 
     public void SetNextTheme()
     {
@@ -106,13 +121,54 @@ public class DungeonManager : MonoBehaviour
         Debug.Log("[DungeonManager] 새로운 테마 선택: " + currentTheme);
     }
 
-    // (외부 참조용) 현재 정해진 테마 값 반환.
-    public Enums.DungeonTheme GetCurrentTheme()
+   
+    //스테이지 관련--------------------------------------------------------------------------------------------------------
+
+    //현재 스테이지가 마지막 스테이지 인지 True/False반환.
+    public bool IsLastStage()
     {
-        return currentTheme;
+        return currentStage >= maxStage;
+    }
+
+    public void OnStageCleared()
+    {
+        Debug.Log($"[DungeonManager] Stage {currentStage} 클리어");
+
+        //마지막 스테이지 클리어 IsLastStage(Bool)로 확인
+        if (IsLastStage())
+        {
+            OnAllStagesCleared();
+            return;
+        }
+
+        currentStage++;
+        SetNextTheme();
+
+        // 연출 완료 대기 상태
+        isStageTransitionPending = true;
+    }
+
+    public void EnterNextStage()
+    {
+        if (!isStageTransitionPending)
+            return;
+
+        Debug.Log($"[DungeonManager] Stage {currentStage} 진입");
+
+        // 이제 안전하게 초기화
+        currentDungeonData = null;
+        isStageTransitionPending = false;
+    }
+    private void OnAllStagesCleared()
+    {
+        Debug.Log("[DungeonManager] 모든 스테이지 클리어");
+
+        ResetDungeonData();
+        currentStage = 1;
     }
 
 
+    //--------------------------------------------------------------------------------------------------------
     // (외부 참조용) 현재 룸타입에 대하여 반환하기.
     public Enums.RoomType GetCurrentRoomType()
     {

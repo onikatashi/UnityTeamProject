@@ -100,7 +100,7 @@ public class ItemManager : MonoBehaviour
         int totalWeight = 0;
         foreach (var rankWeight in sortedWeights)
         {
-            totalWeight += rankWeight.weight;
+            totalWeight += rankWeight.weight + Player.Instance.finalStats.luck;
         }
 
         // 0 ~ 전체 가중치 합 사이 랜덤한 숫자

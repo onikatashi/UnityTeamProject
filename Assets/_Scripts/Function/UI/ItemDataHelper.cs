@@ -49,6 +49,40 @@ public static class ItemDataHelper
         return playerStatInfo;
     }
 
+    public static string GetTraitStatInfo(Stats traitStat, int point)
+    {
+        if (traitStat == null) return "특성 정보 없음";
+
+        StringBuilder statStringBuilder = new StringBuilder();
+
+        List<(string name, float baseStat)> traitStatInfo = new List<(string name, float baseStat)>();
+
+        FieldInfo[] fields = typeof(Stats).GetFields(BindingFlags.Instance | BindingFlags.Public);
+
+        foreach (FieldInfo field in fields)
+        {
+            float baseValue = GetFieldValue(traitStat, field);
+            baseValue *= point;
+            baseValue = (float)System.Math.Round(baseValue, 2);
+            if (Mathf.Abs(baseValue) > 0.001f)
+            {
+                // 스탯 한글 명칭으로 추가
+                if (statName.TryGetValue(field.Name, out string koreanName))
+                {
+                    traitStatInfo.Add((koreanName, baseValue));
+                }
+            }
+        }
+
+        foreach (var stat in traitStatInfo)
+        {
+            string basePart = $"+{stat.baseStat} {stat.name}";
+
+            statStringBuilder.AppendLine($"{basePart}");
+        }
+        return statStringBuilder.ToString();
+    }
+
     // 아이템의 상승 스탯 목록을 문자열로 반환
     public static string GetItemStatsDescription(ItemData itemData, int reinforce)
     {

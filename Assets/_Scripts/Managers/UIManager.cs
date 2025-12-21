@@ -20,10 +20,6 @@ public class UIManager : MonoBehaviour
     private GameObject itemDescriptionPanelPrefab;                  // 아이템 설명 패널 프리팹
     public ItemDescriptionUIController itemDescriptionUIController; // 아이템 설명 UI 컨트롤러
 
-    //[SerializeField]
-    //[Header("시너지 효과 패널 UI")]
-    //private GameObject synergyEffectPanelPrefab;                    // 시너지 효과 활성화 패널 프리팹
-    //public SynergyEffectUIController synergyEffectUIController;     // 시너지 효과 UI 컨트롤러
     [SerializeField]
     [Header("플레이어 스탯 패널 UI")]
     private GameObject playerStatPanelPrefab;                       // 플레이어 스탯창 프리팹
@@ -40,9 +36,26 @@ public class UIManager : MonoBehaviour
     public ModeUIController modeUIController;                       // 강화, 스왑 모드 UI 컨트롤러
 
     [SerializeField]
+    [Header("특성 패널 UI")]
+    private GameObject traitPanelPrefab;                            // 특성 패널 프리팹
+    public TraitUIController traitUIController;                     // 특성 UI 컨트롤러
+
+    [SerializeField]
     [Header("세팅 UI")]
     private GameObject settingUIPrefab;                             // 세팅 UI 프리팹
     public SettingUIController settingUIController;                 // 세팅 UI 컨트롤러
+
+    [SerializeField]
+    [Header("플레이어 상태UI")]
+    private GameObject playerStatePanelPrefab;
+
+    [SerializeField]
+    [Header("스킬 슬롯UI")]
+    private GameObject skillSlotPanelPrefab;
+
+    [SerializeField]
+    [Header("스킬 선택 UI")]
+    private GameObject skillSelectPrefab;
 
     SceneLoaderManager sceneLoaderManager;
 
@@ -75,6 +88,11 @@ public class UIManager : MonoBehaviour
             ToggleInventory();
         }
 
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ToggleTrait();
+        }
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
             InventoryManager.Instance.AddItemToInventory(
@@ -100,6 +118,11 @@ public class UIManager : MonoBehaviour
         InstantiateSynergyDescriptionPanel(canvas);
         InstantiateModeUI(canvas);
         InstantiateSettingUI(canvas);
+        InstantiateTraitPanel(canvas);
+        InstantiatePlayerStateUI(canvas);
+        InstantiateSkillSlotUI(canvas);
+        InstantiateSkillSelectPanel(canvas);
+        
     }
 
     // Canvas 등록 해제
@@ -143,6 +166,16 @@ public class UIManager : MonoBehaviour
         playerStatUIController.UpdatePlayerStatUI();
     }
 
+    // 특성 UI 토글
+    public void ToggleTrait()
+    {
+        traitUIController.gameObject.SetActive(!traitUIController.gameObject.activeSelf);
+        if (traitUIController.gameObject.activeSelf)
+        {
+            traitUIController.RefreshTraitUI();
+        }
+    }
+
     // InventoryPanel 생성
     void InstantiateInventoryPanel(RectTransform canvas)
     {
@@ -164,6 +197,7 @@ public class UIManager : MonoBehaviour
         panel.SetActive(false);
     }
 
+    // playerStatPanel 생성
     void InstantiatePlayerStatPanel(RectTransform canvas)
     {
         // 플레이어 스탯 패널 생성 및 초기화
@@ -185,6 +219,16 @@ public class UIManager : MonoBehaviour
         panel.SetActive(false);
     }
 
+    // traitPanel 생성
+    void InstantiateTraitPanel(RectTransform canvas)
+    {
+        // 특성 패널 생성 및 초기화
+        GameObject panel = Instantiate(traitPanelPrefab, canvas);
+        traitUIController = panel.GetComponent<TraitUIController>();
+
+        panel.SetActive(false);
+    }
+
     // ModeUI 생성
     void InstantiateModeUI(RectTransform canvas)
     {
@@ -201,6 +245,30 @@ public class UIManager : MonoBehaviour
         settingUIController = ui.GetComponent<SettingUIController>();
 
         ui.SetActive(true);
+    }
+
+    // Player State(Hp, Mp, Gold) UI 생성
+    void InstantiatePlayerStateUI(RectTransform canvas)
+    {
+        GameObject ui = Instantiate(playerStatePanelPrefab, canvas);
+        
+        ui.SetActive(true);
+    }
+
+    // Skill Slot UI 생성
+    void InstantiateSkillSlotUI(RectTransform canvas)
+    {
+        GameObject ui = Instantiate(skillSlotPanelPrefab, canvas);
+
+        ui.SetActive(true);
+    }
+
+    // Skill Select UI 생성
+    void InstantiateSkillSelectPanel(RectTransform canvas)
+    {
+        GameObject ui = Instantiate(skillSelectPrefab, canvas);
+
+        ui.SetActive(false);
     }
 
     public Transform GetCanvas()

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// 1. 아이템 데이터를 저장하는 SO
@@ -15,6 +13,7 @@ public class ItemData : ScriptableObject
     public Sprite iIcon;                        // 아이템 아이콘
     public string iName;                        // 아이템 이름
     public string iStatDescription;             // 아이템 스탯 설명
+    [TextArea]
     public string iDescription;                 // 아이템 설명
     public Enums.ItemRank iRank;                // 아이템 등급
     public List<Enums.ItemSynergy> iSynergy;    // 아이템 시너지

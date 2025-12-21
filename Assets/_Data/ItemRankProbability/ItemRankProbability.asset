@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rankWeights:
   - rank: 0
-    weight: 750
+    weight: 385
   - rank: 1
-    weight: 170
+    weight: 85
   - rank: 2
-    weight: 60
+    weight: 30
   - rank: 3
-    weight: 20
+    weight: 10
