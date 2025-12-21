@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections;
-using UnityEngine.Rendering;
+using System.Collections.Generic;
 
 /// <summary>
 /// 1. 플레이어 스탯 (체력, 마나, 공격력, 방어력 등)
@@ -58,6 +58,12 @@ public class Player : MonoBehaviour
     //Hp,Mp,Exp 바 연동용 이벤트 추가
     public System.Action<float, float> OnHpChanged;     //current, max
     public System.Action<float, float> OnMpChanged;
+
+    //피격, 대쉬시 무적 판정용
+    HashSet<Enums.InvincibleReason> invincibleReasons = new HashSet<Enums.InvincibleReason>();
+    public bool isInvincible => invincibleReasons.Count > 0;
+    public float hitInvincibleDuration = 0.5f;
+
 
     private void Awake()
     {
@@ -158,6 +164,10 @@ public class Player : MonoBehaviour
     /// <param name="value"></param>
     public void TakeDamage(float value)
     {
+        //무적 상태면 return
+        if (isInvincible) return;
+
+
         // 방어력(defense)이 있다면 데미지 감소 로직 추가 가능
         // float finalDamage = Mathf.Max(0, value - GetFinalStat().defense); 
         float finalDamage = value;
@@ -174,6 +184,16 @@ public class Player : MonoBehaviour
         {
             Die(); // 사망 처리 함수 (구현 필요)
         }
+        //피격시 무적 적용
+        StartCoroutine(CoHitInvincible());
+    }
+
+    IEnumerator CoHitInvincible()
+    {
+        //무적 이유 추가해주고 무적 시간동안 피격x, 끝나면 이유 없애기
+        AddInvincible(Enums.InvincibleReason.Hit);
+        yield return new WaitForSeconds(hitInvincibleDuration);
+        RemoveInvincible(Enums.InvincibleReason.Hit);
     }
 
     /// <summary>
@@ -296,5 +316,15 @@ public class Player : MonoBehaviour
 
         // 플레이어 스탯창 업데이트
         UIManager.Instance.playerStatUIController.UpdatePlayerStatUI();
+    }
+
+    public void AddInvincible(Enums.InvincibleReason reason)
+    {
+        invincibleReasons.Add(reason);
+    }
+
+    public void RemoveInvincible(Enums.InvincibleReason reason)
+    {
+        invincibleReasons.Remove(reason);
     }
 }

@@ -156,4 +156,11 @@ public class Enums
         Intelligence,
         speed
     }
+
+    // 무적 이유
+    public enum InvincibleReason
+    {
+        Hit,
+        Dash
+    }
 }
