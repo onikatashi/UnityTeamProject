@@ -59,7 +59,16 @@ public class Player : MonoBehaviour
     public System.Action<float, float> OnHpChanged;     //current, max
     public System.Action<float, float> OnMpChanged;
 
-    //피격, 대쉬시 무적 판정용
+    /*피격, 대쉬시 무적 판정용 / 
+     * AddInvincible, RemoveInvincible 사용
+     * Enums - InvincibleReason에 무적하고 싶은 이유를 넣기
+     * 적용하고 싶은 곳에 AddInvincible(무적 이유) 넣어주면 
+     * Invincible.Count가 0 초과가 되므로
+     * TakeDamage에서 걸러줍니다.
+     * 무적 해제를 해야될 타이밍에
+     * RemoveInvincible(아까무적적용한이유); 넣어주면
+     * 자동으로 무적 풀림
+    */
     HashSet<Enums.InvincibleReason> invincibleReasons = new HashSet<Enums.InvincibleReason>();
     public bool isInvincible => invincibleReasons.Count > 0;
     public float hitInvincibleDuration = 0.5f;

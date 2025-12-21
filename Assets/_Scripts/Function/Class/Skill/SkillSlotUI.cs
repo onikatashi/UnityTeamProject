@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Microsoft.Win32.SafeHandles;
-
 public class SkillSlotUI : MonoBehaviour
 {
     [Header("스킬 슬롯")]
