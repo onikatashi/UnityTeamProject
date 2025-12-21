@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27b38e045c7f7a244be1f2943383e6bd, type: 3}
-  m_Name: AllSynergiesData
+  m_Name: _AllSynergiesData
   m_EditorClassIdentifier: 
   allSyneries:
   - {fileID: 11400000, guid: f37464a7bfdb28446b70195d43f77bb8, type: 2}

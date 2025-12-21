@@ -705,6 +705,11 @@ MonoBehaviour:
   - {fileID: 560671917}
   - {fileID: 544995898}
   - {fileID: 230770310}
+  cooldownMasks: []
+  cooldownTexts: []
+  dashIcon: {fileID: 0}
+  dashCooldownMask: {fileID: 0}
+  playerMove: {fileID: 0}
 --- !u!114 &430277238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2051,20 +2056,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc14788e53b98114db6357d7a2aeff5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmSounds:
-  - name: town
-    clip: {fileID: 8300000, guid: 631371985bc070b448ee099022553693, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
-  effectSounds:
-  - name: fire
-    clip: {fileID: 8300000, guid: ac8c8639b29d81e49abe4b613af3c760, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
+  bgmPacks: {fileID: 11400000, guid: fe8ff6527dc580a4097b2ba163109e22, type: 2}
+  sfxPacks: {fileID: 11400000, guid: b89f0ca486751c548837e36be8b057b7, type: 2}
   masterVolume: 0.5
   bgmVolume: 0.5
   sfxVolume: 0.7
@@ -2472,14 +2465,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allTraits: {fileID: 11400000, guid: 528ecff227e729a44b385689d37f499c, type: 2}
-  userData:
-    level: 1
-    nickName: "\uC784\uC2DC \uB2C9\uB124\uC784"
-    currentExp: 0
-    maxExp: 100
-    traitPoints:
-      m_Keys: 
-      m_Values: 
 --- !u!4 &1501170237
 Transform:
   m_ObjectHideFlags: 0
@@ -4165,6 +4150,7 @@ MonoBehaviour:
   arrowPoolSize: 5
   pCam: {fileID: 3711064457302485579}
   animCtrl: {fileID: 6997213888414305029}
+  hitInvincibleDuration: 0.5
 --- !u!4 &6743862884467257242
 Transform:
   m_ObjectHideFlags: 0
@@ -4293,6 +4279,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canMove: 1
+  dashCooldown: 1
+  dashDuration: 0.25
+  dashSpeed: 15
 --- !u!1 &8828106940524682264
 GameObject:
   m_ObjectHideFlags: 0

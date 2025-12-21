@@ -72,7 +72,7 @@ public class TempManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            SoundManager.Instance.Play("fire");
+            SoundManager.Instance.PlaySFX("fire");
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
