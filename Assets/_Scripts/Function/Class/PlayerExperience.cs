@@ -7,11 +7,13 @@ public class PlayerExperience : MonoBehaviour
     public float baseExpMultiplier = 1f;        //기본 경험치 획득 배율 (1 = 100%)
     public float bonusExpMultiplier = 1f;       //보너스 경험치 획득 배율
 
-    private PlayerLevelSystem levelSystem;
+    PlayerLevelSystem levelSystem;
+    Player player;
 
     private void Awake()
     {
         levelSystem = GetComponent<PlayerLevelSystem>();
+        player = Player.Instance;
     }
 
     public void ReceiveRawExp(float rawExp)
@@ -26,6 +28,9 @@ public class PlayerExperience : MonoBehaviour
 
         result *= baseExpMultiplier;
         result *= bonusExpMultiplier;
+
+        //플레이어 스탯 보너스 적용
+        result *= (1f + player.finalStats.bonusExpRate);
 
         return result;
     }
