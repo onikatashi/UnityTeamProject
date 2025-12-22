@@ -154,7 +154,7 @@ public class UIManager : MonoBehaviour
 
         // ModeUI도 이 때 같이 켜져야 함
         modeUIController.UpdateModeUI();
-        if (inventoryUIController.gameObject.activeSelf)
+        if (!inventoryUIController.gameObject.activeSelf)
         {
             modeUIController.HideModeUI();
         }

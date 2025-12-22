@@ -121,6 +121,11 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리에 아이템 추가
     public void AddItemToInventory(ItemData newItem)
     {
+        if (newItem == null)
+        {
+            return;
+        }
+
         if (CheckInventoryIsFull())
         {
             Debug.Log("인벤토리 가득 참");
@@ -154,9 +159,9 @@ public class InventoryManager : MonoBehaviour
 
         if (Player.Instance != null)
         {
+            float tempHp = Player.Instance.finalStats.maxHp;
             Player.Instance.SetFinalStat();
-            Player.Instance.Heal(newItem.iBaseStat.maxHp +
-                (newItem.iBaseStat * reinforcedSlots[currentIndex]).maxHp);
+            Player.Instance.Heal(Player.Instance.finalStats.maxHp - tempHp);
         }
 
         // 아이템 획득 시 시너지 효과 업데이트
@@ -187,9 +192,20 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리에 아이템 추가 인덱스 기반 (스왑할 때 사용)
     public void AddItemToInventoryByIndex(int index, ItemData newItem)
     {
+        if(newItem == null)
+        {
+            return;
+        }
+
         if (CheckInventoryIsFull())
         {
             Debug.Log("인벤토리 가득 참");
+            return;
+        }
+
+        if (CheckDuplicateItems(newItem.iId))
+        {
+            Debug.Log("이미 인벤토리에 있는 아이템");
             return;
         }
 
@@ -212,16 +228,15 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        if (Player.Instance != null)
-        {
-            Player.Instance.SetFinalStat();
-            Player.Instance.Heal(newItem.iBaseStat.maxHp +
-                (newItem.iBaseStat * reinforcedSlots[currentIndex]).maxHp);
-        }
-
-
         // 아이템 시너지 카운트 업데이트
         CheckActiveSynergy();
+
+        if (Player.Instance != null)
+        {
+            float tempHp = Player.Instance.finalStats.maxHp;
+            Player.Instance.SetFinalStat();
+            Player.Instance.Heal(Player.Instance.finalStats.maxHp - tempHp);
+        }
 
         // 아이템 획득 시 시너지 효과 업데이트
         uiManager.playerStatUIController.synergyEffectUIController.ReturnSynergySlot();
@@ -316,15 +331,14 @@ public class InventoryManager : MonoBehaviour
         indexByItemId.Remove(inventory[slotIndex].iId);
         inventory[slotIndex] = null;
 
+        // 아이템 시너지 카운트 업데이트
+        CheckActiveSynergy();
+
         if (Player.Instance != null)
         {
             Player.Instance.SetFinalStat();
             Player.Instance.Heal(0f);
         }
-
-
-        // 아이템 시너지 카운트 업데이트
-        CheckActiveSynergy();
 
         // 아이템 제거 시, 시너지 효과 패널 업데이트
         uiManager.playerStatUIController.synergyEffectUIController.ReturnSynergySlot();
@@ -430,6 +444,11 @@ public class InventoryManager : MonoBehaviour
     {
         ItemData temp = inventory[index1];
         ItemData temp2 = inventory[index2];
+
+        if (temp == null && temp2 == null)
+        {
+            return;
+        }
 
         RemoveItemFromInventory(index1);
         RemoveItemFromInventory(index2);
