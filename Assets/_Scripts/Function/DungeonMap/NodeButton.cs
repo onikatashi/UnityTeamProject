@@ -123,7 +123,7 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
            SceneLoaderManager.Instance.LoadScene(SceneNames.Dungeon);
 
-          // SceneManager.LoadScene("MapDateCheckScene");//테스트용 코드
+           //SceneManager.LoadScene("MapDateCheckScene");//테스트용 코드
         }
         else
         {

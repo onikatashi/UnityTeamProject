@@ -878,6 +878,7 @@ GameObject:
   - component: {fileID: 1474469200}
   - component: {fileID: 1474469199}
   - component: {fileID: 1474469201}
+  - component: {fileID: 1474469202}
   m_Layer: 0
   m_Name: MapGameObject
   m_TagString: Untagged
@@ -942,6 +943,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dungeonMaker: {fileID: 1474469199}
+--- !u!114 &1474469202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474469198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3d6e5479d673f5418a9c6778284cc31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterRoot: {fileID: 0}
+  characterAnimator: {fileID: 0}
+  backgrounds: []
+  backgroundSpeed: 3
+  backgroundWidth: 20
+  mapRoot: {fileID: 0}
+  mapMoveDistance: 900
+  mapMoveDuration: 0.6
+  environmentBackground: {fileID: 0}
+  themeFadeDuration: 0.4
+  dungeonMaker: {fileID: 0}
 --- !u!1001 &1580171942
 PrefabInstance:
   m_ObjectHideFlags: 0
