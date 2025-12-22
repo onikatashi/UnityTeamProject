@@ -2515,8 +2515,9 @@ GameObject:
   - component: {fileID: 1851626519}
   - component: {fileID: 1851626522}
   - component: {fileID: 1851626520}
+  - component: {fileID: 1851626523}
   m_Layer: 0
-  m_Name: Bath
+  m_Name: HotSpring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2552,7 +2553,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -2566,6 +2567,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1851626518}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1851626523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851626518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb5b5736df9b5324f94e4377b5b55790, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healAmount: 5
+  healInterval: 5
 --- !u!1 &2013685209
 GameObject:
   m_ObjectHideFlags: 0
@@ -3147,6 +3162,7 @@ MonoBehaviour:
   currentTheme: 2
   currentRoomType: 1
   currentPlayerPlace: 0
+  userEXPClearedRoomCount: 0
   currentBattleNodeFloor: 0
   currentBattleNodeColum: 0
   currentStage: 1
