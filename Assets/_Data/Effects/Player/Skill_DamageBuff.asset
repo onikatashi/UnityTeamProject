@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81e15949963f00943a5e8ad853ef96d2, type: 3}
-  m_Name: Skill_MultiSlash
+  m_Name: Skill_DamageBuff
   m_EditorClassIdentifier: 
-  effectType: 1
-  effectPrefab: {fileID: 3913357419638688299, guid: 4f0b18af5b400e740bf51d671a75f4fe, type: 3}
-  lifeTime: 0.5
-  followTarget: 0
+  effectType: 3
+  effectPrefab: {fileID: 5834375492144457657, guid: f09ed6e487eae8a4f9cdca151c824e7c, type: 3}
+  lifeTime: 5
+  followTarget: 1

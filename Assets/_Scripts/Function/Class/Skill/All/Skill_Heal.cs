@@ -14,12 +14,24 @@ public class Skill_Heal : SkillBase
 
     public override void Execute(Player player, int skillLevel)
     {
+
         // 이미 풀피면 굳이 실행 안 해도 됨
         if (player.currentHp >= player.finalStats.maxHp)
             return;
 
         float healRatio = GetHealRatio(skillLevel);
         float healAmount = player.finalStats.maxHp * healRatio;
+
+        // 이펙트 추가
+        EffectManager.Instance.PlayEffect(
+            Enums.EffectType.Skill_Heal,
+            player.transform.position,
+            Quaternion.identity,
+            player.transform
+            );
+
+        // 사운드 추가
+        SoundManager.Instance.PlaySFX("heal");
 
         player.Heal(healAmount);
     }
