@@ -21,8 +21,8 @@ public class DungeonManager : MonoBehaviour
     public Enums.currentPlayerPlace currentPlayerPlace;
 
     [Header("유저 경험치용 변수")]
-    private int userEXPClearedRoomCount = 0;
-    private const int USER_EXP_PER_ROOM = 50;
+    public float userEXPClearedRoomCount = 0;
+    private const float USER_EXP_PER_ROOM = 50;
 
     //현재 전투중인 노드 위치.
     public int currentBattleNodeFloor;
