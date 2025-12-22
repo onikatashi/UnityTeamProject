@@ -10,8 +10,6 @@ public class SkillSelectionUI : MonoBehaviour
     private List<GameObject> spawnedCards = new List<GameObject>();
     private Action onCardSelectedCallback;
 
-    SkillSlotUI slotUI;
-
     private void Awake()
     {
         gameObject.SetActive(false);
@@ -39,7 +37,7 @@ public class SkillSelectionUI : MonoBehaviour
     public void OnCardClicked(SkillCardData data)
     {
         //선택 결과 적용
-        PlayerSkillController.Instance.AddSkillOrLevelUp(data.skillBaseData);
+        Player.Instance.skillController.AddSkillOrLevelUp(data.skillBaseData);
 
         //UI 닫기
         gameObject.SetActive(false);
@@ -48,6 +46,10 @@ public class SkillSelectionUI : MonoBehaviour
         //콜백 호출
         onCardSelectedCallback?.Invoke();
 
+        //디버그용/////////////////////////////////////////////////////////////////////////////////////////////////
+        Debug.Log($"[OnCardClicked] Player = {Player.Instance}");
+        Debug.Log($"[OnCardClicked] PSC = {PlayerSkillController.Instance} / hash={PlayerSkillController.Instance.GetHashCode()}");
+        Debug.Log($"[OnCardClicked] skill = {data.skillBaseData?.skillName} ref={data.skillBaseData}");
     }
 
     private void ClearCards()

@@ -24,18 +24,16 @@ public class PlayerSkillController : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            skillSlots = new SkillRuntime[3];
+            ownedSkills = new List<SkillRuntime>();
         }
         else
         {
             Destroy(gameObject);
             return;
         }
-    }
 
-    private void Start()
-    {
-        skillSlots = new SkillRuntime[3];
-        ownedSkills.Clear();
     }
 
     /// <summary>
@@ -58,11 +56,13 @@ public class PlayerSkillController : MonoBehaviour
     /// <returns></returns>
     public int FindFirstEmptySlotIndex()
     {
-        for(int i = 0; i < skillSlots.Length; i++)
+        for (int i = 0; i < skillSlots.Length; i++)
         {
-            if(skillSlots[i] == null) return i;
+            if (skillSlots[i] == null || skillSlots[i].skillBaseData == null) return i;
+            Debug.Log($"[PSC] this={this.GetHashCode()} Instance={Instance.GetHashCode()}");
         }
         return -1;
+
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public class PlayerSkillController : MonoBehaviour
     {
         foreach (var r in ownedSkills)
         {
-            if(r.skillBaseData == baseData) return r;
+            if (r.skillBaseData == baseData) return r;
         }
         return null;
     }
@@ -99,8 +99,8 @@ public class PlayerSkillController : MonoBehaviour
     /// <param name="selectedSkill"></param>
     public void AddSkillOrLevelUp(SkillBase selectedSkill)
     {
-        if (selectedSkill == null) return;
-            
+        if (selectedSkill == null) { Debug.Log("RETURN: selectedSkill null"); return; }
+
 
         //이미 스킬이 있으면 레벨업
         SkillRuntime owned = FindOwnedSkill(selectedSkill);
@@ -109,12 +109,13 @@ public class PlayerSkillController : MonoBehaviour
             owned.LevelUp();
 
             OnSkillChanged?.Invoke();
+            Debug.Log("LEVEL UP");
             return;
         }
 
         //신규 스킬이면 슬롯이 비어있어야만 추가 가능
         int emptyIndex = FindFirstEmptySlotIndex();
-        if (emptyIndex == -1) return;
+        if (emptyIndex == -1) { Debug.Log("RETURN: no empty slot"); return; }
 
 
         SkillRuntime newRuntime = new SkillRuntime(selectedSkill);
@@ -132,7 +133,7 @@ public class PlayerSkillController : MonoBehaviour
     public void UseSkillSlot(int slotIndex, Player player)
     {
         //슬롯 인덱스 벗어나면 return
-        if ( slotIndex < 0 || slotIndex >= skillSlots.Length) return;
+        if (slotIndex < 0 || slotIndex >= skillSlots.Length) return;
 
         SkillRuntime runtime = skillSlots[slotIndex];
         if (runtime == null) return;
@@ -154,7 +155,7 @@ public class PlayerSkillController : MonoBehaviour
         ownedSkills.Clear();
 
         //런타임 스킬 슬롯 초기화
-        for(int i = 0; i < skillSlots.Length; i++)
+        for (int i = 0; i < skillSlots.Length; i++)
         {
             skillSlots[i] = null;
         }
