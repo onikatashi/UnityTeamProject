@@ -36,7 +36,6 @@ public class PlayerLevelSystem : MonoBehaviour
     /// </summary>
     private void HandleLevelUp(int count)
     {
-        Debug.Log($"HandleLevelUp 호출됨. count = {count}");
         remainingLevelUps = count;
 
         GameStateManager.Instance.SetState(Enums.GamePlayState.LevelUpUI);
@@ -56,8 +55,9 @@ public class PlayerLevelSystem : MonoBehaviour
 
         remainingLevelUps--;
 
+        var ui = skillUI;
         var cards = selector.Create3Cards();
-        UIManager.Instance.skillSelectionUI.ShowCards(cards, OnCardSelected);
+        ui.ShowCards(cards, OnCardSelected);
     }
 
     private void OnCardSelected()
@@ -118,5 +118,13 @@ public class PlayerLevelSystem : MonoBehaviour
         Player.Instance.SetFinalStat();
 
         OnExpChanged?.Invoke(currentExp, GetRequiredExp(currentLevel));
+    }
+
+    private SkillSelectionUI skillUI
+    {
+        get
+        {
+            return UIManager.Instance?.skillSelectionUI;
+        }
     }
 }
