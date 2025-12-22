@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3342e4c3100675549996dd163c79eac5, type: 3}
   m_Name: DamageBuff
   m_EditorClassIdentifier: 
-  soundName: 
-  clip: {fileID: 0}
+  soundName: damageBuff
+  clip: {fileID: 8300000, guid: a904117812d21b442a23c7859659ebb1, type: 3}
   volume: 1
   pitch: 1
   loop: 0

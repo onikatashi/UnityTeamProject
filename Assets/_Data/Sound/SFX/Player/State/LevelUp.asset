@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3342e4c3100675549996dd163c79eac5, type: 3}
   m_Name: LevelUp
   m_EditorClassIdentifier: 
-  soundName: 
-  clip: {fileID: 0}
+  soundName: levelUp
+  clip: {fileID: 8300000, guid: 3d3792a5f71048d4e8eb877613e37084, type: 3}
   volume: 1
   pitch: 1
   loop: 0

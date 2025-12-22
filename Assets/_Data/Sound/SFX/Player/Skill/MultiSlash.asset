@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3342e4c3100675549996dd163c79eac5, type: 3}
   m_Name: MultiSlash
   m_EditorClassIdentifier: 
-  soundName: 
-  clip: {fileID: 0}
+  soundName: multiSlash
+  clip: {fileID: 8300000, guid: 39100b41ba78f644284184c2d7c48c0f, type: 3}
   volume: 1
   pitch: 1
   loop: 0
