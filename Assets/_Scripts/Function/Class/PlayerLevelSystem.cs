@@ -17,7 +17,6 @@ public class PlayerLevelSystem : MonoBehaviour
     //이번 프레임에서 몇 번 레벨업 했는지 (한번에 많은 경험치로 2이상 레벨업 했을 경우를 대비)
     int pendingLevelUps = 0;
 
-    public SkillSelectionUI skillSelectionUI;
     public LevelUpSkillSelector selector;
 
     public System.Action<float, float> OnExpChanged;
@@ -27,7 +26,6 @@ public class PlayerLevelSystem : MonoBehaviour
     private void Start()
     {
         selector = new LevelUpSkillSelector(Player.Instance.classStat, PlayerSkillController.Instance);
-        skillSelectionUI.gameObject.SetActive(false);
 
         OnLevelUp -= HandleLevelUp;         //씬 전환 시 여러번 불릴 수 있으니 보험
         OnLevelUp += HandleLevelUp;
@@ -59,7 +57,7 @@ public class PlayerLevelSystem : MonoBehaviour
         remainingLevelUps--;
 
         var cards = selector.Create3Cards();
-        skillSelectionUI.ShowCards(cards, OnCardSelected);
+        UIManager.Instance.skillSelectionUI.ShowCards(cards, OnCardSelected);
     }
 
     private void OnCardSelected()

@@ -34,15 +34,19 @@ public class TraitManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-    }
-
-    private void Start()
-    {
         uiManager = UIManager.Instance;
         soundManager = SoundManager.Instance;
 
         traitsDictionary = allTraits.allTraits.ToDictionary(x => x.traitType, x => x);
     }
+
+    //private void Start()
+    //{
+    //    uiManager = UIManager.Instance;
+    //    soundManager = SoundManager.Instance;
+
+    //    traitsDictionary = allTraits.allTraits.ToDictionary(x => x.traitType, x => x);
+    //}
 
     // 사용 가능한 남은 포인트 (유저 레벨 1당 특성 포인트 1)
     public int GetAvailablePoints()

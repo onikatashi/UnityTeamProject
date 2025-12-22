@@ -36,7 +36,7 @@ public class Skill_MultiSlash : SkillBase
         {
             Collider[] monsters = Physics.OverlapSphere(
                 player.transform.position,
-                range*2,
+                range,
                 monsterLayer
             );
 
@@ -50,6 +50,7 @@ public class Skill_MultiSlash : SkillBase
                     player.finalStats.attackDamage * damageMultiplier;
 
                 m.TakeDamage(damage);
+
             }
 
             yield return new WaitForSeconds(hitInterval);

@@ -54,6 +54,8 @@ public class SkillRuntime
     /// <returns></returns>
     public float GetCooldownRemaining()
     {
+        if (skillBaseData == null) return 0f;
+
         float baseCooldown = skillBaseData.cooldown;
 
         float cdr = Player.Instance.finalStats.cooldownReduction;
@@ -63,6 +65,14 @@ public class SkillRuntime
 
         float endTime = lastUseTime + finalCooldown;
         return Mathf.Max(0f, endTime - Time.time);
+    }
+
+    public float GetFinalCooldown()
+    {
+        float baseCooldown = skillBaseData.cooldown;
+        float cdr = Player.Instance.finalStats.cooldownReduction;
+
+        return baseCooldown * (1f - cdr);
     }
 
     public void ResetSkillLevel()

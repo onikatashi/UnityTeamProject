@@ -20,6 +20,9 @@ public class DungeonManager : MonoBehaviour
     [Header("플레이어 현재 장소")]
     public Enums.currentPlayerPlace currentPlayerPlace;
 
+    [Header("유저 경험치용 변수")]
+    public float userEXPClearedRoomCount = 0;
+    private const float USER_EXP_PER_ROOM = 50;
 
     //현재 전투중인 노드 위치.
     public int currentBattleNodeFloor;
@@ -52,7 +55,6 @@ public class DungeonManager : MonoBehaviour
 
         SetRandomTheme(); // 첫 진입 시 테마 설정
 
-        
     }
 
     //테마 관련--------------------------------------------------------------------------------------------------------
@@ -232,9 +234,16 @@ public class DungeonManager : MonoBehaviour
     public void ResetDungeonData()
     {
         currentDungeonData = null;
-     
+        //타운 쪽으로 들어올 때 타입 초기화.
+        SetCurrentRoomType(Enums.RoomType.None);
+        
         InventoryManager.Instance.ClearInventory();
         Player.Instance.ResetPlayer();
+        //마무리 시 유저 경험치 적용 및 카운팅 최소화.
+        UserDataManager.Instance.AddUserExp(userEXPClearedRoomCount * USER_EXP_PER_ROOM);
+        userEXPClearedRoomCount = 0;
+
+
 
         Debug.Log("[DungeonManager] 던전 데이터 초기화 완료");
     }
@@ -258,6 +267,8 @@ public class DungeonManager : MonoBehaviour
             {
                 //클리어한 노드 true를 통한 클리어 처리.
                 node.isCleared = true;
+                userEXPClearedRoomCount++;
+                Debug.Log($"[DungeonManager] 클리어 룸 카운트: {userEXPClearedRoomCount}");
                 Debug.Log($"[DungeonManager] 노드 클리어: {node.floor},{node.col}");
                 return;
             }

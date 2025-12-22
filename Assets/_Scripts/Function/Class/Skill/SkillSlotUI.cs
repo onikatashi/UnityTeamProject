@@ -21,7 +21,7 @@ public class SkillSlotUI : MonoBehaviour
     {
         skillController = PlayerSkillController.Instance;
         if (skillController != null)
-        skillController.OnSkillChanged += Refresh;
+            skillController.OnSkillChanged += Refresh;
 
         Refresh();
         playerMove = Player.Instance.GetComponent<PlayerMove>();
@@ -38,7 +38,7 @@ public class SkillSlotUI : MonoBehaviour
     /// </summary>
     public void Refresh()
     {
-        if(skillController == null)
+        if (skillController == null)
         {
             Debug.LogError("스킬컨트롤러 없음");
             skillController = PlayerSkillController.Instance;
@@ -71,13 +71,18 @@ public class SkillSlotUI : MonoBehaviour
     /// </summary>
     void UpdateSkillCooldownUI()
     {
-        for(int i = 0;i < slotIcons.Length; i++)
+        for (int i = 0; i < cooldownMasks.Length; i++)
         {
             var skill = skillController.GetSkillAtSlot(i);
-            if (skill == null) continue;
+            if (skill == null || skill.skillBaseData == null)
+            {
+                cooldownMasks[i].fillAmount = 0f;
+                cooldownTexts[i].gameObject.SetActive(false);
+                continue;
+            }
 
             float remain = skill.GetCooldownRemaining();
-            float total = skill.skillBaseData.cooldown;
+            float total = skill.GetFinalCooldown();
 
             if (remain > 0f)
             {
@@ -110,13 +115,13 @@ public class SkillSlotUI : MonoBehaviour
         {
             dashCooldownMask.gameObject.SetActive(false);
         }
-           
+
     }
 
 
     private void OnDestroy()
     {
-        if(skillController != null )
-        skillController.OnSkillChanged -= Refresh;
+        if (skillController != null)
+            skillController.OnSkillChanged -= Refresh;
     }
 }

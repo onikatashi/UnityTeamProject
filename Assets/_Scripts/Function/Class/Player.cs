@@ -17,7 +17,8 @@ public class Player : MonoBehaviour
 
     public PlayerLevelSystem levelSystem;
     public PlayerGoldSystem goldSystem;
-    PlayerSkillController skillController;
+    
+    public PlayerSkillController skillController;
 
     //스킬에 player로 들고올수 있게 캐싱
     PlayerMove move;

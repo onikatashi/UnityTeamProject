@@ -10,7 +10,7 @@ public class PlayerExperience : MonoBehaviour
     PlayerLevelSystem levelSystem;
     Player player;
 
-    private void Awake()
+    private void Start()
     {
         levelSystem = GetComponent<PlayerLevelSystem>();
         player = Player.Instance;
