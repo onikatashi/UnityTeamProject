@@ -159,9 +159,9 @@ public class InventoryManager : MonoBehaviour
 
         if (Player.Instance != null)
         {
+            float tempHp = Player.Instance.finalStats.maxHp;
             Player.Instance.SetFinalStat();
-            Player.Instance.Heal(newItem.iBaseStat.maxHp +
-                (newItem.iBaseStat * reinforcedSlots[currentIndex]).maxHp);
+            Player.Instance.Heal(Player.Instance.finalStats.maxHp - tempHp);
         }
 
         // 아이템 획득 시 시너지 효과 업데이트
@@ -228,16 +228,15 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        if (Player.Instance != null)
-        {
-            Player.Instance.SetFinalStat();
-            Player.Instance.Heal(newItem.iBaseStat.maxHp +
-                (newItem.iBaseStat * reinforcedSlots[currentIndex]).maxHp);
-        }
-
-
         // 아이템 시너지 카운트 업데이트
         CheckActiveSynergy();
+
+        if (Player.Instance != null)
+        {
+            float tempHp = Player.Instance.finalStats.maxHp;
+            Player.Instance.SetFinalStat();
+            Player.Instance.Heal(Player.Instance.finalStats.maxHp - tempHp);
+        }
 
         // 아이템 획득 시 시너지 효과 업데이트
         uiManager.playerStatUIController.synergyEffectUIController.ReturnSynergySlot();
@@ -332,15 +331,14 @@ public class InventoryManager : MonoBehaviour
         indexByItemId.Remove(inventory[slotIndex].iId);
         inventory[slotIndex] = null;
 
+        // 아이템 시너지 카운트 업데이트
+        CheckActiveSynergy();
+
         if (Player.Instance != null)
         {
             Player.Instance.SetFinalStat();
             Player.Instance.Heal(0f);
         }
-
-
-        // 아이템 시너지 카운트 업데이트
-        CheckActiveSynergy();
 
         // 아이템 제거 시, 시너지 효과 패널 업데이트
         uiManager.playerStatUIController.synergyEffectUIController.ReturnSynergySlot();
@@ -460,13 +458,6 @@ public class InventoryManager : MonoBehaviour
 
         // 스왑 후 시너지 빙고 확인
         CheckActiveSynergy();
-
-        if (Player.Instance != null)
-        {
-            float tempHp = Player.Instance.finalStats.maxHp;
-            Player.Instance.SetFinalStat();
-            Player.Instance.Heal(Player.Instance.finalStats.maxHp - tempHp);
-        }
 
         // 인벤토리 슬롯 이미지 업데이트
         uiManager.inventoryUIController.UpdateItemIcon();
