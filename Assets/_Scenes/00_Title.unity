@@ -545,6 +545,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4865327645860975969, guid: c1acfac7c14807e428e0343fcbdc87ac, type: 3}
+      propertyPath: skillSelectionUI
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8828106940936251941, guid: c1acfac7c14807e428e0343fcbdc87ac, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1202,6 +1206,7 @@ MonoBehaviour:
   playerStatePanelPrefab: {fileID: 5240140688339861246, guid: e73b1027170560949a2a7115dce1e46f, type: 3}
   skillSlotPanelPrefab: {fileID: 4715274874986449470, guid: d182433b0f2a074499556ceeef20b3c3, type: 3}
   skillSelectPrefab: {fileID: 6160681061836665523, guid: fd888102ee9237f47913d044baf98db9, type: 3}
+  skillSelectionUI: {fileID: 0}
 --- !u!114 &1527243386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1342,6 +1347,7 @@ MonoBehaviour:
   currentTheme: 0
   currentRoomType: 0
   currentPlayerPlace: 0
+  userEXPClearedRoomCount: 0
   currentBattleNodeFloor: 0
   currentBattleNodeColum: 0
   currentStage: 1
