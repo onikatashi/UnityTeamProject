@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3342e4c3100675549996dd163c79eac5, type: 3}
   m_Name: Hurt
   m_EditorClassIdentifier: 
-  soundName: 
-  clip: {fileID: 0}
+  soundName: hurt
+  clip: {fileID: 8300000, guid: 8a9dc4f434a6f6240a71dc6ad3659cf5, type: 3}
   volume: 1
   pitch: 1
   loop: 0
