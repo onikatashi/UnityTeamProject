@@ -96,6 +96,9 @@ public class PlayerLevelSystem : MonoBehaviour
 
         while (currentExp >= GetRequiredExp(currentLevel))
         {
+            //사운드
+            SoundManager.Instance.PlaySFX("levelUp");
+
             currentExp -= GetRequiredExp(currentLevel);
             currentLevel++;
             pendingLevelUps++;

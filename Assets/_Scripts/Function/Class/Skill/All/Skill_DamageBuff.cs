@@ -16,6 +16,9 @@ public class Skill_DamageBuff : SkillBase
 
     public override void Execute(Player player, int skillLevel)
     {
+        // 사운드
+        SoundManager.Instance.PlaySFX("damageBuff");
+
         // 레벨 기반 최종 배율 계산
         float finalMultiplier = GetFinalMultiplier(skillLevel);
 
@@ -25,6 +28,20 @@ public class Skill_DamageBuff : SkillBase
 
         // Player에게 곱연산 버프 적용 요청
         player.ApplyMultiplicativeBuff(mulStats, duration);
+
+        player.StartCoroutine(CoEffect(player, duration));
+    }
+
+    IEnumerator CoEffect(Player player, float duration)
+    {
+        // 이펙트 추가
+        EffectManager.Instance.PlayEffect(
+            Enums.EffectType.Skill_DamageBuff,
+            player.transform.position,
+            Quaternion.identity,
+            player.transform
+            );
+        yield return new WaitForSeconds(duration);
     }
 
     private float GetFinalMultiplier(int level)

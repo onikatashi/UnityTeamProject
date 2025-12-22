@@ -41,7 +41,7 @@ public class EffectManager : MonoBehaviour
     {
         if (!effectDict.ContainsKey(type))
         {
-            Debug.LogWarning($"Effect Type {type}ÀÌ µî·ÏµÇÁö ¾Ê¾ÒÀ½");
+            Debug.LogWarning($"Effect Type {type}ì´ ë“±ë¡ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤");
             return;
         }
 
