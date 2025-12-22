@@ -16,8 +16,8 @@ public class Player : MonoBehaviour
     public static Player Instance;
 
     public PlayerLevelSystem levelSystem;
+    public PlayerGoldSystem goldSystem;
     PlayerSkillController skillController;
-    SkillSlotUI skillSlotUI;
 
     //스킬에 player로 들고올수 있게 캐싱
     PlayerMove move;
@@ -93,6 +93,7 @@ public class Player : MonoBehaviour
         animCtrl = GetComponentInChildren<PlayerAnimController>();
         pa = GetComponent<PlayerAttack>();
         levelSystem = GetComponent<PlayerLevelSystem>();
+        goldSystem = GetComponent<PlayerGoldSystem>();
         skillController = GetComponent<PlayerSkillController>();
     }
     private void Start()
@@ -270,7 +271,7 @@ public class Player : MonoBehaviour
 
         //Scale 조절로 좌우 반전하기
         Vector3 scale = pSprite.localScale;
-        scale.x = dirX > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        scale.x = dirX > 0 ? -Mathf.Abs(scale.x) : Mathf.Abs(scale.x);
         pSprite.localScale = scale;
     }
 
@@ -320,6 +321,11 @@ public class Player : MonoBehaviour
         levelSystem.ResetLevelAndExp();
         //보유스킬, 스킬레벨, 스킬슬롯 초기화
         skillController.ResetAllSkills();
+
+        //골드 초기화
+        goldSystem.ResetGold();
+
+        //체력, 마나 초기화
         currentHp = finalStats.maxHp;
         currentMp = finalStats.maxMp;
 
@@ -336,4 +342,5 @@ public class Player : MonoBehaviour
     {
         invincibleReasons.Remove(reason);
     }
+
 }

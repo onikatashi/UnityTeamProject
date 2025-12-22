@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: _SFXSoundPack
   m_EditorClassIdentifier: 
   soundList:
-  - {fileID: 11400000, guid: cf446694bed98ab49a3613d1db83536d, type: 2}
+  - {fileID: 11400000, guid: 5fc08d263351a5f4a91cba3e565d5eea, type: 2}
+  - {fileID: 11400000, guid: 9050a6a0a4f93054b8c1af916e83de83, type: 2}
+  - {fileID: 11400000, guid: 137690f6692faab498f1e0b39230dfc4, type: 2}

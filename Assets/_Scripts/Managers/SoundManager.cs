@@ -51,8 +51,15 @@ public class SoundManager : MonoBehaviour
         masterVolume = saveLoadManager.settingData.masterVolume;
         bgmVolume = saveLoadManager.settingData.bgmVolume;
         sfxVolume = saveLoadManager.settingData.sfxVolume;
+
+        RefreshSourceVolume();
     }
 
+    void RefreshSourceVolume()
+    {
+        bgmSource.volume = masterVolume * bgmVolume * soundDictionary[currentBGM].volume;
+        sfxSource.volume = masterVolume * sfxVolume;
+    }
 
     private void InitializeSources()
     {

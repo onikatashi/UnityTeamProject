@@ -45,6 +45,18 @@ public class UIManager : MonoBehaviour
     private GameObject settingUIPrefab;                             // 세팅 UI 프리팹
     public SettingUIController settingUIController;                 // 세팅 UI 컨트롤러
 
+    [SerializeField]
+    [Header("플레이어 상태UI")]
+    private GameObject playerStatePanelPrefab;
+
+    [SerializeField]
+    [Header("스킬 슬롯UI")]
+    private GameObject skillSlotPanelPrefab;
+
+    [SerializeField]
+    [Header("스킬 선택 UI")]
+    private GameObject skillSelectPrefab;
+
     SceneLoaderManager sceneLoaderManager;
 
     private void Awake()
@@ -107,6 +119,10 @@ public class UIManager : MonoBehaviour
         InstantiateModeUI(canvas);
         InstantiateSettingUI(canvas);
         InstantiateTraitPanel(canvas);
+        InstantiatePlayerStateUI(canvas);
+        InstantiateSkillSlotUI(canvas);
+        InstantiateSkillSelectPanel(canvas);
+        
     }
 
     // Canvas 등록 해제
@@ -138,7 +154,7 @@ public class UIManager : MonoBehaviour
 
         // ModeUI도 이 때 같이 켜져야 함
         modeUIController.UpdateModeUI();
-        if (inventoryUIController.gameObject.activeSelf)
+        if (!inventoryUIController.gameObject.activeSelf)
         {
             modeUIController.HideModeUI();
         }
@@ -229,6 +245,30 @@ public class UIManager : MonoBehaviour
         settingUIController = ui.GetComponent<SettingUIController>();
 
         ui.SetActive(true);
+    }
+
+    // Player State(Hp, Mp, Gold) UI 생성
+    void InstantiatePlayerStateUI(RectTransform canvas)
+    {
+        GameObject ui = Instantiate(playerStatePanelPrefab, canvas);
+        
+        ui.SetActive(true);
+    }
+
+    // Skill Slot UI 생성
+    void InstantiateSkillSlotUI(RectTransform canvas)
+    {
+        GameObject ui = Instantiate(skillSlotPanelPrefab, canvas);
+
+        ui.SetActive(true);
+    }
+
+    // Skill Select UI 생성
+    void InstantiateSkillSelectPanel(RectTransform canvas)
+    {
+        GameObject ui = Instantiate(skillSelectPrefab, canvas);
+
+        ui.SetActive(false);
     }
 
     public Transform GetCanvas()

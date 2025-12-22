@@ -7,19 +7,20 @@ public class TraitManager : MonoBehaviour
 {
     public static TraitManager Instance;
 
-    [Header("¸ğµç Æ¯¼º µ¥ÀÌÅÍ")]
+    [Header("ëª¨ë“  íŠ¹ì„± ë°ì´í„°")]
     public AllTraitsData allTraits;
 
-    // SaveLoadManagerÀÇ userData¸¦ ÂüÁ¶
+    // SaveLoadManagerì˜ userDataë¥¼ ì°¸ì¡°
     public UserData userData => SaveLoadManager.Instance.userData;
 
     Dictionary<Enums.TraitType, TraitData> traitsDictionary
-        = new Dictionary<Enums.TraitType, TraitData> ();
+        = new Dictionary<Enums.TraitType, TraitData>();
 
     const float SAVE_DELAY = 0.5f;
     Coroutine saveCoroutine;
 
     UIManager uiManager;
+    SoundManager soundManager;
 
     private void Awake()
     {
@@ -38,17 +39,18 @@ public class TraitManager : MonoBehaviour
     private void Start()
     {
         uiManager = UIManager.Instance;
+        soundManager = SoundManager.Instance;
 
         traitsDictionary = allTraits.allTraits.ToDictionary(x => x.traitType, x => x);
     }
 
-    // »ç¿ë °¡´ÉÇÑ ³²Àº Æ÷ÀÎÆ® (À¯Àú ·¹º§ 1´ç Æ¯¼º Æ÷ÀÎÆ® 1)
+    // ì‚¬ìš© ê°€ëŠ¥í•œ ë‚¨ì€ í¬ì¸íŠ¸ (ìœ ì € ë ˆë²¨ 1ë‹¹ íŠ¹ì„± í¬ì¸íŠ¸ 1)
     public int GetAvailablePoints()
     {
         return userData.GetRemainPoints();
     }
 
-    // Æ¯¼º Æ÷ÀÎÆ® ÅõÀÚ
+    // íŠ¹ì„± í¬ì¸íŠ¸ íˆ¬ì
     public void InvestTraitPoint(Enums.TraitType type, int point = 1)
     {
         if (GetAvailablePoints() <= 0)
@@ -56,7 +58,9 @@ public class TraitManager : MonoBehaviour
             return;
         }
 
-        // traitPoints[type]ÀÇ °ªÀ» °¡Á®¿À°Å³ª ¾øÀ¸¸é ¼³Á¤ÇÑ µğÆúÆ® °ª(0)À» °¡Á®¿È.
+        soundManager.PlaySFX("buttonClick");
+
+        // traitPoints[type]ì˜ ê°’ì„ ê°€ì ¸ì˜¤ê±°ë‚˜ ì—†ìœ¼ë©´ ì„¤ì •í•œ ë””í´íŠ¸ ê°’(0)ì„ ê°€ì ¸ì˜´.
         int currentPoints = userData.traitPoints.GetValueOrDefault(type, 0);
         if (currentPoints < 20)
         {
@@ -74,10 +78,10 @@ public class TraitManager : MonoBehaviour
                 userData.traitPoints[type] = 20;
             }
 
-            // UI ¾÷µ¥ÀÌÆ®
+            // UI ì—…ë°ì´íŠ¸
             uiManager.traitUIController.RefreshTraitUI();
 
-            // Æ¯¼ºÁ¤º¸ ÀúÀå
+            // íŠ¹ì„±ì •ë³´ ì €ì¥
             SaveTraitInfo();
             if (Player.Instance != null)
             {
@@ -87,9 +91,11 @@ public class TraitManager : MonoBehaviour
         }
     }
 
-    // Æ¯¼º Æ÷ÀÎÆ® ¹İÈ¯
+    // íŠ¹ì„± í¬ì¸íŠ¸ ë°˜í™˜
     public void RefundTraitPoint(Enums.TraitType type, int point = 1)
     {
+        soundManager.PlaySFX("buttonClick");
+
         if (userData.traitPoints.TryGetValue(type, out var value) && value > 0)
         {
             userData.traitPoints[type] = value - point;
@@ -99,10 +105,10 @@ public class TraitManager : MonoBehaviour
                 userData.traitPoints.Remove(type);
             }
 
-            // UI ¾÷µ¥ÀÌÆ®
+            // UI ì—…ë°ì´íŠ¸
             uiManager.traitUIController.RefreshTraitUI();
 
-            // Æ¯¼ºÁ¤º¸ ÀúÀå
+            // íŠ¹ì„±ì •ë³´ ì €ì¥
             SaveTraitInfo();
             if (Player.Instance != null)
             {
@@ -114,7 +120,7 @@ public class TraitManager : MonoBehaviour
 
     public void SaveTraitInfo()
     {
-        if(saveCoroutine != null)
+        if (saveCoroutine != null)
         {
             StopCoroutine(saveCoroutine);
         }
@@ -132,7 +138,7 @@ public class TraitManager : MonoBehaviour
     {
         Stats totalTraitStats = new Stats();
 
-        // À¯Àú°¡ ÂïÀº Æ¯¼º Æ÷ÀÎÆ®
+        // ìœ ì €ê°€ ì°ì€ íŠ¹ì„± í¬ì¸íŠ¸
         foreach (var keys in userData.traitPoints.Keys)
         {
             totalTraitStats += traitsDictionary[keys].statsPerPoint * userData.traitPoints[keys];

@@ -200,4 +200,15 @@ public abstract class MonsterBase : MonoBehaviour
 
         exp.ReceiveRawExp(md.dropExp);
     }
+
+    protected virtual void GiveGoldToPlayer()
+    {
+        if (player == null) return;
+
+        PlayerGold gold = Player.Instance.GetComponent<PlayerGold>();
+        if (gold == null) return;
+
+        gold.ReceiveRawGold(md.dropGold);
+
+    }
 }

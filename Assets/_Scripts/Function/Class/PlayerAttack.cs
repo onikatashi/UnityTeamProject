@@ -39,15 +39,9 @@ public class PlayerAttack : MonoBehaviour
         float atkSpd = player.finalStats.attackSpeed;
         float atkRng = player.finalStats.attackRange;
 
-        //주변 몬스터 탐지
-        Collider[] m = Physics.OverlapSphere(
-            transform.position,
-            atkRng,
-            monsterLayer
-            );
-
         //몬스터가 없으면 공격 안함
-        if (m.Length == 0) return false;
+        Collider target = FindNearestMonster(atkRng);
+        if (target == null) return false;
 
 
         // 쿨타임 체크 (쿨타임 안돌면 공격 안함
@@ -68,20 +62,31 @@ public class PlayerAttack : MonoBehaviour
 
         Debug.Log($"[TryAttack] using class logic = {c.name}");
 
-        Player.Instance.animCtrl.ChangeState(PlayerAnimState.Attack);
-        Debug.Log("Attack상태");
-
-        // 가까운 몬스터 Collider 찾아주고
-        Collider target = FindNearestMonster(atkRng);
-        if (target == null) return false;
         // 여기서 방향 확정 해주고
-        Vector3 totarget = target.transform.position - player.transform.position;
+        Vector3 totarget = (target.transform.position - player.transform.position);
+        totarget.y = 0f;
+        totarget.Normalize();
+
         player.SetFacing(totarget.x);
+
         //애니메이션 넣어주기
         player.animCtrl.ChangeState(PlayerAnimState.Attack);
 
         //직업의 기본 공격 실행
         c.BasicAttack(player, monsterLayer);
+
+        //각도 설정
+        Quaternion rot = Quaternion.LookRotation(totarget);
+
+        rot *= Quaternion.Euler(0f, 90f, 0f);
+
+        //이펙트 실행
+        EffectManager.Instance.PlayEffect(
+            EffectType.BaseAttack,
+            transform.position,
+            rot,
+            null
+            );
 
         Debug.Log("TryAttack 실행");
         return true;
@@ -111,15 +116,4 @@ public class PlayerAttack : MonoBehaviour
         return nearest;
     }
 
-    /// <summary>
-    /// 범위 파악용 
-    /// </summary>
-    void OnDrawGizmosSelected()
-    {
-        //공격 범위
-        float atkRng = player.finalStats.attackRange;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, atkRng);
-    }
 }

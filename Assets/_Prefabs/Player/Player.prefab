@@ -609,6 +609,8 @@ GameObject:
   - component: {fileID: 1826085613957420095}
   - component: {fileID: 4865327645860975969}
   - component: {fileID: 8855624650007990076}
+  - component: {fileID: 3907070517981604904}
+  - component: {fileID: 7823457533400481661}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -749,9 +751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelSystem: {fileID: 0}
-  skillController: {fileID: 0}
-  skillSlotUI: {fileID: 0}
-  move: {fileID: 8572887142870727473}
+  goldSystem: {fileID: 0}
   classStat: {fileID: 11400000, guid: 10fae6c4ae880c44996b8a141a737ebd, type: 2}
   currentHp: 0
   currentMp: 0
@@ -776,10 +776,12 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
   arrowPrefab: {fileID: 7500510980359309691, guid: fc1981042e56d3049bf2c57bd7d0ac25, type: 3}
   arrowPoolSize: 5
   pCam: {fileID: 3711064457445612662}
   animCtrl: {fileID: 6997213886945787192}
+  hitInvincibleDuration: 0.5
 --- !u!114 &8572887142870727473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,6 +795,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canMove: 1
+  dashCooldown: 1
+  dashDuration: 0.125
+  dashSpeed: 30
 --- !u!114 &6287438668461967692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -855,8 +860,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentLevel: 1
   currentExp: 0
-  skillSelectionUI: {fileID: 0}
-  playerClassData: {fileID: 0}
+  skillSelectionUI: {fileID: 4766067478837266638, guid: fd888102ee9237f47913d044baf98db9, type: 3}
 --- !u!114 &8855624650007990076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -872,3 +876,30 @@ MonoBehaviour:
   totalFinalExpGained: 0
   baseExpMultiplier: 1
   bonusExpMultiplier: 1
+--- !u!114 &3907070517981604904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8828106940936251941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6327f27ee4a967a488d7a8bccca5bba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseGoldMultiplier: 1
+  bonusGoldMultiplier: 1
+--- !u!114 &7823457533400481661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8828106940936251941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5d03a3972b45f48a26c4db74da3799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentGold: 0

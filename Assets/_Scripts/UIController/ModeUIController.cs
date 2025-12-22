@@ -21,12 +21,14 @@ public class ModeUIController : MonoBehaviour
     ModeManager modeManager;
     InventoryManager inventoryManager;
     UIManager uiManager;
+    SoundManager soundManager;
 
     void Awake()
     {
         modeManager = ModeManager.Instance;
         inventoryManager = InventoryManager.Instance;
         uiManager = UIManager.Instance;
+        soundManager = SoundManager.Instance;
 
         okButton.onClick.AddListener(OkButtonClick);
         cancelButton.onClick.AddListener(CancelButtonClick);
@@ -111,6 +113,8 @@ public class ModeUIController : MonoBehaviour
                 {
                     return;
                 }
+
+                soundManager.PlaySFX("swap");
                 ClearSwapMode();
                 uiManager.inventoryUIController.UnCheckAllSlot();
                 modeManager.SetMode(Enums.InventoryMode.None);
