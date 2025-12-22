@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using static Enums;
 
 /// <summary>
 /// 전방향 기본 공격범위 * 2 
@@ -34,6 +35,24 @@ public class Skill_MultiSlash : SkillBase
 
         for (int i = 0; i < hitCount; i++)
         {
+            //이펙트 추가
+            EffectManager.Instance.PlayEffect(
+                EffectType.Skill_MultiSlash,
+                Player.Instance.gameObject.transform.position,
+                Quaternion.identity,
+                null);
+            EffectManager.Instance.PlayEffect(
+                EffectType.Skill_MultiSlash,
+                Player.Instance.gameObject.transform.position,
+                Quaternion.Euler(0f, 180f, 0f),
+                null);
+
+            //애니메이션 추가
+            player.animCtrl.ChangeState(PlayerAnimState.Attack);
+
+            //사운드 추가
+            SoundManager.Instance.PlaySFX("multiSlash");
+
             Collider[] monsters = Physics.OverlapSphere(
                 player.transform.position,
                 range,
@@ -50,7 +69,6 @@ public class Skill_MultiSlash : SkillBase
                     player.finalStats.attackDamage * damageMultiplier;
 
                 m.TakeDamage(damage);
-
             }
 
             yield return new WaitForSeconds(hitInterval);

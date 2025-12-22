@@ -75,6 +75,9 @@ public class PlayerAttack : MonoBehaviour
         //직업의 기본 공격 실행
         c.BasicAttack(player, monsterLayer);
 
+        //사운드
+        SoundManager.Instance.PlaySFX("baseAttack");
+
         //각도 설정
         Quaternion rot = Quaternion.LookRotation(totarget);
 
