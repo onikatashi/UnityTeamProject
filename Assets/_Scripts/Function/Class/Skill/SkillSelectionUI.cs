@@ -10,14 +10,8 @@ public class SkillSelectionUI : MonoBehaviour
     private List<GameObject> spawnedCards = new List<GameObject>();
     private Action onCardSelectedCallback;
 
-    private void Awake()
-    {
-        gameObject.SetActive(false);
-    }
-
     public void ShowCards(List<SkillCardData> cards, Action onCardSelected)
     {
-
         onCardSelectedCallback = onCardSelected;
 
         ClearCards();

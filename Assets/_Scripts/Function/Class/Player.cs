@@ -346,5 +346,4 @@ public class Player : MonoBehaviour
     {
         invincibleReasons.Remove(reason);
     }
-
 }
