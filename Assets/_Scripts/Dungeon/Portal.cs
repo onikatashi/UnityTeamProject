@@ -38,6 +38,15 @@ public class Portal : MonoBehaviour
         // 충돌한 오브젝트의 최상위 루트가 Player 레이어인지 확인
         if (other.transform.root.gameObject.layer == playerLayer)
         {
+            if (SceneLoaderManager.Instance.GetCurrentSceneName() == SceneNames.Town)
+            {
+                for (int i = 0; i < Player.Instance.finalStats.startItemCount; i++)
+                {
+                    InventoryManager.Instance.AddItemToInventory(
+                        ItemManager.Instance.GetRandomItemDataByRank(
+                            ItemManager.Instance.GetRandomItemRank()));
+                }
+            }
             HandlePortalLogic();
         }
     }
