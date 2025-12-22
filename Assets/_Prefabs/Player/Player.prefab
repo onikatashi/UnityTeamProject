@@ -627,7 +627,7 @@ Transform:
   m_GameObject: {fileID: 8828106940936251941}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 3.94}
+  m_LocalPosition: {x: -5.982435, y: 1, z: 10.623056}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -752,6 +752,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelSystem: {fileID: 0}
   goldSystem: {fileID: 0}
+  skillController: {fileID: 0}
   classStat: {fileID: 11400000, guid: 10fae6c4ae880c44996b8a141a737ebd, type: 2}
   currentHp: 0
   currentMp: 0
@@ -860,7 +861,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentLevel: 1
   currentExp: 0
-  skillSelectionUI: {fileID: 4766067478837266638, guid: fd888102ee9237f47913d044baf98db9, type: 3}
 --- !u!114 &8855624650007990076
 MonoBehaviour:
   m_ObjectHideFlags: 0

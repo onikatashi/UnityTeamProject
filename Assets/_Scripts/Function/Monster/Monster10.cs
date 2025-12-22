@@ -7,7 +7,7 @@ public class Monster10 : MonsterBase
     public float tolerance = 2f;
 
     [Header("Mark Bomb")]
-    public GroundTelegraph telegraphPrefab;
+    public GameObject telegraphPrefab;
     public float markDelay = 1.2f;        // 표식 생성 후 폭발까지 지연 시간
     public float explodeRadius = 3.5f;    // 폭발 반경
     public float stunDuration = 1.0f;     // 스턴 지속 시간
@@ -75,37 +75,30 @@ public class Monster10 : MonsterBase
     {
         casting = true;
 
-        // 표식 생성
-        GroundTelegraph tg = Instantiate(
-            telegraphPrefab, pos, Quaternion.Euler(90f, 0f, 0f));
-        tg.Setup(explodeRadius, markDelay);
-        tg.StartCharge();
+        if (telegraphPrefab == null) { casting = false; yield break; }
 
-        // 폭발 대기
+        // 바닥 보정 (groundMask 사용)
+        if (Physics.Raycast(pos + Vector3.up * 5f, Vector3.down, out var hit, 20f, groundMask)) pos = hit.point;
+
+        GameObject tg = Instantiate(telegraphPrefab, pos, Quaternion.Euler(90f, 0f, 0f));
+
         yield return new WaitForSeconds(markDelay);
 
-        // 폭발 판정
-        Collider[] hits = Physics.OverlapSphere(pos, explodeRadius);
-        int playerLayer = LayerMask.NameToLayer("Player");
+        int playerMask = LayerMask.GetMask("Player");
+        Collider[] hits = Physics.OverlapSphere(pos, explodeRadius, playerMask);
 
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].gameObject.layer != playerLayer) continue;
+            Player p = hits[i].GetComponentInParent<Player>();
+            if (p == null) continue;
 
-            Player p = hits[i].GetComponent<Player>();
-            if (p != null)
-            {
-                float dmg = md.attackDamage * damageMultiplier;
-                p.TakeDamage(dmg);
-
-                // 스턴 적용
-                p.Stun(stunDuration);
-            }
+            float dmg = md.attackDamage * damageMultiplier;
+            p.TakeDamage(dmg);
+            p.Stun(stunDuration);
         }
 
-        tg.StopAndHide();
-        Destroy(tg.gameObject);
-
+        if (tg != null) Destroy(tg);
         casting = false;
     }
+
 }
