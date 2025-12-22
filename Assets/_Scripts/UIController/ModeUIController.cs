@@ -132,6 +132,8 @@ public class ModeUIController : MonoBehaviour
                 {
                     return;
                 }
+
+                soundManager.PlaySFX("reinforce");
                 ClearRankUpMode();
                 uiManager.inventoryUIController.UnCheckAllSlot();
                 modeManager.SetMode(Enums.InventoryMode.None);
@@ -148,6 +150,8 @@ public class ModeUIController : MonoBehaviour
                 {
                     return;
                 }
+
+                soundManager.PlaySFX("reinforce");
                 ClearRankUpMode();
                 uiManager.inventoryUIController.UnCheckAllSlot();
                 modeManager.SetMode(Enums.InventoryMode.None);
