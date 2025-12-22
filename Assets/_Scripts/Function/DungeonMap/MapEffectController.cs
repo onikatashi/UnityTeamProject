@@ -56,6 +56,7 @@ public class MapEffectController : MonoBehaviour
     {
         if (characterAnimator != null)
             characterAnimator.Play("Run");
+            RebindDungeonMaker();
     }
 
     void Update()
@@ -64,13 +65,6 @@ public class MapEffectController : MonoBehaviour
             ScrollBackground();
     }
 
-    //────────────────────────────────────
-    // 씬 로드 시 DungeonMaker 재연결
-    //────────────────────────────────────
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        RebindDungeonMaker();
-    }
 
     private void RebindDungeonMaker()
     {
