@@ -121,7 +121,7 @@ public class DungeonMaker : MonoBehaviour
 
         //모든 노드, 선 정보를 기반으로 선그리기.
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
-        PrintDungeonToConsole();
+       // PrintDungeonToConsole();
 
 
         //던전 알파값 조정

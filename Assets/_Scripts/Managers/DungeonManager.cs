@@ -157,7 +157,7 @@ public class DungeonManager : MonoBehaviour
 
         Debug.Log($"[DungeonManager] Stage {currentStage} 진입");
 
-        // 이제 안전하게 초기화
+        //보스스테이지 까지 클리어시 새로운 맵 생성을 위해 초기화.
         currentDungeonData = null;
         isStageTransitionPending = false;
     }

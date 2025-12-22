@@ -72,7 +72,7 @@ public class Portal : MonoBehaviour
         if (settings.isReset)
         {
             // DungeonManager에 정의된 리셋 함수 호출
-            dungeonManager.ResetDungeonData(); //
+            dungeonManager.OnStageCleared();
         }
 
         // 4. 씬 이동 실행

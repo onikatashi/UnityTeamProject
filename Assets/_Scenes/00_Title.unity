@@ -1166,6 +1166,7 @@ GameObject:
   - component: {fileID: 1527243398}
   - component: {fileID: 1527243399}
   - component: {fileID: 1527243400}
+  - component: {fileID: 1527243401}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1342,6 +1343,7 @@ MonoBehaviour:
   currentTheme: 0
   currentRoomType: 0
   currentPlayerPlace: 0
+  userEXPClearedRoomCount: 0
   currentBattleNodeFloor: 0
   currentBattleNodeColum: 0
   currentStage: 1
@@ -1419,6 +1421,18 @@ MonoBehaviour:
     cooldownReduction: 0
     reviveCount: 0
     startItemCount: 0
+--- !u!114 &1527243401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527243384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 911580ec6be36244e8f8b5206f441897, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1744150696
 GameObject:
   m_ObjectHideFlags: 0
