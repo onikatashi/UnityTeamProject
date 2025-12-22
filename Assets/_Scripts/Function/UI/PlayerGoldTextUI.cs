@@ -8,24 +8,24 @@ public class PlayerGoldTextUI : MonoBehaviour
 
     private void Start()
     {
-        //Ä³½Ì
+        //ìºì‹±
         goldSystem = Player.Instance.GetComponent<PlayerGoldSystem>();
         
-        //¾×¼Ç ³Ö¾îÁÖ±â
+        //ì•¡ì…˜ ë„£ì–´ì£¼ê¸°
         goldSystem.OnGoldChanged += UpdateGoldText;
 
-        //¾÷µ¥ÀÌÆ® ÇÑ¹ø ½ÃÄÑÁÖ±â
+        //ì—…ë°ì´íŠ¸ í•œë²ˆ í•´ì£¼ê¸°
         UpdateGoldText(goldSystem.currentGold);
     }
 
     private void OnDisable()
     {
-        //¾×¼Ç »©ÁÖ±â
+        //ì‚¬ë¼ì§ˆ ë•Œ ì•¡ì…˜ ë¹¼ì£¼ê¸°
         goldSystem.OnGoldChanged -= UpdateGoldText;
     }
 
     void UpdateGoldText(float amount)
     {
-        goldText.text = amount.ToString(" Gold");
+        goldText.text = amount.ToString("N0");
     }
 }

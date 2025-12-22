@@ -24,9 +24,9 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         cc = GetComponent<CharacterController>();
-        cam = Camera.main.transform;
-        pa = GetComponent<PlayerAttack>();
 
+        pa = GetComponent<PlayerAttack>();
+        cam = Camera.main.transform;
         player = Player.Instance;
     }
 
@@ -50,7 +50,7 @@ public class PlayerMove : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
-        if(player != null && player.IsInputReversed)
+        if (player != null && player.IsInputReversed)
         {
             x *= -1;
             z *= -1;
@@ -59,6 +59,8 @@ public class PlayerMove : MonoBehaviour
         //카메라 기준 방향 계산
         Vector3 camForward = cam.forward;
         Vector3 camRight = cam.right;
+
+
 
         //위 / 아래 각도 무시
         camForward.y = 0f;
@@ -85,7 +87,7 @@ public class PlayerMove : MonoBehaviour
         }
 
         //공격 방향으로 sprite돌리기
-        if( dir.x != 0)
+        if (dir.x != 0)
         {
             player.SetFacing(dir.x);
         }
@@ -94,7 +96,7 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //이동키를 안누르면 대쉬 안됨
-            if(dir.sqrMagnitude > 0.01f)
+            if (dir.sqrMagnitude > 0.01f)
             {
                 //방향만 전달해주고, Dash()에서 크기 알아서 적용함
                 Dash(dir.normalized);
@@ -118,7 +120,7 @@ public class PlayerMove : MonoBehaviour
         player.AddInvincible(InvincibleReason.Dash);
 
         float timer = 0f;
-        while(timer < dashDuration)
+        while (timer < dashDuration)
         {
             timer += Time.deltaTime;
             cc.Move(dir * dashSpeed * Time.deltaTime);
