@@ -3,50 +3,32 @@ using TMPro;
 
 public class WorldSpaceTip : MonoBehaviour
 {
-    [Header("Text Settings")]
-    public string displayText = "Hello!";
-    public float fontSize = 3f;
-    public Color textColor = Color.white;
-
     private TextMeshPro textMesh;
     private Transform mainCamera;
 
+    void Awake()
+    {
+        // 기존 TMP 가져오기만 함
+        textMesh = GetComponent<TextMeshPro>();
+        if (textMesh == null)
+            Debug.LogError("WorldSpaceTip: TextMeshPro 컴포넌트가 필요합니다!");
+    }
+
     void Start()
     {
-        // 카메라 참조
         mainCamera = Camera.main.transform;
-
-        // TextMeshPro 컴포넌트 생성 또는 가져오기
-        textMesh = gameObject.GetComponent<TextMeshPro>();
-        if (textMesh == null)
-        {
-            textMesh = gameObject.AddComponent<TextMeshPro>();
-        }
-
-        ApplyTextSettings();
     }
 
     void Update()
     {
-        // 카메라를 바라보도록 회전
-        transform.rotation = Quaternion.LookRotation(transform.position - mainCamera.position);
+        // 카메라를 바라보도록 고정
+        if (mainCamera != null)
+            transform.rotation = Quaternion.LookRotation(transform.position - mainCamera.position);
     }
 
-    void OnValidate()
+    // 필요하면 외부에서 직접 TMP에 접근할 수 있게 프로퍼티 제공
+    public TextMeshPro GetTMP()
     {
-        // 에디터에서 값 변경 시 자동 적용
-        if (textMesh == null)
-            textMesh = GetComponent<TextMeshPro>();
-
-        if (textMesh != null)
-            ApplyTextSettings();
-    }
-
-    private void ApplyTextSettings()
-    {
-        textMesh.text = displayText;
-        textMesh.fontSize = fontSize;
-        textMesh.color = textColor;
-        textMesh.alignment = TextAlignmentOptions.Center;
+        return textMesh;
     }
 }
