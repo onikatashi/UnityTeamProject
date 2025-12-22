@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Title
   m_EditorClassIdentifier: 
   soundName: title
-  clip: {fileID: 8300000, guid: 25eed3c043323544ab8ab8092d69ec71, type: 3}
-  volume: 0.22
+  clip: {fileID: 8300000, guid: 7b2169c802490534f8259add5cdb1cad, type: 3}
+  volume: 1
   pitch: 1
   loop: 1
   isBGM: 1

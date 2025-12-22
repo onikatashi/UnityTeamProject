@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: shop
   clip: {fileID: 8300000, guid: 2f57391de72514e469540c37def84c1f, type: 3}
-  volume: 0.22
+  volume: 1
   pitch: 1
   loop: 1
   isBGM: 1

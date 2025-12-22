@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: bossBattle1
   clip: {fileID: 8300000, guid: 0daa3186efbc6c043a780f1a09b44ce2, type: 3}
-  volume: 0.22
+  volume: 1
   pitch: 1
   loop: 1
   isBGM: 1

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Town1
   m_EditorClassIdentifier: 
   soundName: town1
-  clip: {fileID: 8300000, guid: 49e1e7aae48952148a17bae71713d0a3, type: 3}
-  volume: 0.22
+  clip: {fileID: 8300000, guid: 23efa3312adbd814cac6cab1e2c282aa, type: 3}
+  volume: 1
   pitch: 1
   loop: 1
   isBGM: 1

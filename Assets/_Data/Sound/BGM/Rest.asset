@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: rest
   clip: {fileID: 8300000, guid: 47fb737fe74ff2d4291c68cad897e5eb, type: 3}
-  volume: 0.22
+  volume: 1
   pitch: 1
   loop: 1
   isBGM: 1
