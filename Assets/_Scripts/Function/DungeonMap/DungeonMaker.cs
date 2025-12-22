@@ -739,6 +739,20 @@ public class DungeonMaker : MonoBehaviour
         if (!nextNode.prevNodes.Contains(currentNode)) nextNode.prevNodes.Add(currentNode);
     }
 
+    //이펙트 연출을 위해서 던전메이커의 테마 스프라이트 던지기.
+    public Sprite GetThemeSprite(Enums.DungeonTheme theme)
+    {
+        if (themeSpriteDictionary != null &&
+            themeSpriteDictionary.TryGetValue(theme, out var sprite))
+        {
+            return sprite;
+        }
+
+        Debug.LogWarning($"[DungeonMaker] Theme Sprite not found: {theme}");
+        return null;
+    }
+
+
     // 내부 지도 Type 콘솔로 확인.
     private void PrintDungeonToConsole()
     {
