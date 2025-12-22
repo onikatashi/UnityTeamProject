@@ -234,12 +234,16 @@ public class DungeonManager : MonoBehaviour
     public void ResetDungeonData()
     {
         currentDungeonData = null;
-     
+        //타운 쪽으로 들어올 때 타입 초기화.
+        SetCurrentRoomType(Enums.RoomType.None);
+        
         InventoryManager.Instance.ClearInventory();
         Player.Instance.ResetPlayer();
         //마무리 시 유저 경험치 적용 및 카운팅 최소화.
         UserDataManager.Instance.AddUserExp(userEXPClearedRoomCount * USER_EXP_PER_ROOM);
         userEXPClearedRoomCount = 0;
+
+
 
         Debug.Log("[DungeonManager] 던전 데이터 초기화 완료");
     }
