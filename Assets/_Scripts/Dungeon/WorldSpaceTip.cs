@@ -1,74 +1,52 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class WorldSpaceTip : MonoBehaviour
 {
-    [Header("Tip Text Settings")]
-    public string tipText = "이 물체의 설명입니다.";
-    public float textSize = 1f;
+    [Header("Text Settings")]
+    public string displayText = "Hello!";
+    public float fontSize = 3f;
     public Color textColor = Color.white;
 
-    private Camera mainCam;
-    private Canvas canvas;
-    private TextMeshProUGUI textUI;
+    private TextMeshPro textMesh;
+    private Transform mainCamera;
 
     void Start()
     {
-        mainCam = Camera.main;
-        CreateTipCanvas();
-    }
+        // 카메라 참조
+        mainCamera = Camera.main.transform;
 
-    void LateUpdate()
-    {
-        if (mainCam != null)
+        // TextMeshPro 컴포넌트 생성 또는 가져오기
+        textMesh = gameObject.GetComponent<TextMeshPro>();
+        if (textMesh == null)
         {
-            // 항상 카메라를 바라보도록 (빌보드)
-            canvas.transform.LookAt(canvas.transform.position + mainCam.transform.rotation * Vector3.forward,
-                                    mainCam.transform.rotation * Vector3.up);
+            textMesh = gameObject.AddComponent<TextMeshPro>();
         }
+
+        ApplyTextSettings();
     }
 
-    void CreateTipCanvas()
+    void Update()
     {
-        // Canvas 생성
-        GameObject canvasObj = new GameObject("WorldTipCanvas");
-        canvasObj.transform.SetParent(transform);
-        canvasObj.transform.localPosition = Vector3.up * 2f; // 오브젝트 위에서 표시
-
-        canvas = canvasObj.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.WorldSpace;
-        canvas.worldCamera = mainCam;
-        canvas.sortingOrder = 9999; // 항상 위에 보이도록
-
-        CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
-        canvasObj.AddComponent<GraphicRaycaster>();
-
-        // 배경 없는 TextMeshPro 생성
-        GameObject textObj = new GameObject("TipText");
-        textObj.transform.SetParent(canvasObj.transform);
-        textUI = textObj.AddComponent<TextMeshProUGUI>();
-        textUI.text = tipText;
-        textUI.fontSize = 36;
-        textUI.color = textColor;
-        textUI.alignment = TextAlignmentOptions.Center;
-
-        RectTransform rect = textUI.GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(500, 200);
-        rect.localScale = Vector3.one * textSize;
-
-        // 텍스트가 카메라에 의해 절대 가려지지 않도록
-        canvasObj.layer = LayerMask.NameToLayer("UI");
-        textObj.layer = LayerMask.NameToLayer("UI");
+        // 카메라를 바라보도록 회전
+        transform.rotation = Quaternion.LookRotation(transform.position - mainCamera.position);
     }
 
-    private void OnValidate()
+    void OnValidate()
     {
-        if (textUI != null)
-        {
-            textUI.text = tipText;
-            textUI.color = textColor;
-            textUI.rectTransform.localScale = Vector3.one * textSize;
-        }
+        // 에디터에서 값 변경 시 자동 적용
+        if (textMesh == null)
+            textMesh = GetComponent<TextMeshPro>();
+
+        if (textMesh != null)
+            ApplyTextSettings();
+    }
+
+    private void ApplyTextSettings()
+    {
+        textMesh.text = displayText;
+        textMesh.fontSize = fontSize;
+        textMesh.color = textColor;
+        textMesh.alignment = TextAlignmentOptions.Center;
     }
 }
