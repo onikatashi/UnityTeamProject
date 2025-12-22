@@ -48,26 +48,6 @@ public class MapEffectController : MonoBehaviour
     private bool isBackgroundScrolling = true;
     private Action transitionFinishedCallback;
 
-    //────────────────────────────────────
-    // Singleton (지정된 방식)
-    //────────────────────────────────────
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
 
     //────────────────────────────────────
     // 초기 상태
