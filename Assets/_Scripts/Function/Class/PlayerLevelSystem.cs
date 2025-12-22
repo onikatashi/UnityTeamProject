@@ -36,7 +36,6 @@ public class PlayerLevelSystem : MonoBehaviour
     /// </summary>
     private void HandleLevelUp(int count)
     {
-        Debug.Log($"HandleLevelUp 호출됨. count = {count}");
         remainingLevelUps = count;
 
         GameStateManager.Instance.SetState(Enums.GamePlayState.LevelUpUI);

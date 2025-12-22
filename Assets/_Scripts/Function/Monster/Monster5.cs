@@ -213,7 +213,7 @@ public class Monster5 : MonsterBase
         healRangeInstance.transform.position = pos;
 
         // 지름 = healRange * 2
-        float diameter = healRange * 2f;
+        float diameter = healRange;
         healRangeInstance.transform.localScale = new Vector3(diameter, 1f, diameter);
     }
 

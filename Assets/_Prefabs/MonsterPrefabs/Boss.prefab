@@ -217,7 +217,7 @@ MonoBehaviour:
   laserReverseDuration: 2
   laserTurnDegPerSec: 40
   laserSpawnYOffset: 0.5
-  markCount: 3
+  markCount: 10
   markDelay: 1
   markRadius: 3.5
   markStun: 0.8
@@ -264,8 +264,8 @@ MonoBehaviour:
   hellSpiralSpeed: 420
   fxMarks: {fileID: 5911893088733641442, guid: f6573a110c1967643a98d0efdba24be8, type: 3}
   fxSlam: {fileID: 5551718882146614446, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
-  fxExecute: {fileID: 6261345114989098648, guid: f66e2be959a7d4e4e8b050df54d1af73, type: 3}
-  fxPull: {fileID: 4806843881307822078, guid: d3baa4b3f02cdbc4ea7f22a094b598f7, type: 3}
+  fxExecute: {fileID: 4806843881307822078, guid: d3baa4b3f02cdbc4ea7f22a094b598f7, type: 3}
+  fxPull: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
   fxYOffset: 0.05
   fxLifeExtra: 0.3
   fxUseWorldY0: 1
