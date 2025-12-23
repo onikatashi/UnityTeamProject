@@ -167,7 +167,10 @@ public class MapEffectController : MonoBehaviour
         // 1. 맵 내리기
         yield return PlayMapDown();
 
-     
+
+        DungeonManager.Instance.OnStageCleared();
+        DungeonManager.Instance.EnterNextStage();
+
         // 4. 다음 테마 배경 준비
         PrepareNextStageBackground();
 

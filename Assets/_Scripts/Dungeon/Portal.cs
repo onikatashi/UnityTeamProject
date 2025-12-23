@@ -74,28 +74,19 @@ public class Portal : MonoBehaviour
             //// DungeonManager에 정의된 리셋 함수 호출
             //dungeonManager.OnStageCleared();
 
-            if (currentType != Enums.RoomType.Boss)
+            if (settings.isReset && currentType == Enums.RoomType.Boss)
             {
+                bool isFinalStage = dungeonManager.currentStage >= dungeonManager.maxStage;
+
+                dungeonManager.needStageTransitionEffect = true;
+
+                if (isFinalStage)
+                    MoveToScene("Town");
+                else
+                    MoveToScene("DungeonMap");
+
                 return;
             }
-
-            bool isFinalStage = dungeonManager.currentStage >= dungeonManager.maxStage;
-
-            dungeonManager.needStageTransitionEffect = true;
-            dungeonManager.OnStageCleared();
-            dungeonManager.EnterNextStage();
-
-            // 마지막 스테이지면 인스펙터에 적어둔 씬(Town)
-            if (isFinalStage)
-            {
-                MoveToScene("Town");
-            }
-            // 아니면 다음 스테이지 맵
-            else
-            {
-                MoveToScene("DungeonMap");
-            }
-            return;
         }
 
         // 4. 씬 이동 실행
