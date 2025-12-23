@@ -186,6 +186,9 @@ public class Player : MonoBehaviour
         // 몬스터 쪽에서 들고가야함 -> 플레이어가 데미지를 받는 로직은 플레이어 쪽에 있어야 합니다.
         currentHp -= finalDamage;
 
+        // 사운드
+        SoundManager.Instance.PlaySFX("hurt");
+
         Debug.Log("Player took " + finalDamage + " damage. Current HP: " + currentHp);
 
         OnHpChanged?.Invoke(currentHp, finalStats.maxHp);
@@ -343,5 +346,4 @@ public class Player : MonoBehaviour
     {
         invincibleReasons.Remove(reason);
     }
-
 }

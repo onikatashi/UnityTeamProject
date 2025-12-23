@@ -122,6 +122,9 @@ public class PlayerMove : MonoBehaviour
         float timer = 0f;
         while (timer < dashDuration)
         {
+            //사운드
+            SoundManager.Instance.PlaySFX("dash");
+
             timer += Time.deltaTime;
             cc.Move(dir * dashSpeed * Time.deltaTime);
             yield return null;
