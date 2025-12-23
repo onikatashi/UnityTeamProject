@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq; // LINQ 사용을 위해 추가
+using TMPro; // TextMeshPro 사용을 위해 추가
 using static Enums; // RoomType Enum 접근을 위해 필요
 using Random = UnityEngine.Random; // UnityEngine.Random 명시
 
@@ -35,9 +36,15 @@ public class SpawnManager : MonoBehaviour
         public float spawnOffset = 1.0f;
     }
 
+    [Header("UI 설정")]
+    [Tooltip("카운트다운 및 페이즈 알림을 표시할 TextMeshProUGUI")]
+    public TextMeshProUGUI infoText;
+
     [Header("전역 설정")]
     [Tooltip("다음 페이즈로 넘어가기까지의 인터벌 시간")]
     public float IntervalTime = 3f;
+    [Tooltip("게임 시작 전 대기 시간 (초)")]
+    public float startWaitTime = 5f;
 
     // -----------------------------------------------------
     [Header("룸 타입별 페이즈 데이터")]
@@ -90,6 +97,12 @@ public class SpawnManager : MonoBehaviour
             portalObject.SetActive(false);
             Debug.Log("[SpawnManager] 포탈을 초기 비활성화 상태로 설정했습니다.");
         }
+
+        // 초기 텍스트 설정
+        if (infoText != null)
+        {
+            infoText.alpha = 0f;
+        }
     }
 
     void Start()
@@ -115,8 +128,36 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator StartSpawningFlow(RoomType roomType)
     {
-        // 안정성을 위해 1프레임 대기 시간 추가
-        yield return null;
+        // 초기 대기 및 카운트다운 로직 (5초 대기)
+        float timer = 0f;
+        bool hasCounted3 = false;
+        bool hasCounted2 = false;
+        bool hasCounted1 = false;
+
+        while (timer < startWaitTime)
+        {
+            timer += Time.deltaTime;
+            float remaining = startWaitTime - timer;
+
+            // 3초 남았을 때부터 카운트다운 시작
+            if (remaining <= 3f && !hasCounted3)
+            {
+                StartCoroutine(PlayTextAnim("시작까지 3"));
+                hasCounted3 = true;
+            }
+            else if (remaining <= 2f && !hasCounted2)
+            {
+                StartCoroutine(PlayTextAnim("시작까지 2"));
+                hasCounted2 = true;
+            }
+            else if (remaining <= 1f && !hasCounted1)
+            {
+                StartCoroutine(PlayTextAnim("시작까지 1"));
+                hasCounted1 = true;
+            }
+
+            yield return null;
+        }
 
         // 실제 스폰 로직 시작
         StartCoroutine(SpawnFlow(roomType));
@@ -139,6 +180,10 @@ public class SpawnManager : MonoBehaviour
         {
             var phase = currentPhases[i];
             Debug.Log($"== {currentRoomType} - {i + 1} 페이즈 시작 ==");
+
+            // 페이즈 시작 텍스트 알림
+            StartCoroutine(PlayTextAnim($"페이즈 {i + 1} 시작"));
+
             isPhaseActive = true;
 
             // 페이즈 시작 즉시 스폰
@@ -176,6 +221,40 @@ public class SpawnManager : MonoBehaviour
 
         // 모든 페이즈가 끝났으므로 최종 클리어 상태 체크를 시작
         StartCoroutine(CheckClearState());
+    }
+
+    /// <summary>
+    /// UI 텍스트 애니메이션: 크기 확장 + 페이드 아웃
+    /// </summary>
+    IEnumerator PlayTextAnim(string message)
+    {
+        if (infoText == null) yield break;
+
+        infoText.text = message;
+        infoText.alpha = 1f;
+        infoText.transform.localScale = Vector3.one;
+
+        float duration = 1.0f; // 애니메이션 총 시간
+        float elapsed = 0f;
+
+        Vector3 startScale = Vector3.one;
+        Vector3 targetScale = Vector3.one * 1.5f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            // 1. 사이즈 점점 커짐
+            infoText.transform.localScale = Vector3.Lerp(startScale, targetScale, t);
+
+            // 2. 점점 투명화 (알파값 감소)
+            infoText.alpha = Mathf.Lerp(1f, 0f, t);
+
+            yield return null;
+        }
+
+        infoText.alpha = 0f;
     }
 
     /// <summary>
@@ -249,6 +328,10 @@ public class SpawnManager : MonoBehaviour
             if (spawningFinished && aliveEnemies.Count == 0)
             {
                 Debug.Log("모든 적 제거 → 던전 클리어");
+
+                // 클리어 텍스트 애니메이션 실행
+                StartCoroutine(PlayTextAnim("클리어"));
+
                 OnAllEnemiesCleared?.Invoke(); // 방 클리어 이벤트 발생
                 HandleRoomCleared(); // 리워드 생성/포탈 활성화 로직 호출
                 yield break;
