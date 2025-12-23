@@ -69,22 +69,24 @@ public class Portal : MonoBehaviour
             Debug.Log($"Portal: {currentType} 노드 클리어 처리 완료.");
         }
 
-        if (settings.isReset)
+        if (settings.isReset && currentType == Enums.RoomType.Boss)
         {
-            //// DungeonManager에 정의된 리셋 함수 호출
-            //dungeonManager.OnStageCleared();
+            bool isFinalStage = dungeonManager.IsLastStage();
 
-            if (settings.isReset && currentType == Enums.RoomType.Boss)
+            if (isFinalStage)
             {
-                bool isFinalStage = dungeonManager.currentStage >= dungeonManager.maxStage;
+                // ★ 최종 스테이지: DungeonMap으로 가지 않는다
+                // 여기서 최종 정산/리셋이 필요하면 OnStageCleared()로 끝내도 됨(현재 구조상 ResetDungeonData 포함)
+                dungeonManager.OnStageCleared();   // -> OnAllStagesCleared() -> ResetDungeonData() -> currentStage=1
 
+                MoveToScene("Town");
+                return;
+            }
+            else
+            {
+                // ★ 다음 스테이지: DungeonMap 들어가서 MapEffectController가 처리
                 dungeonManager.needStageTransitionEffect = true;
-
-                if (isFinalStage)
-                    MoveToScene("Town");
-                else
-                    MoveToScene("DungeonMap");
-
+                MoveToScene("DungeonMap");
                 return;
             }
         }

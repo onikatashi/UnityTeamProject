@@ -6,58 +6,77 @@ public class MapEffectController : MonoBehaviour
 {
     public static MapEffectController Instance;
 
-    //────────────────────────────────────
-    // 캐릭터 연출
-    //────────────────────────────────────
     [Header("Character")]
     public Transform characterRoot;
     public Animator characterAnimator;
 
-    //────────────────────────────────────
-    // 배경 스크롤 (UI 기반)
-    //────────────────────────────────────
     [Header("Background Scroll")]
-    public RectTransform backgroundRoot;     // 고정 루트
-    public RectTransform[] backgrounds;       // 반드시 2개
+    public RectTransform[] backgrounds; // 반드시 2개
     public float backgroundSpeed = 300f;
-    public float backgroundWidth = 1920f;     // Reference Resolution 기준
+    public float backgroundWidth = 1920f;
 
-    //────────────────────────────────────
-    // 맵 전환 연출
-    //────────────────────────────────────
     [Header("Map Transition")]
     public RectTransform mapRoot;
     public float mapMoveDistance = 900f;
     public float mapMoveDuration = 0.6f;
 
-    //────────────────────────────────────
-    // 외부 참조
-    //────────────────────────────────────
     [Header("References")]
     public DungeonMaker dungeonMaker;
 
     private bool isBackgroundScrolling = true;
+    private bool isThemeSyncDone = false;
 
-   
+    // ★ 추가: 전환 전/후 테마 캐시 (연출용)
+    private bool hasStageTransition = false;
+    private Enums.DungeonTheme fromTheme;
+    private Enums.DungeonTheme toTheme;
+
+    void Awake()
+    {
+        Instance = this;
+
+        // ★ 핵심: DungeonMaker.Start()보다 먼저 "다음 스테이지 준비"를 끝낸다
+        if (DungeonManager.Instance != null && DungeonManager.Instance.needStageTransitionEffect)
+        {
+            hasStageTransition = true;
+            DungeonManager.Instance.needStageTransitionEffect = false;
+
+            // 전환 연출용 테마 캐시
+            fromTheme = DungeonManager.Instance.currentTheme;
+
+            // 스테이지/테마 결정 + 맵 초기화(= currentDungeonData null) 선처리
+            DungeonManager.Instance.OnStageCleared();
+            DungeonManager.Instance.EnterNextStage();
+
+            // EnterNextStage에서 currentTheme가 nextTheme로 확정되어 있어야 함
+            toTheme = DungeonManager.Instance.currentTheme;
+        }
+    }
+
     void Start()
     {
         if (characterAnimator != null)
             characterAnimator.Play("Run");
 
-        //RebindDungeonMaker();
-        InitBackgroundPositions();
-        InitBackgroundSprites();
+        ResetBackgroundPositions();
 
-        if (DungeonManager.Instance.needStageTransitionEffect)
+        if (hasStageTransition)
         {
-            DungeonManager.Instance.needStageTransitionEffect = false;
+            // 1) 처음 화면은 이전 테마(fromTheme)
+            InitAllBackgroundToTheme(fromTheme);
+
+            // 2) 오른쪽(뒤) 배경만 다음 테마(toTheme)
+            SetThemeToBackBackground(toTheme);
+
+            // 3) 맵 올라오는 연출
             StartCoroutine(StageTransitionSequence());
         }
         else
         {
-            StartCoroutine(PlayMapUp()); // 일반 진입
+            // 일반 진입: 현재 테마로 통일
+            InitAllBackgroundToTheme(DungeonManager.Instance.GetCurrentTheme());
+            StartCoroutine(PlayMapUp());
         }
-
     }
 
     void Update()
@@ -66,194 +85,145 @@ public class MapEffectController : MonoBehaviour
             ScrollBackground();
     }
 
-    private void InitBackgroundSprites()
-    {
-        if (dungeonMaker == null)
-            return;
+   
 
-        Enums.DungeonTheme currentTheme = DungeonManager.Instance.GetCurrentTheme();
-        Sprite sprite = dungeonMaker.GetThemeSprite(currentTheme);
-        if (sprite == null)
-            return;
-
-        for (int i = 0; i < backgrounds.Length; i++)
-        {
-            Image img = backgrounds[i].GetComponent<Image>();
-            if (img == null) continue;
-
-            img.sprite = sprite;
-            img.color = Color.white;
-        }
-
-        Debug.Log("[MapEffectController] Background sprites initialized");
-    }
     //────────────────────────────────────
-    // DungeonMaker 재연결
+    // Stage Transition (연출만 담당)
     //────────────────────────────────────
-    private void RebindDungeonMaker()
+    private IEnumerator StageTransitionSequence()
     {
-        dungeonMaker = FindFirstObjectByType<DungeonMaker>();
+        isThemeSyncDone = false;
+
+        // 맵이 내려가서 초기화되는 느낌을 주고 싶으면 Down->Up 순서
+        yield return PlayMapDown();
+
+        // 여기서는 절대 OnStageCleared/EnterNextStage 호출하지 않는다 (Awake에서 이미 끝남)
+
+        ResetBackgroundPositions();
+        yield return PlayMapUp();
     }
 
     //────────────────────────────────────
-    // 배경 초기 위치 (중요)
-    //────────────────────────────────────
-    private void InitBackgroundPositions()
-    {
-        if (backgrounds == null || backgrounds.Length < 2)
-            return;
-
-        // 기준은 항상 화면 중앙
-        backgrounds[0].anchoredPosition = Vector2.zero;
-        backgrounds[1].anchoredPosition = new Vector2(backgroundWidth, 0f);
-
-        Debug.Log("[MapEffectController] Background initialized");
-    }
-
-    //────────────────────────────────────
-    // 배경 무한 스크롤 (anchoredPosition ONLY)
+    // Background Logic
     //────────────────────────────────────
     private void ScrollBackground()
     {
         for (int i = 0; i < backgrounds.Length; i++)
         {
             RectTransform bg = backgrounds[i];
-
             bg.anchoredPosition += Vector2.left * backgroundSpeed * Time.deltaTime;
 
+            // ★ 경계 통과 순간(랩) = “현재 테마가 전부 지나간 순간”
             if (bg.anchoredPosition.x <= -backgroundWidth)
             {
                 bg.anchoredPosition += Vector2.right * backgroundWidth * backgrounds.Length;
+
+                // ★ 스테이지 전환 중이고, 아직 동기화 안했으면 여기서 1회 동기화
+                if (hasStageTransition && !isThemeSyncDone)
+                {
+                    SyncAllBackgroundsToTheme(toTheme);
+                    isThemeSyncDone = true;
+                }
             }
         }
     }
 
-    //────────────────────────────────────
-    // 노드 클릭 이동 연출
-    //────────────────────────────────────
-    public void PlayNodeMove()
+    private void ResetBackgroundPositions()
     {
-        StartCoroutine(NodeMoveSequence());
+        backgrounds[0].anchoredPosition = Vector2.zero;
+        backgrounds[1].anchoredPosition = new Vector2(backgroundWidth, 0f);
     }
 
-    private IEnumerator NodeMoveSequence()
+    private void InitAllBackgroundToTheme(Enums.DungeonTheme theme)
     {
-        Vector3 start = characterRoot.position;
-        Vector3 end = start + Vector3.right * 3.5f;
+        Sprite sprite = dungeonMaker.GetThemeSprite(theme);
+        if (sprite == null) return;
 
-        float duration = 0.3f;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
+        foreach (var bg in backgrounds)
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-            characterRoot.position = Vector3.Lerp(start, end, t);
-            yield return null;
+            Image img = bg.GetComponent<Image>();
+            img.sprite = sprite;
+            img.color = Color.white;
         }
     }
 
-    //────────────────────────────────────
-    // 스테이지 전환 연출
-    //────────────────────────────────────
-    public void PlayStageTransition()
+    // 뒤 배경(오른쪽)만 지정 테마로
+    private void SetThemeToBackBackground(Enums.DungeonTheme theme)
     {
-        StartCoroutine(StageTransitionSequence());
+        Sprite sprite = dungeonMaker.GetThemeSprite(theme);
+        if (sprite == null) return;
+
+        RectTransform back = GetRightSideBackground();
+        Image img = back.GetComponent<Image>();
+        img.sprite = sprite;
+        img.color = Color.white;
     }
 
-    private IEnumerator StageTransitionSequence()
+    private void SyncAllBackgroundsToTheme(Enums.DungeonTheme theme)
     {
-        isBackgroundScrolling = false;
-        // 1. 맵 내리기
-        yield return PlayMapDown();
+        Sprite sprite = dungeonMaker.GetThemeSprite(theme);
+        if (sprite == null) return;
 
+        foreach (var bg in backgrounds)
+        {
+            Image img = bg.GetComponent<Image>();
+            img.sprite = sprite;
+            img.color = Color.white;
+        }
+    }
 
-        DungeonManager.Instance.OnStageCleared();
-        DungeonManager.Instance.EnterNextStage();
+    private bool HasPassedThemeBoundary()
+    {
+        RectTransform left = GetLeftSideBackground();
+        return left.anchoredPosition.x <= -backgroundWidth;
+    }
 
-        // 4. 다음 테마 배경 준비
-        PrepareNextStageBackground();
+    private RectTransform GetRightSideBackground()
+    {
+        return backgrounds[0].anchoredPosition.x > backgrounds[1].anchoredPosition.x
+            ? backgrounds[0]
+            : backgrounds[1];
+    }
 
-        // 5. 맵 올리기
-        yield return PlayMapUp();
-
-        isBackgroundScrolling = true;
+    private RectTransform GetLeftSideBackground()
+    {
+        return backgrounds[0].anchoredPosition.x < backgrounds[1].anchoredPosition.x
+            ? backgrounds[0]
+            : backgrounds[1];
     }
 
     //────────────────────────────────────
-    // 맵 이동
+    // Map Move
     //────────────────────────────────────
     private IEnumerator PlayMapDown()
     {
-        Debug.Log("[MapEffect] PlayMapDown START");
+        isBackgroundScrolling = false; // 내려가는 동안 멈춤(요구사항)
+
         Vector2 start = mapRoot.anchoredPosition;
         Vector2 end = start + Vector2.down * mapMoveDistance;
 
-        float elapsed = 0f;
-
-        while (elapsed < mapMoveDuration)
+        float t = 0f;
+        while (t < 1f)
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / mapMoveDuration;
+            t += Time.deltaTime / mapMoveDuration;
             mapRoot.anchoredPosition = Vector2.Lerp(start, end, t);
             yield return null;
         }
-        Debug.Log("[MapEffect] PlayMapDown END");
     }
 
     private IEnumerator PlayMapUp()
     {
-        Vector2 start = mapRoot.anchoredPosition;   // 현재(내려간 상태)
-        Vector2 end = Vector2.zero;                 // 원래 위치
+        Vector2 start = mapRoot.anchoredPosition;
+        Vector2 end = Vector2.zero;
 
-        float elapsed = 0f;
-
-        while (elapsed < mapMoveDuration)
+        float t = 0f;
+        while (t < 1f)
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / mapMoveDuration;
+            t += Time.deltaTime / mapMoveDuration;
             mapRoot.anchoredPosition = Vector2.Lerp(start, end, t);
             yield return null;
         }
 
-        mapRoot.anchoredPosition = end;
-    }
-
-    //────────────────────────────────────
-    // 다음 스테이지 배경 선적용 (핵심)
-    //────────────────────────────────────
-    private void PrepareNextStageBackground()
-    {
-        if (dungeonMaker == null)
-            return;
-
-        Enums.DungeonTheme theme = DungeonManager.Instance.GetCurrentTheme();
-        Sprite sprite = dungeonMaker.GetThemeSprite(theme);
-        if (sprite == null)
-            return;
-
-        RectTransform nextBg = GetRightSideBackground();
-        Image img = nextBg.GetComponent<Image>();
-
-        img.sprite = sprite;
-        img.color = Color.white;
-
-        Debug.Log("[MapEffectController] Next background prepared : " + theme);
-    }
-
-    //────────────────────────────────────
-    // 오른쪽(화면 밖) 배경 찾기
-    //────────────────────────────────────
-    private RectTransform GetRightSideBackground()
-    {
-        RectTransform result = backgrounds[0];
-
-        for (int i = 0; i < backgrounds.Length; i++)
-        {
-            if (backgrounds[i].anchoredPosition.x > result.anchoredPosition.x)
-                result = backgrounds[i];
-        }
-
-        return result;
+        isBackgroundScrolling = true; // 올라온 뒤 재개
     }
 }

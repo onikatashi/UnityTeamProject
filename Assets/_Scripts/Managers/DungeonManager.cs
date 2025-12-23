@@ -12,6 +12,7 @@ public class DungeonManager : MonoBehaviour
 
     [Header("현재 테마")]
     public Enums.DungeonTheme currentTheme;
+    public Enums.DungeonTheme nextTheme;
 
     [Header("현재 선택된 룸 타입")]
     public Enums.RoomType currentRoomType;
@@ -37,7 +38,7 @@ public class DungeonManager : MonoBehaviour
 
     [Header("Stage Info")]
     public int currentStage = 1;   // 1부터
-    public int maxStage = 2;       // 1~3 가변
+    public int maxStage = 3;       // 1~3 가변
 
     //스테이지 변경시 이용할 연출용 변수.
     private bool isStageTransitionPending = false;
@@ -119,7 +120,7 @@ public class DungeonManager : MonoBehaviour
 
         // 랜덤으로 선택
         int randomIndex = Random.Range(0, filteringThemes.Count);
-        currentTheme = filteringThemes[randomIndex];
+        nextTheme = filteringThemes[randomIndex];
 
         Debug.Log("[DungeonManager] 새로운 테마 선택: " + currentTheme);
     }
@@ -161,8 +162,12 @@ public class DungeonManager : MonoBehaviour
 
         Debug.Log($"[DungeonManager] Stage {currentStage} 진입");
 
-        //보스스테이지 까지 클리어시 새로운 맵 생성을 위해 초기화.
+        //다음 테마 확정 (SetNextTheme가 nextTheme만 뽑는 구조라면 필수)
+        currentTheme = nextTheme;
+
+        //  새 맵 생성 유도
         currentDungeonData = null;
+
         isStageTransitionPending = false;
     }
 

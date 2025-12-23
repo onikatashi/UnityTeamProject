@@ -1034,15 +1034,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterRoot: {fileID: 1838968289}
   characterAnimator: {fileID: 0}
-  backgroundRoot: {fileID: 1382941117}
   backgrounds:
   - {fileID: 1196073496}
   - {fileID: 1060566490}
-  backgroundSpeed: 100
+  backgroundSpeed: 400
   backgroundWidth: 1920
   mapRoot: {fileID: 1603663285}
-  mapMoveDistance: 2000
-  mapMoveDuration: 3
+  mapMoveDistance: 1600
+  mapMoveDuration: 2
   dungeonMaker: {fileID: 1474469199}
 --- !u!1001 &1580171942
 PrefabInstance:
