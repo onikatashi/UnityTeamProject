@@ -91,7 +91,10 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            ToggleTrait();
+            if (sceneLoaderManager.GetCurrentSceneName() == SceneNames.Town)
+            {
+                ToggleTrait();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
