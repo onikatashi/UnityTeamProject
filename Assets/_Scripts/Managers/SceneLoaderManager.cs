@@ -37,10 +37,9 @@ public class SceneLoaderManager : MonoBehaviour
 
     [Header("progress UI")]
     public Slider progressBar;                  // 프로그레스 바
-    public TextMeshProUGUI progressValue;       // 로딩 진행도 텍스트
+    public TextMeshProUGUI tipText;             // 팁 텍스트
 
-    public GameObject loadingImage;             // 로딩 화면에서 움직이는 이미지
-    public AnimationClip loadingAnimation;            // 로딩 애니메이션
+    public LoadingTipData loadingTipData;       // 팁 모음
 
     float fadeDuration = 0.5f;                  // 페이드 인/아웃 지속시간
     float stayDuration = 1.2f;                  // 이미지 유지 지속시간
@@ -167,21 +166,27 @@ public class SceneLoaderManager : MonoBehaviour
 
         float fakeProgress = 0f;
         float targetProgress = 0f;
+        int randomIndex = Random.Range(0, loadingTipData.tips.Count);
 
-        // 실제 로딩과 별개로 fakeProgress를 천천히 올립니다.
+        if (type == Enums.LoadingType.ProgressBar)
+        {
+            tipText.text = "TIP: " + loadingTipData.tips[randomIndex];
+        }
+
+        // 실제 로딩과 별개로 가짜 로딩 생성
         while (fakeProgress < 1.0f)
         {
-            // 실제 로딩 진척도 (0 ~ 0.9)를 0 ~ 1.0으로 환산
+            //0.0 ~0.9: 로딩단계 / 0.9 ~1.0: 최종 활성화단계
             targetProgress = Mathf.Clamp01(op.progress / 0.9f);
 
-            // fakeProgress가 실제 targetProgress를 따라가게 하되, 최대 속도를 제한합니다.
-            // 0.5f 숫자를 조절해서 로딩 속도를 제어하세요 (낮을수록 느림)
+            // fakeProgress가 실제 targetProgress를 따라가게 하되, 최대 속도를 제한
+            // 0.5f 숫자를 조절해서 로딩 속도를 제어 (낮을수록 느림)
             fakeProgress = Mathf.MoveTowards(fakeProgress, targetProgress, Time.deltaTime * 0.5f);
 
+            // 프로그레스 바 로딩 화면이면 프로그레스 바 채워줌
             if (type == Enums.LoadingType.ProgressBar)
             {
                 progressBar.value = fakeProgress;
-                progressValue.text = $"{(fakeProgress * 100):F0}%";
             }
 
             // 로딩이 실제로는 다 끝났고(0.9), 가짜 바도 100%에 도달했다면 루프 탈출
