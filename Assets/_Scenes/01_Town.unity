@@ -183,7 +183,6 @@ MonoBehaviour:
   - type: 0
     soundData:
     - {fileID: 11400000, guid: 9427a67756994654f95b29519e8a88fa, type: 2}
-    - {fileID: 11400000, guid: 0ede207d02efc384993a02dbf9e2f721, type: 2}
 --- !u!4 &383792481
 Transform:
   m_ObjectHideFlags: 0

@@ -102,7 +102,7 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    IEnumerator PreloadBGMs()
+    public IEnumerator PreloadBGMs()
     {
         foreach (SoundData bgm in bgmPacks.soundList)
         {
