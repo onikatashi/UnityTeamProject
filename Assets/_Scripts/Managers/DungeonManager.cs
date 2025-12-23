@@ -37,10 +37,11 @@ public class DungeonManager : MonoBehaviour
 
     [Header("Stage Info")]
     public int currentStage = 1;   // 1부터
-    public int maxStage = 3;       // 1~3 가변
+    public int maxStage = 2;       // 1~3 가변
 
     //스테이지 변경시 이용할 연출용 변수.
     private bool isStageTransitionPending = false;
+    public bool needStageTransitionEffect = false;
 
     //싱글톤 및 테마 설정.
     void Awake()
@@ -123,7 +124,7 @@ public class DungeonManager : MonoBehaviour
         Debug.Log("[DungeonManager] 새로운 테마 선택: " + currentTheme);
     }
 
-   
+
     //스테이지 관련--------------------------------------------------------------------------------------------------------
 
     //현재 스테이지가 마지막 스테이지 인지 True/False반환.
@@ -137,7 +138,7 @@ public class DungeonManager : MonoBehaviour
         Debug.Log($"[DungeonManager] Stage {currentStage} 클리어");
 
         //마지막 스테이지 클리어 IsLastStage(Bool)로 확인
-        if (IsLastStage())
+        if (currentStage >= maxStage)
         {
             OnAllStagesCleared();
             return;
@@ -148,6 +149,9 @@ public class DungeonManager : MonoBehaviour
 
         // 연출 완료 대기 상태
         isStageTransitionPending = true;
+
+
+
     }
 
     public void EnterNextStage()
@@ -161,6 +165,7 @@ public class DungeonManager : MonoBehaviour
         currentDungeonData = null;
         isStageTransitionPending = false;
     }
+
     private void OnAllStagesCleared()
     {
         Debug.Log("[DungeonManager] 모든 스테이지 클리어");
@@ -184,19 +189,19 @@ public class DungeonManager : MonoBehaviour
     {
         return currentPlayerPlace;
     }
-    
+
 
     //(외부 참조용) 던전 내부
     public void EnterDungeon()
-    {   
+    {
         currentPlayerPlace = Enums.currentPlayerPlace.dungeonIn;
         Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonIn");
 
-  
+
     }
     //(외부 참조용) 던전 외부
     public void ExitDungeon()
-    { 
+    {
         currentPlayerPlace = Enums.currentPlayerPlace.dungeonOut;
         Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonOut");
     }
@@ -236,7 +241,7 @@ public class DungeonManager : MonoBehaviour
         currentDungeonData = null;
         //타운 쪽으로 들어올 때 타입 초기화.
         SetCurrentRoomType(Enums.RoomType.None);
-        
+
         InventoryManager.Instance.ClearInventory();
         Player.Instance.ResetPlayer();
         //마무리 시 유저 경험치 적용 및 카운팅 최소화.

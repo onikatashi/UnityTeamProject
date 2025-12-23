@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MapEffectController : MonoBehaviour
@@ -12,31 +10,25 @@ public class MapEffectController : MonoBehaviour
     // 캐릭터 연출
     //────────────────────────────────────
     [Header("Character")]
-    public Transform characterRoot;          // 실제 이동 Transform
-    public Animator characterAnimator;       // Run 애니메이션
+    public Transform characterRoot;
+    public Animator characterAnimator;
 
     //────────────────────────────────────
-    // 배경 스크롤 (Flappy Bird 방식)
+    // 배경 스크롤 (UI 기반)
     //────────────────────────────────────
     [Header("Background Scroll")]
-    public Transform[] backgrounds;
-    public float backgroundSpeed = 3f;
-    public float backgroundWidth = 20f;
+    public RectTransform backgroundRoot;     // 고정 루트
+    public RectTransform[] backgrounds;       // 반드시 2개
+    public float backgroundSpeed = 300f;
+    public float backgroundWidth = 1920f;     // Reference Resolution 기준
 
     //────────────────────────────────────
     // 맵 전환 연출
     //────────────────────────────────────
     [Header("Map Transition")]
-    public Transform mapRoot;
+    public RectTransform mapRoot;
     public float mapMoveDistance = 900f;
     public float mapMoveDuration = 0.6f;
-
-    //────────────────────────────────────
-    // 테마 전환
-    //────────────────────────────────────
-    [Header("Theme Transition")]
-    public Image environmentBackground;
-    public float themeFadeDuration = 0.4f;
 
     //────────────────────────────────────
     // 외부 참조
@@ -44,19 +36,28 @@ public class MapEffectController : MonoBehaviour
     [Header("References")]
     public DungeonMaker dungeonMaker;
 
-    // 내부 상태
     private bool isBackgroundScrolling = true;
-    private Action transitionFinishedCallback;
 
-
-    //────────────────────────────────────
-    // 초기 상태
-    //────────────────────────────────────
+   
     void Start()
     {
         if (characterAnimator != null)
             characterAnimator.Play("Run");
-            RebindDungeonMaker();
+
+        //RebindDungeonMaker();
+        InitBackgroundPositions();
+        InitBackgroundSprites();
+
+        if (DungeonManager.Instance.needStageTransitionEffect)
+        {
+            DungeonManager.Instance.needStageTransitionEffect = false;
+            StartCoroutine(StageTransitionSequence());
+        }
+        else
+        {
+            StartCoroutine(PlayMapUp()); // 일반 진입
+        }
+
     }
 
     void Update()
@@ -65,46 +66,77 @@ public class MapEffectController : MonoBehaviour
             ScrollBackground();
     }
 
+    private void InitBackgroundSprites()
+    {
+        if (dungeonMaker == null)
+            return;
 
+        Enums.DungeonTheme currentTheme = DungeonManager.Instance.GetCurrentTheme();
+        Sprite sprite = dungeonMaker.GetThemeSprite(currentTheme);
+        if (sprite == null)
+            return;
+
+        for (int i = 0; i < backgrounds.Length; i++)
+        {
+            Image img = backgrounds[i].GetComponent<Image>();
+            if (img == null) continue;
+
+            img.sprite = sprite;
+            img.color = Color.white;
+        }
+
+        Debug.Log("[MapEffectController] Background sprites initialized");
+    }
+    //────────────────────────────────────
+    // DungeonMaker 재연결
+    //────────────────────────────────────
     private void RebindDungeonMaker()
     {
         dungeonMaker = FindFirstObjectByType<DungeonMaker>();
-
-        if (dungeonMaker == null)
-            Debug.Log("[MapEffectController] DungeonMaker not found.");
-        else
-            Debug.Log("[MapEffectController] DungeonMaker rebound.");
     }
 
     //────────────────────────────────────
-    // 배경 무한 스크롤
+    // 배경 초기 위치 (중요)
+    //────────────────────────────────────
+    private void InitBackgroundPositions()
+    {
+        if (backgrounds == null || backgrounds.Length < 2)
+            return;
+
+        // 기준은 항상 화면 중앙
+        backgrounds[0].anchoredPosition = Vector2.zero;
+        backgrounds[1].anchoredPosition = new Vector2(backgroundWidth, 0f);
+
+        Debug.Log("[MapEffectController] Background initialized");
+    }
+
+    //────────────────────────────────────
+    // 배경 무한 스크롤 (anchoredPosition ONLY)
     //────────────────────────────────────
     private void ScrollBackground()
     {
-        if (backgrounds == null) return;
-
-        foreach (var bg in backgrounds)
+        for (int i = 0; i < backgrounds.Length; i++)
         {
-            if (bg == null) continue;
+            RectTransform bg = backgrounds[i];
 
-            bg.position += Vector3.left * backgroundSpeed * Time.deltaTime;
+            bg.anchoredPosition += Vector2.left * backgroundSpeed * Time.deltaTime;
 
-            if (bg.position.x <= -backgroundWidth)
+            if (bg.anchoredPosition.x <= -backgroundWidth)
             {
-                bg.position += Vector3.right * backgroundWidth * backgrounds.Length;
+                bg.anchoredPosition += Vector2.right * backgroundWidth * backgrounds.Length;
             }
         }
     }
 
     //────────────────────────────────────
-    // 노드 클릭 시 캐릭터 빠른 이동
+    // 노드 클릭 이동 연출
     //────────────────────────────────────
-    public void PlayNodeMove(Action onComplete)
+    public void PlayNodeMove()
     {
-        StartCoroutine(NodeMoveSequence(onComplete));
+        StartCoroutine(NodeMoveSequence());
     }
 
-    private IEnumerator NodeMoveSequence(Action onComplete)
+    private IEnumerator NodeMoveSequence()
     {
         Vector3 start = characterRoot.position;
         Vector3 end = start + Vector3.right * 3.5f;
@@ -119,42 +151,40 @@ public class MapEffectController : MonoBehaviour
             characterRoot.position = Vector3.Lerp(start, end, t);
             yield return null;
         }
-
-        onComplete?.Invoke();
     }
 
     //────────────────────────────────────
     // 스테이지 전환 연출
-    // 맵 ↓ → 새 스테이지 → 테마 교체 → 맵 ↑
     //────────────────────────────────────
-    public void PlayStageTransition(Action onFinished)
+    public void PlayStageTransition()
     {
-        transitionFinishedCallback = onFinished;
         StartCoroutine(StageTransitionSequence());
     }
 
     private IEnumerator StageTransitionSequence()
     {
-        // 1) 맵 내리기
+        isBackgroundScrolling = false;
+        // 1. 맵 내리기
         yield return PlayMapDown();
 
-        // 2) 스테이지 갱신
-        DungeonManager.Instance.EnterNextStage();
+     
+        // 4. 다음 테마 배경 준비
+        PrepareNextStageBackground();
 
-        // 3) 테마 교체 연출
-        yield return ThemeChangeSequence();
-
-        // 4) 맵 올리기
+        // 5. 맵 올리기
         yield return PlayMapUp();
 
-        transitionFinishedCallback?.Invoke();
-        transitionFinishedCallback = null;
+        isBackgroundScrolling = true;
     }
 
+    //────────────────────────────────────
+    // 맵 이동
+    //────────────────────────────────────
     private IEnumerator PlayMapDown()
     {
-        Vector3 start = mapRoot.localPosition;
-        Vector3 end = start + Vector3.down * mapMoveDistance;
+        Debug.Log("[MapEffect] PlayMapDown START");
+        Vector2 start = mapRoot.anchoredPosition;
+        Vector2 end = start + Vector2.down * mapMoveDistance;
 
         float elapsed = 0f;
 
@@ -162,17 +192,16 @@ public class MapEffectController : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = elapsed / mapMoveDuration;
-            mapRoot.localPosition = Vector3.Lerp(start, end, t);
+            mapRoot.anchoredPosition = Vector2.Lerp(start, end, t);
             yield return null;
         }
+        Debug.Log("[MapEffect] PlayMapDown END");
     }
 
     private IEnumerator PlayMapUp()
     {
-        Vector3 end = mapRoot.localPosition;
-        Vector3 start = end + Vector3.down * mapMoveDistance;
-
-        mapRoot.localPosition = start;
+        Vector2 start = mapRoot.anchoredPosition;   // 현재(내려간 상태)
+        Vector2 end = Vector2.zero;                 // 원래 위치
 
         float elapsed = 0f;
 
@@ -180,58 +209,48 @@ public class MapEffectController : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = elapsed / mapMoveDuration;
-            mapRoot.localPosition = Vector3.Lerp(start, end, t);
+            mapRoot.anchoredPosition = Vector2.Lerp(start, end, t);
             yield return null;
         }
+
+        mapRoot.anchoredPosition = end;
     }
 
     //────────────────────────────────────
-    // 테마 교체 연출
+    // 다음 스테이지 배경 선적용 (핵심)
     //────────────────────────────────────
-    private IEnumerator ThemeChangeSequence()
+    private void PrepareNextStageBackground()
     {
-        if (environmentBackground == null || dungeonMaker == null)
-            yield break;
+        if (dungeonMaker == null)
+            return;
 
-        // Fade Out
-        yield return FadeBackground(1f, 0f);
-
-        // Sprite 교체
-        ApplyCurrentThemeSprite();
-
-        // Fade In
-        yield return FadeBackground(0f, 1f);
-    }
-
-    private void ApplyCurrentThemeSprite()
-    {
-        var theme = DungeonManager.Instance.GetCurrentTheme();
+        Enums.DungeonTheme theme = DungeonManager.Instance.GetCurrentTheme();
         Sprite sprite = dungeonMaker.GetThemeSprite(theme);
+        if (sprite == null)
+            return;
 
-        if (sprite != null)
-        {
-            environmentBackground.sprite = sprite;
-            environmentBackground.color = Color.white;
-        }
+        RectTransform nextBg = GetRightSideBackground();
+        Image img = nextBg.GetComponent<Image>();
+
+        img.sprite = sprite;
+        img.color = Color.white;
+
+        Debug.Log("[MapEffectController] Next background prepared : " + theme);
     }
 
-    private IEnumerator FadeBackground(float from, float to)
+    //────────────────────────────────────
+    // 오른쪽(화면 밖) 배경 찾기
+    //────────────────────────────────────
+    private RectTransform GetRightSideBackground()
     {
-        float elapsed = 0f;
-        Color color = environmentBackground.color;
+        RectTransform result = backgrounds[0];
 
-        while (elapsed < themeFadeDuration)
+        for (int i = 0; i < backgrounds.Length; i++)
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / themeFadeDuration;
-
-            color.a = Mathf.Lerp(from, to, t);
-            environmentBackground.color = color;
-
-            yield return null;
+            if (backgrounds[i].anchoredPosition.x > result.anchoredPosition.x)
+                result = backgrounds[i];
         }
 
-        color.a = to;
-        environmentBackground.color = color;
+        return result;
     }
 }

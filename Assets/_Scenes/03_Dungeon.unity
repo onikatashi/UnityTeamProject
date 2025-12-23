@@ -249,10 +249,12 @@ MonoBehaviour:
   currentTheme: 2
   currentRoomType: 1
   currentPlayerPlace: 0
+  userEXPClearedRoomCount: 0
   currentBattleNodeFloor: 0
   currentBattleNodeColum: 0
   currentStage: 1
   maxStage: 3
+  needStageTransitionEffect: 0
 --- !u!1001 &30062028
 PrefabInstance:
   m_ObjectHideFlags: 0
