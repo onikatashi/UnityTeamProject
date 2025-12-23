@@ -35,28 +35,21 @@ public class MapEffectController : MonoBehaviour
     {
         Instance = this;
 
-        // ★ 핵심: DungeonMaker.Start()보다 먼저 "다음 스테이지 준비"를 끝낸다
-        if (DungeonManager.Instance != null && DungeonManager.Instance.needStageTransitionEffect)
+        if (DungeonManager.Instance != null &&
+            DungeonManager.Instance.needStageTransitionEffect)
         {
             hasStageTransition = true;
             DungeonManager.Instance.needStageTransitionEffect = false;
 
-            // 전환 연출용 테마 캐시
+            // ★ 연출용 캐시만
             fromTheme = DungeonManager.Instance.currentTheme;
-
-            // 스테이지/테마 결정 + 맵 초기화(= currentDungeonData null) 선처리
-            DungeonManager.Instance.OnStageCleared();
-            DungeonManager.Instance.EnterNextStage();
-
-            // EnterNextStage에서 currentTheme가 nextTheme로 확정되어 있어야 함
-            toTheme = DungeonManager.Instance.currentTheme;
+            toTheme = DungeonManager.Instance.nextTheme;
         }
     }
-
-    void Start()
+        void Start()
     {
-        if (characterAnimator != null)
-            characterAnimator.Play("Run");
+        //if (characterAnimator != null)
+        //    characterAnimator.Play("Run");
 
         ResetBackgroundPositions();
 
@@ -150,6 +143,7 @@ public class MapEffectController : MonoBehaviour
     // 뒤 배경(오른쪽)만 지정 테마로
     private void SetThemeToBackBackground(Enums.DungeonTheme theme)
     {
+
         Sprite sprite = dungeonMaker.GetThemeSprite(theme);
         if (sprite == null) return;
 

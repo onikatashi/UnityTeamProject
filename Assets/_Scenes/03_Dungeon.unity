@@ -247,6 +247,7 @@ MonoBehaviour:
     theme: 0
     nodes: []
   currentTheme: 2
+  nextTheme: 0
   currentRoomType: 1
   currentPlayerPlace: 0
   userEXPClearedRoomCount: 0

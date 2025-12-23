@@ -56,42 +56,26 @@ public class Portal : MonoBehaviour
         DungeonManager dungeonManager = DungeonManager.Instance;
         if (dungeonManager == null) return;
 
-        // 1. 현재 룸 타입 획득
         Enums.RoomType currentType = dungeonManager.GetCurrentRoomType();
-
-        // 2. 인스펙터 설정값 찾아오기
         RoomSettings settings = GetSettingsForType(currentType);
 
-        // 3. 조건별 로직 실행
         if (settings.isClear)
         {
-            dungeonManager.dungeonClearSignal(); //
+            dungeonManager.dungeonClearSignal();
             Debug.Log($"Portal: {currentType} 노드 클리어 처리 완료.");
         }
 
+        // 보스 + 리셋 처리
         if (settings.isReset && currentType == Enums.RoomType.Boss)
         {
-            bool isFinalStage = dungeonManager.IsLastStage();
+            bool isAllStagesCleared = dungeonManager.OnStageCleared();
 
-            if (isFinalStage)
-            {
-                // ★ 최종 스테이지: DungeonMap으로 가지 않는다
-                // 여기서 최종 정산/리셋이 필요하면 OnStageCleared()로 끝내도 됨(현재 구조상 ResetDungeonData 포함)
-                dungeonManager.OnStageCleared();   // -> OnAllStagesCleared() -> ResetDungeonData() -> currentStage=1
+            dungeonManager.needStageTransitionEffect = !isAllStagesCleared;
 
-                MoveToScene("Town");
-                return;
-            }
-            else
-            {
-                // ★ 다음 스테이지: DungeonMap 들어가서 MapEffectController가 처리
-                dungeonManager.needStageTransitionEffect = true;
-                MoveToScene("DungeonMap");
-                return;
-            }
+            MoveToScene(isAllStagesCleared ? "Town" : "DungeonMap");
+            return;
         }
-
-        // 4. 씬 이동 실행
+        // 일반 이동
         if (!string.IsNullOrEmpty(settings.sceneFieldName))
         {
             MoveToScene(settings.sceneFieldName);
