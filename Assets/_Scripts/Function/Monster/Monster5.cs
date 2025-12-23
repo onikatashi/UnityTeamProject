@@ -24,6 +24,7 @@ public class Monster5 : MonsterBase
     public float healVisualYOffset = 0.05f;
 
     GameObject healRangeInstance;
+    bool needHeal;
 
     float healTimer = 0f;
 
@@ -39,6 +40,23 @@ public class Monster5 : MonsterBase
         }
 
     }
+    
+
+    protected override void Update()
+    {
+        if (isDef) return;
+
+        needHeal = HasInjuredAllyInHealRange();
+
+        switch (state)
+        {
+            case Enums.MonsterState.Idle: Idle(); break;
+            case Enums.MonsterState.Move: Move(); break;
+            case Enums.MonsterState.Attack: Attack(); break;
+            case Enums.MonsterState.Die: Die(); break;
+        }
+    }
+
 
     void LateUpdate()
     {
@@ -69,8 +87,12 @@ public class Monster5 : MonsterBase
             agent.updateRotation = false;
             state = Enums.MonsterState.Attack;
 
-            healTimer = 0f;
-            attackTimer = 0f;
+            if(state != Enums.MonsterState.Attack)
+            {
+                state = Enums.MonsterState.Attack;
+                healTimer = 0f;
+                attackTimer = 0f;
+            }
             return;
         }
 

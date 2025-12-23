@@ -80,7 +80,7 @@ public class Monster10 : MonsterBase
         // 바닥 보정 (groundMask 사용)
         if (Physics.Raycast(pos + Vector3.up * 5f, Vector3.down, out var hit, 20f, groundMask)) pos = hit.point;
 
-        GameObject tg = Instantiate(telegraphPrefab, pos, Quaternion.Euler(90f, 0f, 0f));
+        GameObject tg = Instantiate(telegraphPrefab, pos, Quaternion.Euler(0f, 0f, 0f));
 
         yield return new WaitForSeconds(markDelay);
 
