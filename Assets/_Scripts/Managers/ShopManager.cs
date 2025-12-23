@@ -1,11 +1,13 @@
 using UnityEngine;
+using TMPro; // Text Mesh Pro 사용을 위해 추가
 
 public class ShopManager : MonoBehaviour
 {
     public static ShopManager Instance;
 
     [Header("UI References")]
-    [SerializeField] private GameObject shopPanel; // 인스펙터에서 Shop 오브젝트 연결
+    [SerializeField] private GameObject shopPanel;
+    [SerializeField] private TextMeshProUGUI goldText; // Gold : [골드값] 표시용 텍스트
 
     private void Awake()
     {
@@ -18,13 +20,25 @@ public class ShopManager : MonoBehaviour
         // 최초 로딩 시 상점은 무조건 비활성화
         if (shopPanel != null)
             shopPanel.SetActive(false);
+
+        // PlayerGoldSystem의 이벤트에 UI 갱신 함수 연결
+        if (Player.Instance != null && Player.Instance.goldSystem != null)
+        {
+            Player.Instance.goldSystem.OnGoldChanged += UpdateGoldUI;
+        }
     }
 
     // 상점 열기
     public void OpenShop()
     {
         shopPanel.SetActive(true);
-        // TODO: 상점이 열릴 때 아이템 목록을 갱신하는 로직 등 (추후 구현 예정)
+
+        // 열릴 때 현재 골드값 즉시 반영
+        if (Player.Instance != null && Player.Instance.goldSystem != null)
+        {
+            UpdateGoldUI(Player.Instance.goldSystem.currentGold);
+        }
+
         Debug.Log("상점을 열었습니다.");
     }
 
@@ -33,5 +47,24 @@ public class ShopManager : MonoBehaviour
     {
         shopPanel.SetActive(false);
         Debug.Log("상점을 닫았습니다.");
+    }
+
+    // 골드 UI 텍스트 업데이트 함수
+    private void UpdateGoldUI(float currentGold)
+    {
+        if (goldText != null)
+        {
+            // 소수점 없이 정수로 표현하려면 (int) 캐스팅이나 "F0" 포맷 사용
+            goldText.text = $"Gold : {Mathf.FloorToInt(currentGold)}";
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // 메모리 누수 방지를 위한 이벤트 구독 해제
+        if (Player.Instance != null && Player.Instance.goldSystem != null)
+        {
+            Player.Instance.goldSystem.OnGoldChanged -= UpdateGoldUI;
+        }
     }
 }
