@@ -26,6 +26,9 @@ public class MapEffectController : MonoBehaviour
     private bool isBackgroundScrolling = true;
     private bool isThemeSyncDone = false;
 
+    private Vector2 mapBasePos;
+
+
     // ★ 추가: 전환 전/후 테마 캐시 (연출용)
     private bool hasStageTransition = false;
     private Enums.DungeonTheme fromTheme;
@@ -40,38 +43,33 @@ public class MapEffectController : MonoBehaviour
         {
             dm.needStageTransitionEffect = false;
 
-            // 1️⃣ 연출용 캐시
+            // 1️ 연출용 캐시
             fromTheme = dm.currentTheme;
             toTheme = dm.nextTheme;
             hasStageTransition = true;
 
-            // 2️⃣ ★ 여기서 게임 상태 확정
+            // 2 여기서 게임 상태 확정
             dm.EnterNextStage();
         }
     }
     void Start()
     {
-        //if (characterAnimator != null)
-        //    characterAnimator.Play("Run");
+        mapBasePos = new Vector2(250f, 0f);  
+        mapRoot.anchoredPosition = mapBasePos;
 
         ResetBackgroundPositions();
 
         if (hasStageTransition)
         {
-            // 1) 처음 화면은 이전 테마(fromTheme)
             InitAllBackgroundToTheme(fromTheme);
-
-            // 2) 오른쪽(뒤) 배경만 다음 테마(toTheme)
             SetThemeToBackBackground(toTheme);
-
-            // 3) 맵 올라오는 연출
             StartCoroutine(StageTransitionSequence());
         }
         else
         {
-            // 일반 진입: 현재 테마로 통일
+            mapRoot.anchoredPosition = mapBasePos;
+
             InitAllBackgroundToTheme(DungeonManager.Instance.GetCurrentTheme());
-            StartCoroutine(PlayMapUp());
         }
     }
 
@@ -194,10 +192,10 @@ public class MapEffectController : MonoBehaviour
     //────────────────────────────────────
     private IEnumerator PlayMapDown()
     {
-        isBackgroundScrolling = false; // 내려가는 동안 멈춤(요구사항)
+        isBackgroundScrolling = false;
 
-        Vector2 start = mapRoot.anchoredPosition;
-        Vector2 end = start + Vector2.down * mapMoveDistance;
+        Vector2 start = mapBasePos;
+        Vector2 end = mapBasePos + Vector2.down * mapMoveDistance;
 
         float t = 0f;
         while (t < 1f)
@@ -208,10 +206,11 @@ public class MapEffectController : MonoBehaviour
         }
     }
 
+
     private IEnumerator PlayMapUp()
     {
-        Vector2 start = mapRoot.anchoredPosition;
-        Vector2 end = Vector2.zero;
+        Vector2 start = mapBasePos + Vector2.down * mapMoveDistance;
+        Vector2 end = mapBasePos;
 
         float t = 0f;
         while (t < 1f)
@@ -221,6 +220,6 @@ public class MapEffectController : MonoBehaviour
             yield return null;
         }
 
-        isBackgroundScrolling = true; // 올라온 뒤 재개
+        isBackgroundScrolling = true;
     }
 }
