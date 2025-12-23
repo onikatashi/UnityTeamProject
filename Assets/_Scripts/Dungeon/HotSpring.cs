@@ -31,6 +31,11 @@ public class HotSpring : MonoBehaviour
                 {
                     UIManager.Instance.ToggleInventory();
                 }
+                else
+                {
+                    UIManager.Instance.ToggleInventory();
+                    UIManager.Instance.ToggleInventory();
+                }
             }
         }
     }
