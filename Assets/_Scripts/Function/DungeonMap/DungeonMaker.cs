@@ -84,16 +84,14 @@ public class DungeonMaker : MonoBehaviour
 
         //NodeButton타입을 가진 2차원 배열 생성
         dungeonButtons = new NodeButton[maxFloor, maxColumn];
+        //테마와 가져오기.
+        ApplyEnvironmentTheme(DungeonManager.Instance.GetCurrentTheme());
 
         // 기존 던전 유/무 확인
         if (DungeonManager.Instance != null && DungeonManager.Instance.HasDungeonData())
         {
-            DungeonMapData dungeonData = DungeonManager.Instance.GetDungeonData();
-
-            //테마와 가져오기.
-            ApplyEnvironmentTheme(dungeonData.theme);
-            //기존 던전 데이터 가져오기
-            LoadDungeonFromData(dungeonData);
+           //기존 던전 데이터 가져오기
+            LoadDungeonFromData(DungeonManager.Instance.GetDungeonData());
             //클리어한 노드 상태 변경.
             applyClearNodeState();
 
@@ -121,7 +119,7 @@ public class DungeonMaker : MonoBehaviour
 
         //모든 노드, 선 정보를 기반으로 선그리기.
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
-        PrintDungeonToConsole();
+       // PrintDungeonToConsole();
 
 
         //던전 알파값 조정

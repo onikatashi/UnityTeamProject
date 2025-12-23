@@ -64,7 +64,7 @@ public class RoomTypeData : MonoBehaviour
 
 
         //테스트용 치트코드
-        //forcedRooms.Add((1, 0), Enums.RoomType.Boss);
+        forcedRooms.Add((1, 0), Enums.RoomType.Boss);
 
 
         //2종류 번갈아 출현시키기.

@@ -56,26 +56,26 @@ public class Portal : MonoBehaviour
         DungeonManager dungeonManager = DungeonManager.Instance;
         if (dungeonManager == null) return;
 
-        // 1. 현재 룸 타입 획득
         Enums.RoomType currentType = dungeonManager.GetCurrentRoomType();
-
-        // 2. 인스펙터 설정값 찾아오기
         RoomSettings settings = GetSettingsForType(currentType);
 
-        // 3. 조건별 로직 실행
         if (settings.isClear)
         {
-            dungeonManager.dungeonClearSignal(); //
+            dungeonManager.dungeonClearSignal();
             Debug.Log($"Portal: {currentType} 노드 클리어 처리 완료.");
         }
 
-        if (settings.isReset)
+        // 보스 + 리셋 처리
+        if (settings.isReset && currentType == Enums.RoomType.Boss)
         {
-            // DungeonManager에 정의된 리셋 함수 호출
-            dungeonManager.ResetDungeonData(); //
-        }
+            bool isAllStagesCleared = dungeonManager.OnStageCleared();
 
-        // 4. 씬 이동 실행
+            dungeonManager.needStageTransitionEffect = !isAllStagesCleared;
+
+            MoveToScene(isAllStagesCleared ? "Town" : "DungeonMap");
+            return;
+        }
+        // 일반 이동
         if (!string.IsNullOrEmpty(settings.sceneFieldName))
         {
             MoveToScene(settings.sceneFieldName);

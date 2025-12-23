@@ -12,6 +12,7 @@ public class DungeonManager : MonoBehaviour
 
     [Header("현재 테마")]
     public Enums.DungeonTheme currentTheme;
+    public Enums.DungeonTheme nextTheme;
 
     [Header("현재 선택된 룸 타입")]
     public Enums.RoomType currentRoomType;
@@ -36,11 +37,12 @@ public class DungeonManager : MonoBehaviour
     }
 
     [Header("Stage Info")]
-    public int currentStage = 1;   // 1부터
-    public int maxStage = 3;       // 1~3 가변
+    private int currentStage = 1;   // 1부터
+    private int maxStage = 2;       // 1~3 가변
 
     //스테이지 변경시 이용할 연출용 변수.
     private bool isStageTransitionPending = false;
+    public bool needStageTransitionEffect = false;
 
     //싱글톤 및 테마 설정.
     void Awake()
@@ -54,7 +56,8 @@ public class DungeonManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         SetRandomTheme(); // 첫 진입 시 테마 설정
-
+        Debug.Log($"[Portal] Boss clear BEFORE OnStageCleared: " +
+                     $"currentStage={currentStage}, maxStage={maxStage}, currentteme={currentTheme}");
     }
 
     //테마 관련--------------------------------------------------------------------------------------------------------
@@ -78,7 +81,7 @@ public class DungeonManager : MonoBehaviour
         //랜덤 테마 선정.
         int randomIndex = Random.Range(0, filteringTheme.Count);
         currentTheme = filteringTheme[randomIndex];
-
+        nextTheme = currentTheme;
         Debug.Log("[DungeonManager] 초기 테마 선택: " + currentTheme);
 
     }
@@ -101,11 +104,8 @@ public class DungeonManager : MonoBehaviour
         //Enums의 테마들 중 None과 이미 사용한 테마 필터링.
         foreach (var theme in themes)
         {
-            if (theme == Enums.DungeonTheme.None)
-                continue;
-
-            if (theme != currentTheme)
-                filteringThemes.Add(theme);
+            if (theme == Enums.DungeonTheme.None) continue;
+            if (theme != currentTheme) filteringThemes.Add(theme);
         }
 
 
@@ -113,17 +113,18 @@ public class DungeonManager : MonoBehaviour
         if (filteringThemes.Count == 0)
         {
             Debug.LogWarning("[DungeonManager] 사용 가능한 다른 테마가 없습니다.");
+            nextTheme = currentTheme;
             return;
         }
 
         // 랜덤으로 선택
         int randomIndex = Random.Range(0, filteringThemes.Count);
-        currentTheme = filteringThemes[randomIndex];
+        nextTheme = filteringThemes[randomIndex];
 
-        Debug.Log("[DungeonManager] 새로운 테마 선택: " + currentTheme);
+        Debug.Log("[DungeonManager] 새로운 테마 선택(다음): " + nextTheme);
     }
 
-   
+
     //스테이지 관련--------------------------------------------------------------------------------------------------------
 
     //현재 스테이지가 마지막 스테이지 인지 True/False반환.
@@ -132,41 +133,57 @@ public class DungeonManager : MonoBehaviour
         return currentStage >= maxStage;
     }
 
-    public void OnStageCleared()
+    public bool OnStageCleared()
     {
+
         Debug.Log($"[DungeonManager] Stage {currentStage} 클리어");
 
+       
         //마지막 스테이지 클리어 IsLastStage(Bool)로 확인
-        if (IsLastStage())
+        if (currentStage >= maxStage)
         {
             OnAllStagesCleared();
-            return;
+            return true;
         }
 
         currentStage++;
+        EnterNextStage();
         SetNextTheme();
 
         // 연출 완료 대기 상태
         isStageTransitionPending = true;
+        return false; // 다음 스테이지 있음
     }
 
     public void EnterNextStage()
     {
-        if (!isStageTransitionPending)
-            return;
+        
 
-        Debug.Log($"[DungeonManager] Stage {currentStage} 진입");
+        //다음 테마 확정 (SetNextTheme가 nextTheme만 뽑는 구조라면 필수)
+        currentTheme = nextTheme;
 
-        // 이제 안전하게 초기화
+        //  새 맵 생성 유도
         currentDungeonData = null;
+
         isStageTransitionPending = false;
     }
+
     private void OnAllStagesCleared()
     {
         Debug.Log("[DungeonManager] 모든 스테이지 클리어");
 
+        // 런 정리(맵데이터/인벤/플레이어/EXP 정산)
         ResetDungeonData();
+
+        // 스테이지/전환 플래그 리셋
         currentStage = 1;
+      
+        isStageTransitionPending = false;
+        needStageTransitionEffect = false;
+
+        // 테마도 새로 시작 상태로 리셋 (싱글톤 유지 때문에 필수)
+        SetRandomTheme();          // 내부 private 그대로 사용 가능 (같은 클래스 내부 호출)
+        nextTheme = currentTheme;  // 다음테마도 안전하게 동기화
     }
 
 
@@ -184,19 +201,19 @@ public class DungeonManager : MonoBehaviour
     {
         return currentPlayerPlace;
     }
-    
+
 
     //(외부 참조용) 던전 내부
     public void EnterDungeon()
-    {   
+    {
         currentPlayerPlace = Enums.currentPlayerPlace.dungeonIn;
         Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonIn");
 
-  
+
     }
     //(외부 참조용) 던전 외부
     public void ExitDungeon()
-    { 
+    {
         currentPlayerPlace = Enums.currentPlayerPlace.dungeonOut;
         Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonOut");
     }
@@ -233,10 +250,11 @@ public class DungeonManager : MonoBehaviour
     // 클리어, 포기, 종료 시 초기화 (모든 것을 끝내고 Town으로 돌아올 때.)
     public void ResetDungeonData()
     {
+        Debug.Log("[DungeonManager] ResetDungeonData CALLED");
         currentDungeonData = null;
         //타운 쪽으로 들어올 때 타입 초기화.
         SetCurrentRoomType(Enums.RoomType.None);
-        
+
         InventoryManager.Instance.ClearInventory();
         Player.Instance.ResetPlayer();
         //마무리 시 유저 경험치 적용 및 카운팅 최소화.
