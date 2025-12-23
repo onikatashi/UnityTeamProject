@@ -187,7 +187,7 @@ public class Player : MonoBehaviour
         currentHp -= finalDamage;
 
         // 사운드
-        SoundManager.Instance.PlaySFX("hurt");
+        //SoundManager.Instance.PlaySFX("hurt");
 
         Debug.Log("Player took " + finalDamage + " damage. Current HP: " + currentHp);
 
