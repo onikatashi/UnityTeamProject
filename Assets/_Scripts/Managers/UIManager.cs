@@ -47,15 +47,16 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     [Header("플레이어 상태UI")]
-    private GameObject playerStatePanelPrefab;
+    private GameObject playerStatePanelPrefab;                      // 플레이어 상태 UI 프리팹
 
     [SerializeField]
     [Header("스킬 슬롯UI")]
-    private GameObject skillSlotPanelPrefab;
+    private GameObject skillSlotPanelPrefab;                        //스킬 슬롯 UI 프리팹
 
     [SerializeField]
     [Header("스킬 선택 UI")]
-    private GameObject skillSelectPrefab;
+    private GameObject skillSelectPrefab;                           
+    public SkillSelectionUI skillSelectionUI;
 
     SceneLoaderManager sceneLoaderManager;
 
@@ -267,6 +268,7 @@ public class UIManager : MonoBehaviour
     void InstantiateSkillSelectPanel(RectTransform canvas)
     {
         GameObject ui = Instantiate(skillSelectPrefab, canvas);
+        skillSelectionUI = ui.GetComponent<SkillSelectionUI>();
 
         ui.SetActive(false);
     }

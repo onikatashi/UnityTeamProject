@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -17,7 +18,6 @@ public class PlayerLevelSystem : MonoBehaviour
     //이번 프레임에서 몇 번 레벨업 했는지 (한번에 많은 경험치로 2이상 레벨업 했을 경우를 대비)
     int pendingLevelUps = 0;
 
-    public SkillSelectionUI skillSelectionUI;
     public LevelUpSkillSelector selector;
 
     public System.Action<float, float> OnExpChanged;
@@ -27,7 +27,6 @@ public class PlayerLevelSystem : MonoBehaviour
     private void Start()
     {
         selector = new LevelUpSkillSelector(Player.Instance.classStat, PlayerSkillController.Instance);
-        skillSelectionUI.gameObject.SetActive(false);
 
         OnLevelUp -= HandleLevelUp;         //씬 전환 시 여러번 불릴 수 있으니 보험
         OnLevelUp += HandleLevelUp;
@@ -38,12 +37,33 @@ public class PlayerLevelSystem : MonoBehaviour
     /// </summary>
     private void HandleLevelUp(int count)
     {
-        Debug.Log($"HandleLevelUp 호출됨. count = {count}");
         remainingLevelUps = count;
 
-        GameStateManager.Instance.SetState(Enums.GamePlayState.LevelUpUI);
-        Time.timeScale = 0f;
+        StartCoroutine(CoLevelUp());
+    }
+    IEnumerator CoLevelUp()
+    {
+        //사운드
+        SoundManager.Instance.PlaySFX("levelUp");
 
+        //이펙트
+        EffectManager.Instance.PlayEffect(
+            Enums.EffectType.LevelUp,
+            Player.Instance.transform.position,
+            Quaternion.identity,
+            Player.Instance.transform
+        );
+
+        //연출 나오게 기다려주는 시간
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        //화면 정지
+        Time.timeScale = 0f;
+        GameStateManager.Instance.SetState(Enums.GamePlayState.LevelUpUI);
+
+        yield return new WaitForSecondsRealtime(1f);
+
+        //스킬 선택 UI 표시
         ShowNextLevelUpUI();
     }
 
@@ -58,8 +78,9 @@ public class PlayerLevelSystem : MonoBehaviour
 
         remainingLevelUps--;
 
+        var ui = skillUI;
         var cards = selector.Create3Cards();
-        skillSelectionUI.ShowCards(cards, OnCardSelected);
+        ui.ShowCards(cards, OnCardSelected);
     }
 
     private void OnCardSelected()
@@ -117,5 +138,13 @@ public class PlayerLevelSystem : MonoBehaviour
         Player.Instance.SetFinalStat();
 
         OnExpChanged?.Invoke(currentExp, GetRequiredExp(currentLevel));
+    }
+
+    private SkillSelectionUI skillUI
+    {
+        get
+        {
+            return UIManager.Instance?.skillSelectionUI;
+        }
     }
 }

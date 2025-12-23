@@ -3,8 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Effect/EffectData")]
 public class EffectData : ScriptableObject
 {
-    public Enums.EffectType effectType;     //ÀÌÆåÆ® Å¸ÀÔ
-    public GameObject effectPrefab;         //ÀÌÆåÆ® ÇÁ¸®ÆÕ
-    public float lifeTime;                  //ÀÌÆåÆ® Áö¼Ó ½Ã°£
-    public bool followTarget;               //Å¸°Ù µû¶ó´Ù´ÒÁö ¿©ºÎ
+    public Enums.EffectType effectType;     // ì´í™íŠ¸ íƒ€ì…
+    public GameObject effectPrefab;         // ì´í™íŠ¸ í”„ë¦¬íŒ¹
+    public float lifeTime;                  // ì´í™íŠ¸ ì§€ì† ì‹œê°„
+    public bool followTarget;               // ë”°ë¼ê°ˆê±´ì§€ ì„¤ì •
 }

@@ -69,9 +69,6 @@ public class TempManager : MonoBehaviour
         {
             SoundManager.Instance.StopBGM();
         }
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            SceneLoaderManager.Instance.LoadScene(SceneNames.Town);
-        }
+
     }
 }

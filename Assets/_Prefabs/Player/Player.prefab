@@ -480,7 +480,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: d6385720037d93440aec63bd24c1be05, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -752,6 +752,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelSystem: {fileID: 0}
   goldSystem: {fileID: 0}
+  skillController: {fileID: 0}
   classStat: {fileID: 11400000, guid: 10fae6c4ae880c44996b8a141a737ebd, type: 2}
   currentHp: 0
   currentMp: 0
@@ -860,7 +861,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentLevel: 1
   currentExp: 0
-  skillSelectionUI: {fileID: 4766067478837266638, guid: fd888102ee9237f47913d044baf98db9, type: 3}
 --- !u!114 &8855624650007990076
 MonoBehaviour:
   m_ObjectHideFlags: 0
