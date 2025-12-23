@@ -140,6 +140,11 @@ public class ForgeManager : MonoBehaviour
         {
             UIManager.Instance.ToggleInventory();
         }
+        else
+        {
+            UIManager.Instance.ToggleInventory();
+            UIManager.Instance.ToggleInventory();
+        }
 
         CloseForge();
     }
@@ -157,6 +162,11 @@ public class ForgeManager : MonoBehaviour
         ModeManager.Instance.SetMode(Enums.InventoryMode.RanKUpWithSynergy);
         if (!UIManager.Instance.inventoryUIController.gameObject.activeSelf)
         {
+            UIManager.Instance.ToggleInventory();
+        }
+        else
+        {
+            UIManager.Instance.ToggleInventory();
             UIManager.Instance.ToggleInventory();
         }
 
