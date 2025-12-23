@@ -35,18 +35,21 @@ public class MapEffectController : MonoBehaviour
     {
         Instance = this;
 
-        if (DungeonManager.Instance != null &&
-            DungeonManager.Instance.needStageTransitionEffect)
+        var dm = DungeonManager.Instance;
+        if (dm != null && dm.needStageTransitionEffect)
         {
-            hasStageTransition = true;
-            DungeonManager.Instance.needStageTransitionEffect = false;
+            dm.needStageTransitionEffect = false;
 
-            // ★ 연출용 캐시만
-            fromTheme = DungeonManager.Instance.currentTheme;
-            toTheme = DungeonManager.Instance.nextTheme;
+            // 1️⃣ 연출용 캐시
+            fromTheme = dm.currentTheme;
+            toTheme = dm.nextTheme;
+            hasStageTransition = true;
+
+            // 2️⃣ ★ 여기서 게임 상태 확정
+            dm.EnterNextStage();
         }
     }
-        void Start()
+    void Start()
     {
         //if (characterAnimator != null)
         //    characterAnimator.Play("Run");
