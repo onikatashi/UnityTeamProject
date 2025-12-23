@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: normalBattle2
   clip: {fileID: 8300000, guid: bb967f256719a7e4ab69e0b6d6c199f5, type: 3}
-  volume: 0.22
+  volume: 1
   pitch: 1
   loop: 1
   isBGM: 1

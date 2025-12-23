@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: eliteBattle2
   clip: {fileID: 8300000, guid: dad70ca8959ef6945988b254ba8a1cc1, type: 3}
-  volume: 0.22
+  volume: 1
   pitch: 1
   loop: 1
   isBGM: 1

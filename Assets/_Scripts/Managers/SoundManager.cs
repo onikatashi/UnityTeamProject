@@ -57,7 +57,8 @@ public class SoundManager : MonoBehaviour
 
     void RefreshSourceVolume()
     {
-        bgmSource.volume = masterVolume * bgmVolume * soundDictionary[currentBGM].volume;
+        //bgmSource.volume = masterVolume * bgmVolume * soundDictionary[currentBGM].volume;
+        bgmSource.volume = masterVolume * bgmVolume;
         sfxSource.volume = masterVolume * sfxVolume;
     }
 
@@ -101,7 +102,7 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    IEnumerator PreloadBGMs()
+    public IEnumerator PreloadBGMs()
     {
         foreach (SoundData bgm in bgmPacks.soundList)
         {

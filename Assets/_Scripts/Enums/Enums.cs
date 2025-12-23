@@ -175,4 +175,12 @@ public class Enums
         LevelUp
     }
     
+    // 로딩 씬 타입
+    public enum LoadingType
+    {
+        None,                   // 아무 연출없음
+        Logo,                   // 로고 나오는 연출
+        CircleInBlack,          // 원이 퍼지고 작아지는 연출 (로딩이 짧은 씬 전환)
+        ProgressBar             // 프로그레스 바 (로딩이 긴 씬 전환)
+    }
 }

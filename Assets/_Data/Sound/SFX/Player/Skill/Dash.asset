@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: dash
   clip: {fileID: 8300000, guid: 3802c6a03e0f0134fbd1f2b8b225f484, type: 3}
-  volume: 0.55
+  volume: 0.29
   pitch: 1
   loop: 0
   isBGM: 0
