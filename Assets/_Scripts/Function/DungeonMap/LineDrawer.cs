@@ -8,7 +8,9 @@ public class LineDrawer : MonoBehaviour
     public float lineThickness = 4f;            // 라인 두깨 설정.
 
     private readonly List<GameObject> activeLines = new List<GameObject>();
-
+    //연출을 위한 라인의 정보 저장
+    private Dictionary<int, List<GameObject>> floorLines = new Dictionary<int, List<GameObject>>();
+    
     public void DrawAllConnections(NodeButton[,] nodes, int maxFloor, int maxColumn)
     {
         ClearAllLines();
@@ -46,6 +48,19 @@ public class LineDrawer : MonoBehaviour
         activeLines.Clear();
     }
 
+    public void HideAllLines()
+    {
+        foreach (var line in activeLines)
+            line.SetActive(false);
+    }
+
+    public void ShowLinesForFloor(int floor)
+    {
+        if (!floorLines.ContainsKey(floor)) return;
+
+        foreach (var line in floorLines[floor])
+            line.SetActive(true);
+    }
 
     private void DrawLine(NodeButton startNode, NodeButton targetNode)
     {
@@ -53,6 +68,20 @@ public class LineDrawer : MonoBehaviour
         //라인 프리펩을 이용한 선잇기.
         GameObject lineObj = Instantiate(linePrefab, lineParent);
         activeLines.Add(lineObj);
+
+        //연출용 코드 추가
+        int floor = Mathf.Min(startNode.floor, targetNode.floor);
+
+        if (!floorLines.ContainsKey(floor))
+            floorLines[floor] = new List<GameObject>();
+
+        floorLines[floor].Add(lineObj);
+
+
+
+
+
+
 
         //라인의 위치값
         RectTransform lineRect  = lineObj.GetComponent<RectTransform>();
