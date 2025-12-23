@@ -33,6 +33,35 @@ public class ItemData : ScriptableObject
     public float iExtraAttackSpeed;             // 강화 보너스 공격 속도
     public float iExtraProjectileSpeed;         // 강화 보너스 투사체 속도
 
+    private void OnValidate()
+    {
+        UpdatePriceByRank();
+    }
+
+    // 랭크에 따라 가격이 바뀌는 함수
+    private void UpdatePriceByRank()
+    {
+        // 등급별 가격 설정 (기획에 맞게 숫자를 수정하세요)
+        switch (iRank)
+        {
+            case Enums.ItemRank.Common:
+                iPrice = 200f;
+                break;
+            case Enums.ItemRank.Rare:
+                iPrice = 400f;
+                break;
+            case Enums.ItemRank.Unique:
+                iPrice = 800f;
+                break;
+            case Enums.ItemRank.Legendary:
+                iPrice = 1600f;
+                break;
+            default:
+                iPrice = 0f;
+                break;
+        }
+    }
+
     // 이 함수 호출 시 리스트 자체에서 중복을 없앰
     public void SanitizeData()
     {

@@ -1,5 +1,6 @@
 using UnityEngine;
-using TMPro; // Text Mesh Pro 사용을 위해 추가
+using TMPro;
+using System.Collections.Generic; // Text Mesh Pro 사용을 위해 추가
 
 public class ShopManager : MonoBehaviour
 {
@@ -8,6 +9,11 @@ public class ShopManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private GameObject shopPanel;
     [SerializeField] private TextMeshProUGUI goldText; // Gold : [골드값] 표시용 텍스트
+
+    public Transform itemListParent;                    // 아이템 리스트 부모 오브젝트
+    public GameObject sellItemInfoPrefab;               // 팔 아이템 정보 프리팹                  
+
+    Dictionary<int, bool> shopItemId;                   // 중복 아이템 체크용 딕셔너리
 
     private void Awake()
     {
@@ -26,6 +32,30 @@ public class ShopManager : MonoBehaviour
         {
             Player.Instance.goldSystem.OnGoldChanged += UpdateGoldUI;
         }
+
+        shopItemId = new Dictionary<int, bool>();
+
+        while (shopItemId.Count < 3)
+        {
+            InstantiateShopItem();
+        }
+        
+    }
+
+    public void InstantiateShopItem()
+    {
+        ItemData shopItem = ItemManager.Instance.GetRandomItemDataByRank(
+            ItemManager.Instance.GetRandomItemRank());
+
+        if (shopItemId.ContainsKey(shopItem.iId))
+        {
+            return;
+        }
+
+        GameObject go = Instantiate(sellItemInfoPrefab, itemListParent);
+        ShopItemUIController itemInfo = go.GetComponent<ShopItemUIController>();
+        itemInfo.InitializeShopItem(shopItem);
+        shopItemId.Add(shopItem.iId, true);
     }
 
     // 상점 열기
