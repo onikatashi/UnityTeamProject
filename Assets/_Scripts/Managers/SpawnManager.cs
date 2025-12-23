@@ -14,16 +14,24 @@ public class SpawnManager : MonoBehaviour
     [System.Serializable]
     public class PhaseData
     {
-        [Tooltip("이 페이즈에서 소환할 적들")]
+        [Tooltip("이 페이즈에서 소환할 적 그룹들")]
         public List<SpawnInfo> spawns = new List<SpawnInfo>();
     }
 
     [System.Serializable]
     public class SpawnInfo
     {
-        public GameObject enemyPrefab;
+        [Tooltip("소환될 수 있는 에너미 프리팹 목록 (이 중 랜덤으로 선택됨)")]
+        public List<GameObject> enemyPrefabs = new List<GameObject>();
+
         public Transform spawnPoint;
-        public int count = 3;
+
+        [Header("랜덤 소환 개수 설정")]
+        [Tooltip("최소 소환 개수")]
+        public int minCount = 1;
+        [Tooltip("최대 소환 개수")]
+        public int maxCount = 3;
+
         public float spawnOffset = 1.0f;
     }
 
@@ -136,7 +144,7 @@ public class SpawnManager : MonoBehaviour
             // 페이즈 시작 즉시 스폰
             foreach (var spawn in phase.spawns)
             {
-                SpawnEnemies(spawn);
+                SpawnEnemiesRandomly(spawn);
             }
 
             float timer = 0f;
@@ -189,25 +197,43 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    void SpawnEnemies(SpawnInfo info)
+    /// <summary>
+    /// 설정된 프리팹 리스트 중 랜덤하게 선택하고, 지정된 범위 내의 개수만큼 적을 소환합니다.
+    /// </summary>
+    void SpawnEnemiesRandomly(SpawnInfo info)
     {
-        for (int i = 0; i < info.count; i++)
+        if (info.enemyPrefabs == null || info.enemyPrefabs.Count == 0)
         {
+            Debug.LogWarning($"{info.spawnPoint.name}에 할당된 에너미 프리팹이 없습니다.");
+            return;
+        }
+
+        // 최소~최대 범위 내에서 소환할 개수 결정
+        int finalSpawnCount = Random.Range(info.minCount, info.maxCount + 1);
+
+        for (int i = 0; i < finalSpawnCount; i++)
+        {
+            // 리스트에 등록된 프리팹 중 하나를 랜덤으로 선택
+            int randomIndex = Random.Range(0, info.enemyPrefabs.Count);
+            GameObject selectedPrefab = info.enemyPrefabs[randomIndex];
+
+            if (selectedPrefab == null) continue;
+
             float offsetX = Random.Range(-info.spawnOffset, info.spawnOffset);
             float offsetZ = Random.Range(-info.spawnOffset, info.spawnOffset);
 
             Vector3 pos = info.spawnPoint.position + new Vector3(offsetX, 0f, offsetZ);
 
-            GameObject enemy = Instantiate(info.enemyPrefab, pos, info.spawnPoint.rotation);
+            GameObject enemy = Instantiate(selectedPrefab, pos, info.spawnPoint.rotation);
 
             aliveEnemies.Add(enemy);
 
-            // 적이 죽었을 때 리스트에서 제거하도록 EnemyHP 같은 스크립트에서 호출 필요
+            // 적이 죽었을 때 리스트에서 제거하도록 하는 바인더 추가
             EnemyLifeBinder binder = enemy.AddComponent<EnemyLifeBinder>();
             binder.manager = this;
         }
 
-        Debug.Log($"{info.spawnPoint.name}에서 {info.count}마리 소환");
+        Debug.Log($"{info.spawnPoint.name}에서 {finalSpawnCount}마리의 적을 랜덤하게 소환했습니다.");
     }
 
     // Enemy 가 사망 시 호출될 함수
