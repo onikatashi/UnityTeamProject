@@ -27,12 +27,10 @@ public class PlayerAnimController : MonoBehaviour
         {
             case PlayerAnimState.Idle:
                 anim.SetBool("isIdling", true);
-                Debug.Log("Idle상태");
                 break;
 
             case PlayerAnimState.Move:
                 anim.SetBool("isMoving", true);
-                Debug.Log("Move상태");
                 break;
 
             case PlayerAnimState.Attack:

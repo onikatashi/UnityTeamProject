@@ -515,7 +515,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3441145217554379397, guid: c1acfac7c14807e428e0343fcbdc87ac, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.94
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3441145217554379397, guid: c1acfac7c14807e428e0343fcbdc87ac, type: 3}
       propertyPath: m_LocalRotation.w
@@ -545,9 +545,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3882460790139568487, guid: c1acfac7c14807e428e0343fcbdc87ac, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4865327645860975969, guid: c1acfac7c14807e428e0343fcbdc87ac, type: 3}
       propertyPath: skillSelectionUI
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7778195838466269849, guid: c1acfac7c14807e428e0343fcbdc87ac, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8828106940936251941, guid: c1acfac7c14807e428e0343fcbdc87ac, type: 3}
       propertyPath: m_Name
@@ -1392,6 +1400,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectDatas:
   - {fileID: 11400000, guid: 887db18285d1f7849bd22217cc64b008, type: 2}
+  - {fileID: 11400000, guid: b46c2e218a454e0469866ce0eeab8794, type: 2}
+  - {fileID: 11400000, guid: 27bd6fc27c383cc4c84d97a6ca14af16, type: 2}
+  - {fileID: 11400000, guid: 774f401283922794e94cb4130e1ea1f0, type: 2}
+  - {fileID: 11400000, guid: 6f2f3cbffdd2a64478bee44046b5c38e, type: 2}
 --- !u!114 &1527243400
 MonoBehaviour:
   m_ObjectHideFlags: 0

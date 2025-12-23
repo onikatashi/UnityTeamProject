@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -36,12 +37,33 @@ public class PlayerLevelSystem : MonoBehaviour
     /// </summary>
     private void HandleLevelUp(int count)
     {
-        Debug.Log($"HandleLevelUp 호출됨. count = {count}");
         remainingLevelUps = count;
 
-        GameStateManager.Instance.SetState(Enums.GamePlayState.LevelUpUI);
-        Time.timeScale = 0f;
+        StartCoroutine(CoLevelUp());
+    }
+    IEnumerator CoLevelUp()
+    {
+        //사운드
+        SoundManager.Instance.PlaySFX("levelUp");
 
+        //이펙트
+        EffectManager.Instance.PlayEffect(
+            Enums.EffectType.LevelUp,
+            Player.Instance.transform.position,
+            Quaternion.identity,
+            Player.Instance.transform
+        );
+
+        //연출 나오게 기다려주는 시간
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        //화면 정지
+        Time.timeScale = 0f;
+        GameStateManager.Instance.SetState(Enums.GamePlayState.LevelUpUI);
+
+        yield return new WaitForSecondsRealtime(1f);
+
+        //스킬 선택 UI 표시
         ShowNextLevelUpUI();
     }
 
@@ -56,8 +78,9 @@ public class PlayerLevelSystem : MonoBehaviour
 
         remainingLevelUps--;
 
+        var ui = skillUI;
         var cards = selector.Create3Cards();
-        UIManager.Instance.skillSelectionUI.ShowCards(cards, OnCardSelected);
+        ui.ShowCards(cards, OnCardSelected);
     }
 
     private void OnCardSelected()
@@ -115,5 +138,13 @@ public class PlayerLevelSystem : MonoBehaviour
         Player.Instance.SetFinalStat();
 
         OnExpChanged?.Invoke(currentExp, GetRequiredExp(currentLevel));
+    }
+
+    private SkillSelectionUI skillUI
+    {
+        get
+        {
+            return UIManager.Instance?.skillSelectionUI;
+        }
     }
 }

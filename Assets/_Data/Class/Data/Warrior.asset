@@ -25,7 +25,7 @@ MonoBehaviour:
     maxDashCount: 1
     dashRegen: 1
     dashDistance: 3
-    attackDamage: 100
+    attackDamage: 5
     attackRange: 2
     attackSpeed: 1
     projectileCount: 0
