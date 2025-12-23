@@ -113,17 +113,17 @@ public class UIManager : MonoBehaviour
         
         canvas = canvasTransform;
 
+        InstantiatePlayerStateUI(canvas);
+        InstantiateSkillSlotUI(canvas);
         InstantiateInventoryPanel(canvas);
         InstantiateItemDescriptionPanel(canvas);
         InstantiatePlayerStatPanel(canvas);
         InstantiateSynergyDescriptionPanel(canvas);
         InstantiateModeUI(canvas);
         InstantiateSettingUI(canvas);
-        InstantiateTraitPanel(canvas);
-        InstantiatePlayerStateUI(canvas);
-        InstantiateSkillSlotUI(canvas);
         InstantiateSkillSelectPanel(canvas);
-        
+        InstantiateTraitPanel(canvas);
+
     }
 
     // Canvas 등록 해제
@@ -252,7 +252,8 @@ public class UIManager : MonoBehaviour
     void InstantiatePlayerStateUI(RectTransform canvas)
     {
         GameObject ui = Instantiate(playerStatePanelPrefab, canvas);
-        
+        ui.transform.SetSiblingIndex(0);
+
         ui.SetActive(true);
     }
 
@@ -260,6 +261,7 @@ public class UIManager : MonoBehaviour
     void InstantiateSkillSlotUI(RectTransform canvas)
     {
         GameObject ui = Instantiate(skillSlotPanelPrefab, canvas);
+        ui.transform.SetSiblingIndex(0);
 
         ui.SetActive(true);
     }

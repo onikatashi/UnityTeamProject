@@ -101,6 +101,12 @@ public class Portal : MonoBehaviour
         // 포탈로 넘어가는 곳은 DungeonMap 밖에 없음 => 넘어갈 때, 룸타입 변경해줌으로써 BGM 재생
         DungeonManager.Instance.SetCurrentRoomType(RoomType.None);
 
+        // 인벤토리 모드 None으로 되돌리기
+        if(ModeManager.Instance.GetCurrentMode() != InventoryMode.None)
+        {
+            ModeManager.Instance.SetMode(InventoryMode.None);
+        }
+
         if (SceneLoaderManager.Instance != null)
         {
             SceneLoaderManager.Instance.LoadScene(actualSceneName); //
