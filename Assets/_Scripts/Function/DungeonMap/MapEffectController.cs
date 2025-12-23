@@ -18,7 +18,8 @@ public class MapEffectController : MonoBehaviour
     [Header("Map Transition")]
     public RectTransform mapRoot;
     public float mapMoveDistance = 900f;
-    public float mapMoveDuration = 0.6f;
+    public float mapDownDuration = 0.4f;   // 내려가는 속도
+    public float mapUpDuration = 0.8f;     // 올라오는 속도
 
     [Header("References")]
     public DungeonMaker dungeonMaker;
@@ -187,6 +188,61 @@ public class MapEffectController : MonoBehaviour
             : backgrounds[1];
     }
 
+    public void PlayEnterEffect()
+    {
+        StartCoroutine(EnterEffectSequence());
+    }
+
+    private IEnumerator EnterEffectSequence()
+    {
+        // 1. 캐릭터 이동 연출
+        yield return StartCoroutine(PlayCharacterExitToRight());
+        // 2. 클릭한 노드 로직에 따라 씬 전환
+        LoadSceneByCurrentNode();
+    }
+
+    private void LoadSceneByCurrentNode()
+    {
+        var type = DungeonManager.Instance.GetCurrentRoomType();
+
+        if (type == Enums.RoomType.Normal ||
+            type == Enums.RoomType.Elite ||
+            type == Enums.RoomType.Boss)
+        {
+            SceneLoaderManager.Instance.LoadScene(SceneNames.Dungeon);
+        }
+        else
+        {
+            SceneLoaderManager.Instance.LoadScene(SceneNames.Restroom);
+        }
+    }
+    public IEnumerator PlayCharacterExitToRight()
+    {
+        RectTransform charRt = characterRoot as RectTransform;
+        if (charRt == null) yield break;
+
+        float speed = 4500f;                 // 체감 속도
+        float outX = charRt.anchoredPosition.x + 1600f;
+
+        while (true)
+        {
+            charRt.anchoredPosition =
+                Vector2.MoveTowards(
+                    charRt.anchoredPosition,
+                    new Vector2(outX, charRt.anchoredPosition.y),
+                    speed * Time.deltaTime
+                );
+
+            // ❗ 도착 프레임에서는 yield 안 함
+            if (charRt.anchoredPosition.x >= outX)
+                break;
+
+            yield return null; // 이동 중에만
+        }
+
+        // 여기서 바로 종료 (같은 프레임)
+    }
+
     //────────────────────────────────────
     // Map Move
     //────────────────────────────────────
@@ -200,7 +256,7 @@ public class MapEffectController : MonoBehaviour
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / mapMoveDuration;
+            t += Time.deltaTime / mapDownDuration;
             mapRoot.anchoredPosition = Vector2.Lerp(start, end, t);
             yield return null;
         }
@@ -215,7 +271,7 @@ public class MapEffectController : MonoBehaviour
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / mapMoveDuration;
+            t += Time.deltaTime / mapUpDuration;
             mapRoot.anchoredPosition = Vector2.Lerp(start, end, t);
             yield return null;
         }

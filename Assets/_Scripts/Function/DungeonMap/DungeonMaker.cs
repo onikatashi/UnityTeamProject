@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -54,6 +55,9 @@ public class DungeonMaker : MonoBehaviour
     //던전 버튼의 층수,열의 정보.;
     private NodeButton[,] dungeonButtons;
 
+    //연출 타이밍을 위한 
+    private bool isNewDungeonCreated = false;
+
 
     //---------------------------------------------------------------------------------------------
     //Start는 Scene이동 후 돌아올 때마다 실행됨.
@@ -96,6 +100,7 @@ public class DungeonMaker : MonoBehaviour
             applyClearNodeState();
 
             Debug.Log("[DungeonMaker] 기존 던전 데이터 로드 완료");
+            isNewDungeonCreated = false;
         }
         else
         {
@@ -115,6 +120,7 @@ public class DungeonMaker : MonoBehaviour
             saveData.theme = dungeonTheme;
             DungeonManager.Instance?.SaveDungeonData(saveData);
             Debug.Log("[DungeonMaker] 신규 던전 생성 및 저장 완료");
+            isNewDungeonCreated = true;
         }
 
         //모든 노드, 선 정보를 기반으로 선그리기.
@@ -135,8 +141,49 @@ public class DungeonMaker : MonoBehaviour
         {
             OpenStartFloor();
         }
+
+        if (isNewDungeonCreated)
+        {
+            HideAllMapElements();
+            StartCoroutine(RevealMapByFloor());
+        }
+
     }
 
+    //연출을 위한 코드
+    private void HideAllMapElements()
+    {
+        for (int f = 0; f < maxFloor; f++)
+        {
+            for (int c = 0; c < maxColumn; c++)
+            {
+                if (dungeonButtons[f, c] != null)
+                    dungeonButtons[f, c].SetVisible(false);
+            }
+        }
+
+        lineDrawer.HideAllLines();
+    }
+
+    private IEnumerator RevealMapByFloor()
+    {
+        for (int floor = 0; floor < maxFloor; floor++)
+        {
+            // 노드 표시
+            for (int c = 0; c < maxColumn; c++)
+            {
+                NodeButton node = dungeonButtons[floor, c];
+                if (node != null && node.isAvailable)
+                    node.SetVisible(true);
+            }
+
+            // 선 표시
+            lineDrawer.ShowLinesForFloor(floor);
+
+            yield return new WaitForSeconds(0.4f);
+        }
+    }
+   
 
     //클리어 관련 작동 코드----------------------------------------------------------------------------------
 
