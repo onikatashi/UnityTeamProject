@@ -50,7 +50,7 @@ public class BGMSelector : MonoBehaviour
         {
             List<SoundData> sounds = new List<SoundData>();
 
-            sounds = bgmDictionary[DungeonManager.Instance.GetCurrentRoomType()];
+            sounds = bgmDictionary[Enums.RoomType.Rest];
             int randomIndex = Random.Range(0, sounds.Count);
 
             SoundManager.Instance.PlayBGM(sounds[randomIndex].soundName);
