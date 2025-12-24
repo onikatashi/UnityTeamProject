@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
-  m_Name: GoldBar
+  m_Name: Diamond
   m_EditorClassIdentifier: 
-  iId: 25
-  iIcon: {fileID: 21300000, guid: b9d3a2c7b0918924bb0680886adbdb0e, type: 3}
-  iName: "\uACE8\uB4DC \uBC14"
+  iId: 0
+  iIcon: {fileID: 0}
+  iName: "\uB2E4\uC774\uC544\uBAAC\uB4DC"
   iStatDescription: 
-  iDescription: "\uAE08\uAD34 "
-  iRank: 2
+  iDescription: "\uC9C4\uC9DC \uBE44\uC308"
+  iRank: 3
   iSynergy: 05000000
   iEffect: 0
-  iPrice: 800
+  iPrice: 1600
   iBaseStat:
     maxHp: 0
     maxMp: 0
@@ -37,8 +37,8 @@ MonoBehaviour:
     criticalRate: 0
     criticalDamage: 0
     shield: 0
-    bonusExpRate: 0.1
-    bonusGoldRate: 0.1
+    bonusExpRate: 0
+    bonusGoldRate: 0
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
@@ -59,8 +59,8 @@ MonoBehaviour:
     criticalRate: 0
     criticalDamage: 0
     shield: 0
-    bonusExpRate: 0.05
-    bonusGoldRate: 0.05
+    bonusExpRate: 0
+    bonusGoldRate: 0
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
