@@ -77,7 +77,11 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
 
     }
-
+    //스테이지 진입시 연출을 위한 (gameObject.SetActive)
+    public void SetVisible(bool visible)
+    {
+        gameObject.SetActive(visible);
+    }
 
     public void SetAlpha(float alpha)
     {
@@ -117,18 +121,19 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         DungeonManager.Instance.SetCurrentNode(floor, col);
         DungeonManager.Instance.SetCurrentRoomType(CurrentRoomType);
+        MapEffectController.Instance.PlayEnterEffect();
+        //씬 전환 할거면 무조건 이 아래 해야함.//실제 사용 코드
+        //if (CurrentRoomType == RoomType.Normal || CurrentRoomType == RoomType.Elite || CurrentRoomType == RoomType.Boss)
+        //{
+            
+        //    SceneLoaderManager.Instance.LoadScene(SceneNames.Dungeon);
 
-        ////씬 전환 할거면 무조건 이 아래 해야함.//실제 사용 코드
-        if (CurrentRoomType == RoomType.Normal || CurrentRoomType == RoomType.Elite || CurrentRoomType == RoomType.Boss)
-        {
-           SceneLoaderManager.Instance.LoadScene(SceneNames.Dungeon);
-
-           //SceneManager.LoadScene("MapDateCheckScene");//테스트용 코드
-        }
-        else
-        {
-           SceneLoaderManager.Instance.LoadScene(SceneNames.Restroom);
-           //SceneManager.LoadScene("MapDateCheckScene");//테스트용코드.
-        }
+        //   //SceneManager.LoadScene("MapDateCheckScene");//테스트용 코드
+        //}
+        //else
+        //{
+        //   SceneLoaderManager.Instance.LoadScene(SceneNames.Restroom);
+        //   //SceneManager.LoadScene("MapDateCheckScene");//테스트용코드.
+        //}
     }
 }
