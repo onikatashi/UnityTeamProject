@@ -65,6 +65,8 @@ public class DungeonMaker : MonoBehaviour
     {
         DungeonManager.Instance.EnterDungeon();
 
+        
+
         //테마 Sprite Inspector로 설정.
         themeSpriteDictionary = new Dictionary<Enums.DungeonTheme, Sprite>()
         {
@@ -145,12 +147,18 @@ public class DungeonMaker : MonoBehaviour
         if (isNewDungeonCreated)
         {
             HideAllMapElements();
+            waitTime(10f);
             StartCoroutine(RevealMapByFloor());
         }
 
     }
 
     //연출을 위한 코드
+    private IEnumerator waitTime(float t)
+    {
+        yield return new WaitForSeconds(t);
+    }
+
     private void HideAllMapElements()
     {
         for (int f = 0; f < maxFloor; f++)
@@ -180,7 +188,7 @@ public class DungeonMaker : MonoBehaviour
             // 선 표시
             lineDrawer.ShowLinesForFloor(floor);
 
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
    
