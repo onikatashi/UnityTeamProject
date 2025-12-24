@@ -41,6 +41,9 @@ public class SpawnManager : MonoBehaviour
     public TextMeshProUGUI infoText;
 
     [Header("전역 설정")]
+    [Tooltip("모든 몬스터 생성 시 공통으로 사용할 텔레포트/소환 이펙트 프리팹")]
+    public GameObject globalSpawnEffectPrefab;
+
     [Tooltip("다음 페이즈로 넘어가기까지의 인터벌 시간")]
     public float IntervalTime = 3f;
     [Tooltip("게임 시작 전 대기 시간 (초)")]
@@ -302,6 +305,14 @@ public class SpawnManager : MonoBehaviour
             float offsetZ = Random.Range(-info.spawnOffset, info.spawnOffset);
 
             Vector3 pos = info.spawnPoint.position + new Vector3(offsetX, 0f, offsetZ);
+
+            // [전역 설정] 모든 몬스터 생성 시 공통 이펙트 소환
+            if (globalSpawnEffectPrefab != null)
+            {
+                GameObject effect = Instantiate(globalSpawnEffectPrefab, pos, Quaternion.identity);
+                // 생성 직후 0.8초 뒤에 자동으로 파괴되도록 설정
+                Destroy(effect, 0.8f);
+            }
 
             GameObject enemy = Instantiate(selectedPrefab, pos, info.spawnPoint.rotation);
 
