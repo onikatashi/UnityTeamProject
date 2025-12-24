@@ -49,7 +49,7 @@ public class PlayerLevelSystem : MonoBehaviour
         //이펙트
         EffectManager.Instance.PlayEffect(
             Enums.EffectType.LevelUp,
-            Player.Instance.transform.position,
+            Player.Instance.transform.position + Vector3.down * 1f,
             Quaternion.identity,
             Player.Instance.transform
         );
