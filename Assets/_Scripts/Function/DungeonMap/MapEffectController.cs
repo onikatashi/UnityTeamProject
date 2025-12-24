@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,8 +19,8 @@ public class MapEffectController : MonoBehaviour
     [Header("Map Transition")]
     public RectTransform mapRoot;
     public float mapMoveDistance = 900f;
-    public float mapDownDuration = 0.4f;   // 내려가는 속도
-    public float mapUpDuration = 0.8f;     // 올라오는 속도
+    public float mapDownDuration = 1f;   // 내려가는 속도
+    public float mapUpDuration = 3f;     // 올라오는 속도
 
     [Header("References")]
     public DungeonMaker dungeonMaker;
@@ -27,7 +28,7 @@ public class MapEffectController : MonoBehaviour
     private bool isBackgroundScrolling = true;
     private bool isThemeSyncDone = false;
 
-    private Vector2 mapBasePos;
+    private Vector2 mapBasePos = new Vector2(250f, 0f);
 
 
     // ★ 추가: 전환 전/후 테마 캐시 (연출용)
@@ -54,8 +55,7 @@ public class MapEffectController : MonoBehaviour
         }
     }
     void Start()
-    {
-        mapBasePos = new Vector2(250f, 0f);  
+    {  
         mapRoot.anchoredPosition = mapBasePos;
 
         ResetBackgroundPositions();
@@ -168,11 +168,7 @@ public class MapEffectController : MonoBehaviour
         }
     }
 
-    private bool HasPassedThemeBoundary()
-    {
-        RectTransform left = GetLeftSideBackground();
-        return left.anchoredPosition.x <= -backgroundWidth;
-    }
+
 
     private RectTransform GetRightSideBackground()
     {
@@ -246,11 +242,11 @@ public class MapEffectController : MonoBehaviour
     //────────────────────────────────────
     // Map Move
     //────────────────────────────────────
-    private IEnumerator PlayMapDown()
+    public IEnumerator PlayMapDown()
     {
         isBackgroundScrolling = false;
 
-        Vector2 start = mapBasePos;
+        Vector2 start = new Vector2(250f, 0f);
         Vector2 end = mapBasePos + Vector2.down * mapMoveDistance;
 
         float t = 0f;
@@ -263,9 +259,25 @@ public class MapEffectController : MonoBehaviour
     }
 
 
-    private IEnumerator PlayMapUp()
+    public void MapUpEffect()
     {
-        Vector2 start = mapBasePos + Vector2.down * mapMoveDistance;
+        StartCoroutine(MapUpSequence());
+    }
+
+    private IEnumerator MapUpSequence()
+    {
+        // 1. 맵 올라오기 끝날 때까지 대기
+        yield return StartCoroutine(PlayMapUp());
+
+        // 2. 정확히 5초 대기
+        yield return new WaitForSeconds(1f);
+
+        // 3. DungeonMaker에게 공개 요청
+        dungeonMaker.StartRevealMap();
+    }
+    public IEnumerator PlayMapUp()
+    {
+        Vector2 start = new Vector2(250f, -2000f);
         Vector2 end = mapBasePos;
 
         float t = 0f;
@@ -277,5 +289,10 @@ public class MapEffectController : MonoBehaviour
         }
 
         isBackgroundScrolling = true;
+
+     
     }
+
+   
+
 }
