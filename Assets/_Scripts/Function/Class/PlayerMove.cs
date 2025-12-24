@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using UnityEngine;
 using static Enums;
@@ -20,6 +21,8 @@ public class PlayerMove : MonoBehaviour
     public float dashSpeed = 30f;
     float lastDashTime = -999f;
     bool isDashing;
+
+    const float face_threshold = 0.2f;          //캐릭터 떨림 방지
 
     void Start()
     {
@@ -86,11 +89,20 @@ public class PlayerMove : MonoBehaviour
             player.animCtrl.ChangeState(PlayerAnimState.Idle);
         }
 
-        //공격 방향으로 sprite돌리기
-        if (dir.sqrMagnitude > 0.001f)
+        //sprite돌리기
+        if (dir.sqrMagnitude > 0.1f)
         {
             float dot = Vector3.Dot(dir, cam.right);
-            player.SetFacing(dot);
+
+            if(dot > face_threshold)
+            {
+                player.SetFacing(1f);
+            }
+            else if( dot < -face_threshold)
+            {
+                player.SetFacing(-1f);
+            }
+               //player.SetFacing(dot);
         }
 
         //대쉬기능 = 스페이스바
