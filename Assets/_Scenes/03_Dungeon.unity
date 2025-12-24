@@ -1114,6 +1114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   infoText: {fileID: 885747310}
+  globalSpawnEffectPrefab: {fileID: 7761031033666763820, guid: 1eb833340b41fb444b576c4dced8d4dc, type: 3}
   IntervalTime: 5
   startWaitTime: 5
   normalPhases:
