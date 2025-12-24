@@ -109,8 +109,7 @@ public class BossController : MonsterBase
     public float ultimateCd = 18f;
 
     Renderer rend;
-    MaterialPropertyBlock mpb;
-    int dissolveID;
+    MonsterBase ms;
     Vector3 targetPos;
     Vector3 startPos;
 
@@ -122,17 +121,15 @@ public class BossController : MonsterBase
         base.Awake();
         playerLayer = LayerMask.NameToLayer(playerLayerName);
         rend = GetComponent<Renderer>();
-        mpb = new MaterialPropertyBlock();
-        dissolveID = Shader.PropertyToID(dissolveProp);
-
+        ms = GetComponent<MonsterBase>();
+        
         if (laser == null) laser = GetComponentInChildren<MonsterLaser>(true);
     }
     
-
     void Start()
     {
         FindPlayerByLayer();
-
+        
         if (PoolManager.Instance != null && bossBulletPrefab != null)
         {
             PoolManager.Instance.CreatePool(Enums.PoolType.BossBullet, bossBulletPrefab, 200);
@@ -661,7 +658,7 @@ public class BossController : MonsterBase
 
     IEnumerator Dissolve(float start, float end, float duration)
     {
-        SetDissolve(start);
+        //ShowDissolve(start);
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -669,19 +666,11 @@ public class BossController : MonsterBase
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             float v = Mathf.Lerp(start, end, t);
-            SetDissolve(v);
+            //ShowDissolve(v);
             yield return null;
         }
 
-        SetDissolve(end);
-    }
-
-    void SetDissolve(float v)
-    {
-        if (rend == null) return;
-        rend.GetPropertyBlock(mpb);
-        mpb.SetFloat(dissolveID, v);
-        rend.SetPropertyBlock(mpb);
+        //ShowDissolve(end);
     }
 
 
