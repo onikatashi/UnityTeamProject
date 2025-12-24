@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
   m_Name: Diamond
   m_EditorClassIdentifier: 
-  iId: 0
+  iId: 32
   iIcon: {fileID: 0}
   iName: "\uB2E4\uC774\uC544\uBAAC\uB4DC"
   iStatDescription: 
   iDescription: "\uC9C4\uC9DC \uBE44\uC308"
   iRank: 3
-  iSynergy: 05000000
+  iSynergy: 0500000002000000
   iEffect: 0
   iPrice: 1600
   iBaseStat:
@@ -28,7 +28,7 @@ MonoBehaviour:
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0
-    attackDamage: 0
+    attackDamage: 10
     attackRange: 0
     attackSpeed: 0
     projectileCount: 0
@@ -37,10 +37,10 @@ MonoBehaviour:
     criticalRate: 0
     criticalDamage: 0
     shield: 0
-    bonusExpRate: 0
-    bonusGoldRate: 0
-    luck: 0
-    cooldownReduction: 0
+    bonusExpRate: 0.1
+    bonusGoldRate: 0.1
+    luck: 10
+    cooldownReduction: 0.1
     reviveCount: 0
     startItemCount: 0
   iBonusStat:
@@ -50,7 +50,7 @@ MonoBehaviour:
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0
-    attackDamage: 0
+    attackDamage: 10
     attackRange: 0
     attackSpeed: 0
     projectileCount: 0
@@ -59,10 +59,10 @@ MonoBehaviour:
     criticalRate: 0
     criticalDamage: 0
     shield: 0
-    bonusExpRate: 0
-    bonusGoldRate: 0
-    luck: 0
-    cooldownReduction: 0
+    bonusExpRate: 0.1
+    bonusGoldRate: 0.1
+    luck: 10
+    cooldownReduction: 0.1
     reviveCount: 0
     startItemCount: 0
   iExtraAttackDamage: 0

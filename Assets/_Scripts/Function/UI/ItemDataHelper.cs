@@ -78,7 +78,10 @@ public static class ItemDataHelper
         {
             string basePart = $"+{stat.baseStat} {stat.name}";
 
-            if (stat.baseStat < 1)
+            if (stat.name == "마나 재생 속도" || stat.name == "대시 재생 속도"|| 
+                stat.name == "공격 속도" || stat.name == "치명타 확률" || 
+                stat.name == "치명타 피해" || stat.name == "추가 경험치 획득량" ||
+                stat.name == "추가 골드 획득량" || stat.name == "스킬 가속")
             {
                 basePart = $"+{stat.baseStat * 100}% {stat.name}";
             }
@@ -135,7 +138,10 @@ public static class ItemDataHelper
             string basePart = $"{stat.name}: {stat.baseStat}";
             string bonusPart = "";
 
-            if(stat.baseStat < 1)
+            if (stat.name == "마나 재생 속도" || stat.name == "대시 재생 속도" ||
+                stat.name == "공격 속도" || stat.name == "치명타 확률" ||
+                stat.name == "치명타 피해" || stat.name == "추가 경험치 획득량" ||
+                stat.name == "추가 골드 획득량" || stat.name == "스킬 가속")
             {
                 basePart = $"{stat.name}: {stat.baseStat * 100}%";
             }
@@ -144,7 +150,10 @@ public static class ItemDataHelper
             if (stat.bonusStat > 0)
             {
                 bonusPart = $" + {stat.bonusStat}";
-                if(stat.bonusStat < 1)
+                if (stat.name == "마나 재생 속도" || stat.name == "대시 재생 속도" ||
+                stat.name == "공격 속도" || stat.name == "치명타 확률" ||
+                stat.name == "치명타 피해" || stat.name == "추가 경험치 획득량" ||
+                stat.name == "추가 골드 획득량" || stat.name == "스킬 가속")
                 {
                     bonusPart = $" + {stat.bonusStat * 100}%";
                 }
@@ -192,7 +201,10 @@ public static class ItemDataHelper
         {
             string basePart = $"{stat.name}: {stat.baseStat}  ";
 
-            if (stat.baseStat < 1)
+            if (stat.name == "마나 재생 속도" || stat.name == "대시 재생 속도" ||
+                stat.name == "공격 속도" || stat.name == "치명타 확률" ||
+                stat.name == "치명타 피해" || stat.name == "추가 경험치 획득량" ||
+                stat.name == "추가 골드 획득량" || stat.name == "스킬 가속")
             {
                 basePart = $"{stat.name}: {stat.baseStat * 100}%  ";
             }
