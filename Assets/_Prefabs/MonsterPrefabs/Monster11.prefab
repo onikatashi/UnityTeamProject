@@ -250,7 +250,7 @@ MonoBehaviour:
   pullCooldown: 5
   pullDuration: 1
   pullStrength: 50
-  pullEffectPrefab: {fileID: 2183146480622160771, guid: 131ad0e894ecda14eac32155d82d6c3d, type: 3}
+  pullEffectPrefab: {fileID: 9070474633162843459, guid: 356cf4dca1465b54fabbb8cd9b1cd190, type: 3}
   effectHeight: 0.05
 --- !u!114 &-8712946463688060826
 MonoBehaviour:

@@ -69,7 +69,7 @@ public abstract class MonsterBase : MonoBehaviour
         poolManager = PoolManager.Instance;
         if (bulletPrefab != null && firepoint != null)
         {
-            poolManager.CreatePool<MonsterProjectile>(Enums.PoolType.MonsterProjectile, bulletPrefab, 5, null);
+            poolManager.CreatePool<MonsterProjectile>(Enums.PoolType.MonsterProjectile, bulletPrefab, 20, null);
         }
         
     }
@@ -146,8 +146,10 @@ public abstract class MonsterBase : MonoBehaviour
         isDie = true;
         agent.enabled = false;
 
-        // 플레이어에게 경험치 주기
+        // 플레이어에게 경험치 + 골드 주기
         GiveExpToPlayer();
+        GiveGoldToPlayer();
+
         Debug.Log($"플레이어에게 경험치 주기 성공{md.dropExp}");
         if (dissolve != null) StopCoroutine(dissolve);
 
@@ -194,7 +196,7 @@ public abstract class MonsterBase : MonoBehaviour
         PlayerExperience exp = Player.Instance.GetComponent<PlayerExperience>();
         if(exp == null)
         {
-            Debug.LogWarning("PlayerExperience 컴포넌트 없음, 추가 바랍니다");
+            //Debug.LogWarning("PlayerExperience 컴포넌트 없음, 추가 바랍니다");
             return;
         }
 
@@ -203,12 +205,10 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void GiveGoldToPlayer()
     {
-        if (player == null) return;
+        if (Player.Instance == null) return;
 
         PlayerGold gold = Player.Instance.GetComponent<PlayerGold>();
-        if (gold == null) return;
 
         gold.ReceiveRawGold(md.dropGold);
-
     }
 }

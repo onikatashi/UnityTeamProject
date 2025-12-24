@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
   m_Name: GoldBar
   m_EditorClassIdentifier: 
-  iId: 0
+  iId: 25
   iIcon: {fileID: 21300000, guid: b9d3a2c7b0918924bb0680886adbdb0e, type: 3}
   iName: "\uACE8\uB4DC \uBC14"
   iStatDescription: 
   iDescription: "\uAE08\uAD34 "
-  iRank: 0
-  iSynergy: 00000000
+  iRank: 2
+  iSynergy: 05000000
   iEffect: 0
-  iPrice: 200
+  iPrice: 800
   iBaseStat:
     maxHp: 0
     maxMp: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
     criticalDamage: 0
     shield: 0
     bonusExpRate: 0
-    bonusGoldRate: 0.05
+    bonusGoldRate: 0.15
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
@@ -60,7 +60,7 @@ MonoBehaviour:
     criticalDamage: 0
     shield: 0
     bonusExpRate: 0
-    bonusGoldRate: 0.01
+    bonusGoldRate: 0.05
     luck: 0
     cooldownReduction: 0
     reviveCount: 0

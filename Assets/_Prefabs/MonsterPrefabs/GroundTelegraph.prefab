@@ -152,7 +152,7 @@ MonoBehaviour:
   outerRect: {fileID: 1492347685324217697}
   inner: {fileID: 6022374694115716895}
   innerRect: {fileID: 4415511000893997815}
-  chargeTime: 1.5
+  chargeTime: 2
   radius: 3
   worldToUIScale: 1
   innerStartRatio: 0

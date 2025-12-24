@@ -88,7 +88,7 @@ public class PlayerAttack : MonoBehaviour
             EffectType.BaseAttack,
             transform.position,
             rot,
-            null
+            player.transform
             );
 
         Debug.Log("TryAttack 실행");

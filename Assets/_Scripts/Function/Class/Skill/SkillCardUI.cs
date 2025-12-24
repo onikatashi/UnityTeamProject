@@ -75,6 +75,7 @@ public class SkillCardUI : MonoBehaviour, IPointerEnterHandler
         {
             StopCoroutine(hoverRoutine);
         }
+        SoundManager.Instance.PlaySFX("cardPointed");
 
         hoverRoutine = StartCoroutine(CoHoverRotate());
     }
@@ -109,6 +110,7 @@ public class SkillCardUI : MonoBehaviour, IPointerEnterHandler
     /// </summary>
     public void PlaySelected()
     {
+        SoundManager.Instance.PlaySFX("cardSelected");
         StopAllCoroutines();
         StartCoroutine(CoScaleTo(1.2f));
     }

@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class PlayerGold : MonoBehaviour
 {
+    public float totalFinalGoldGained;
+
     public float baseGoldMultiplier = 1f;
     public float bonusGoldMultiplier = 1f;
 
     PlayerGoldSystem goldSystem;
     Player player;
 
-    private void Awake()
+    private void Start()
     {
         goldSystem = GetComponent<PlayerGoldSystem>();
         player = Player.Instance;
@@ -17,7 +19,7 @@ public class PlayerGold : MonoBehaviour
     public void ReceiveRawGold(float rawGold)
     {
         float finalGold = CalculateFinalGold(rawGold);
-        goldSystem.AddGold(finalGold);
+        AddFinalGold(finalGold);
     }
 
     float CalculateFinalGold(float rawGold)
@@ -27,10 +29,16 @@ public class PlayerGold : MonoBehaviour
         result *= baseGoldMultiplier;
         result *= bonusGoldMultiplier;
 
-        //ÇÃ·¹ÀÌ¾î ½ºÅÈ º¸³Ê½ºµµ Àû¿ë
+        //100 % + ì¶”ê°€ ê³¨ë“œëŸ‰ í•´ì„œ ì ìš©
         result *= (1f + player.finalStats.bonusGoldRate);
 
         return result;
+    }
+    
+    void AddFinalGold(float finalGold)
+    {
+        totalFinalGoldGained += finalGold;
+        goldSystem.AddGold(finalGold);
     }
 
 }

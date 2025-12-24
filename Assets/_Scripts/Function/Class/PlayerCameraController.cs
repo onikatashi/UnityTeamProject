@@ -28,6 +28,8 @@ public class PlayerCameraController : MonoBehaviour
 
         if (orbit == null) Debug.Log("OrbitalFollow가 카메라에 없다");
 
+        orbit.Radius = maxZoom;
+
     }
 
     private void Update()

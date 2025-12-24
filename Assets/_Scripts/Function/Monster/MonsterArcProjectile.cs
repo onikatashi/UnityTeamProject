@@ -20,6 +20,7 @@ public class MonsterArcProjectile : MonoBehaviour
     Vector3 startPos;
 
     MonsterBase owner;
+    public GameObject ExplosionFx;
     PoolManager pool;
     int playerLayer;
 
@@ -85,7 +86,7 @@ public class MonsterArcProjectile : MonoBehaviour
         // 텔레그래프 생성
         if (telegraphPrefab != null)
         {
-            tg = Instantiate(telegraphPrefab, groundPoint, Quaternion.Euler(90f, 0f, 0f));
+            tg = Instantiate(telegraphPrefab, groundPoint, Quaternion.Euler(0f, 0f, 0f));
             tg.Setup(explodeRadius, delayMark);
             tg.StartCharge();
         }
@@ -109,6 +110,11 @@ public class MonsterArcProjectile : MonoBehaviour
 
     void DoExplosionDamage()
     {
+        if(ExplosionFx != null)
+        {
+            GameObject fx = Instantiate(ExplosionFx, transform.position, Quaternion.identity);
+            Destroy(fx, 2f);
+        }
         Collider[] hits = Physics.OverlapSphere(transform.position, explodeRadius);
 
         for (int i = 0; i < hits.Length; i++)

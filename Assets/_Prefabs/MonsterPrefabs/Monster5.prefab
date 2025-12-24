@@ -279,13 +279,15 @@ MonoBehaviour:
   firepoint: {fileID: 201645302722970081}
   isDef: 0
   tolerance: 2
-  healRange: 10
+  healRange: 5
   healPerSecond: 8
   healTickInterval: 5
   includeSelf: 0
   monster:
     serializedVersion: 2
     m_Bits: 64
+  healRangePrefab: {fileID: 7986504087968017091, guid: 12a56ee4630040c4eb17ae9707ed4cef, type: 3}
+  healVisualYOffset: 0.05
 --- !u!114 &7839891058254878435
 MonoBehaviour:
   m_ObjectHideFlags: 0

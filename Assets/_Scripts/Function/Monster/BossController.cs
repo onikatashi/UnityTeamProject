@@ -33,11 +33,9 @@ public class BossController : MonsterBase
     public float laserReverseDuration = 1.2f;
 
     public float laserTurnDegPerSec = 120f;     
-    public float laserSpawnYOffset = 0.5f;        
-    
+    public float laserSpawnYOffset = 0.5f;
 
     [Header("Marks")]
-    public GroundTelegraph markPrefab;
     public int markCount = 3;
     public float markDelay = 1.0f;
     public float markRadius = 3.5f;
@@ -57,12 +55,6 @@ public class BossController : MonsterBase
     public float pullStrength = 14f;
     public float pullExplosionRadius = 2.5f;
     public float pullStun = 0.6f;
-
-    [Header("PullBurst Telegraph")]
-    public GroundTelegraph pullTelegraphPrefab; 
-    public float pullTelegraphYOffset = 0.05f; 
-    public bool telegraphUseBossY = false;    
-
 
     [Header("SlamStun")]
     public float slamRange = 6f;
@@ -92,6 +84,25 @@ public class BossController : MonsterBase
     public int hellFanBullets = 21;
     public float hellFanAngle = 110f;
     public float hellSpiralSpeed = 420f;
+
+    [Header("Pattern FX Prefabs")]
+
+    // Marks
+    public GameObject fxMarks;
+
+    // Slam
+    public GameObject fxSlam;
+
+    // Execute
+    public GameObject fxExecute;
+
+    // PullBurst
+    public GameObject fxPull;
+
+    // (공통 옵션)
+    public float fxYOffset = 0.05f;
+    public float fxLifeExtra = 0.3f;
+    public bool fxUseWorldY0 = true;
 
     bool runningPattern = false;
     float lastUltimate = -999f;
@@ -369,29 +380,32 @@ public class BossController : MonsterBase
         if (isStunned) yield break;
 
         EnsurePlayer();
-        if (player == null || md == null || markPrefab == null) yield break;
+        if (player == null || md == null) yield break;
 
         if (agent != null) agent.isStopped = false;
 
         for (int i = 0; i < markCount; i++)
         {
             Vector3 pos = new Vector3(
-                Random.Range(markAreaMin.x, markAreaMax.x), 0f,
+                Random.Range(markAreaMin.x, markAreaMax.x),
+                0f,
                 Random.Range(markAreaMin.y, markAreaMax.y)
             );
 
-            GroundTelegraph tg = Instantiate(markPrefab, pos, Quaternion.Euler(90f, 1f, 0f));
-            tg.Setup(markRadius, markDelay);
-            tg.StartCharge();
+            if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 2.5f, NavMesh.AllAreas)) pos = hit.position;
 
-            StartCoroutine(CoMarkExplode(pos, markRadius, markDelay, markStun, tg));
+            GameObject fx = SpawnPatternFx(fxMarks, pos, markRadius, markDelay);
+
+            StartCoroutine(CoMarkExplode(pos, markRadius, markDelay, markStun, fx));
+
             yield return new WaitForSeconds(0.18f);
         }
 
         yield return new WaitForSeconds(0.35f);
     }
 
-    IEnumerator CoMarkExplode(Vector3 pos, float radius, float delay, float stun, GroundTelegraph tg)
+
+    IEnumerator CoMarkExplode(Vector3 pos, float radius, float delay, float stun, GameObject fx)
     {
         if (isStunned) yield break;
         yield return new WaitForSeconds(delay);
@@ -410,8 +424,8 @@ public class BossController : MonsterBase
             }
         }
 
-        if (tg != null) { tg.StopAndHide(); Destroy(tg.gameObject); }
     }
+
 
     IEnumerator Pattern_SplitShot()
     {
@@ -516,13 +530,11 @@ public class BossController : MonsterBase
         if (isStunned) yield break;
 
         EnsurePlayer();
-        if (player == null || playerComp == null || markPrefab == null) yield break;
+        if (player == null || playerComp == null || md == null) yield break;
 
         if (agent != null) agent.isStopped = true;
 
-        GroundTelegraph tg = Instantiate(markPrefab, transform.position, Quaternion.Euler(90f, 1f, 0f));
-        tg.Setup(slamRadius, slamWindup);
-        tg.StartCharge();
+        GameObject fx = SpawnPatternFx(fxSlam, transform.position, slamRadius, slamWindup);
 
         yield return new WaitForSeconds(slamWindup);
 
@@ -540,37 +552,33 @@ public class BossController : MonsterBase
             }
         }
 
-        if (tg != null) { tg.StopAndHide(); Destroy(tg.gameObject); }
-
         if (agent != null) agent.isStopped = false;
     }
+
 
     IEnumerator Pattern_ExecuteCharge()
     {
         if (isStunned) yield break;
 
         EnsurePlayer();
-        if (player == null || playerComp == null || markPrefab == null) yield break;
+        if (player == null || playerComp == null) yield break;
 
         if (!playerComp.IsStunned) yield break;
 
         if (agent != null) agent.isStopped = true;
 
         Vector3 pos = player.transform.position;
-        GroundTelegraph tg = Instantiate(markPrefab, pos, Quaternion.Euler(90f, 1f, 0f));
-        tg.Setup(executeRadius, executeCharge);
-        tg.StartCharge();
+
+        GameObject fx = SpawnPatternFx(fxExecute, pos, executeRadius, executeCharge);
 
         yield return new WaitForSeconds(executeCharge);
 
         float dis = Vector3.Distance(player.transform.position, pos);
-        if (dis <= executeRadius)
-            playerComp.TakeDamage(999999f);
-
-        if (tg != null) { tg.StopAndHide(); Destroy(tg.gameObject); }
+        if (dis <= executeRadius) playerComp.TakeDamage(999999f);
 
         if (agent != null) agent.isStopped = false;
     }
+
 
     IEnumerator Pattern_SummonAdds()
     {
@@ -777,25 +785,32 @@ public class BossController : MonsterBase
     IEnumerator CoPullTelegraph(float radius, float chargeTime)
     {
         if (isStunned) yield break;
-        if (pullTelegraphPrefab == null) yield break;
 
-        Vector3 pos = transform.position;
-
-        if (!telegraphUseBossY) pos.y = 0f;
-
-        pos.y += pullTelegraphYOffset;
-
-        GroundTelegraph tg = Instantiate(pullTelegraphPrefab, pos, Quaternion.Euler(90f, 0f, 0f));
-        tg.Setup(radius, chargeTime);
-        tg.StartCharge();
+        SpawnPatternFx(fxPull, transform.position, radius, chargeTime);
 
         yield return new WaitForSeconds(chargeTime);
+    }
 
-        if (tg != null)
-        {
-            tg.StopAndHide();
-            Destroy(tg.gameObject);
-        }
+    GameObject SpawnPatternFx(GameObject prefab, Vector3 pos, float radius, float lifeTime)
+    {
+        if (prefab == null) return null;
+
+        if (fxUseWorldY0) pos.y = 0f;
+        pos.y += fxYOffset;
+
+        Quaternion rot = Quaternion.identity;
+
+        GameObject fx = Instantiate(prefab, pos, rot);
+
+        float diameter = radius * 2f;
+        fx.transform.localScale = new Vector3(
+            diameter,
+            fx.transform.localScale.y,
+            diameter
+        );
+
+        Destroy(fx, lifeTime + fxLifeExtra);
+        return fx;
     }
 
 }
