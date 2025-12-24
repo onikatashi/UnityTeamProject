@@ -78,6 +78,11 @@ public static class ItemDataHelper
         {
             string basePart = $"+{stat.baseStat} {stat.name}";
 
+            if (stat.baseStat < 1)
+            {
+                basePart = $"+{stat.baseStat * 100}% {stat.name}";
+            }
+
             statStringBuilder.AppendLine($"{basePart}");
         }
         return statStringBuilder.ToString();
@@ -112,7 +117,7 @@ public static class ItemDataHelper
             bonusValue *= reinforce;
 
             // 유의미한 아이템 스탯만 필터링
-            if (Mathf.Abs(baseValue) > 0.01f || Mathf.Abs(bonusValue) > 0.01f)
+            if (Mathf.Abs(baseValue) > 0.001f || Mathf.Abs(bonusValue) > 0.001f)
             {
                 // 스탯 한글 명칭으로 추가
                 if (statName.TryGetValue(field.Name, out string koreanName))
@@ -130,10 +135,19 @@ public static class ItemDataHelper
             string basePart = $"{stat.name}: {stat.baseStat}";
             string bonusPart = "";
 
+            if(stat.baseStat < 1)
+            {
+                basePart = $"{stat.name}: {stat.baseStat * 100}%";
+            }
+
             // 강화 수치가 0보다 크다면, 강화 보너스 정보 추가
             if (stat.bonusStat > 0)
             {
                 bonusPart = $" + {stat.bonusStat}";
+                if(stat.bonusStat < 1)
+                {
+                    bonusPart = $" + {stat.bonusStat * 100}%";
+                }
             }
             statStringBuilder.AppendLine($"{basePart}{bonusPart}");
         }
@@ -163,7 +177,7 @@ public static class ItemDataHelper
             float bonusValue = GetFieldValue(synergyData.GetBonusStats(synergyLevel), field);
 
             // 유의미한 아이템 스탯만 필터링
-            if (Mathf.Abs(bonusValue) > 0.01f)
+            if (Mathf.Abs(bonusValue) > 0.001f)
             {
                 // 스탯 한글 명칭으로 추가
                 if (statName.TryGetValue(field.Name, out string koreanName))
@@ -177,6 +191,11 @@ public static class ItemDataHelper
         foreach (var stat in synergyStatInfo)
         {
             string basePart = $"{stat.name}: {stat.baseStat}  ";
+
+            if (stat.baseStat < 1)
+            {
+                basePart = $"{stat.name}: {stat.baseStat * 100}%  ";
+            }
 
             statStringBuilder.Append($"{basePart}");
         }

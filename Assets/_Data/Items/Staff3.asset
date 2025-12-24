@@ -20,7 +20,7 @@ MonoBehaviour:
   iRank: 2
   iSynergy: 0100000003000000
   iEffect: 0
-  iPrice: 0
+  iPrice: 800
   iBaseStat:
     maxHp: 0
     maxMp: 30
@@ -28,7 +28,7 @@ MonoBehaviour:
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0
-    attackDamage: 30
+    attackDamage: 25
     attackRange: 0
     attackSpeed: 0
     projectileCount: 0
@@ -42,6 +42,7 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
   iBonusStat:
     maxHp: 0
     maxMp: 0
@@ -51,7 +52,7 @@ MonoBehaviour:
     dashDistance: 0
     attackDamage: 0
     attackRange: 0
-    attackSpeed: 6
+    attackSpeed: 0.1
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0
@@ -63,6 +64,7 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
   iExtraAttackDamage: 0
   iExtraRange: 0
   iExtraAttackRange: 0

@@ -18,9 +18,9 @@ MonoBehaviour:
   iStatDescription: 
   iDescription: "\uBAA9\uC5D0\uAC78\uBA74 \uBAA9\uAC78\uC774"
   iRank: 0
-  iSynergy: 00000000
+  iSynergy: 04000000
   iEffect: 0
-  iPrice: 0
+  iPrice: 200
   iBaseStat:
     maxHp: 25
     maxMp: 0
@@ -42,6 +42,7 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
   iBonusStat:
     maxHp: 5
     maxMp: 0
@@ -63,6 +64,7 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
   iExtraAttackDamage: 0
   iExtraRange: 0
   iExtraAttackRange: 0

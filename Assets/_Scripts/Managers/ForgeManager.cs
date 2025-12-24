@@ -74,9 +74,9 @@ public class ForgeManager : MonoBehaviour
         rankUpPrice = 150 + count * 20;
         rankUpWithSynergyPrice = 200 + count * 30;
 
-        reinforcePriceText.text = reinforcePrice.ToString();
-        rankUpPriceText.text = rankUpPrice.ToString();
-        rankUpWithSynergyPriceText.text = rankUpWithSynergyPrice.ToString();
+        reinforcePriceText.text = reinforcePrice.ToString() + " G";
+        rankUpPriceText.text = rankUpPrice.ToString() + " G";
+        rankUpWithSynergyPriceText.text = rankUpWithSynergyPrice.ToString() + " G";
     }
 
     public void OpenForge()
