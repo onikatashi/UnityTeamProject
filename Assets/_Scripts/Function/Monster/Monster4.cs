@@ -31,7 +31,7 @@ public class Monster4 : MonsterBase
         {
             //agent.isStopped = false;
             agent.updateRotation = true;
-            agent.SetDestination(player.transform.position);
+            //agent.SetDestination(player.transform.position);
         }
         else
         {
@@ -46,7 +46,7 @@ public class Monster4 : MonsterBase
     protected override void Attack()
     {
         if (isDef) return;
-        agent.isStopped = true;
+        //agent.isStopped = true;
         agent.updateRotation = false;
 
         float dis = Vector3.Distance(transform.position, player.transform.position);
