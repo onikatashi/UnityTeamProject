@@ -16,34 +16,13 @@ MonoBehaviour:
   iIcon: {fileID: 21300000, guid: b30bbdea7cb1c2149b869249a8949e77, type: 3}
   iName: "\uAC11\uC6371"
   iStatDescription: "\uCCB4\uB825 + 100"
-  iDescription: 1\n2\n3\n4\n5
+  iDescription: "\uD3C9\uBC94\uD558\uB2E4"
   iRank: 0
-  iSynergy: 01000000
+  iSynergy: 00000000
   iEffect: 0
-  iPrice: 100
+  iPrice: 200
   iBaseStat:
-    maxHp: 100
-    maxMp: 1
-    mpRegen: 1
-    maxDashCount: 1
-    dashRegen: 1
-    dashDistance: 0
-    attackDamage: 0
-    attackRange: 0
-    attackSpeed: 0
-    projectileCount: 0
-    projectileSpeed: 0
-    moveSpeed: 0
-    criticalRate: 0
-    criticalDamage: 0
-    shield: 0
-    bonusExpRate: 0
-    bonusGoldRate: 0
-    luck: 0
-    cooldownReduction: 0
-    reviveCount: 0
-  iBonusStat:
-    maxHp: 10
+    maxHp: 50
     maxMp: 0
     mpRegen: 0
     maxDashCount: 0
@@ -63,6 +42,29 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
+  iBonusStat:
+    maxHp: 5
+    maxMp: 0
+    mpRegen: 0
+    maxDashCount: 0
+    dashRegen: 0
+    dashDistance: 0
+    attackDamage: 0
+    attackRange: 0
+    attackSpeed: 0
+    projectileCount: 0
+    projectileSpeed: 0
+    moveSpeed: 0
+    criticalRate: 0
+    criticalDamage: 0
+    shield: 0
+    bonusExpRate: 0
+    bonusGoldRate: 0
+    luck: 0
+    cooldownReduction: 0
+    reviveCount: 0
+    startItemCount: 0
   iExtraAttackDamage: 0
   iExtraRange: 0
   iExtraAttackRange: 0

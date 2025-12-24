@@ -10,14 +10,37 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d8cbdba176f58b41b43eb36d1c18c02, type: 3}
-  m_Name: Wind
+  m_Name: Light
   m_EditorClassIdentifier: 
-  synergyIcon: {fileID: 21300000, guid: c970aedb0a6cacf4584712a8c4e869cc, type: 3}
-  synergyType: 3
-  synergyName: "\uBC14\uB78C"
-  synergyDescription: "\uBC14\uB78C\uC740 \uBE68\uB77C\uC9C4"
-  maxLevel: 6
+  synergyIcon: {fileID: 21300000, guid: 8f676e04b8516f141b3349d91ad1bae7, type: 3}
+  synergyType: 5
+  synergyName: "\uBE5B"
+  synergyDescription: "\uB300\uBA38\uB9AC\uB294 \uBA38\uB9AC\uC5D0\uC11C\uB3C4 \uBE5B\uC774\uB098\uC694"
+  maxLevel: 3
   levels:
+  - requiredLines: 1
+    bonusStats:
+      maxHp: 0
+      maxMp: 0
+      mpRegen: 0
+      maxDashCount: 0
+      dashRegen: 0
+      dashDistance: 0
+      attackDamage: 0
+      attackRange: 0
+      attackSpeed: 0
+      projectileCount: 0
+      projectileSpeed: 0
+      moveSpeed: 0
+      criticalRate: 0
+      criticalDamage: 0
+      shield: 0
+      bonusExpRate: 0
+      bonusGoldRate: 0
+      luck: 30
+      cooldownReduction: 0
+      reviveCount: 0
+      startItemCount: 0
   - requiredLines: 2
     bonusStats:
       maxHp: 0
@@ -31,17 +54,17 @@ MonoBehaviour:
       attackSpeed: 0
       projectileCount: 0
       projectileSpeed: 0
-      moveSpeed: 10
+      moveSpeed: 0
       criticalRate: 0
       criticalDamage: 0
       shield: 0
       bonusExpRate: 0
       bonusGoldRate: 0
-      luck: 0
+      luck: 80
       cooldownReduction: 0
       reviveCount: 0
       startItemCount: 0
-  - requiredLines: 4
+  - requiredLines: 3
     bonusStats:
       maxHp: 0
       maxMp: 0
@@ -54,36 +77,13 @@ MonoBehaviour:
       attackSpeed: 0
       projectileCount: 0
       projectileSpeed: 0
-      moveSpeed: 20
+      moveSpeed: 0
       criticalRate: 0
       criticalDamage: 0
       shield: 0
       bonusExpRate: 0
       bonusGoldRate: 0
-      luck: 0
-      cooldownReduction: 0
-      reviveCount: 0
-      startItemCount: 0
-  - requiredLines: 6
-    bonusStats:
-      maxHp: 0
-      maxMp: 0
-      mpRegen: 0
-      maxDashCount: 0
-      dashRegen: 0
-      dashDistance: 0
-      attackDamage: 0
-      attackRange: 0.2
-      attackSpeed: 0
-      projectileCount: 0
-      projectileSpeed: 0
-      moveSpeed: 30
-      criticalRate: 0
-      criticalDamage: 0
-      shield: 0
-      bonusExpRate: 0
-      bonusGoldRate: 0
-      luck: 0
+      luck: 200
       cooldownReduction: 0
       reviveCount: 0
       startItemCount: 0

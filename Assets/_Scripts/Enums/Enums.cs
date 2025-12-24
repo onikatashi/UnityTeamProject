@@ -18,7 +18,9 @@ public class Enums
         None,
         Fire,
         Ice,
-        Wind
+        Wind,
+        Dark,
+        Light
     }
 
     // 아이템 추가 효과

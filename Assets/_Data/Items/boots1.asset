@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
   m_Name: boots1
   m_EditorClassIdentifier: 
-  iId: 9
+  iId: 5
   iIcon: {fileID: 21300000, guid: fe81e13c1e693904da7169cb61230b0d, type: 3}
   iName: "\uD754\uD55C\uC7A5\uD654"
   iStatDescription: "\uC774\uB3D9\uC18D\uB3C4 + 3"
   iDescription: "\uC7A5\uD654"
   iRank: 0
-  iSynergy: 01000000
+  iSynergy: 03000000
   iEffect: 0
-  iPrice: 0
+  iPrice: 200
   iBaseStat:
     maxHp: 5
     maxMp: 0
@@ -42,6 +42,7 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
   iBonusStat:
     maxHp: 0
     maxMp: 0
@@ -54,7 +55,7 @@ MonoBehaviour:
     attackSpeed: 0
     projectileCount: 0
     projectileSpeed: 0
-    moveSpeed: 0
+    moveSpeed: 1
     criticalRate: 0
     criticalDamage: 0
     shield: 0
@@ -63,6 +64,7 @@ MonoBehaviour:
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
+    startItemCount: 0
   iExtraAttackDamage: 0
   iExtraRange: 0
   iExtraAttackRange: 0
