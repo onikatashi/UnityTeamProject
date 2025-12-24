@@ -19,7 +19,7 @@ public class MapEffectController : MonoBehaviour
     public RectTransform mapRoot;
     public float mapMoveDistance = 900f;
     public float mapDownDuration = 0.4f;   // 내려가는 속도
-    public float mapUpDuration = 0.8f;     // 올라오는 속도
+    public float mapUpDuration = 1.8f;     // 올라오는 속도
 
     [Header("References")]
     public DungeonMaker dungeonMaker;
@@ -191,6 +191,11 @@ public class MapEffectController : MonoBehaviour
     public void PlayEnterEffect()
     {
         StartCoroutine(EnterEffectSequence());
+    }
+
+    public void MapUpEffect()
+    {
+        StartCoroutine(PlayMapUp());
     }
 
     private IEnumerator EnterEffectSequence()

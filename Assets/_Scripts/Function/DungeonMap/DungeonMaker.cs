@@ -65,7 +65,6 @@ public class DungeonMaker : MonoBehaviour
     {
         DungeonManager.Instance.EnterDungeon();
 
-        
 
         //테마 Sprite Inspector로 설정.
         themeSpriteDictionary = new Dictionary<Enums.DungeonTheme, Sprite>()
@@ -144,14 +143,14 @@ public class DungeonMaker : MonoBehaviour
             OpenStartFloor();
         }
 
+        
         if (isNewDungeonCreated)
         {
-
             HideAllMapElements();
-            MapEffectController.Instance.StartCoroutine(MapEffectController.Instance.PlayMapUp()
-);
 
-            StartCoroutine(waitTime(10f));
+           MapEffectController.Instance.MapUpEffect();
+
+
             StartCoroutine(RevealMapByFloor());
         }
 
