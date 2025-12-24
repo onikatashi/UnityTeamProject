@@ -13,9 +13,17 @@ public class MonsterProjectile : MonoBehaviour
     public MonsterBase owner;
     int playerLayer;
 
+    public ParticleSystem fx;
+
     private void Awake()
     {
         playerLayer = LayerMask.NameToLayer("Player");
+    }
+
+    private void OnEnable()
+    {
+        fx.Clear();
+        fx.Play();
     }
 
     void Update()
@@ -28,7 +36,16 @@ public class MonsterProjectile : MonoBehaviour
         this.owner = owner;
         startPosition = transform.position;
         moveDir = dir.normalized;
+
+        //if (fx != null)
+        //{
+        //    fx.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        //    fx.Clear(true);
+        //    fx.Play(true);
+        //}
+
         gameObject.SetActive(true);
+        
     }
 
     public void fire()
@@ -65,18 +82,28 @@ public class MonsterProjectile : MonoBehaviour
             }
         }
     }
-    
+    //public void ReloadPool()
+    //{
+    //    if (fx != null)
+    //        fx.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+
+    //    gameObject.SetActive(false);
+    //    PoolManager.Instance.Return(Enums.PoolType.MonsterProjectile, this);
+    //}
+
 
     public void ReloadPool()
     {
         if (owner != null)
         {
-            owner.ReturnMonsterProjectile(this);
+            //owner.ReturnMonsterProjectile(this);
+            //fx.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            PoolManager.Instance.Return(Enums.PoolType.MonsterProjectile, this);
         }
         else
         {
             //몬스터가 죽어도 계속 날아가려면 이거 지워야함 아마도 
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 }

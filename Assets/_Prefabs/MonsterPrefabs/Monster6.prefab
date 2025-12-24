@@ -279,7 +279,7 @@ MonoBehaviour:
   firepoint: {fileID: 107270403625805788}
   isDef: 0
   tolerance: 2
-  buffRange: 10
+  buffRange: 5
   buffMultiplier: 1.5
   buffDuration: 3
   buffTickInterval: 0.5
@@ -287,7 +287,7 @@ MonoBehaviour:
   monster:
     serializedVersion: 2
     m_Bits: 64
-  buffRangePrefab: {fileID: 8853544529061659951, guid: 4aa00bc0632a5ba469fd969e25736866, type: 3}
+  buffRangePrefab: {fileID: 3377181292992421420, guid: 48c5715f9603c3842a353516a8baefbb, type: 3}
   buffVisualYOffset: 0.05
 --- !u!114 &575716407421286964
 MonoBehaviour:

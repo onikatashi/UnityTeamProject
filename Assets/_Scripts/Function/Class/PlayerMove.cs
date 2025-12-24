@@ -87,9 +87,10 @@ public class PlayerMove : MonoBehaviour
         }
 
         //공격 방향으로 sprite돌리기
-        if (dir.x != 0)
+        if (dir.sqrMagnitude > 0.001f)
         {
-            player.SetFacing(dir.x);
+            float dot = Vector3.Dot(dir, cam.right);
+            player.SetFacing(dot);
         }
 
         //대쉬기능 = 스페이스바

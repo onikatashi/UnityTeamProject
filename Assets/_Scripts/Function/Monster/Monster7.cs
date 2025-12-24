@@ -166,7 +166,7 @@ public class Monster7 : MonsterBase
         buffRangeInstance.transform.position = pos;
 
         // 지름 = healRange * 2
-        float diameter = buffRange * 2f;
+        float diameter = buffRange;
         buffRangeInstance.transform.localScale = new Vector3(diameter, 1f, diameter);
     }
 

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8419178667490943989}
   - component: {fileID: 8419802679652866803}
   - component: {fileID: 1509052957470483787}
+  - component: {fileID: 8328594550401114049}
   m_Layer: 0
   m_Name: Smoke loop
   m_TagString: Untagged
@@ -4786,6 +4787,9 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -4842,3 +4846,23 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &8328594550401114049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4318940320840401929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3c0ba82f4334994d8e9bc9228d53f5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outer: {fileID: 0}
+  outerRect: {fileID: 0}
+  inner: {fileID: 0}
+  innerRect: {fileID: 0}
+  chargeTime: 1.5
+  radius: 3
+  worldToUIScale: 1
+  innerStartRatio: 0
