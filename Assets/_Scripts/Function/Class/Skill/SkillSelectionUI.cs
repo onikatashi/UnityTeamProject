@@ -22,7 +22,7 @@ public class SkillSelectionUI : MonoBehaviour
             spawnedCards.Add(go);
 
             SkillCardUI cardUI = go.GetComponent<SkillCardUI>();
-            cardUI.SetUp(cardData, OnCardClicked);
+            cardUI.SetUp(cardData, OnCardClicked, this);
         }
         
         gameObject.SetActive(true);
@@ -50,4 +50,21 @@ public class SkillSelectionUI : MonoBehaviour
         spawnedCards.Clear();
     }
 
+
+    public void PlayerSelectEffect(SkillCardUI selected)
+    {
+        foreach(var go in spawnedCards)
+        {
+            var card = go.GetComponent<SkillCardUI>();
+
+            if(card == selected)
+            {
+                card.PlaySelected();
+            }
+            else
+            {
+                card.PlayUnSelected();
+            }
+        }
+    }
 }
