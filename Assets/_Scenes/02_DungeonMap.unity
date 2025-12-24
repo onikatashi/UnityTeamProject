@@ -1040,8 +1040,9 @@ MonoBehaviour:
   backgroundSpeed: 400
   backgroundWidth: 1920
   mapRoot: {fileID: 1603663285}
-  mapMoveDistance: 1600
-  mapMoveDuration: 2
+  mapMoveDistance: 1200
+  mapDownDuration: 0.4
+  mapUpDuration: 1.8
   dungeonMaker: {fileID: 1474469199}
 --- !u!1001 &1580171942
 PrefabInstance:
