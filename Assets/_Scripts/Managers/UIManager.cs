@@ -288,7 +288,8 @@ public class UIManager : MonoBehaviour
     {
         bool showHUD =
             sceneName == SceneNames.Town ||
-            sceneName == SceneNames.Dungeon;
+            sceneName == SceneNames.Dungeon||
+            sceneName == SceneNames.Restroom;
 
         if (playerStateUI != null)
         {
