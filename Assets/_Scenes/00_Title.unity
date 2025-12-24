@@ -2674,9 +2674,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgmPacks: {fileID: 11400000, guid: fe8ff6527dc580a4097b2ba163109e22, type: 2}
   sfxPacks: {fileID: 11400000, guid: b89f0ca486751c548837e36be8b057b7, type: 2}
-  masterVolume: 0
-  bgmVolume: 0
-  sfxVolume: 0
+  masterVolume: 0.348
+  bgmVolume: 0.329
+  sfxVolume: 0.335
 --- !u!1 &1744150696
 GameObject:
   m_ObjectHideFlags: 0
