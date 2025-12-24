@@ -18,6 +18,9 @@ public abstract class SkillBase : ScriptableObject
     //스킬 쿨타임
     public float cooldown = 1f;
 
+    //스킬 설명
+    public string desc;
+
     /// <summary>
     /// 스킬 실행 함수
     /// </summary>

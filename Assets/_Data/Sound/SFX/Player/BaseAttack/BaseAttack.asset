@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: baseAttack
   clip: {fileID: 8300000, guid: 39100b41ba78f644284184c2d7c48c0f, type: 3}
-  volume: 0.56
-  pitch: 1
+  volume: 0.63
+  pitch: 0.74
   loop: 0
   isBGM: 0

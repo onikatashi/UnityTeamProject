@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3342e4c3100675549996dd163c79eac5, type: 3}
   m_Name: CardSelected
   m_EditorClassIdentifier: 
-  soundName: 
-  clip: {fileID: 0}
+  soundName: cardSelected
+  clip: {fileID: 8300000, guid: da5d7f9e4f12c5248a7fa55cf80c74a4, type: 3}
   volume: 1
   pitch: 1
   loop: 0

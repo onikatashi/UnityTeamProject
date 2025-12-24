@@ -95,7 +95,7 @@ public class LevelUpSkillSelector
             cardType = Enums.SkillCardType.NewSkill,
             skillBaseData = skill,
             nameText = skill.skillName,
-            descriptionText = "NEW SKILL",
+            descriptionText = $"NEW SKILL\n{skill.desc}",
             icon = skill.icon
         };
     }
