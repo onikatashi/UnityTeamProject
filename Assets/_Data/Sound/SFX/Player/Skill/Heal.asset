@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: heal
   clip: {fileID: 8300000, guid: 4a4deaeca3ea2ec4a867d1a879105898, type: 3}
-  volume: 1
+  volume: 0.505
   pitch: 1
   loop: 0
   isBGM: 0

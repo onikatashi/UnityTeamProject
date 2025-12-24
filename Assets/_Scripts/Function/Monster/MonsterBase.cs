@@ -146,8 +146,10 @@ public abstract class MonsterBase : MonoBehaviour
         isDie = true;
         agent.enabled = false;
 
-        // 플레이어에게 경험치 주기
+        // 플레이어에게 경험치 + 골드 주기
         GiveExpToPlayer();
+        GiveGoldToPlayer();
+
         Debug.Log($"플레이어에게 경험치 주기 성공{md.dropExp}");
         if (dissolve != null) StopCoroutine(dissolve);
 
@@ -203,12 +205,10 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void GiveGoldToPlayer()
     {
-        if (player == null) return;
+        if (Player.Instance == null) return;
 
         PlayerGold gold = Player.Instance.GetComponent<PlayerGold>();
-        if (gold == null) return;
 
         gold.ReceiveRawGold(md.dropGold);
-
     }
 }

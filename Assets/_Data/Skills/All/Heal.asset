@@ -15,5 +15,6 @@ MonoBehaviour:
   skillName: Heal
   icon: {fileID: 21300000, guid: 8c859ca448b515445a236cc94944f09c, type: 3}
   cooldown: 5
+  desc: "\uCCB4\uB825 \uD68C\uBCF5"
   baseHealRatio: 0.2
   healRatioPerLevel: 0.05
