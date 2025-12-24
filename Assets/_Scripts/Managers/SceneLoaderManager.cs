@@ -215,7 +215,7 @@ public class SceneLoaderManager : MonoBehaviour
         // circleInBackground 연출 마무리
         if (type == Enums.LoadingType.CircleInBlack)
         {
-            yield return new WaitForSeconds(0.7f);
+            yield return new WaitForSeconds(0.4f);
 
             yield return StartCoroutine(AnimationIrisScale(0, maxScale, transitionDuration));
         }

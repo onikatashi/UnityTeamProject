@@ -16,31 +16,27 @@ public class HotSpring : MonoBehaviour
     private Coroutine healCoroutine;
     private bool isPlayerInside = false; // 플레이어가 온천 안에 있는지 여부
 
+    bool isSwaped = false;
+
     void Update()
     {
         // 플레이어가 온천 안에 있고 F 키를 눌렀을 때
         if (isPlayerInside && Input.GetKeyDown(KeyCode.F))
         {
-            ToggleInventory();
-        }
-    }
-
-    // 인벤토리 상태를 반전시키는 함수 (F키 입력 시)
-    public void ToggleInventory()
-    {
-        if (inventoryPanel != null)
-        {
-            bool isActive = inventoryPanel.activeSelf;
-            inventoryPanel.SetActive(!isActive);
-        }
-    }
-
-    // 인벤토리를 명시적으로 닫는 함수 (Exit 버튼 연결용 및 이탈 시 사용)
-    public void CloseInventory()
-    {
-        if (inventoryPanel != null)
-        {
-            inventoryPanel.SetActive(false);
+            if (!isSwaped)
+            {
+                isSwaped = true;
+                ModeManager.Instance.SetMode(Enums.InventoryMode.Swap);
+                if (!UIManager.Instance.inventoryUIController.gameObject.activeSelf)
+                {
+                    UIManager.Instance.ToggleInventory();
+                }
+                else
+                {
+                    UIManager.Instance.ToggleInventory();
+                    UIManager.Instance.ToggleInventory();
+                }
+            }
         }
     }
 
@@ -64,9 +60,6 @@ public class HotSpring : MonoBehaviour
         {
             Debug.Log("<color=yellow><b>[온천]</b> 플레이어가 나갔습니다. 인벤토리를 닫습니다.</color>");
             isPlayerInside = false;
-
-            // 온천을 벗어나면 인벤토리를 자동으로 닫음
-            CloseInventory();
 
             if (healCoroutine != null)
             {
