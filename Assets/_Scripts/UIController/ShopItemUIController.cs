@@ -76,7 +76,7 @@ public class ShopItemUIController : MonoBehaviour
 
         itemDescription.text = itemData.iDescription;
         itemIcon.sprite = itemData.iIcon;
-        itemPrice.text = itemData.iPrice.ToString() + " G";
+        itemPrice.text = itemData.iPrice.ToString();
     }
 
     void BuyItem()
