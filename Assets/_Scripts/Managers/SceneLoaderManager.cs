@@ -150,53 +150,49 @@ public class SceneLoaderManager : MonoBehaviour
 
         // 로딩이 된 정도
         // 0.0 ~ 0.9: 로딩단계 / 0.9 ~ 1.0: 최종 활성화단계
-        //while(op.progress < 0.9f)
-        //{
-        //    if (type == Enums.LoadingType.ProgressBar)
-        //    {
-        //        float progress = Mathf.Clamp01(op.progress / 0.9f);
-        //        progressBar.value = progress;
-        //        progressValue.text = $"{progress * 100}:F0";
-
-        //        // 애니메이션
-
-        //    }
-        //    yield return null;
-        //}
-
-        float fakeProgress = 0f;
-        float targetProgress = 0f;
-        int randomIndex = Random.Range(0, loadingTipData.tips.Count);
-
-        if (type == Enums.LoadingType.ProgressBar)
+        if (type != Enums.LoadingType.ProgressBar)
         {
-            tipText.text = "TIP: " + loadingTipData.tips[randomIndex];
+            while (op.progress < 0.9f)
+            {
+                yield return null;
+            }
         }
 
-        // 실제 로딩과 별개로 가짜 로딩 생성
-        while (fakeProgress < 1.0f)
+        else
         {
-            //0.0 ~0.9: 로딩단계 / 0.9 ~1.0: 최종 활성화단계
-            targetProgress = Mathf.Clamp01(op.progress / 0.9f);
+            float fakeProgress = 0f;
+            float targetProgress = 0f;
+            int randomIndex = Random.Range(0, loadingTipData.tips.Count);
 
-            // fakeProgress가 실제 targetProgress를 따라가게 하되, 최대 속도를 제한
-            // 0.5f 숫자를 조절해서 로딩 속도를 제어 (낮을수록 느림)
-            fakeProgress = Mathf.MoveTowards(fakeProgress, targetProgress, Time.deltaTime * 0.5f);
-
-            // 프로그레스 바 로딩 화면이면 프로그레스 바 채워줌
             if (type == Enums.LoadingType.ProgressBar)
             {
-                progressBar.value = fakeProgress;
+                tipText.text = "TIP: " + loadingTipData.tips[randomIndex];
             }
 
-            // 로딩이 실제로는 다 끝났고(0.9), 가짜 바도 100%에 도달했다면 루프 탈출
-            if (fakeProgress >= 1.0f && op.progress >= 0.9f)
+            // 실제 로딩과 별개로 가짜 로딩 생성
+            while (fakeProgress < 1.0f)
             {
-                break;
-            }
+                //0.0 ~0.9: 로딩단계 / 0.9 ~1.0: 최종 활성화단계
+                targetProgress = Mathf.Clamp01(op.progress / 0.9f);
 
-            
-            yield return null;
+                // fakeProgress가 실제 targetProgress를 따라가게 하되, 최대 속도를 제한
+                // 0.5f 숫자를 조절해서 로딩 속도를 제어 (낮을수록 느림)
+                fakeProgress = Mathf.MoveTowards(fakeProgress, targetProgress, Time.deltaTime * 0.5f);
+
+                // 프로그레스 바 로딩 화면이면 프로그레스 바 채워줌
+                if (type == Enums.LoadingType.ProgressBar)
+                {
+                    progressBar.value = fakeProgress;
+                }
+
+                // 로딩이 실제로는 다 끝났고(0.9), 가짜 바도 100%에 도달했다면 루프 탈출
+                if (fakeProgress >= 1.0f && op.progress >= 0.9f)
+                {
+                    break;
+                }
+
+                yield return null;
+            }
         }
 
         // 씬 활성화
@@ -218,6 +214,11 @@ public class SceneLoaderManager : MonoBehaviour
             yield return new WaitForSeconds(0.4f);
 
             yield return StartCoroutine(AnimationIrisScale(0, maxScale, transitionDuration));
+        }
+
+        if (type == Enums.LoadingType.ProgressBar)
+        {
+             yield return new WaitForSeconds(0.4f);
         }
 
         HideAllUI();
