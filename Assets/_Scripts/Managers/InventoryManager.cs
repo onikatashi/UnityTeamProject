@@ -292,8 +292,10 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
+        int level = UnityEngine.Random.Range(1, 3);
+
         // 강화 수치도 랜덤하게 올라가고 싶으면 여기 수정
-        reinforcedSlots[slotIndex]++;
+        reinforcedSlots[slotIndex] += level;
         uiManager.inventoryUIController.UpdateItemIcon();
         uiManager.playerStatUIController.UpdatePlayerStatUI();
     }
@@ -627,6 +629,7 @@ public class InventoryManager : MonoBehaviour
         reinforcedSlots = new Dictionary<int, int>();
         indexByItemId = new Dictionary<int, int>();
 
+        ModeManager.Instance.SetMode(Enums.InventoryMode.None);
         InitReinforceSlots();
         InitSynergyActiveCount();
 
