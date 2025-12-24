@@ -246,7 +246,7 @@ public class MapEffectController : MonoBehaviour
     //────────────────────────────────────
     // Map Move
     //────────────────────────────────────
-    private IEnumerator PlayMapDown()
+    public IEnumerator PlayMapDown()
     {
         isBackgroundScrolling = false;
 
@@ -263,7 +263,7 @@ public class MapEffectController : MonoBehaviour
     }
 
 
-    private IEnumerator PlayMapUp()
+    public IEnumerator PlayMapUp()
     {
         Vector2 start = mapBasePos + Vector2.down * mapMoveDistance;
         Vector2 end = mapBasePos;

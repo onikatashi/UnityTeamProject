@@ -146,8 +146,12 @@ public class DungeonMaker : MonoBehaviour
 
         if (isNewDungeonCreated)
         {
+
             HideAllMapElements();
-            waitTime(10f);
+            MapEffectController.Instance.StartCoroutine(MapEffectController.Instance.PlayMapUp()
+);
+
+            StartCoroutine(waitTime(10f));
             StartCoroutine(RevealMapByFloor());
         }
 
