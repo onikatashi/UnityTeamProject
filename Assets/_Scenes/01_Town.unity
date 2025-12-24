@@ -772,8 +772,8 @@ Transform:
   m_GameObject: {fileID: 1341447248}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.019999996, y: 0.62, z: -0.059999466}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.019999996, y: -1, z: -0.059999466}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1316192923}
@@ -850,7 +850,7 @@ GameObject:
   - component: {fileID: 1670054414}
   - component: {fileID: 1670054415}
   m_Layer: 0
-  m_Name: Scene Load Manager
+  m_Name: Spawn Point Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
