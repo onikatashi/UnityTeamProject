@@ -144,8 +144,8 @@ public class DungeonMaker : MonoBehaviour
 
         if (isNewDungeonCreated)
         {
-            HideAllMapElements();
-            StartCoroutine(RevealMapByFloor());
+            HideAllMapElements();//노드랑 선 안보이게 숨기기
+            StartCoroutine(RevealMapByFloor());// 아래층 부터 보이기
         }
 
     }

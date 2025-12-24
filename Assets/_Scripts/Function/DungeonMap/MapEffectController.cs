@@ -277,5 +277,13 @@ public class MapEffectController : MonoBehaviour
         }
 
         isBackgroundScrolling = true;
+
+        waitTime();
     }
+
+    private IEnumerator waitTime()
+    {
+        yield return new WaitForSeconds(5f);
+    }
+
 }
