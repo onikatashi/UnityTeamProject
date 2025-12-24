@@ -23,7 +23,7 @@ public class PlayerAttack : MonoBehaviour
     void Update()
     {
         if (!canAtt) return;
-
+        if (!GameStateManager.Instance.CanPlayerControl()) return;
         TryAttack();
     }
 

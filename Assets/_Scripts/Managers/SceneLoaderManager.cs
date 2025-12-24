@@ -1,4 +1,3 @@
-using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -66,6 +65,11 @@ public class SceneLoaderManager : MonoBehaviour
         }
 
         HideAllUI();
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.activeSceneChanged += OnSceneChanged;
     }
 
     private void HideAllUI()
@@ -288,4 +292,19 @@ public class SceneLoaderManager : MonoBehaviour
     //    string currentSceneName = SceneManager.GetActiveScene().name;
     //    LoadScene(currentSceneName);
     //}
+
+    /// <summary>
+    /// 플레이어 HUD 특정 씬에서만 적용
+    /// </summary>
+    /// <param name="oldScene"></param>
+    /// <param name="newScene"></param>
+    void OnSceneChanged(Scene oldScene, Scene newScene)
+    {
+        UIManager.Instance?.UpdateHUD(newScene.name);
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.activeSceneChanged -= OnSceneChanged;
+    }
 }

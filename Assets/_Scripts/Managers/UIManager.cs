@@ -48,10 +48,12 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     [Header("플레이어 상태UI")]
     private GameObject playerStatePanelPrefab;                      // 플레이어 상태 UI 프리팹
+    private GameObject playerStateUI;
 
     [SerializeField]
     [Header("스킬 슬롯UI")]
     private GameObject skillSlotPanelPrefab;                        //스킬 슬롯 UI 프리팹
+    private GameObject skillSlotUI;
 
     [SerializeField]
     [Header("스킬 선택 UI")]
@@ -254,19 +256,19 @@ public class UIManager : MonoBehaviour
     // Player State(Hp, Mp, Gold) UI 생성
     void InstantiatePlayerStateUI(RectTransform canvas)
     {
-        GameObject ui = Instantiate(playerStatePanelPrefab, canvas);
-        ui.transform.SetSiblingIndex(0);
+        playerStateUI = Instantiate(playerStatePanelPrefab, canvas);
+        playerStateUI.transform.SetSiblingIndex(0);
 
-        ui.SetActive(true);
+        playerStateUI.SetActive(true);
     }
 
     // Skill Slot UI 생성
     void InstantiateSkillSlotUI(RectTransform canvas)
     {
-        GameObject ui = Instantiate(skillSlotPanelPrefab, canvas);
-        ui.transform.SetSiblingIndex(0);
+        skillSlotUI = Instantiate(skillSlotPanelPrefab, canvas);
+        skillSlotUI.transform.SetSiblingIndex(0);
 
-        ui.SetActive(true);
+        playerStateUI.SetActive(true);
     }
 
     // Skill Select UI 생성
@@ -276,6 +278,27 @@ public class UIManager : MonoBehaviour
         skillSelectionUI = ui.GetComponent<SkillSelectionUI>();
 
         ui.SetActive(false);
+    }
+
+    /// <summary>
+    /// 플레이어HUD 업데이트해주기 (나올때만 나오기)
+    /// </summary>
+    /// <param name="sceneName"></param>
+    public void UpdateHUD(string sceneName)
+    {
+        bool showHUD =
+            sceneName == SceneNames.Town ||
+            sceneName == SceneNames.Dungeon;
+
+        if (playerStateUI != null)
+        {
+            playerStateUI.SetActive(showHUD);
+        }
+
+        if(skillSelectionUI != null)
+        {
+            skillSlotUI.SetActive(showHUD);
+        }
     }
 
     public Transform GetCanvas()
