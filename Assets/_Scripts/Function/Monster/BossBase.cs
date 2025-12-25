@@ -10,7 +10,7 @@ public abstract class BossBase : MonsterBase, BossStatus
     [Header("Stun")]
     [SerializeField] protected float currentStun = 0f;
     [SerializeField] protected float stunDuration = 5f;
-    [SerializeField] protected float stunGainPerHit = 1f; // 맞을 때마다 누적량
+    [SerializeField] protected float stunGainPerHit = 3f; // 맞을 때마다 누적량
 
     protected float maxStun = 100f;
     protected bool isAlive = true;
@@ -80,8 +80,8 @@ public abstract class BossBase : MonsterBase, BossStatus
         isStunned = true;
 
         currentStun = 0f;
-
         yield return new WaitForSeconds(stunDuration);
+        currentStun = Mathf.Clamp(currentStun, 0f, maxStun);
 
         isStunned = false;
     }

@@ -93,7 +93,6 @@ public class DashBoss : BossBase
 
     // Stun gage
     float currentStunGage = 0f;
-    bool isDashBossStunned = false;
 
     int playerLayer;
     
@@ -106,7 +105,7 @@ public class DashBoss : BossBase
 
     protected override void Idle()
     {
-        if (isDashBossStunned) return;
+        if (isStunned) return;
 
         agent.isStopped = true;
         if (player == null) return;
@@ -116,7 +115,7 @@ public class DashBoss : BossBase
 
     protected override void Move()
     {
-        if (isDashBossStunned) return;
+        if (isStunned) return;
         if (player == null || md == null) return;
 
         if (pstate != PatternState.None)
@@ -190,7 +189,7 @@ public class DashBoss : BossBase
 
     protected override void Attack()
     {
-        if (isDashBossStunned) return;
+        if (isStunned) return;
 
         switch (pstate)
         {
