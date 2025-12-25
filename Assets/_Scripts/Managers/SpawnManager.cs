@@ -186,10 +186,7 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     public void GoToTown()
     {
-        if (Player.Instance != null)
-        {
-            Player.Instance.ResetPlayer();
-        }
+        DungeonManager.Instance.ResetDungeonData();
 
         // SceneLoaderManager를 통해 마을 씬으로 이동
         SceneLoaderManager.Instance.LoadScene(SceneNames.Town);
