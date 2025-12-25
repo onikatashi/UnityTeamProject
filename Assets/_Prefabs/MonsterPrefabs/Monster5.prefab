@@ -189,7 +189,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c4cb68b3758bab64a90d921d7a7481f8, type: 2}
+  - {fileID: 2100000, guid: c1d75aa09e581e849b079959253daeb3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -272,8 +272,8 @@ MonoBehaviour:
   md: {fileID: 11400000, guid: 581f29e522fe48c4aa31dbe2c49bc5c3, type: 2}
   currentHp: 100
   detectRange: 10
-  dissolveProp: _SplitValue
-  dissolveDuration: 1
+  deathFxPrefab: {fileID: 9070474633162843459, guid: 356cf4dca1465b54fabbb8cd9b1cd190, type: 3}
+  deathFxLife: 2
   destroyDelay: 1
   bulletPrefab: {fileID: 9077996087677029699, guid: a5308720e74fabf459340cbd886a2b4e, type: 3}
   firepoint: {fileID: 201645302722970081}
@@ -287,7 +287,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   healRangePrefab: {fileID: 7986504087968017091, guid: 12a56ee4630040c4eb17ae9707ed4cef, type: 3}
-  healVisualYOffset: 0.05
+  healVisualYOffset: -1
 --- !u!114 &7839891058254878435
 MonoBehaviour:
   m_ObjectHideFlags: 0

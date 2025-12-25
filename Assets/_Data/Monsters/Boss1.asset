@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterRank: 2
   mId: 12
-  monsterName: 
-  maxHp: 500
+  monsterName: Final Boss
+  maxHp: 1000
   attackDamage: 5
   attackRange: 7
   attackSpeed: 2
@@ -26,4 +26,4 @@ MonoBehaviour:
   dropExp: 0
   shield: 0
   mosterPrefab: {fileID: 2499834092553138976, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
-  stunGage: 30
+  stunGauge: 0
