@@ -67,6 +67,8 @@ public class Portal : MonoBehaviour
         // 중복 실행 방지
         isTransitioning = true;
 
+        SoundManager.Instance.PlaySFX("moveToDungeonMap");
+
         // 마을에서 출발할 때 아이템 지급 로직 (기존 로직 유지)
         if (SceneLoaderManager.Instance.GetCurrentSceneName() == SceneNames.Town)
         {

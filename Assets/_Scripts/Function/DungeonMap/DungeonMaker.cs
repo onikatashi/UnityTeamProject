@@ -58,11 +58,13 @@ public class DungeonMaker : MonoBehaviour
     //연출 타이밍을 위한 
     private bool isNewDungeonCreated = false;
 
+    SoundManager soundManager;
 
     //---------------------------------------------------------------------------------------------
     //Start는 Scene이동 후 돌아올 때마다 실행됨.
     void Start() 
     {
+        soundManager = SoundManager.Instance;
         DungeonManager.Instance.EnterDungeon();
 
         //테마 Sprite Inspector로 설정.
@@ -460,6 +462,9 @@ public class DungeonMaker : MonoBehaviour
     //클리어한 노드 X표기하고 잠궈놓기.
     private void ApplyClearPrint_X(NodeButton node)
     {
+        // Map X 사인 소리
+        StartCoroutine(MapXSignSound());
+
         //노드 프리펩에 꺼놓은 X표시 스프라이트 켜기
         var clear = node.transform.Find("ClearMarkX");
         if (clear != null)
@@ -469,7 +474,14 @@ public class DungeonMaker : MonoBehaviour
         LockNode(node);
     }
 
-   
+    IEnumerator MapXSignSound()
+    {
+        soundManager.PlaySFX("mapXSign");
+
+        yield return new WaitForSeconds(soundManager.GetSoundData("mapXSign").clip.length);
+
+        soundManager.PlaySFX("mapXSign");
+    }
 
 
     //노드 생성부---------------------------------------------------------------------------------------------

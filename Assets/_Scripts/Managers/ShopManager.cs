@@ -61,6 +61,11 @@ public class ShopManager : MonoBehaviour
     // 상점 열기
     public void OpenShop()
     {
+        if (!shopPanel.activeSelf)
+        {
+            SoundManager.Instance.PlaySFX("shopEnter");
+        }
+
         shopPanel.SetActive(true);
 
         // 열릴 때 현재 골드값 즉시 반영
