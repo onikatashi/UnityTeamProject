@@ -218,8 +218,8 @@ MonoBehaviour:
   md: {fileID: 11400000, guid: 4ce72205deef66547a5f73f2edc39e16, type: 2}
   currentHp: 100
   detectRange: 10
-  dissolveProp: _SplitValue
-  dissolveDuration: 1
+  deathFxPrefab: {fileID: 9070474633162843459, guid: 356cf4dca1465b54fabbb8cd9b1cd190, type: 3}
+  deathFxLife: 2
   destroyDelay: 1
   bulletPrefab: {fileID: 0}
   firepoint: {fileID: 0}

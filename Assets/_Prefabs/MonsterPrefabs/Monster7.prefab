@@ -242,8 +242,8 @@ MonoBehaviour:
   md: {fileID: 11400000, guid: 581801041f0e38b4d9d199049febe519, type: 2}
   currentHp: 100
   detectRange: 10
-  dissolveProp: _SplitValue
-  dissolveDuration: 1
+  deathFxPrefab: {fileID: 9070474633162843459, guid: 356cf4dca1465b54fabbb8cd9b1cd190, type: 3}
+  deathFxLife: 2
   destroyDelay: 1
   bulletPrefab: {fileID: 9077996087677029699, guid: a5308720e74fabf459340cbd886a2b4e, type: 3}
   firepoint: {fileID: 500352311926993501}
@@ -258,7 +258,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   buffRangePrefab: {fileID: 4932088507883938021, guid: 0e5709a7ddb77924090c112cf73bb98a, type: 3}
-  buffVisualYOffset: 0.05
+  buffVisualYOffset: -1
 --- !u!114 &8225810706884506681
 MonoBehaviour:
   m_ObjectHideFlags: 0

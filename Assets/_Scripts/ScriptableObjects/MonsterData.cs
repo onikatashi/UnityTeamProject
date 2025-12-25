@@ -31,7 +31,7 @@ public class MonsterData : ScriptableObject
     public GameObject mosterPrefab;             // 몬스터 프리팹
 
     // 이건 보스한테만 필요
-    public float stunGage;                      // 몬스터 기절 게이지
+    public float stunGauge;                      // 몬스터 기절 게이지
 
 
 }

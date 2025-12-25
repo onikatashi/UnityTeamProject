@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,22 +15,16 @@ public abstract class MonsterBase : MonoBehaviour
     public float currentHp = 100f;
     public float detectRange = 10f;
 
-    [Header("Dissolve")]
-    public string dissolveProp = "_SplitValue";
-    public float dissolveDuration = 1f;
-    public float destroyDelay = 1f;
+    [Header("Death FX")]
+    public GameObject deathFxPrefab;
+    public float deathFxLife = 2f;
+    public float destroyDelay = 0.1f;
 
-    [Header("Materials")]
-    public Material normalMat; 
-    public Material dissolveMat;  
-
-    protected SpriteRenderer sr;
-    protected Material runtimeDissolveMat;     // 개체별 인스턴스
-    Coroutine dissolveCo;
-
+    [Header("Projectile")]
     public MonsterProjectile bulletPrefab;
     public Transform firepoint;
-    PoolManager poolManager;
+
+    protected PoolManager poolManager;
 
     public bool isDef = false;
     bool isDie;
@@ -42,19 +35,7 @@ public abstract class MonsterBase : MonoBehaviour
         anim = GetComponent<Animator>();
         state = Enums.MonsterState.Idle;
 
-        sr = GetComponentInChildren<SpriteRenderer>(true);
-        if (sr == null)
-        {
-            //Debug.LogError($"{name} : SpriteRenderer 를 찾을수 없음");
-        }
-        else
-        {
-            // 기본 머티리얼 적용
-            if (normalMat != null) sr.sharedMaterial = normalMat;
-
-            // 디졸브 머티리얼은 개체별 인스턴스 생성
-            if (dissolveMat != null) runtimeDissolveMat = new Material(dissolveMat);
-        }
+        if (md != null && md.maxHp > 0f) currentHp = md.maxHp;
 
         if (agent != null)
         {
@@ -68,7 +49,8 @@ public abstract class MonsterBase : MonoBehaviour
     protected virtual void Start()
     {
         poolManager = PoolManager.Instance;
-        if (bulletPrefab != null && firepoint != null)
+
+        if (bulletPrefab != null && firepoint != null && poolManager != null)
         {
             poolManager.CreatePool<MonsterProjectile>(Enums.PoolType.MonsterProjectile, bulletPrefab, 20, null);
         }
@@ -98,12 +80,15 @@ public abstract class MonsterBase : MonoBehaviour
 
     public virtual void TakeDamage(float dmg)
     {
+        if (state == Enums.MonsterState.Die) return;
+
         BuffReceiver buff = GetComponent<BuffReceiver>();
         if (buff != null) dmg *= buff.DamageTakenMultiplier;
 
         currentHp -= dmg;
-        if (currentHp <= 0 && state != Enums.MonsterState.Die)
+        if (currentHp <= 0f)
         {
+            currentHp = 0f;
             state = Enums.MonsterState.Die;
             Die();
         }
@@ -111,12 +96,14 @@ public abstract class MonsterBase : MonoBehaviour
 
     public virtual MonsterProjectile GetMonsterProjectile()
     {
-        return poolManager.Get<MonsterProjectile>(Enums.PoolType.MonsterProjectile);
+        if (poolManager == null) poolManager = PoolManager.Instance;
+        return poolManager != null ? poolManager.Get<MonsterProjectile>(Enums.PoolType.MonsterProjectile) : null;
     }
 
     public virtual void ReturnMonsterProjectile(MonsterProjectile mp)
     {
-        poolManager.Return(Enums.PoolType.MonsterProjectile, mp);
+        if (poolManager == null) poolManager = PoolManager.Instance;
+        if (poolManager != null) poolManager.Return(Enums.PoolType.MonsterProjectile, mp);
     }
 
     protected virtual void OnEnable()
@@ -129,9 +116,8 @@ public abstract class MonsterBase : MonoBehaviour
             agent.isStopped = false;
         }
 
-        //풀에서 재사용될 때 기본 머티리얼로 복구
-        UseNormalMat();
-        SetDissolveValue(1f);
+        if (md != null && md.maxHp > 0f) currentHp = md.maxHp;
+        if (state == Enums.MonsterState.Die) state = Enums.MonsterState.Idle;
     }
 
     void SetDie()
@@ -141,79 +127,31 @@ public abstract class MonsterBase : MonoBehaviour
 
         if (agent != null) agent.enabled = false;
 
-        // 플레이어에게 경험치 + 골드 주기
         GiveExpToPlayer();
         GiveGoldToPlayer();
 
-        Debug.Log($"플레이어에게 경험치 주기 성공{md.dropExp}");
-
-        //죽을 때만 디졸브 머티리얼 적용 + 디졸브 실행
-        if (dissolveCo != null) StopCoroutine(dissolveCo);
-        dissolveCo = StartCoroutine(CoDieDissolveAndDestroy());
-    }
-
-    IEnumerator CoDieDissolveAndDestroy()
-    {
-        UseDissolveMat();
-
-        yield return CoDissolve(1f, 0f, dissolveDuration);
+        if (deathFxPrefab != null)
+        {
+            GameObject fx = Instantiate(deathFxPrefab, transform.position, Quaternion.identity);
+            Destroy(fx, deathFxLife);
+        }
 
         Destroy(gameObject, destroyDelay);
     }
 
-    IEnumerator CoDissolve(float start, float end, float duration)
-    {
-        SetDissolveValue(start);
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            float v = Mathf.Lerp(start, end, t);
-            SetDissolveValue(v);
-            yield return null;
-        }
-
-        SetDissolveValue(end);
-    }
-
-    // 디졸브 값 세팅 (runtimeDissolveMat에만)
-    void SetDissolveValue(float v)
-    {
-        if (runtimeDissolveMat == null) return;
-        runtimeDissolveMat.SetFloat(dissolveProp, v);
-    }
-
-    //머티리얼 전환
-    protected void UseDissolveMat()
-    {
-        if (sr == null || runtimeDissolveMat == null) return;
-        sr.material = runtimeDissolveMat; // 인스턴스 머티리얼 적용
-    }
-
-    protected void UseNormalMat()
-    {
-        if (sr == null || normalMat == null) return;
-        sr.sharedMaterial = normalMat;
-    }
-
     protected virtual void GiveExpToPlayer()
     {
-        if (Player.Instance == null) return;
+        if (Player.Instance == null || md == null) return;
 
         PlayerExperience exp = Player.Instance.GetComponent<PlayerExperience>();
-        if (exp == null) return;
-
-        exp.ReceiveRawExp(md.dropExp);
+        if (exp != null) exp.ReceiveRawExp(md.dropExp);
     }
 
     protected virtual void GiveGoldToPlayer()
     {
-        if (Player.Instance == null) return;
+        if (Player.Instance == null || md == null) return;
 
         PlayerGold gold = Player.Instance.GetComponent<PlayerGold>();
-
-        gold.ReceiveRawGold(md.dropGold);
+        if (gold != null) gold.ReceiveRawGold(md.dropGold);
     }
 }
