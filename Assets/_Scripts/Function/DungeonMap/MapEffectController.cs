@@ -247,7 +247,6 @@ public class MapEffectController : MonoBehaviour
 
     IEnumerator PlayerWalkSound()
     {
-        Debug.LogWarning("playerWalk");
         SoundManager.Instance.PlaySFX("playerWalk");
 
         yield return new WaitForSeconds(SoundManager.Instance.GetSoundData("playerWalk").clip.length);
@@ -260,7 +259,6 @@ public class MapEffectController : MonoBehaviour
     {
         isBackgroundScrolling = false;
 
-        Debug.LogWarning("mapClose");
         // 맵 내려가는 소리
         SoundManager.Instance.PlaySFX("mapClose");
 
@@ -295,7 +293,6 @@ public class MapEffectController : MonoBehaviour
     }
     public IEnumerator PlayMapUp()
     {
-        Debug.LogWarning("mapOpen");
         // 맵 올라오는 소리
         SoundManager.Instance.PlaySFX("mapOpen");
 

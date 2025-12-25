@@ -406,11 +406,16 @@ public class SpawnManager : MonoBehaviour
                 if(DungeonManager.Instance.currentRoomType == RoomType.Boss)
                 {
                     SoundManager.Instance.StopBGM();
-                    SoundManager.Instance.PlayBGM("victory");
+                    SoundManager.Instance.PlayBGM("bossVictory");
+                }
+                else
+                {
+                    SoundManager.Instance.StopBGM();
+                    SoundManager.Instance.PlayBGM("battleVictory");
                 }
 
-                // 클리어 텍스트 애니메이션 실행
-                StartCoroutine(PlayTextAnim("클리어"));
+                    // 클리어 텍스트 애니메이션 실행
+                    StartCoroutine(PlayTextAnim("클리어"));
 
                 OnAllEnemiesCleared?.Invoke(); // 방 클리어 이벤트 발생
                 HandleRoomCleared(); // 리워드 생성/포탈 활성화 로직 호출
