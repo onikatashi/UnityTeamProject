@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
   m_Name: Shield1
   m_EditorClassIdentifier: 
-  iId: 26
+  iId: 25
   iIcon: {fileID: 21300000, guid: 8122552812d83d84395bc814bbbf2b1e, type: 3}
   iName: "\uB098\uBB34 \uBC29\uD328"
   iStatDescription: 

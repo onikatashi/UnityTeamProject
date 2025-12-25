@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
   m_Name: SilverBar
   m_EditorClassIdentifier: 
-  iId: 0
+  iId: 29
   iIcon: {fileID: 21300000, guid: 966211303761bd44eaea68aba4bbc52b, type: 3}
   iName: "\uC740\uAD34"
   iStatDescription: 

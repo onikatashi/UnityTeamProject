@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
-  m_Name: Sword1
+  m_Name: Bow2
   m_EditorClassIdentifier: 
-  iId: 9
-  iIcon: {fileID: 21300000, guid: 27f00d73dadfcb04391c136038931d6a, type: 3}
-  iName: "\uAC801"
-  iStatDescription: "\uACF5\uACA9\uB825 + 10"
-  iDescription: "\uD754\uD55C \uAC80"
-  iRank: 0
-  iSynergy: 01000000
+  iId: 33
+  iIcon: {fileID: 21300000, guid: 3bf630ae8a32fee4bb54dec1c70d8090, type: 3}
+  iName: "\uC5B4\uB460 \uD65C"
+  iStatDescription: 
+  iDescription: "\uAE4C\uB9E4\uC11C \uADF8\uB7F4\uAC70 \uAC19\uC544"
+  iRank: 1
+  iSynergy: 04000000
   iEffect: 0
-  iPrice: 200
+  iPrice: 400
   iBaseStat:
     maxHp: 0
     maxMp: 0
@@ -28,9 +28,9 @@ MonoBehaviour:
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0
-    attackDamage: 10
-    attackRange: 0
-    attackSpeed: 0
+    attackDamage: 5
+    attackRange: 2
+    attackSpeed: 0.2
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0
@@ -50,9 +50,9 @@ MonoBehaviour:
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0
-    attackDamage: 2
-    attackRange: 0
-    attackSpeed: 0
+    attackDamage: 0
+    attackRange: 0.1
+    attackSpeed: 0.07
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0

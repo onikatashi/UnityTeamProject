@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
   m_Name: Clock
   m_EditorClassIdentifier: 
-  iId: 28
+  iId: 27
   iIcon: {fileID: 21300000, guid: 741412fbc634eed489ad708c2f946565, type: 3}
   iName: "\uC2DC\uACC4"
   iStatDescription: 
   iDescription: "\uC2DC\uAC04\uC740 \uAE08\uC774\uB2E4"
   iRank: 3
-  iSynergy: 0500000003000000
+  iSynergy: 0300000005000000
   iEffect: 0
   iPrice: 1600
   iBaseStat:
