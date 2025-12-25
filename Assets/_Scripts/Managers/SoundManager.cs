@@ -233,4 +233,9 @@ public class SoundManager : MonoBehaviour
     {
         return bgmSource.clip.name;
     }
+
+    public SoundData GetSoundData(string name)
+    {
+        return soundDictionary[name];
+    }
 }

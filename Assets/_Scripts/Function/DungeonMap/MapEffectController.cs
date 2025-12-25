@@ -30,7 +30,6 @@ public class MapEffectController : MonoBehaviour
 
     private Vector2 mapBasePos = new Vector2(250f, 0f);
 
-
     // ★ 추가: 전환 전/후 테마 캐시 (연출용)
     private bool hasStageTransition = false;
     private Enums.DungeonTheme fromTheme;
@@ -220,6 +219,8 @@ public class MapEffectController : MonoBehaviour
         float speed = 4500f;                 // 체감 속도
         float outX = charRt.anchoredPosition.x + 1600f;
 
+        Coroutine walSoundCoroutine = null;
+
         while (true)
         {
             charRt.anchoredPosition =
@@ -228,6 +229,11 @@ public class MapEffectController : MonoBehaviour
                     new Vector2(outX, charRt.anchoredPosition.y),
                     speed * Time.deltaTime
                 );
+            
+            if( walSoundCoroutine == null)
+            {
+                walSoundCoroutine = StartCoroutine(PlayerWalkSound());
+            }
 
             // ❗ 도착 프레임에서는 yield 안 함
             if (charRt.anchoredPosition.x >= outX)
@@ -239,12 +245,24 @@ public class MapEffectController : MonoBehaviour
         // 여기서 바로 종료 (같은 프레임)
     }
 
+    IEnumerator PlayerWalkSound()
+    {
+        Debug.LogWarning("playerWalk");
+        SoundManager.Instance.PlaySFX("playerWalk");
+
+        yield return new WaitForSeconds(SoundManager.Instance.GetSoundData("playerWalk").clip.length);
+    }
+
     //────────────────────────────────────
     // Map Move
     //────────────────────────────────────
     public IEnumerator PlayMapDown()
     {
         isBackgroundScrolling = false;
+
+        Debug.LogWarning("mapClose");
+        // 맵 내려가는 소리
+        SoundManager.Instance.PlaySFX("mapClose");
 
         Vector2 start = new Vector2(250f, 0f);
         Vector2 end = mapBasePos + Vector2.down * mapMoveDistance;
@@ -277,6 +295,10 @@ public class MapEffectController : MonoBehaviour
     }
     public IEnumerator PlayMapUp()
     {
+        Debug.LogWarning("mapOpen");
+        // 맵 올라오는 소리
+        SoundManager.Instance.PlaySFX("mapOpen");
+
         Vector2 start = new Vector2(250f, -2000f);
         Vector2 end = mapBasePos;
 
