@@ -24,7 +24,7 @@ MonoBehaviour:
   iBaseStat:
     maxHp: 0
     maxMp: 30
-    mpRegen: 30
+    mpRegen: 0.3
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0

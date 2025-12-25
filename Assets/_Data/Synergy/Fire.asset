@@ -42,6 +42,29 @@ MonoBehaviour:
       cooldownReduction: 0
       reviveCount: 0
       startItemCount: 0
+  - requiredLines: 2
+    bonusStats:
+      maxHp: 0
+      maxMp: 0
+      mpRegen: 0
+      maxDashCount: 0
+      dashRegen: 0
+      dashDistance: 0
+      attackDamage: 4
+      attackRange: 0
+      attackSpeed: 0
+      projectileCount: 0
+      projectileSpeed: 0
+      moveSpeed: 0
+      criticalRate: 0
+      criticalDamage: 0
+      shield: 0
+      bonusExpRate: 0
+      bonusGoldRate: 0
+      luck: 0
+      cooldownReduction: 0
+      reviveCount: 0
+      startItemCount: 0
   - requiredLines: 3
     bonusStats:
       maxHp: 0
@@ -143,29 +166,6 @@ MonoBehaviour:
       dashRegen: 0
       dashDistance: 0
       attackDamage: 30
-      attackRange: 0
-      attackSpeed: 0
-      projectileCount: 0
-      projectileSpeed: 0
-      moveSpeed: 0
-      criticalRate: 0
-      criticalDamage: 0
-      shield: 0
-      bonusExpRate: 0
-      bonusGoldRate: 0
-      luck: 0
-      cooldownReduction: 0
-      reviveCount: 0
-      startItemCount: 0
-  - requiredLines: 8
-    bonusStats:
-      maxHp: 0
-      maxMp: 0
-      mpRegen: 0
-      maxDashCount: 0
-      dashRegen: 0
-      dashDistance: 0
-      attackDamage: 4
       attackRange: 0
       attackSpeed: 0
       projectileCount: 0
