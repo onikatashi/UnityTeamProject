@@ -55,6 +55,7 @@ public class RewardItemUIController : MonoBehaviour
         {
             if (!inventoryManager.CheckInventoryIsFull() && !inventoryManager.CheckDuplicateItems(randItem.iId))
             {
+                SoundManager.Instance.PlaySFX("itemPickUp");
                 inventoryManager.AddItemToInventory(randItem);
                 spawnManager.DestroyAllRewards();
             }
