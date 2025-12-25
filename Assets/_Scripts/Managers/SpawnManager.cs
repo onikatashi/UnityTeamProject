@@ -5,6 +5,7 @@ using System.Linq; // LINQ 사용을 위해 추가
 using TMPro; // TextMeshPro 사용을 위해 추가
 using static Enums; // RoomType Enum 접근을 위해 필요
 using Random = UnityEngine.Random; // UnityEngine.Random 명시
+using UnityEngine.UI; // 버튼 UI 제어를 위해 추가
 
 public class SpawnManager : MonoBehaviour
 {
@@ -39,6 +40,13 @@ public class SpawnManager : MonoBehaviour
     [Header("UI 설정")]
     [Tooltip("카운트다운 및 페이즈 알림을 표시할 TextMeshProUGUI")]
     public TextMeshProUGUI infoText;
+
+    [Header("Game Over UI")]
+    [Tooltip("플레이어 사망 시 활성화될 부모 오브젝트 (마을로 버튼 포함)")]
+    public GameObject gameOverGroup;
+    [Tooltip("마을로 이동하는 기능을 가진 버튼")]
+    public Button backToTownButton;
+
 
     [Header("전역 설정")]
     [Tooltip("모든 몬스터 생성 시 공통으로 사용할 텔레포트/소환 이펙트 프리팹")]
@@ -81,6 +89,7 @@ public class SpawnManager : MonoBehaviour
     List<GameObject> aliveEnemies = new List<GameObject>();
     bool spawningFinished = false;
     bool isPhaseActive = false;
+    bool isPlayerDead = false; // 사망 중복 처리 방지
 
     public List<RewardItemUIController> rewards = new List<RewardItemUIController>();
 
@@ -106,10 +115,29 @@ public class SpawnManager : MonoBehaviour
         {
             infoText.alpha = 0f;
         }
+
+        // 게임 오버 UI 초기 비활성화
+        if (gameOverGroup != null)
+        {
+            gameOverGroup.SetActive(false);
+        }
+
+        // 마을 이동 버튼 리스너 등록
+        if (backToTownButton != null)
+        {
+            backToTownButton.onClick.AddListener(GoToTown);
+        }
     }
 
     void Start()
+
     {
+        // 플레이어 HP 변화 이벤트 구독하여 사망 감지
+        if (Player.Instance != null)
+        {
+            Player.Instance.OnHpChanged += OnCheckPlayerDeath;
+        }
+
         // DungeonManager의 인스턴스를 찾아옵니다.
         DungeonManager dungeonManager = DungeonManager.Instance;
 
@@ -127,6 +155,44 @@ public class SpawnManager : MonoBehaviour
 
         // 코루틴 시작
         StartCoroutine(StartSpawningFlow(currentRoomType));
+    }
+
+    /// <summary>
+    /// 플레이어 HP 변화를 감시하여 0 이하일 때 사망 처리를 수행합니다.
+    /// </summary>
+    private void OnCheckPlayerDeath(float currentHp, float maxHp)
+    {
+        if (currentHp <= 0 && !isPlayerDead)
+        {
+            isPlayerDead = true;
+            HandlePlayerDeath();
+        }
+    }
+
+    private void HandlePlayerDeath()
+    {
+        // "사망했습니다." 애니메이션 출력
+        StartCoroutine(PlayTextAnim("사망했습니다."));
+
+        // 마을로 버튼이 포함된 UI 그룹 활성화
+        if (gameOverGroup != null)
+        {
+            gameOverGroup.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// 마을로 버튼 클릭 시 호출되는 함수입니다.
+    /// </summary>
+    public void GoToTown()
+    {
+        if (Player.Instance != null)
+        {
+            Player.Instance.ResetPlayer();
+        }
+
+        // SceneLoaderManager를 통해 마을 씬으로 이동
+        SceneLoaderManager.Instance.LoadScene(SceneNames.Town);
     }
 
     IEnumerator StartSpawningFlow(RoomType roomType)
