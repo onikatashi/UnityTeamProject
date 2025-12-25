@@ -18,7 +18,7 @@ MonoBehaviour:
   iStatDescription: 
   iDescription: "\u3141\u3132\u3147"
   iRank: 3
-  iSynergy: 0400000000000000
+  iSynergy: 04000000
   iEffect: 0
   iPrice: 1600
   iBaseStat:

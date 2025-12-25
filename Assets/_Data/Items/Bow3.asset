@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c915bcedf3985ca4f8bda30f7aafac00, type: 3}
-  m_Name: Bow
+  m_Name: Bow3
   m_EditorClassIdentifier: 
-  iId: 0
-  iIcon: {fileID: 21300000, guid: 64e736188770b964680f7847aebd0b7a, type: 3}
-  iName: "\uD65C"
+  iId: 34
+  iIcon: {fileID: 21300000, guid: 91d198ba1476ef6488454a6fffc94744, type: 3}
+  iName: "\uC5BC\uC74C \uD65C"
   iStatDescription: 
-  iDescription: "\uD65C\uC740 \uC548\uC368\uB3C4 \uD6A8\uACFC\uB294 \uBC1B\uB294\uB2E4"
+  iDescription: "\uCC28\uAC11\uB514 \uCC28\uAC11\uB2E4"
   iRank: 2
-  iSynergy: 
+  iSynergy: 02000000
   iEffect: 0
   iPrice: 800
   iBaseStat:
@@ -28,9 +28,9 @@ MonoBehaviour:
     maxDashCount: 0
     dashRegen: 0
     dashDistance: 0
-    attackDamage: 30
+    attackDamage: 15
     attackRange: 3
-    attackSpeed: 0.1
+    attackSpeed: 0.3
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0
@@ -51,8 +51,8 @@ MonoBehaviour:
     dashRegen: 0
     dashDistance: 0
     attackDamage: 5
-    attackRange: 0
-    attackSpeed: 0.05
+    attackRange: 0.2
+    attackSpeed: 0.1
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0

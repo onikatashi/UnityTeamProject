@@ -18,7 +18,7 @@ MonoBehaviour:
   iStatDescription: 
   iDescription: "4\uC778"
   iRank: 3
-  iSynergy: 050000000100000003000000
+  iSynergy: 010000000300000005000000
   iEffect: 0
   iPrice: 1600
   iBaseStat:

@@ -34,7 +34,7 @@ MonoBehaviour:
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0
-    criticalRate: 3
+    criticalRate: 0.05
     criticalDamage: 0
     shield: 0
     bonusExpRate: 0
@@ -56,7 +56,7 @@ MonoBehaviour:
     projectileCount: 0
     projectileSpeed: 0
     moveSpeed: 0
-    criticalRate: 0.5
+    criticalRate: 0.01
     criticalDamage: 0
     shield: 0
     bonusExpRate: 0
