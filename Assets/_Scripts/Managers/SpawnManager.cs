@@ -340,6 +340,12 @@ public class SpawnManager : MonoBehaviour
             {
                 Debug.Log("모든 적 제거 → 던전 클리어");
 
+                if(DungeonManager.Instance.currentRoomType == RoomType.Boss)
+                {
+                    SoundManager.Instance.StopBGM();
+                    SoundManager.Instance.PlayBGM("victory");
+                }
+
                 // 클리어 텍스트 애니메이션 실행
                 StartCoroutine(PlayTextAnim("클리어"));
 
