@@ -145,12 +145,18 @@ public class DungeonMaker : MonoBehaviour
         if (isNewDungeonCreated)
         {
             HideAllMapElements();
-            StartCoroutine(RevealMapByFloor());
+            MapEffectController.Instance.MapUpEffect();
         }
 
     }
 
-    //연출을 위한 코드
+      //연출을 위한 코드
+    public void StartRevealMap()
+    {
+        StartCoroutine(RevealMapByFloor());
+    }
+
+  
     private void HideAllMapElements()
     {
         for (int f = 0; f < maxFloor; f++)

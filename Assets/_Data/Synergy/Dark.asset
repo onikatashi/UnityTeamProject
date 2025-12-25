@@ -17,4 +17,50 @@ MonoBehaviour:
   synergyName: "\uC5B4\uB460"
   synergyDescription: "\uC5B4\uB461\uB2E4\uB9AC \uC5B4\uB450\uC6CC"
   maxLevel: 4
-  levels: []
+  levels:
+  - requiredLines: 2
+    bonusStats:
+      maxHp: 0
+      maxMp: 0
+      mpRegen: 0
+      maxDashCount: 0
+      dashRegen: 0
+      dashDistance: 0
+      attackDamage: 0
+      attackRange: 0
+      attackSpeed: 0.5
+      projectileCount: 0
+      projectileSpeed: 0
+      moveSpeed: 0
+      criticalRate: 0
+      criticalDamage: 0
+      shield: 0
+      bonusExpRate: 0
+      bonusGoldRate: 0
+      luck: 0
+      cooldownReduction: 0
+      reviveCount: 0
+      startItemCount: 0
+  - requiredLines: 4
+    bonusStats:
+      maxHp: 0
+      maxMp: 0
+      mpRegen: 0
+      maxDashCount: 0
+      dashRegen: 0
+      dashDistance: 0
+      attackDamage: 0
+      attackRange: 0
+      attackSpeed: 1.5
+      projectileCount: 0
+      projectileSpeed: 0
+      moveSpeed: 0
+      criticalRate: 0
+      criticalDamage: 0
+      shield: 0
+      bonusExpRate: 0
+      bonusGoldRate: 0
+      luck: 0
+      cooldownReduction: 0
+      reviveCount: 0
+      startItemCount: 0

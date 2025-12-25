@@ -37,8 +37,8 @@ MonoBehaviour:
     criticalRate: 0
     criticalDamage: 0
     shield: 0
-    bonusExpRate: 0
-    bonusGoldRate: 0.15
+    bonusExpRate: 0.1
+    bonusGoldRate: 0.1
     luck: 0
     cooldownReduction: 0
     reviveCount: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
     criticalRate: 0
     criticalDamage: 0
     shield: 0
-    bonusExpRate: 0
+    bonusExpRate: 0.05
     bonusGoldRate: 0.05
     luck: 0
     cooldownReduction: 0
