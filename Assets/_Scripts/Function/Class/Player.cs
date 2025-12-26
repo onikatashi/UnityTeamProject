@@ -17,11 +17,11 @@ public class Player : MonoBehaviour
 
     public PlayerLevelSystem levelSystem;
     public PlayerGoldSystem goldSystem;
-    
     public PlayerSkillController skillController;
 
     //스킬에 player로 들고올수 있게 캐싱
     PlayerMove move;
+    PlayerAttack pa;
 
     //직업 데이터 넣는곳, 처음은 Warrior고정, 직업 변경시 바꿔줘야함.
     public ClassData classStat;
@@ -35,7 +35,6 @@ public class Player : MonoBehaviour
 
     public Stats finalStats;                                            //최종 스탯
 
-    PlayerAttack pa;
     bool isStunned = false;
     public bool IsStunned => isStunned;
     bool isInputReversed = false;
@@ -59,6 +58,13 @@ public class Player : MonoBehaviour
     //Hp,Mp,Exp 바 연동용 이벤트 추가
     public System.Action<float, float> OnHpChanged;     //current, max
     public System.Action<float, float> OnMpChanged;
+
+    //죽을때
+    public float deathRotateAngle = -90f;
+    public float deathShakeAngle = 10f;
+    public float deathAnimDuration = 2f;
+
+    public bool isDead = false;
 
     /*피격, 대쉬시 무적 판정용 / 
      * AddInvincible, RemoveInvincible 사용
@@ -117,16 +123,9 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (isDead) return;
         LookAtPCam();
     }
-
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    //public void GetLevelSystem()
-    //{
-
-    //}
 
     public Stats GetBaseStat()
     {
@@ -193,11 +192,6 @@ public class Player : MonoBehaviour
 
         OnHpChanged?.Invoke(currentHp, finalStats.maxHp);
 
-        // 애니메이션 넣을거면 넣고, 피격효과 넣을거면 여기 넣어줘야함.
-        if (currentHp <= 0)
-        {
-            Die(); // 사망 처리 함수 (구현 필요)
-        }
         //피격시 무적 적용
         StartCoroutine(CoHitInvincible());
     }
@@ -226,11 +220,62 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 플레이어 죽을 시 실행될 함수
     /// </summary>
-    private void Die()
+    public void Die()
     {
         // 플레이어 사망 처리 (게임 오버, 재시작 등)
         Debug.Log("Player has died.");
+
+
+        if(isDead) return;
+        isDead = true;
+
+        //이동, 공격 막기
+        move.canMove = false;
+        pa.canAtt = false;
+
+        //애니메이션 상태 고정
+        animCtrl.ChangeState(Enums.PlayerAnimState.Idle);
+
         // Time.timeScale = 0;
+        StartCoroutine(CoDie());
+    }
+
+    IEnumerator CoDie()
+    {
+        Transform sprite = pSprite;
+        Vector3 originalScale = sprite.localScale;
+
+        float elapsed = 0f;
+
+        // 앞 뒤 흔들고
+        while (elapsed < deathAnimDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            float t = elapsed / deathAnimDuration;
+            float shake = Mathf.Sin(t * Mathf.PI * 4f) * deathShakeAngle;
+
+            sprite.localRotation = Quaternion.Euler(shake, 0f, 0f);
+            yield return null;
+        }
+
+        float fallTime = 0.4f;
+        elapsed = 0f;
+
+        // 쓰러지기
+        while (elapsed < fallTime)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = elapsed / fallTime;
+
+            float z = Mathf.Lerp(0f, -deathRotateAngle, t);
+            sprite.localRotation = Quaternion.Euler(z, 0f, 0f);
+
+            yield return null;
+        }
+
+        //정지
+        Time.timeScale = 0f;
     }
 
     /// <summary>
@@ -326,6 +371,14 @@ public class Player : MonoBehaviour
         //보유스킬, 스킬레벨, 스킬슬롯 초기화
         skillController.ResetAllSkills();
 
+        //이동/ 공격 허용
+        move.canMove = true;
+        pa.canAtt = true;
+
+        //회전 / 스케일 초기화
+        pSprite.localRotation = Quaternion.identity;
+        pSprite.localScale = Vector3.one * 4f;
+
         //골드 초기화
         goldSystem.ResetGold();
 
@@ -335,6 +388,9 @@ public class Player : MonoBehaviour
 
         // 플레이어 스탯창 업데이트
         UIManager.Instance.playerStatUIController.UpdatePlayerStatUI();
+
+        // 게임 시간 다시 흐르기
+        Time.timeScale = 1f;
     }
 
     public void AddInvincible(Enums.InvincibleReason reason)

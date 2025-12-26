@@ -171,6 +171,9 @@ public class SpawnManager : MonoBehaviour
 
     private void HandlePlayerDeath()
     {
+
+        Player.Instance.Die();
+
         // "사망했습니다." 애니메이션 출력
         StartCoroutine(PlayTextAnim("사망했습니다."));
 

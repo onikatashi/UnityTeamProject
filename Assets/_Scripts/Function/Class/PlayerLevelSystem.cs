@@ -104,6 +104,7 @@ public class PlayerLevelSystem : MonoBehaviour
     /// <param name="amount"></param>
     public void AddExp(float amount)
     {
+        if (Player.Instance.isDead) return;
         currentExp += amount;
         OnExpChanged?.Invoke(currentExp, GetRequiredExp(currentLevel));
 
