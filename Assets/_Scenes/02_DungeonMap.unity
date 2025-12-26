@@ -1077,7 +1077,7 @@ MonoBehaviour:
   restSprite: {fileID: 21300000, guid: ac2dd8407de605a4292d1d9518ab8c99, type: 3}
   forgeSprite: {fileID: 21300000, guid: 2bad8d8a766c2894faf6097f008ea017, type: 3}
   bossSprite: {fileID: 21300000, guid: a8af1ce53c4c7524a86273d7adbdf178, type: 3}
-  desertThemeSprite: {fileID: 21300000, guid: efbcc82d17316054b841e4ea7e27b9ae, type: 3}
+  desertThemeSprite: {fileID: 21300000, guid: 1dc2ad2266bca63418b4b81630434b48, type: 3}
   grassThemeSprite: {fileID: 21300000, guid: 909eb9f237e98874b8e7afc0b3dac457, type: 3}
   lavaThemeSprite: {fileID: 21300000, guid: 4f3bd0a67e6220f46b815af5a001f154, type: 3}
   snowThemeSprite: {fileID: 21300000, guid: 0b39456de6f19aa4ebedb8d5cc9a8d44, type: 3}
