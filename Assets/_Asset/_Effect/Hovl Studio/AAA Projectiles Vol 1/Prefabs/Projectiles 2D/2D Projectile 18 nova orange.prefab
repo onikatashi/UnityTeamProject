@@ -19823,7 +19823,7 @@ MonoBehaviour:
   speed: 10
   destroyDistance: 20
   owner: {fileID: 0}
-  fx: {fileID: 0}
+  fx: {fileID: 198257708438332096}
 --- !u!1 &1548625300088820
 GameObject:
   m_ObjectHideFlags: 0

@@ -254,6 +254,7 @@ public class DungeonManager : MonoBehaviour
         currentDungeonData = null;
         //타운 쪽으로 들어올 때 타입 초기화.
         SetCurrentRoomType(Enums.RoomType.None);
+        SetRandomTheme();
 
         InventoryManager.Instance.ClearInventory();
         Player.Instance.ResetPlayer();

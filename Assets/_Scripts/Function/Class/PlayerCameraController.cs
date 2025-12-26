@@ -34,6 +34,7 @@ public class PlayerCameraController : MonoBehaviour
 
     private void Update()
     {
+        if (Player.Instance.isDead) return;
         RightClickRotation();
         Zoom();
     }
