@@ -3334,6 +3334,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: _cursor
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 305
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c7a597b06b430340b72f5db9b15722d
+      internalID: -592408547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -3450,6 +3472,7 @@ TextureImporter:
       UI_64: -523748426
       UI_65: -1064198273
       UI_66: 442576219
+      UI_67: -1038882433
       UI_68: 1662215755
       UI_69: -1028117383
       UI_7: -1077379846
@@ -3487,6 +3510,7 @@ TextureImporter:
       _circleSlot: -1646259740
       _circleThinSlot: -1792623966
       _coin: 1816133261
+      _cursor: -592408547
       _greenBar: -2115483399
       _hpBar: -1469757917
       _mpBar: 763020140
