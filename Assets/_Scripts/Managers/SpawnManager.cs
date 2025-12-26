@@ -171,8 +171,14 @@ public class SpawnManager : MonoBehaviour
 
     private void HandlePlayerDeath()
     {
+        StartCoroutine(CoPlayerDie());
+    }
 
+    IEnumerator CoPlayerDie()
+    {   
         Player.Instance.Die();
+        yield return new WaitForSecondsRealtime(2f);
+        Time.timeScale = 0f;
 
         // "사망했습니다." 애니메이션 출력
         StartCoroutine(PlayTextAnim("사망했습니다."));
@@ -182,6 +188,7 @@ public class SpawnManager : MonoBehaviour
         {
             gameOverGroup.SetActive(true);
         }
+
     }
 
     /// <summary>
