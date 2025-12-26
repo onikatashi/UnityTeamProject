@@ -24,7 +24,7 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     //이미지 스프라이트와 하이라이트 UI연동
     private Image icon;
     private GameObject highlight;
-    
+
     //--------------------------------------------------------------------------------
 
     // DungeonMaker에서 연결하기 위한 그래프 구조
@@ -32,6 +32,10 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public List<NodeButton> prevNodes = new List<NodeButton>();   // 위층(이전층) 노드들
 
     //--------------------------------------------------------------------------------
+
+    //이중클릭 방지.
+    private bool isClicked = false;
+
 
     void Awake()
     {
@@ -99,7 +103,7 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
 
         if (!isAvailable) return;
-        if (!isGoingNextNode) return;   
+        if (!isGoingNextNode) return;
 
         if (highlight != null)
             highlight.SetActive(true);
@@ -118,6 +122,10 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!isAvailable || !isGoingNextNode) return;
+        //중복 클릭 방지.(클리어 후 다시 돌아올 때 씬에서 false로 복구됨)
+        if (isClicked) return;
+        isClicked = true;
+
 
         DungeonManager.Instance.SetCurrentNode(floor, col);
         DungeonManager.Instance.SetCurrentRoomType(CurrentRoomType);
@@ -125,7 +133,7 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         //씬 전환 할거면 무조건 이 아래 해야함.//실제 사용 코드
         //if (CurrentRoomType == RoomType.Normal || CurrentRoomType == RoomType.Elite || CurrentRoomType == RoomType.Boss)
         //{
-            
+
         //    SceneLoaderManager.Instance.LoadScene(SceneNames.Dungeon);
 
         //   //SceneManager.LoadScene("MapDateCheckScene");//테스트용 코드
