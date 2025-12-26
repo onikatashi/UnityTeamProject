@@ -390,7 +390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b2886614c85a8249be8366991558a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonText: {fileID: 0}
+  buttonText: {fileID: 1803568430}
   scaleMultiplier: 1.3
   duration: 0.3
 --- !u!1 &221402723
