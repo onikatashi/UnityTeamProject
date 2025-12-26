@@ -273,9 +273,6 @@ public class Player : MonoBehaviour
 
             yield return null;
         }
-
-        //정지
-        Time.timeScale = 0f;
     }
 
     /// <summary>
