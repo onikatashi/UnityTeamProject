@@ -157,14 +157,11 @@ public class DungeonManager : MonoBehaviour
 
     public void EnterNextStage()
     {
-
-
         //다음 테마 확정 (SetNextTheme가 nextTheme만 뽑는 구조라면 필수)
         currentTheme = nextTheme;
 
         //  새 맵 생성 유도
         currentDungeonData = null;
-
         isStageTransitionPending = false;
     }
 
@@ -208,8 +205,6 @@ public class DungeonManager : MonoBehaviour
     {
         currentPlayerPlace = Enums.currentPlayerPlace.dungeonIn;
         Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonIn");
-
-
     }
     //(외부 참조용) 던전 외부
     public void ExitDungeon()
@@ -261,8 +256,6 @@ public class DungeonManager : MonoBehaviour
         //마무리 시 유저 경험치 적용 및 카운팅 최소화.
         UserDataManager.Instance.AddUserExp(userEXPClearedRoomCount * USER_EXP_PER_ROOM);
         userEXPClearedRoomCount = 0;
-
-
 
         Debug.Log("[DungeonManager] 던전 데이터 초기화 완료");
     }

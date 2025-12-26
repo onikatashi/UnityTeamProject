@@ -28,8 +28,8 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     //--------------------------------------------------------------------------------
 
     // DungeonMaker에서 연결하기 위한 그래프 구조
-    public List<NodeButton> nextNodes = new List<NodeButton>();   // 아래층(다음층) 노드들
-    public List<NodeButton> prevNodes = new List<NodeButton>();   // 위층(이전층) 노드들
+    public List<NodeButton> nextNodes = new List<NodeButton>();   // 다음 층 노드들
+    public List<NodeButton> prevNodes = new List<NodeButton>();   // 이전 층 노드들
 
     //--------------------------------------------------------------------------------
 
@@ -101,14 +101,11 @@ public class NodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-
         if (!isAvailable) return;
         if (!isGoingNextNode) return;
 
         if (highlight != null)
             highlight.SetActive(true);
-
-
     }
 
     // 마우스가 이미지 범위 밖으로 나감.
