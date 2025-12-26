@@ -1137,14 +1137,31 @@ MonoBehaviour:
       minCount: 3
       maxCount: 6
       spawnOffset: 3
+    - enemyPrefabs:
+      - {fileID: 3611501301504084308, guid: 594b9b63d37101e40aaf5fd2e7b46e62, type: 3}
+      - {fileID: 2305738969686351384, guid: 813c4f2cee4ddb445973c50ae17f84ec, type: 3}
+      - {fileID: 8485822838278982117, guid: fc065390348a8b647966c7b082b12921, type: 3}
+      spawnPoint: {fileID: 768979484}
+      minCount: 3
+      maxCount: 6
+      spawnOffset: 3
+    - enemyPrefabs:
+      - {fileID: 3122567897031105555, guid: 45011b98d0f49c44b9b804ab6220cc4d, type: 3}
+      - {fileID: 6766457303251118766, guid: a920fa750d1a4d842943eafd7c01ec09, type: 3}
+      spawnPoint: {fileID: 795851296}
+      minCount: 3
+      maxCount: 6
+      spawnOffset: 3
   elitePhases:
   - spawns: []
   bossPhases:
   - spawns:
-    - enemyPrefabs: []
+    - enemyPrefabs:
+      - {fileID: 2499834092553138976, guid: cbc240d399fcf5c4f99eb1c23e4f6636, type: 3}
+      - {fileID: 6824053861770154418, guid: 8f391fcd937475348b75af6984d3e081, type: 3}
       spawnPoint: {fileID: 795851296}
       minCount: 1
-      maxCount: 3
+      maxCount: 1
       spawnOffset: 0
   rewardPrefab: {fileID: 2263483894746026911, guid: ae009cd848af9204cb099696c7b6ec13, type: 3}
   reward1SpawnPoint: {fileID: 466008906}
