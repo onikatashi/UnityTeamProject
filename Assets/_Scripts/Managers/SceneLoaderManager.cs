@@ -170,7 +170,7 @@ public class SceneLoaderManager : MonoBehaviour
 
             if (type == Enums.LoadingType.ProgressBar)
             {
-                tipText.text = "TIP: " + loadingTipData.tips[randomIndex];
+                tipText.text = loadingTipData.tips[randomIndex];
             }
 
             // 실제 로딩과 별개로 가짜 로딩 생성

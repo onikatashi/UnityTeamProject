@@ -110,12 +110,15 @@ public class FinalBoss : BossBase
         base.Awake();
         playerLayer = LayerMask.NameToLayer(playerLayerName);
 
-        if (laser == null) laser = GetComponentInChildren<Hovl_Laser>(true);
-        if (laser != null) laser.EndFire();
+        //if (laser == null) laser = GetComponentInChildren<Hovl_Laser>(true);
+        //if (laser != null) laser.EndFire();
     }
 
     protected override void Start()
     {
+        if (laser == null) laser = GetComponentInChildren<Hovl_Laser>(true);
+        if (laser != null) laser.EndFire();
+
         base.Start();
 
         FindPlayerByLayer();
@@ -174,9 +177,9 @@ public class FinalBoss : BossBase
 
         if (agent != null)
         {
-            agent.isStopped = false;
+            //agent.isStopped = false;
             agent.updateRotation = true;
-            agent.SetDestination(player.transform.position);
+            //agent.SetDestination(player.transform.position);
         }
 
         if (!runningPattern && Vector3.Distance(transform.position, player.transform.position) <= md.attackRange)
