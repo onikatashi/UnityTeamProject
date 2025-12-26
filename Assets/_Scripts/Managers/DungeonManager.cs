@@ -138,7 +138,7 @@ public class DungeonManager : MonoBehaviour
 
         Debug.Log($"[DungeonManager] Stage {currentStage} 클리어");
 
-       
+
         //마지막 스테이지 클리어 IsLastStage(Bool)로 확인
         if (currentStage >= maxStage)
         {
@@ -157,7 +157,7 @@ public class DungeonManager : MonoBehaviour
 
     public void EnterNextStage()
     {
-        
+
 
         //다음 테마 확정 (SetNextTheme가 nextTheme만 뽑는 구조라면 필수)
         currentTheme = nextTheme;
@@ -177,7 +177,7 @@ public class DungeonManager : MonoBehaviour
 
         // 스테이지/전환 플래그 리셋
         currentStage = 1;
-      
+
         isStageTransitionPending = false;
         needStageTransitionEffect = false;
 
