@@ -5,7 +5,8 @@ using System.Linq; // LINQ 사용을 위해 추가
 using TMPro; // TextMeshPro 사용을 위해 추가
 using static Enums; // RoomType Enum 접근을 위해 필요
 using Random = UnityEngine.Random; // UnityEngine.Random 명시
-using UnityEngine.UI; // 버튼 UI 제어를 위해 추가
+using UnityEngine.UI;
+using Unity.VisualScripting; // 버튼 UI 제어를 위해 추가
 
 public class SpawnManager : MonoBehaviour
 {
@@ -175,7 +176,12 @@ public class SpawnManager : MonoBehaviour
     }
 
     IEnumerator CoPlayerDie()
-    {   
+    {
+        foreach(var m in aliveEnemies)
+        {
+            Destroy(m);
+        }
+        
         Player.Instance.Die();
         yield return new WaitForSecondsRealtime(2f);
         Time.timeScale = 0f;
@@ -407,6 +413,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator CheckClearState()
     {
+        if (Player.Instance.isDead) yield break;
         while (true)
         {
             if (spawningFinished && aliveEnemies.Count == 0)
