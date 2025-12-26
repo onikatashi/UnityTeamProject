@@ -78,11 +78,6 @@ public class LineDrawer : MonoBehaviour
         floorLines[floor].Add(lineObj);
 
 
-
-
-
-
-
         //라인의 위치값
         RectTransform lineRect  = lineObj.GetComponent<RectTransform>();
         //시작노드와 목적지 노드의 위치.

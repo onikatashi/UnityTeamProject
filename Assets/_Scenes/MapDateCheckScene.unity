@@ -452,10 +452,13 @@ MonoBehaviour:
     theme: 0
     nodes: []
   currentTheme: 0
+  nextTheme: 0
   currentRoomType: 0
   currentPlayerPlace: 0
+  userEXPClearedRoomCount: 0
   currentBattleNodeFloor: 0
   currentBattleNodeColum: 0
+  needStageTransitionEffect: 0
 --- !u!114 &536627028
 MonoBehaviour:
   m_ObjectHideFlags: 0

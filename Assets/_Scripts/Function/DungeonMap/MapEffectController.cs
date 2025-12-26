@@ -79,8 +79,6 @@ public class MapEffectController : MonoBehaviour
             ScrollBackground();
     }
 
-
-
     //────────────────────────────────────
     // Stage Transition (연출만 담당)
     //────────────────────────────────────
@@ -167,8 +165,6 @@ public class MapEffectController : MonoBehaviour
         }
     }
 
-
-
     private RectTransform GetRightSideBackground()
     {
         return backgrounds[0].anchoredPosition.x > backgrounds[1].anchoredPosition.x
@@ -211,6 +207,7 @@ public class MapEffectController : MonoBehaviour
             SceneLoaderManager.Instance.LoadScene(SceneNames.Restroom);
         }
     }
+
     public IEnumerator PlayCharacterExitToRight()
     {
         RectTransform charRt = characterRoot as RectTransform;

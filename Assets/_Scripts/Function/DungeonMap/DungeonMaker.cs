@@ -300,8 +300,6 @@ public class DungeonMaker : MonoBehaviour
         }
     }
 
-
-
     //시작노드의 정보만 가져옴.
     private void CollectStartNodes()
     {
@@ -352,15 +350,9 @@ public class DungeonMaker : MonoBehaviour
                 // 다음 연결된 노드의 좌표 저장
                 foreach (var next in node.nextNodes)
                 {
-                    nodeData.nextNodesLink.Add
-                       (new NextNodeLinkData
-                       {
-                           floor = next.floor,
-                           column = next.col
-                       }
+                    nodeData.nextNodesLink.Add(new NextNodeLinkData { floor = next.floor, column = next.col }
                     );
                 }
-
                 saveData.nodes.Add(nodeData);
             }
         }
