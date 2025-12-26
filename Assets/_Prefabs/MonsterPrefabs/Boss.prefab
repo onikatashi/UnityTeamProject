@@ -203,6 +203,11 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6666476323274595776, guid: 0dc5d7207c20d6b4ab08f4ef524bdfc4, type: 3}
   firepoint: {fileID: 7048166793528404391}
   isDef: 0
+  bossId: 0
+  bossNameOverride: 
+  currentStun: 0
+  stunDuration: 5
+  stunGainPerHit: 3
   playerLayerName: Player
   topCenterPoint: {fileID: 1390496861338300824}
   patternIdle: 0.6
@@ -214,6 +219,7 @@ MonoBehaviour:
   laserTick: 0.3
   laserReverseDuration: 2
   laserTurnDegPerSec: 40
+  laserSpawnYOffset: 0.5
   markCount: 10
   markDelay: 1
   markRadius: 3.5
@@ -377,7 +383,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: c1d75aa09e581e849b079959253daeb3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

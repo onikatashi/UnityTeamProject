@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,6 +26,7 @@ public abstract class MonsterBase : MonoBehaviour
     public Transform firepoint;
 
     protected PoolManager poolManager;
+    Material mat;
 
     public bool isDef = false;
     bool isDie;
@@ -34,6 +36,8 @@ public abstract class MonsterBase : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         state = Enums.MonsterState.Idle;
+
+        mat = GetComponentInChildren<SpriteRenderer>().material;
 
         if (md != null && md.maxHp > 0f) currentHp = md.maxHp;
 
@@ -129,6 +133,7 @@ public abstract class MonsterBase : MonoBehaviour
 
         GiveExpToPlayer();
         GiveGoldToPlayer();
+        SetDieDissolve(destroyDelay);
 
         if (deathFxPrefab != null)
         {
@@ -136,6 +141,7 @@ public abstract class MonsterBase : MonoBehaviour
             Destroy(fx, deathFxLife);
         }
 
+        
         Destroy(gameObject, destroyDelay);
     }
 
@@ -153,5 +159,29 @@ public abstract class MonsterBase : MonoBehaviour
 
         PlayerGold gold = Player.Instance.GetComponent<PlayerGold>();
         if (gold != null) gold.ReceiveRawGold(md.dropGold);
+    }
+
+    void SetSpawnDissolve(float duration)
+    {
+        StartCoroutine(AnimateShader(1f, -1f, duration));
+    }
+
+    void SetDieDissolve(float duration)
+    {
+        StartCoroutine(AnimateShader(-1f, 1f, duration));
+    }
+
+    IEnumerator AnimateShader(float start, float end, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            float value = Mathf.Lerp(start, end, t);
+            mat.SetFloat("_DissolveAmount", value);
+            yield return null;
+        }
+        mat.SetFloat("_DissolveAmount", end);
     }
 }
