@@ -374,6 +374,7 @@ public class Player : MonoBehaviour
         //이동/ 공격 허용
         move.canMove = true;
         pa.canAtt = true;
+        isDead = false;
 
         //회전 / 스케일 초기화
         pSprite.localRotation = Quaternion.identity;
