@@ -136,7 +136,7 @@ public class SoundManager : MonoBehaviour
         float finalVolume = masterVolume * sfxVolume * sound.volume * volumeScale;
 
         // 효과음의 피치를 살짝 랜덤화 하여 반복적인 효과음의 지루함을 해소
-        sfxSource.pitch = sound.pitch + Random.Range(-0.05f, 0.05f);
+        //sfxSource.pitch = sound.pitch + Random.Range(-0.05f, 0.05f);
 
         // 재생
         sfxSource.PlayOneShot(sound.clip, finalVolume);

@@ -136,7 +136,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c1d75aa09e581e849b079959253daeb3, type: 2}
+  - {fileID: 2100000, guid: 909cbf6b7606d914e9266be3e90da174, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 8828106940936251941, guid: c1acfac7c14807e428e0343fcbdc87ac, type: 3}
   md: {fileID: 11400000, guid: 01f71c05b1b643b4a910ab1e43fda0a5, type: 2}
-  currentHp: 100
+  currentHp: 0
   detectRange: 10
   deathFxPrefab: {fileID: 9070474633162843459, guid: 356cf4dca1465b54fabbb8cd9b1cd190, type: 3}
   deathFxLife: 2
@@ -208,6 +208,8 @@ MonoBehaviour:
   currentStun: 0
   stunDuration: 5
   stunGainPerHit: 3
+  bossHitSfx: 
+  bossDieSfx: 
   playerLayerName: Player
   topCenterPoint: {fileID: 1390496861338300824}
   patternIdle: 0.6
@@ -215,10 +217,10 @@ MonoBehaviour:
   firePoint2: {fileID: 8148847178628328286}
   laser: {fileID: 5067341029673006062}
   laserWindup: 0.6
-  laserDuration: 5
+  laserDuration: 4
   laserTick: 0.3
-  laserReverseDuration: 2
-  laserTurnDegPerSec: 40
+  laserReverseDuration: 3
+  laserTurnDegPerSec: 0.1
   laserSpawnYOffset: 0.5
   markCount: 10
   markDelay: 1
@@ -273,7 +275,7 @@ MonoBehaviour:
   fxMarks: {fileID: 5911893088733641442, guid: f6573a110c1967643a98d0efdba24be8, type: 3}
   fxSlam: {fileID: 5551718882146614446, guid: ca5678a67971360408484fc2051d9d2e, type: 3}
   fxExecute: {fileID: 4806843881307822078, guid: d3baa4b3f02cdbc4ea7f22a094b598f7, type: 3}
-  fxPull: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+  fxPull: {fileID: 7363227449265609124, guid: 678cbaac0f18acb47a46e6043c4c9186, type: 3}
   fxYOffset: 0.05
   fxLifeExtra: 0.3
   fxUseWorldY0: 1
@@ -383,7 +385,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c1d75aa09e581e849b079959253daeb3, type: 2}
+  - {fileID: 2100000, guid: 909cbf6b7606d914e9266be3e90da174, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -499,6 +501,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114678305193455830, guid: b67042affc59bdf469a26afcc712c2bc, type: 3}
+      propertyPath: MaxLength
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 114678305193455830, guid: b67042affc59bdf469a26afcc712c2bc, type: 3}
       propertyPath: tickInterval
       value: 0.3
       objectReference: {fileID: 0}
@@ -511,8 +517,16 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 114678305193455830, guid: b67042affc59bdf469a26afcc712c2bc, type: 3}
+      propertyPath: MainTextureLength
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114678305193455830, guid: b67042affc59bdf469a26afcc712c2bc, type: 3}
       propertyPath: playerMask.m_Bits
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114678305193455830, guid: b67042affc59bdf469a26afcc712c2bc, type: 3}
+      propertyPath: NoiseTextureLength
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 120067324791973530, guid: b67042affc59bdf469a26afcc712c2bc, type: 3}
       propertyPath: m_Parameters.textureScale.x

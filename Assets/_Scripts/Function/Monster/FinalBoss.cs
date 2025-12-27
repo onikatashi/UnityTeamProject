@@ -260,7 +260,14 @@ public class FinalBoss : BossBase
 
     public override void TakeDamage(float dmg)
     {
+        PlaySfx("FinalBossHit");
         base.TakeDamage(dmg);
+    }
+
+    protected override void Die()
+    {
+        PlaySfx("FinalBossDie");
+        base.Die();
     }
 
     IEnumerator RunPattern(BossPattern p)
@@ -288,6 +295,8 @@ public class FinalBoss : BossBase
 
         EnsurePlayer();
         if (player == null || playerComp == null || md == null || laser == null) yield break;
+
+        PlaySfx("FinalBossLaser");
 
         if (agent != null)
         {
@@ -341,6 +350,7 @@ public class FinalBoss : BossBase
         }
 
         laser.EndFire();
+        
         if (agent != null) agent.isStopped = false;
     }
 
@@ -350,6 +360,8 @@ public class FinalBoss : BossBase
 
         EnsurePlayer();
         if (player == null || md == null) yield break;
+
+        PlaySfx("FinalBossMark1");
 
         if (agent != null) agent.isStopped = false;
 
@@ -380,6 +392,8 @@ public class FinalBoss : BossBase
 
         yield return new WaitForSeconds(delay);
 
+        PlaySfx("FinalBossMark2");
+
         Collider[] hits = Physics.OverlapSphere(pos, radius);
         for (int i = 0; i < hits.Length; i++)
         {
@@ -401,6 +415,8 @@ public class FinalBoss : BossBase
 
         EnsurePlayer();
         if (player == null || bossBulletPrefab == null) yield break;
+
+        PlaySfx("FinalBossSplitShot");
 
         if (agent != null) agent.isStopped = true;
 
@@ -434,6 +450,8 @@ public class FinalBoss : BossBase
         EnsurePlayer();
         if (player == null || playerComp == null || md == null) yield break;
 
+        PlaySfx("FinalBossPull1");
+
         if (agent != null) agent.isStopped = true;
 
         if (Vector3.Distance(transform.position, player.transform.position) > pullRange)
@@ -445,9 +463,13 @@ public class FinalBoss : BossBase
         float windup = 0.25f;
 
         yield return StartCoroutine(CoPullTelegraph(pullExplosionRadius, windup));
+        
         yield return StartCoroutine(CoPull(player.transform, pullDuration, pullStrength));
-
+        
         Collider[] hits = Physics.OverlapSphere(transform.position, pullExplosionRadius);
+
+        PlaySfx("FinalBossPull2");
+
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].gameObject.layer != playerLayer) continue;
@@ -498,11 +520,15 @@ public class FinalBoss : BossBase
         EnsurePlayer();
         if (player == null || playerComp == null || md == null) yield break;
 
+        PlaySfx("FinalBossSlam1");
+
         if (agent != null) agent.isStopped = true;
 
         GameObject fx = SpawnPatternFx(fxSlam, transform.position, slamRadius, slamWindup);
 
         yield return new WaitForSeconds(slamWindup);
+
+        PlaySfx("FinalBossSlam2");
 
         Collider[] hits = Physics.OverlapSphere(transform.position, slamRadius);
         for (int i = 0; i < hits.Length; i++)
@@ -530,6 +556,8 @@ public class FinalBoss : BossBase
 
         if (!playerComp.IsStunned) yield break;
 
+        PlaySfx("FinalBossExecute1");
+
         if (agent != null) agent.isStopped = true;
 
         Vector3 pos = player.transform.position;
@@ -537,6 +565,8 @@ public class FinalBoss : BossBase
         GameObject fx = SpawnPatternFx(fxExecute, pos, executeRadius, executeCharge);
 
         yield return new WaitForSeconds(executeCharge);
+
+        PlaySfx("FinalBossExecute");
 
         float dis = Vector3.Distance(player.transform.position, pos);
         if (dis <= executeRadius) playerComp.TakeDamage(999999f);
@@ -548,6 +578,8 @@ public class FinalBoss : BossBase
     {
         if (IsStunned) yield break;
         if (randomMonsterPrefabs == null || randomMonsterPrefabs.Length == 0) yield break;
+
+        PlaySfx("FinalBossSummon");
 
         if (agent != null) agent.isStopped = true;
 
@@ -593,6 +625,8 @@ public class FinalBoss : BossBase
         if (IsStunned) yield break;
         if (player == null) yield break;
 
+        PlaySfx("FinalBossTeleport");
+
         SpawnTeleportFx(teleportOutFx, transform.position);
         yield return new WaitForSeconds(0.15f);
 
@@ -624,6 +658,8 @@ public class FinalBoss : BossBase
     {
         if (IsStunned) yield break;
 
+        PlaySfx("FinalBossTeleport");
+
         SpawnTeleportFx(teleportOutFx, transform.position);
         yield return new WaitForSeconds(0.15f);
 
@@ -652,6 +688,7 @@ public class FinalBoss : BossBase
             if (fire >= hellFireInterval)
             {
                 fire = 0f;
+                // 여긴 발사 빈도가 너무 높아서 SFX 넣으면 난리남(원하면 따로 쿨다운 SFX로 처리)
                 FireBulletAtAngle(spiralAngle);
                 FireBulletAtAngle(spiralAngle + 180f);
                 FireBulletAtAngle(spiralAngle + 90f);
@@ -662,6 +699,7 @@ public class FinalBoss : BossBase
 
         FireRing(hellRingBullets);
         yield return new WaitForSeconds(0.55f);
+
         FireRing(hellRingBullets);
         yield return new WaitForSeconds(0.55f);
 
@@ -674,11 +712,13 @@ public class FinalBoss : BossBase
 
             FireFan(baseAng, hellFanAngle, hellFanBullets);
             yield return new WaitForSeconds(0.45f);
+
             FireFan(baseAng + 25f, hellFanAngle, hellFanBullets);
         }
 
         if (agent != null) agent.isStopped = false;
         yield return new WaitForSeconds(0.4f);
+
     }
 
     // ===== BulletHell helpers =====
@@ -761,4 +801,5 @@ public class FinalBoss : BossBase
         GameObject fx = Instantiate(prefab, pos, Quaternion.identity);
         Destroy(fx, teleportFxLife);
     }
+
 }

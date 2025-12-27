@@ -42,6 +42,7 @@ public class MonsterArcProjectile : MonoBehaviour
         landed = false;
         velocity = CalculateArcVelocity(from, to, arcHeight);
 
+        PlaySfx("MonsterArcProjectile");
         gameObject.SetActive(true);
     }
 
@@ -153,5 +154,9 @@ public class MonsterArcProjectile : MonoBehaviour
     void ReturnToPool()
     {
         pool.Return(Enums.PoolType.MonsterArcProjectile, this);
+    }
+    void PlaySfx(string name)
+    {
+        SoundManager.Instance.PlaySFX(name);
     }
 }

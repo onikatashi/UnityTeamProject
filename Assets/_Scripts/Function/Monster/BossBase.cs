@@ -12,6 +12,10 @@ public abstract class BossBase : MonsterBase, BossStatus
     [SerializeField] protected float stunDuration = 5f;
     [SerializeField] protected float stunGainPerHit = 3f; // 맞을 때마다 누적량
 
+    [Header("Boss SFX")]
+    [SerializeField] protected string bossHitSfx = "";
+    [SerializeField] protected string bossDieSfx = "";
+
     protected float maxStun = 100f;
     protected bool isAlive = true;
     protected bool isStunned = false;
@@ -28,6 +32,8 @@ public abstract class BossBase : MonsterBase, BossStatus
 
     public bool IsAlive => isAlive;
     public bool IsStunned => isStunned;
+    protected override bool UseBaseHitSfx => false;
+    protected override bool UseBaseDieSfx => false;
 
     // UI 편의
     public float Hp01 => (MaxHp <= 0.0001f) ? 0f : Mathf.Clamp01(CurrentHp / MaxHp);
@@ -63,7 +69,11 @@ public abstract class BossBase : MonsterBase, BossStatus
             isAlive = false;
             return;
         }
-
+        if (!string.IsNullOrEmpty(bossHitSfx))
+        {
+            PlaySfx(bossHitSfx);
+        }
+        
         if (!isStunned && maxStun > 0f)
         {
             currentStun = Mathf.Min(currentStun + stunGainPerHit, maxStun);
@@ -73,6 +83,15 @@ public abstract class BossBase : MonsterBase, BossStatus
                 StartCoroutine(CoStun());
             }
         }
+    }
+    protected override void Die()
+    {
+        if (!string.IsNullOrEmpty(bossDieSfx))
+        {
+            PlaySfx(bossDieSfx);
+        }
+        
+        base.Die();
     }
 
     IEnumerator CoStun()
@@ -84,11 +103,5 @@ public abstract class BossBase : MonsterBase, BossStatus
         currentStun = Mathf.Clamp(currentStun, 0f, maxStun);
 
         isStunned = false;
-    }
-
-    protected override void Die()
-    {
-        isAlive = false;
-        base.Die();
     }
 }
