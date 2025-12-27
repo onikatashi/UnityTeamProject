@@ -95,7 +95,6 @@ public class DashBoss : BossBase
     float currentStunGage = 0f;
 
     int playerLayer;
-    
 
     protected override void Awake()
     {
@@ -144,7 +143,6 @@ public class DashBoss : BossBase
         Player p = player.GetComponentInParent<Player>();
         bool playerStunned = (p != null && p.IsStunned);
 
-        
         // 플레이어가 스턴 중이면 무조건 돌진
         if (playerStunned)
         {
@@ -214,6 +212,8 @@ public class DashBoss : BossBase
     #region Random Evade Jump
     void StartRandomEvadeJump()
     {
+        PlaySfx("DashBossJump");
+
         StopAllCoroutines();
 
         // NavMesh 끊기
@@ -246,7 +246,6 @@ public class DashBoss : BossBase
                 cand = hit.point;
                 cand.y += landingYOffset;
             }
-            
 
             // NavMesh 위 유효한 지점인지 체크
             if (NavMesh.SamplePosition(cand, out var navHit, 1.0f, NavMesh.AllAreas))
@@ -312,6 +311,8 @@ public class DashBoss : BossBase
     #region Dash
     void StartDashCharge()
     {
+        PlaySfx("DashBossDashCharge");
+
         StopAllCoroutines();
 
         agent.enabled = false;
@@ -350,6 +351,9 @@ public class DashBoss : BossBase
 
         dashStartTime = Time.time;
         dashHitDone = false;
+
+        PlaySfx("DashBossDash");
+
         pstate = PatternState.Dash_Dashing;
     }
 
@@ -375,6 +379,9 @@ public class DashBoss : BossBase
 
                 p.TakeDamage(md.attackDamage * dashDamageMultiplier);
                 p.Stun(dashStunDuration);
+
+                PlaySfx("DashBossDashHit");
+
                 dashHitDone = true;
                 break;
             }
@@ -395,6 +402,8 @@ public class DashBoss : BossBase
     #region Pull
     void StartPullCharge()
     {
+        PlaySfx("DashBossPull1");
+
         StopAllCoroutines();
 
         pstate = PatternState.Pull_Charge;
@@ -427,6 +436,8 @@ public class DashBoss : BossBase
         }
 
         pstate = PatternState.Pull_Pulling;
+
+        PlaySfx("DashBossPull2");
 
         Transform pt = player.transform;
         float t = 0f;
@@ -476,6 +487,8 @@ public class DashBoss : BossBase
         base.TakeDamage(dmg);
         if (state == Enums.MonsterState.Die) return;
 
+        PlaySfx("DashBossHit");
+
         if (md.stunGauge <= 0f) return;
         currentStunGage += md.stunGauge / 20f;
 
@@ -484,6 +497,12 @@ public class DashBoss : BossBase
             currentStunGage = 0f;
             StartCoroutine(CoSelfStun());
         }
+    }
+
+    protected override void Die()
+    {
+        PlaySfx("DashBossDie");
+        base.Die();
     }
 
     IEnumerator CoSelfStun()
@@ -518,7 +537,6 @@ public class DashBoss : BossBase
 
     private void OnDisable()
     {
-        if (dashTelegraphInstance != null)
-            Destroy(dashTelegraphInstance);
+        if (dashTelegraphInstance != null) Destroy(dashTelegraphInstance);
     }
 }

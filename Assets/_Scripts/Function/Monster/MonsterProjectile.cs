@@ -43,7 +43,7 @@ public class MonsterProjectile : MonoBehaviour
         //    fx.Clear(true);
         //    fx.Play(true);
         //}
-
+        PlaySfx("MonsterProjectile");
         gameObject.SetActive(true);
         
     }
@@ -105,5 +105,10 @@ public class MonsterProjectile : MonoBehaviour
             //몬스터가 죽어도 계속 날아가려면 이거 지워야함 아마도 
             //Destroy(gameObject);
         }
+    }
+
+    void PlaySfx(string name)
+    {
+        SoundManager.Instance.PlaySFX(name);
     }
 }

@@ -50,6 +50,8 @@ public class BossBullet : MonoBehaviour
         startPos = transform.position;
 
         lifeTimer = 0f;
+
+        PlaySfx("BossBullet");
     }
 
     public void InitStraight(MonsterBase owner, Vector3 dir, float speed, float splitDistance, int splitCount)
@@ -132,5 +134,10 @@ public class BossBullet : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+    }
+
+    void PlaySfx(string name)
+    {
+        SoundManager.Instance.PlaySFX(name);
     }
 }

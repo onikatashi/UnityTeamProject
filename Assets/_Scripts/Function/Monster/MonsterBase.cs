@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using static Enums;
 
 public abstract class MonsterBase : MonoBehaviour
 {
@@ -27,6 +28,9 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected PoolManager poolManager;
     Material mat;
+
+    protected virtual bool UseBaseHitSfx => true;
+    protected virtual bool UseBaseDieSfx => true;
 
     public bool isDef = false;
     bool isDie;
@@ -89,7 +93,13 @@ public abstract class MonsterBase : MonoBehaviour
         BuffReceiver buff = GetComponent<BuffReceiver>();
         if (buff != null) dmg *= buff.DamageTakenMultiplier;
 
-        currentHp -= dmg;
+        if (UseBaseHitSfx)
+        {
+            PlaySfx("NomalHit");
+        }
+
+            currentHp -= dmg;
+
         if (currentHp <= 0f)
         {
             currentHp = 0f;
@@ -97,6 +107,7 @@ public abstract class MonsterBase : MonoBehaviour
             Die();
         }
     }
+
 
     public virtual MonsterProjectile GetMonsterProjectile()
     {
@@ -135,15 +146,20 @@ public abstract class MonsterBase : MonoBehaviour
         GiveGoldToPlayer();
         SetDieDissolve(destroyDelay);
 
+        if (UseBaseDieSfx)
+        {
+            PlaySfx("NomalDie");
+        }
+
         if (deathFxPrefab != null)
         {
             GameObject fx = Instantiate(deathFxPrefab, transform.position, Quaternion.identity);
             Destroy(fx, deathFxLife);
         }
 
-        
         Destroy(gameObject, destroyDelay);
     }
+
 
     protected virtual void GiveExpToPlayer()
     {
@@ -183,5 +199,10 @@ public abstract class MonsterBase : MonoBehaviour
             yield return null;
         }
         mat.SetFloat("_DissolveAmount", end);
+    }
+
+    protected void PlaySfx(string name)
+    {
+        SoundManager.Instance.PlaySFX(name);
     }
 }
