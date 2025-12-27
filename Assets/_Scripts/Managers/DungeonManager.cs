@@ -138,7 +138,7 @@ public class DungeonManager : MonoBehaviour
 
         Debug.Log($"[DungeonManager] Stage {currentStage} 클리어");
 
-       
+
         //마지막 스테이지 클리어 IsLastStage(Bool)로 확인
         if (currentStage >= maxStage)
         {
@@ -157,14 +157,11 @@ public class DungeonManager : MonoBehaviour
 
     public void EnterNextStage()
     {
-        
-
         //다음 테마 확정 (SetNextTheme가 nextTheme만 뽑는 구조라면 필수)
         currentTheme = nextTheme;
 
         //  새 맵 생성 유도
         currentDungeonData = null;
-
         isStageTransitionPending = false;
     }
 
@@ -177,7 +174,7 @@ public class DungeonManager : MonoBehaviour
 
         // 스테이지/전환 플래그 리셋
         currentStage = 1;
-      
+
         isStageTransitionPending = false;
         needStageTransitionEffect = false;
 
@@ -208,8 +205,6 @@ public class DungeonManager : MonoBehaviour
     {
         currentPlayerPlace = Enums.currentPlayerPlace.dungeonIn;
         Debug.Log("[DungeonManager] PlayerPlace 변경: dungeonIn");
-
-
     }
     //(외부 참조용) 던전 외부
     public void ExitDungeon()
@@ -254,14 +249,13 @@ public class DungeonManager : MonoBehaviour
         currentDungeonData = null;
         //타운 쪽으로 들어올 때 타입 초기화.
         SetCurrentRoomType(Enums.RoomType.None);
+        SetRandomTheme();
 
         InventoryManager.Instance.ClearInventory();
         Player.Instance.ResetPlayer();
         //마무리 시 유저 경험치 적용 및 카운팅 최소화.
         UserDataManager.Instance.AddUserExp(userEXPClearedRoomCount * USER_EXP_PER_ROOM);
         userEXPClearedRoomCount = 0;
-
-
 
         Debug.Log("[DungeonManager] 던전 데이터 초기화 완료");
     }

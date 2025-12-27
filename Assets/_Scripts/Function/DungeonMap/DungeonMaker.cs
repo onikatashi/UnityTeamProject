@@ -58,11 +58,14 @@ public class DungeonMaker : MonoBehaviour
     //연출 타이밍을 위한 
     private bool isNewDungeonCreated = false;
 
+    //노드 드러내기 중 클릭 방지용 판넬 제어용 변수.
+    public GameObject ClickBlockPanel;
+
     SoundManager soundManager;
 
     //---------------------------------------------------------------------------------------------
     //Start는 Scene이동 후 돌아올 때마다 실행됨.
-    void Start() 
+    void Start()
     {
         soundManager = SoundManager.Instance;
         DungeonManager.Instance.EnterDungeon();
@@ -96,13 +99,14 @@ public class DungeonMaker : MonoBehaviour
         // 기존 던전 유/무 확인
         if (DungeonManager.Instance != null && DungeonManager.Instance.HasDungeonData())
         {
-           //기존 던전 데이터 가져오기
+            //기존 던전 데이터 가져오기
             LoadDungeonFromData(DungeonManager.Instance.GetDungeonData());
             //클리어한 노드 상태 변경.
             applyClearNodeState();
 
             Debug.Log("[DungeonMaker] 기존 던전 데이터 로드 완료");
             isNewDungeonCreated = false;
+            SetClickBlock(false);
         }
         else
         {
@@ -127,7 +131,7 @@ public class DungeonMaker : MonoBehaviour
 
         //모든 노드, 선 정보를 기반으로 선그리기.
         lineDrawer.DrawAllConnections(dungeonButtons, maxFloor, maxColumn);
-       // PrintDungeonToConsole();
+        // PrintDungeonToConsole();
 
 
         //던전 알파값 조정
@@ -152,13 +156,21 @@ public class DungeonMaker : MonoBehaviour
 
     }
 
-      //연출을 위한 코드
+    //연출을 위한 코드
+
+    public void SetClickBlock(bool value)
+    {
+        if (ClickBlockPanel != null)
+            ClickBlockPanel.SetActive(value);
+    }
+
+
     public void StartRevealMap()
     {
         StartCoroutine(RevealMapByFloor());
     }
 
-  
+
     private void HideAllMapElements()
     {
         for (int f = 0; f < maxFloor; f++)
@@ -188,10 +200,12 @@ public class DungeonMaker : MonoBehaviour
             // 선 표시
             lineDrawer.ShowLinesForFloor(floor);
 
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(0.1f);
         }
+
+        SetClickBlock(false);
     }
-   
+
 
     //클리어 관련 작동 코드----------------------------------------------------------------------------------
 
@@ -286,8 +300,6 @@ public class DungeonMaker : MonoBehaviour
         }
     }
 
- 
-
     //시작노드의 정보만 가져옴.
     private void CollectStartNodes()
     {
@@ -338,15 +350,9 @@ public class DungeonMaker : MonoBehaviour
                 // 다음 연결된 노드의 좌표 저장
                 foreach (var next in node.nextNodes)
                 {
-                    nodeData.nextNodesLink.Add
-                       (new NextNodeLinkData
-                       {
-                        floor = next.floor,
-                        column = next.col
-                    }
+                    nodeData.nextNodesLink.Add(new NextNodeLinkData { floor = next.floor, column = next.col }
                     );
                 }
-
                 saveData.nodes.Add(nodeData);
             }
         }

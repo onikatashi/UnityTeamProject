@@ -54,17 +54,14 @@ public class RoomTypeData : MonoBehaviour
         // [4층 2열] → 휴식방
         // 예시 : forcedRooms.Add((4, 2), Enums.RoomType.Rest);
 
-        // [0층(시작노드는 전부 노말 던전]
-        
-        forcedFloors.Add(dungeonMaker.maxFloor - 1, Enums.RoomType.Boss);//맨끝 보스 노드
-        forcedFloors.Add(dungeonMaker.maxFloor - 2, Enums.RoomType.Rest);//보스전 휴식
-        forcedFloors.Add(dungeonMaker.maxFloor - 3, Enums.RoomType.Elite);//휴식직전 엘리트던전
-        forcedFloors.Add(0, Enums.RoomType.Normal);//시작 노드 노말
 
-
+        forcedFloors.Add(dungeonMaker.maxFloor - 1, Enums.RoomType.Boss);   //보스 노드 설정
+        forcedFloors.Add(dungeonMaker.maxFloor - 2, Enums.RoomType.Rest);   //보스 직전 휴식
+        forcedFloors.Add(dungeonMaker.maxFloor - 3, Enums.RoomType.Elite);  //휴식직전 엘리트던전
+        forcedFloors.Add(0, Enums.RoomType.Normal);                         //시작 노드 노말
 
         //테스트용 치트코드
-        forcedRooms.Add((1, 0), Enums.RoomType.Boss);
+        forcedRooms.Add((1, 0), Enums.RoomType.Boss);                       //(1,0)위치에 보스룸 설정.
 
 
         //2종류 번갈아 출현시키기.
@@ -82,8 +79,6 @@ public class RoomTypeData : MonoBehaviour
         //    Enums.RoomType assignedType = (col % 2 == 0) ? firstType : secondType;
         //    forcedRooms.Add((restFloor, col), assignedType);
         //}
-
-
     }
 
     //-----------------------------------------------------------------------

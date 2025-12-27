@@ -20,7 +20,7 @@ public class MapEffectController : MonoBehaviour
     public RectTransform mapRoot;
     public float mapMoveDistance = 900f;
     public float mapDownDuration = 1f;   // 내려가는 속도
-    public float mapUpDuration = 3f;     // 올라오는 속도
+    public float mapUpDuration = 10f;     // 올라오는 속도
 
     [Header("References")]
     public DungeonMaker dungeonMaker;
@@ -54,7 +54,7 @@ public class MapEffectController : MonoBehaviour
         }
     }
     void Start()
-    {  
+    {
         mapRoot.anchoredPosition = mapBasePos;
 
         ResetBackgroundPositions();
@@ -78,8 +78,6 @@ public class MapEffectController : MonoBehaviour
         if (isBackgroundScrolling)
             ScrollBackground();
     }
-
-   
 
     //────────────────────────────────────
     // Stage Transition (연출만 담당)
@@ -167,8 +165,6 @@ public class MapEffectController : MonoBehaviour
         }
     }
 
-
-
     private RectTransform GetRightSideBackground()
     {
         return backgrounds[0].anchoredPosition.x > backgrounds[1].anchoredPosition.x
@@ -211,6 +207,7 @@ public class MapEffectController : MonoBehaviour
             SceneLoaderManager.Instance.LoadScene(SceneNames.Restroom);
         }
     }
+
     public IEnumerator PlayCharacterExitToRight()
     {
         RectTransform charRt = characterRoot as RectTransform;
@@ -229,8 +226,8 @@ public class MapEffectController : MonoBehaviour
                     new Vector2(outX, charRt.anchoredPosition.y),
                     speed * Time.deltaTime
                 );
-            
-            if( walSoundCoroutine == null)
+
+            if (walSoundCoroutine == null)
             {
                 walSoundCoroutine = StartCoroutine(PlayerWalkSound());
             }
@@ -286,7 +283,7 @@ public class MapEffectController : MonoBehaviour
         yield return StartCoroutine(PlayMapUp());
 
         // 2. 정확히 5초 대기
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
 
         // 3. DungeonMaker에게 공개 요청
         dungeonMaker.StartRevealMap();
@@ -294,6 +291,7 @@ public class MapEffectController : MonoBehaviour
     public IEnumerator PlayMapUp()
     {
         // 맵 올라오는 소리
+        dungeonMaker.SetClickBlock(true);
         SoundManager.Instance.PlaySFX("mapOpen");
 
         Vector2 start = new Vector2(250f, -2000f);
@@ -309,9 +307,9 @@ public class MapEffectController : MonoBehaviour
 
         isBackgroundScrolling = true;
 
-     
+
     }
 
-   
+
 
 }
