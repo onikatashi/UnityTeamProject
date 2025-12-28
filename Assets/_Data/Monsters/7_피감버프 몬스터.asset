@@ -16,14 +16,14 @@ MonoBehaviour:
   mId: 7
   monsterName: "\uC774\uB798\uD638"
   maxHp: 50
-  attackDamage: 2
+  attackDamage: 15
   attackRange: 3
-  attackSpeed: 4
+  attackSpeed: 2
   projectileCount: 0
   projectileSpeed: 0
   moveSpeed: 0
   dropGold: 10
-  dropExp: 50
+  dropExp: 5
   shield: 0
   mosterPrefab: {fileID: 3611501301504084308, guid: 594b9b63d37101e40aaf5fd2e7b46e62, type: 3}
-  stunGage: 999
+  stunGauge: 0

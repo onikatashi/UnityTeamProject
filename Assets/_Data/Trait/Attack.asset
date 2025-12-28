@@ -86,7 +86,7 @@ MonoBehaviour:
       cooldownReduction: 0
       reviveCount: 0
       startItemCount: 0
-    bonusDescription: "\uCE58\uD655 15%"
+    bonusDescription: "\uCE58\uBA85\uD0C0 \uD655\uB960 15%"
   - requiredPoints: 20
     bonusStats:
       maxHp: 0

@@ -74,8 +74,8 @@ public class DungeonMaker : MonoBehaviour
         themeSpriteDictionary = new Dictionary<Enums.DungeonTheme, Sprite>()
         {
             { Enums.DungeonTheme.Desert, desertThemeSprite },
-            { Enums.DungeonTheme.Grass,  grassThemeSprite },
-            { Enums.DungeonTheme.Lava,   lavaThemeSprite },
+            //{ Enums.DungeonTheme.Grass,  grassThemeSprite },
+            //{ Enums.DungeonTheme.Lava,   lavaThemeSprite },
             { Enums.DungeonTheme.Snow,   snowThemeSprite }
         };
 

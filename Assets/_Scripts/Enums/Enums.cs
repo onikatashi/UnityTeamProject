@@ -67,8 +67,8 @@ public class Enums
     {
         None,
         Desert,
-        Grass,
-        Lava,
+        //Grass,
+        //Lava,
         Snow
     }
 

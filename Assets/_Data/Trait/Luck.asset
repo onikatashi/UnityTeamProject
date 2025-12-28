@@ -56,13 +56,13 @@ MonoBehaviour:
       criticalRate: 0
       criticalDamage: 0
       shield: 0
-      bonusExpRate: 10
+      bonusExpRate: 0.1
       bonusGoldRate: 0
       luck: 0
       cooldownReduction: 0
       reviveCount: 0
       startItemCount: 0
-    bonusDescription: "\uACBD\uD5D8\uCE58 \uCD94\uAC00 \uD68D\uB4DD\uB7C9 + 10"
+    bonusDescription: "\uACBD\uD5D8\uCE58 \uCD94\uAC00 \uD68D\uB4DD\uB7C9 + 10%"
   - requiredPoints: 10
     bonusStats:
       maxHp: 0
@@ -81,12 +81,12 @@ MonoBehaviour:
       criticalDamage: 0
       shield: 0
       bonusExpRate: 0
-      bonusGoldRate: 10
+      bonusGoldRate: 0.1
       luck: 0
       cooldownReduction: 0
       reviveCount: 0
       startItemCount: 0
-    bonusDescription: "\uACE8\uB4DC \uCD94\uAC00 \uD68D\uB4DD\uB7C9 + 10"
+    bonusDescription: "\uACE8\uB4DC \uCD94\uAC00 \uD68D\uB4DD\uB7C9 + 10%"
   - requiredPoints: 20
     bonusStats:
       maxHp: 0

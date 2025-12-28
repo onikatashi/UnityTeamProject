@@ -12,7 +12,7 @@ public class MapMaker : MonoBehaviour
 
     [Header("DungeonManager 참조 실패 시 기본 테마")]
     // 인스펙터에서 기본 테마를 설정할 수 있도록 합니다.
-    public DungeonTheme defaultThemeOnFailure = DungeonTheme.Grass;
+    public DungeonTheme defaultThemeOnFailure = DungeonTheme.Snow;
 
     private void Start()
     {
@@ -83,9 +83,9 @@ public class MapMaker : MonoBehaviour
 
         switch (theme)
         {
-            case DungeonTheme.Grass:
-                if (grassGroup) grassGroup.SetActive(true);
-                break;
+            //case DungeonTheme.Grass:
+            //    if (grassGroup) grassGroup.SetActive(true);
+            //    break;
 
             case DungeonTheme.Snow:
                 if (snowGroup) snowGroup.SetActive(true);
@@ -95,9 +95,9 @@ public class MapMaker : MonoBehaviour
                 if (desertGroup) desertGroup.SetActive(true);
                 break;
 
-            case DungeonTheme.Lava:
-                if (lavaGroup) lavaGroup.SetActive(true);
-                break;
+            //case DungeonTheme.Lava:
+            //    if (lavaGroup) lavaGroup.SetActive(true);
+            //    break;
 
             case DungeonTheme.None:
                 // 이 경우는 발생하지 않아야 합니다.
