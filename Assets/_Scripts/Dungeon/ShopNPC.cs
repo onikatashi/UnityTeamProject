@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class ShopNPC : MonoBehaviour
@@ -6,8 +7,17 @@ public class ShopNPC : MonoBehaviour
     [SerializeField] private float interactionRange = 5f; // 상호작용 반경 (기본값 5m)
     [SerializeField] private KeyCode interactionKey = KeyCode.F; // 상호작용 키
 
+    CinemachineCamera pCam;
+
+    private void Start()
+    {
+        pCam = Player.Instance.GetComponentInChildren<CinemachineCamera>();
+    }
+
     private void Update()
     {
+        LookAtCam();
+
         // 플레이어와 NPC 사이의 거리 계산 (Player.Instance 활용)
         if (Player.Instance == null) return;
 
@@ -21,6 +31,13 @@ public class ShopNPC : MonoBehaviour
                 ShopManager.Instance.OpenShop();
             }
         }
+    }
+
+    void LookAtCam()
+    {
+        Vector3 lookDir = pCam.transform.forward;
+
+        transform.rotation = Quaternion.LookRotation(lookDir);
     }
 
     // 에디터 뷰에서 반경을 시각적으로 확인하기 위함
