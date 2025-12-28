@@ -15,10 +15,10 @@ MonoBehaviour:
   monsterRank: 2
   mId: 12
   monsterName: Final Boss
-  maxHp: 1000
-  attackDamage: 5
+  maxHp: 3000
+  attackDamage: 70
   attackRange: 7
-  attackSpeed: 2
+  attackSpeed: 1
   projectileCount: 0
   projectileSpeed: 0
   moveSpeed: 0

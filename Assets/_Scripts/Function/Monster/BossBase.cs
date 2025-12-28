@@ -16,7 +16,7 @@ public abstract class BossBase : MonsterBase, BossStatus
     [SerializeField] protected string bossHitSfx = "";
     [SerializeField] protected string bossDieSfx = "";
 
-    protected float maxStun = 100f;
+    protected float maxStun = 50f;
     protected bool isAlive = true;
     protected bool isStunned = false;
 
@@ -46,11 +46,11 @@ public abstract class BossBase : MonsterBase, BossStatus
         if (md != null)
         {
             currentHp = md.maxHp;
-            maxStun = (md.stunGauge > 0f) ? md.stunGauge : 100f;
+            maxStun = (md.stunGauge > 0f) ? md.stunGauge : 50f;
         }
         else
         {
-            maxStun = 100f;
+            maxStun = 50f;
         }
 
         isAlive = true;
