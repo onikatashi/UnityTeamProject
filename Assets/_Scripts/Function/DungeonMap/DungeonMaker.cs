@@ -173,12 +173,12 @@ public class DungeonMaker : MonoBehaviour
 
     private void HideAllMapElements()
     {
-        for (int f = 0; f < maxFloor; f++)
+        for (int floor = 0; floor < maxFloor; floor++)
         {
-            for (int c = 0; c < maxColumn; c++)
+            for (int colum = 0; colum < maxColumn; colum++)
             {
-                if (dungeonButtons[f, c] != null)
-                    dungeonButtons[f, c].SetVisible(false);
+                if (dungeonButtons[floor, colum] != null)
+                    dungeonButtons[floor, colum].SetVisible(false);
             }
         }
 
@@ -190,9 +190,9 @@ public class DungeonMaker : MonoBehaviour
         for (int floor = 0; floor < maxFloor; floor++)
         {
             // 노드 표시
-            for (int c = 0; c < maxColumn; c++)
+            for (int column = 0; column < maxColumn; column++)
             {
-                NodeButton node = dungeonButtons[floor, c];
+                NodeButton node = dungeonButtons[floor, column];
                 if (node != null && node.isAvailable)
                     node.SetVisible(true);
             }
@@ -455,9 +455,9 @@ public class DungeonMaker : MonoBehaviour
         // 3. 같은 층의 다른 노드 전부 잠금
         foreach (int floor in clearedFloors)
         {
-            for (int c = 0; c < maxColumn; c++)
+            for (int colum = 0; colum < maxColumn; colum++)
             {
-                NodeButton node = dungeonButtons[floor, c];
+                NodeButton node = dungeonButtons[floor, colum];
                 if (node == null || !node.isAvailable) continue;
 
                 LockNode(node);
